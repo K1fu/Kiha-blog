@@ -3,444 +3,701 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiha's School Blog</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Understanding the self - Prelims</title>
+    <!-- Use a modern, easy-to-read font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS for mobile-first, responsive design -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            color-scheme: light;
+            --bg-color: #f3f4f6; /* Light gray */
+            --container-bg: #ffffff; /* White */
+            --text-color: #1f2937; /* Dark gray */
+            --card-bg: #eff6ff; /* Light blue */
+            --accent-color: #3b82f6; /* Blue */
+            --correct-bg: #dcfce7; /* Light green */
+            --correct-text: #166534; /* Dark green */
+            --wrong-bg: #fee2e2; /* Light red */
+            --wrong-text: #991b1b; /* Dark red */
+            --border-color: #d1d5db; /* Gray border */
         }
-        .dark {
-            color-scheme: dark;
+        body.dark-mode {
+            --bg-color: #121212;
+            --container-bg: #1f2937;
+            --text-color: #e5e7eb;
+            --card-bg: #374151;
+            --accent-color: #60a5fa;
+            --correct-bg: #14532d;
+            --correct-text: #bbf7d0;
+            --wrong-bg: #7f1d1d;
+            --wrong-text: #fecaca;
+            --border-color: #4b5563;
         }
         body {
             font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
+        }
+        #quiz-container {
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        #question-card {
+            background-color: var(--card-bg);
+            transition: background-color 0.3s;
+        }
+        .option-button, #answer-input, #next-button, #restart-button, #mode-toggle {
+            transition: all 0.2s;
+        }
+        .option-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        /* Custom styles for correct/incorrect answers */
+        .correct-answer-bg {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-text) !important;
+        }
+        .wrong-answer-bg {
+            background-color: var(--wrong-bg) !important;
+            border-color: var(--wrong-text) !important;
+        }
+        .correct-answer-text {
+            color: var(--correct-text) !important;
+        }
+        .wrong-answer-text {
+            color: var(--wrong-text) !important;
+        }
+        .option-button.correct-answer-bg, .option-button.wrong-answer-bg {
+            color: var(--text-color);
+            pointer-events: none; /* Disable clicking after selecting */
+        }
+        .dark-mode .option-button.correct-answer-bg {
+            color: #bbf7d0;
+        }
+        .dark-mode .option-button.wrong-answer-bg {
+            color: #fecaca;
+        }
+        .incorrect-summary-card {
+            background-color: var(--wrong-bg);
+            border-color: var(--wrong-text);
+        }
+        .dark-mode .incorrect-summary-card {
+            background-color: #7f1d1d;
+            border-color: #b91c1c;
+        }
+        /* Fix for question and title text colors */
+        h1, #question-text {
+            color: var(--text-color);
         }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100 flex flex-col min-h-screen">
-    <!-- Header -->
-    <header class="bg-white dark:bg-slate-800 shadow-md sticky top-0 z-50">
-        <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
-            <!-- Logo/Site Title -->
-            <div class="flex items-center space-x-2 cursor-pointer" onclick="showPage('home')">
-                <i data-lucide="rocket" class="text-blue-500"></i>
-                <span class="font-bold text-lg text-gray-900 dark:text-gray-100">Kiha's Blog</span>
-            </div>
+<body class="flex items-center justify-center min-h-screen p-4">
 
-            <!-- Desktop Navigation -->
-            <div class="hidden md:flex items-center space-x-6">
-                <div class="relative group">
-                    <button class="flex items-center text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors">
-                        Courses <i data-lucide="chevron-down" class="ml-1 h-4 w-4 transition-transform group-hover:rotate-180"></i>
-                    </button>
-                    <div class="absolute left-0 mt-2 w-48 bg-white dark:bg-slate-700 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform scale-95 group-hover:scale-100">
-                        <div class="py-1">
-                            <!-- Link to the new 1st year page with semester cards -->
-                            <a href="#" onclick="showPage('courses-1st')" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600">1st Year</a>
-                            <a href="#" onclick="showPage('courses-2nd')" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600">2nd Year</a>
-                            <a href="#" onclick="showPage('courses-3rd')" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600">3rd Year</a>
-                            <a href="#" onclick="showPage('courses-4th')" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600">4th Year</a>
-                        </div>
-                    </div>
+    <!-- Dark Mode Toggle Button -->
+    <button id="mode-toggle" class="fixed top-4 right-4 z-50 bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 px-4 py-2 rounded-lg font-medium shadow-md">
+        Toggle Dark Mode
+    </button>
+    
+    <div id="quiz-container" class="rounded-3xl shadow-xl w-full max-w-xl mx-auto p-8 transition-all duration-300 transform scale-100">
+        <!-- Title -->
+        <h1 class="text-3xl font-bold text-center mb-6">Understanding the Self: A Philosophical and Sociological Quiz</h1>
+        
+        <!-- Quiz section -->
+        <div id="quiz-section">
+            <div id="question-card" class="p-6 rounded-2xl mb-6 shadow-inner">
+                <p id="question-count" class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-2"></p>
+                <p id="question-text" class="text-xl font-semibold mb-4"></p>
+                
+                <div id="input-container" class="hidden">
+                    <input type="text" id="answer-input" class="w-full p-3 rounded-lg border-2 border-blue-200 dark:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100" placeholder="Type your answer here...">
                 </div>
-                <a href="#" onclick="showPage('helpful-websites')" class="text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors">Helpful Websites</a>
-                <button onclick="showPage('login')" class="flex items-center bg-blue-500 text-white font-medium py-2 px-4 rounded-full transition-all hover:bg-blue-600 hover:shadow-lg">
-                    <i data-lucide="log-in" class="mr-2 h-4 w-4"></i> Log In
-                </button>
-                <button id="darkModeToggle" class="text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700">
-                    <i id="darkModeIcon" data-lucide="sun" class="h-6 w-6"></i>
-                </button>
+                
+                <div id="options-container" class="flex flex-col space-y-3">
+                    <!-- Options buttons will be injected here -->
+                </div>
             </div>
 
-            <!-- Mobile hamburger menu -->
-            <div class="md:hidden flex items-center space-x-2">
-                <button id="mobileDarkModeToggle" class="text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700">
-                    <i id="mobileDarkModeIcon" data-lucide="sun" class="h-6 w-6"></i>
-                </button>
-                <button id="sidebarToggle" class="text-gray-600 dark:text-gray-300 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
-                    <i data-lucide="menu" class="h-6 w-6"></i>
-                </button>
+            <!-- Feedback section (hidden initially) -->
+            <div id="feedback-section" class="hidden mb-6 p-4 rounded-xl">
+                <h3 id="feedback-status" class="text-xl font-bold mb-2"></h3>
+                <p id="feedback-explanation" class="text-gray-700 dark:text-gray-300 italic border-l-4 border-gray-300 dark:border-gray-500 pl-4"></p>
             </div>
-        </nav>
-    </header>
 
-    <!-- Mobile Sidebar -->
-    <div id="sidebar" class="fixed inset-y-0 right-0 z-50 transform translate-x-full transition-transform duration-300 ease-in-out bg-white dark:bg-slate-800 shadow-xl w-64 md:hidden">
-        <div class="flex justify-between items-center p-4 border-b dark:border-slate-700">
-            <span class="font-bold text-lg text-gray-900 dark:text-gray-100">Navigation</span>
-            <button id="sidebarClose" class="text-gray-600 dark:text-gray-300 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-slate-700">
-                <i data-lucide="x" class="h-6 w-6"></i>
-            </button>
+            <!-- Quiz Controls -->
+            <div class="flex justify-center items-center">
+                <button id="next-button" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-blue-300 disabled:shadow-none">Submit Answer</button>
+            </div>
         </div>
-        <nav class="p-4 flex flex-col space-y-4">
-            <a href="#" onclick="showPage('home')" class="flex items-center text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md p-2 transition-colors cursor-pointer">
-                <i data-lucide="layout-dashboard" class="mr-2"></i> Home
-            </a>
-            <div class="border-b dark:border-slate-700 my-2"></div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium px-2">Courses</p>
-            <!-- Link to the new 1st year page with semester cards -->
-            <a href="#" onclick="showPage('courses-1st')" class="pl-6 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md p-2 transition-colors cursor-pointer">1st Year</a>
-            <a href="#" onclick="showPage('courses-2nd')" class="pl-6 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md p-2 transition-colors cursor-pointer">2nd Year</a>
-            <a href="#" onclick="showPage('courses-3rd')" class="pl-6 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md p-2 transition-colors cursor-pointer">3rd Year</a>
-            <a href="#" onclick="showPage('courses-4th')" class="pl-6 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md p-2 transition-colors cursor-pointer">4th Year</a>
-            <div class="border-b dark:border-slate-700 my-2"></div>
-            <a href="#" onclick="showPage('helpful-websites')" class="flex items-center text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-md p-2 transition-colors cursor-pointer">
-                <i data-lucide="globe" class="mr-2"></i> Helpful Websites
-            </a>
-            <div class="border-b dark:border-slate-700 my-2"></div>
-            <button onclick="showPage('login')" class="flex items-center justify-center w-full bg-blue-500 text-white font-medium py-2 px-4 rounded-full transition-all hover:bg-blue-600">
-                <i data-lucide="log-in" class="mr-2 h-4 w-4"></i> Log In
-            </button>
-        </nav>
+
+        <!-- Result section -->
+        <div id="result-section" class="hidden text-center">
+            <h2 class="text-3xl font-bold text-green-600 dark:text-green-400 mb-4">Quiz Complete!</h2>
+            <p id="final-score" class="text-4xl font-extrabold mb-4"></p>
+            <p id="score-message" class="text-lg text-gray-600 dark:text-gray-300 mb-8"></p>
+            
+            <h3 id="incorrect-title" class="text-2xl font-bold mb-4 hidden">Questions You Got Wrong:</h3>
+            <div id="answers-summary" class="text-left max-h-60 overflow-y-auto pr-2">
+                <!-- Answer summary will be injected here -->
+            </div>
+            
+            <div id="progress-history" class="mt-8 text-left">
+                <h3 class="text-xl font-semibold mb-2">Your Past Scores</h3>
+                <ul id="score-list" class="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400"></ul>
+            </div>
+
+            <button id="restart-button" class="mt-8 bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-300">Restart Quiz</button>
+        </div>
     </div>
 
-    <!-- Main Content Area -->
-    <main class="flex-grow">
-        <!-- Home Page Content -->
-        <div id="home-page" class="page-content container mx-auto px-4 py-8 max-w-7xl">
-            <!-- Quote and Description Section -->
-            <div class="text-center mb-12">
-                <p class="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-800 dark:text-gray-200 font-inter leading-tight mb-4">
-                    "Build boldly, learn constantly, live with purpose."
-                </p>
-                <p class="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-                    Kiha's homepage for school-related stuff. Basically a passion project of sorts. Currently experimenting with AI for me to learn its techniques and incorporate it into my coding style.
-                </p>
-            </div>
-
-            <!-- Image Carousel -->
-            <div class="relative w-full overflow-hidden rounded-xl shadow-lg mb-12 h-[200px] sm:h-[300px] md:h-[400px]">
-                <img id="carouselImage" class="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-100" src="https://pbs.twimg.com/profile_banners/1810967044873146368/1753011841/1500x500" alt="Carousel Slide" onerror="this.onerror=null; this.src='https://placehold.co/1200x600/e2e8f0/0f172a?text=Image+Not+Found';">
-                <div id="carouselDots" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-                    <span class="block w-2 h-2 rounded-full cursor-pointer transition-colors duration-300 bg-white"></span>
-                    <span class="block w-2 h-2 rounded-full cursor-pointer transition-colors duration-300 bg-white/50"></span>
-                    <span class="block w-2 h-2 rounded-full cursor-pointer transition-colors duration-300 bg-white/50"></span>
-                </div>
-            </div>
-
-            <!-- Sections -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-                <!-- Quizzes Section -->
-                <div class="p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg transition-transform hover:scale-[1.02] transform duration-300">
-                    <div class="flex items-center mb-4">
-                        <i data-lucide="lightbulb" class="text-blue-500 mr-3" style="width: 32px; height: 32px;"></i>
-                        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Quizzes</h2>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-400">
-                        Here you can find quizzes that might help you in studying for your exams! Ace them all you want!
-                    </p>
-                </div>
-
-                <!-- Websites Section -->
-                <div class="p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg transition-transform hover:scale-[1.02] transform duration-300">
-                    <div class="flex items-center mb-4">
-                        <i data-lucide="globe" class="text-blue-500 mr-3" style="width: 32px; height: 32px;"></i>
-                        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Websites</h2>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-400">
-                        Powerful websites you should know about.
-                    </p>
-                </div>
-
-                <!-- Prompts Section -->
-                <div class="p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg transition-transform hover:scale-[1.02] transform duration-300">
-                    <div class="flex items-center mb-4">
-                        <i data-lucide="message-square-text" class="text-blue-500 mr-3" style="width: 32px; height: 32px;"></i>
-                        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Prompts</h2>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-400">
-                        Basically how to talk to an AI. It's easier than talking to a girlfriend! Really!
-                    </p>
-                </div>
-
-                <!-- All about Kiha Section -->
-                <div class="p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg transition-transform hover:scale-[1.02] transform duration-300">
-                    <div class="flex items-center mb-4">
-                        <i data-lucide="user" class="text-blue-500 mr-3" style="width: 32px; height: 32px;"></i>
-                        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">All about Kiha</h2>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-400">
-                        I-i-if you wanna know more about me t-t-then I'll be honored... b-baka
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Helpful Websites Page -->
-        <div id="helpful-websites-page" class="page-content hidden container mx-auto px-4 py-8 max-w-7xl">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-200 mb-8">Helpful Websites</h1>
-            <p class="text-gray-600 dark:text-gray-400">This page will contain a list of helpful websites. Coming soon!</p>
-        </div>
-
-        <!-- Login Page -->
-        <div id="login-page" class="page-content hidden container mx-auto px-4 py-8 max-w-7xl">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-200 mb-8">Log In</h1>
-            <p class="text-gray-600 dark:text-gray-400">The login functionality will be implemented with a future backend. Stay tuned!</p>
-        </div>
-
-        <!-- Course Pages -->
-        <!-- UPDATED: Page for 1st Year Semesters (no dropdown) -->
-        <div id="courses-1st-page" class="page-content hidden container mx-auto px-4 py-8 max-w-7xl">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-200 mb-8">1st Year Courses</h1>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-                <!-- 1st Semester Card, now a simple link -->
-                <div onclick="showPage('courses-1st-sem')" class="p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg transition-transform hover:scale-[1.02] transform duration-300 cursor-pointer">
-                    <div class="flex items-center mb-4">
-                        <i data-lucide="calendar-check" class="text-blue-500 mr-3" style="width: 32px; height: 32px;"></i>
-                        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">1st Semester</h2>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-400">
-                        View subjects and reviewers for the first semester.
-                    </p>
-                </div>
-                <!-- 2nd Semester Card, now a simple link -->
-                <div onclick="showPage('courses-2nd-sem')" class="p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg transition-transform hover:scale-[1.02] transform duration-300 cursor-pointer">
-                    <div class="flex items-center mb-4">
-                        <i data-lucide="calendar-check-2" class="text-blue-500 mr-3" style="width: 32px; height: 32px;"></i>
-                        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">2nd Semester</h2>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-400">
-                        View subjects and reviewers for the second semester.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <!-- Page for 1st Semester Subjects (from previous version) -->
-        <div id="courses-1st-sem-page" class="page-content hidden container mx-auto px-4 py-8 max-w-7xl">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-200 mb-8">1st Semester Subjects</h1>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Subject Card: The Contemporary World -->
-                <div class="relative group p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg transition-transform hover:scale-[1.02] transform duration-300 cursor-pointer">
-                    <h3 class="text-xl font-semibold mb-2">The Contemporary World</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Study guides and reviewers.</p>
-                    <!-- Dropdown on hover -->
-                    <div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="bg-gray-100 dark:bg-slate-700 rounded-lg shadow-lg overflow-hidden py-1 w-48">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Prelims Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Midterms Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Pre-finals Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Finals Reviewer</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Subject Card: NSTP -->
-                <div class="relative group p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg transition-transform hover:scale-[1.02] transform duration-300 cursor-pointer">
-                    <h3 class="text-xl font-semibold mb-2">NSTP</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Study guides and reviewers.</p>
-                    <div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="bg-gray-100 dark:bg-slate-700 rounded-lg shadow-lg overflow-hidden py-1 w-48">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Prelims Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Midterms Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Pre-finals Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Finals Reviewer</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Subject Card: Understanding the self -->
-                <div class="relative group p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg transition-transform hover:scale-[1.02] transform duration-300 cursor-pointer">
-                    <h3 class="text-xl font-semibold mb-2">Understanding the self</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Study guides and reviewers.</p>
-                    <div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="bg-gray-100 dark:bg-slate-700 rounded-lg shadow-lg overflow-hidden py-1 w-48">
-                            <a href="C:\Users\Kieboy\Documents\Quiz websites\Kiha-Blog\Kiha-blog\Courses\1st year\1st semester\Understanding the self\Prelims\quiz.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Prelims Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Midterms Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Pre-finals Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Finals Reviewer</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Subject Card: Purposive Communication -->
-                <div class="relative group p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg transition-transform hover:scale-[1.02] transform duration-300 cursor-pointer">
-                    <h3 class="text-xl font-semibold mb-2">Purposive Communication</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Study guides and reviewers.</p>
-                    <div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="bg-gray-100 dark:bg-slate-700 rounded-lg shadow-lg overflow-hidden py-1 w-48">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Prelims Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Midterms Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Pre-finals Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Finals Reviewer</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Subject Card: Computer Programming 1 -->
-                <div class="relative group p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg transition-transform hover:scale-[1.02] transform duration-300 cursor-pointer">
-                    <h3 class="text-xl font-semibold mb-2">Computer Programming 1</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Study guides and reviewers.</p>
-                    <div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="bg-gray-100 dark:bg-slate-700 rounded-lg shadow-lg overflow-hidden py-1 w-48">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Prelims Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Midterms Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Pre-finals Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Finals Reviewer</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Subject Card: Introduction to Computing -->
-                <div class="relative group p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg transition-transform hover:scale-[1.02] transform duration-300 cursor-pointer">
-                    <h3 class="text-xl font-semibold mb-2">Introduction to Computing</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Study guides and reviewers.</p>
-                    <div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="bg-gray-100 dark:bg-slate-700 rounded-lg shadow-lg overflow-hidden py-1 w-48">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Prelims Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Midterms Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Pre-finals Reviewer</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600">Finals Reviewer</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Page for 2nd Semester Subjects (placeholder) -->
-        <div id="courses-2nd-sem-page" class="page-content hidden container mx-auto px-4 py-8 max-w-7xl">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-200 mb-8">2nd Semester Subjects</h1>
-            <p class="text-gray-600 dark:text-gray-400">This page will contain a series of cards with subjects for the 2nd semester. Coming soon!</p>
-        </div>
-        <div id="courses-2nd-page" class="page-content hidden container mx-auto px-4 py-8 max-w-7xl">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-200 mb-8">2nd Year Courses</h1>
-            <p class="text-gray-600 dark:text-gray-400">This page will display courses for the 2nd year. Work in progress!</p>
-        </div>
-        <div id="courses-3rd-page" class="page-content hidden container mx-auto px-4 py-8 max-w-7xl">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-200 mb-8">3rd Year Courses</h1>
-            <p class="text-600 dark:text-gray-400">This page will display courses for the 3rd year. Work in progress!</p>
-        </div>
-        <div id="courses-4th-page" class="page-content hidden container mx-auto px-4 py-8 max-w-7xl">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-200 mb-8">4th Year Courses</h1>
-            <p class="text-gray-600 dark:text-gray-400">This page will display courses for the 4th year. Work in progress!</p>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="w-full bg-blue-600 dark:bg-blue-900 h-16 sm:h-20"></footer>
-
-    <!-- JavaScript for interactivity -->
     <script>
-        // DOM elements
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebarClose = document.getElementById('sidebarClose');
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const mobileDarkModeToggle = document.getElementById('mobileDarkModeToggle');
-        const carouselImage = document.getElementById('carouselImage');
-        const carouselDots = document.getElementById('carouselDots');
-        const allPages = document.querySelectorAll('.page-content');
-        
-        // Image carousel data
-        const images = [
-            'https://pbs.twimg.com/profile_banners/1810967044873146368/1753011841/1500x500',
-            'https://placehold.co/1200x600/3b82f6/ffffff?text=Late+Night+Grind',
-            'https://placehold.co/1200x600/1d4ed8/ffffff?text=Code+is+Life'
-        ];
-        let currentImageIndex = 0;
-
-        // --- Page Navigation Functionality ---
-        function showPage(pageId) {
-            console.log(`Navigating to page: ${pageId}-page`);
-
-            // Hide all pages
-            allPages.forEach(page => {
-                page.classList.add('hidden');
-            });
-            // Show the requested page
-            const targetPage = document.getElementById(`${pageId}-page`);
-            if (targetPage) {
-                targetPage.classList.remove('hidden');
-                console.log(`Successfully displayed page: ${pageId}-page`);
-            } else {
-                console.error(`Page with ID ${pageId}-page not found.`);
-            }
-            // Close the sidebar if it's open (mobile-specific behavior)
-            sidebar.classList.add('translate-x-full');
-        }
-
-        // --- Dark Mode Functionality ---
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-
-            const desktopIcon = document.getElementById('darkModeIcon');
-            const mobileIcon = document.getElementById('mobileDarkModeIcon');
-
-            if (desktopIcon) desktopIcon.setAttribute('data-lucide', isDark ? 'moon' : 'sun');
-            if (mobileIcon) mobileIcon.setAttribute('data-lucide', isDark ? 'moon' : 'sun');
-            
-            lucide.createIcons();
-        }
-
-        // --- Event Listeners and Initial Setup ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize Lucide icons on DOMContentLoaded to ensure elements are ready
-            lucide.createIcons();
-
-            // Check for saved theme preference or system preference on load
-            const savedTheme = localStorage.getItem('theme');
-            const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const isDark = savedTheme === 'dark' || (!savedTheme && isSystemDark);
-            
-            if (isDark) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-
-            // Set initial icon based on theme
-            const desktopIcon = document.getElementById('darkModeIcon');
-            const mobileIcon = document.getElementById('mobileDarkModeIcon');
-            if (desktopIcon) desktopIcon.setAttribute('data-lucide', isDark ? 'moon' : 'sun');
-            if (mobileIcon) mobileIcon.setAttribute('data-lucide', isDark ? 'moon' : 'sun');
-            lucide.createIcons();
-
-            // Initial page load
-            showPage('home');
-        });
-
-        sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.remove('translate-x-full');
-        });
-
-        sidebarClose.addEventListener('click', () => {
-            sidebar.classList.add('translate-x-full');
-        });
-
-        darkModeToggle.addEventListener('click', toggleDarkMode);
-        mobileDarkModeToggle.addEventListener('click', toggleDarkMode);
-        
-        // --- Image Carousel Functionality ---
-        function updateCarousel() {
-            carouselImage.src = images[currentImageIndex];
-            const dots = carouselDots.querySelectorAll('span');
-            dots.forEach((dot, index) => {
-                if (index === currentImageIndex) {
-                    dot.classList.remove('bg-white/50');
-                    dot.classList.add('bg-white');
-                } else {
-                    dot.classList.remove('bg-white');
-                    dot.classList.add('bg-white/50');
+        // Data containing all quiz questions, answers, and explanations.
+        // This is a comprehensive set based on the provided module sources.
+        const quizData = {
+            mcq: [
+                {
+                    question: "Who emphasized the importance of self-knowledge and is known for the maxim, 'Know thyself'?",
+                    options: ["Plato", "Aristotle", "Socrates", "Augustine"],
+                    answer: "Socrates",
+                    explanation: "Socrates was an ancient Greek philosopher who emphasized the importance of self-knowledge. He mentioned the philosophical maxim, 'Know thyself.' He believed that true wisdom comes from introspection and self-examination."
+                },
+                {
+                    question: "According to Plato, the self is composed of three parts. Which part is responsible for our physical desires?",
+                    options: ["Reason", "Spirit", "Appetite", "Consciousness"],
+                    answer: "Appetite",
+                    explanation: "Plato argued that the self is immortal and independent of the body, with three parts of the soul: reason, spirit, and appetite. The appetite is the part responsible for physical desires."
+                },
+                {
+                    question: "Who believed the self is a 'unified creature' where the body and soul are inseparable?",
+                    options: ["René Descartes", "John Locke", "Aristotle", "David Hume"],
+                    answer: "Aristotle",
+                    explanation: "Aristotle believed that the body and soul are inseparable from one another. For him, the self is a unified creature."
+                },
+                {
+                    question: "The famous phrase 'I think, therefore I am' is attributed to which philosopher?",
+                    options: ["Socrates", "Plato", "René Descartes", "Immanuel Kant"],
+                    answer: "René Descartes",
+                    explanation: "René Descartes is a French philosopher, scientist, and mathematician known for the philosophical statement 'I think, therefore I am.'"
+                },
+                {
+                    question: "Which philosopher proposed the 'Tabula rasa' or 'blank slate' theory?",
+                    options: ["John Locke", "David Hume", "Immanuel Kant", "Paul Churchland"],
+                    answer: "John Locke",
+                    explanation: "John Locke was an English philosopher and physician. He proposed the 'Tabula rasa' theory, emphasizing that the self is shaped by memories and experience."
+                },
+                {
+                    question: "David Hume proposed the 'Bundle Theory,' which suggests that the self is:",
+                    options: ["A unified entity", "An illusion", "A product of God", "A social construct"],
+                    answer: "An illusion",
+                    explanation: "He proposed the Bundle Theory: the self is a bundle of perceptions, thoughts, and sensations."
+                },
+                {
+                    question: "Who is known for the phrase 'ghost in the machine,' which criticizes the idea of a separate mind and body?",
+                    options: ["Gilbert Ryle", "Sigmund Freud", "Merleau-Ponty", "Charles Horton Cooley"],
+                    answer: "Gilbert Ryle",
+                    explanation: "Gilbert Ryle was a British philosopher who coined the phrase 'ghost in the machine.' The self is shown through actions and behaviors."
+                },
+                {
+                    question: "According to Immanuel Kant, what does the 'Outer Self' represent?",
+                    options: ["Emotions and intellect", "Our physical and senses", "Our social interactions", "The unconscious mind"],
+                    answer: "Our physical and senses",
+                    explanation: "The Outer Self is our physical and senses."
+                },
+                {
+                    question: "Sigmund Freud's concept of the self focused on the 'ego' as a mediator between which two parts?",
+                    options: ["Inner and Outer self", "The conscious and unconscious", "The superego and the id", "The mind and the body"],
+                    answer: "The superego and the id",
+                    explanation: "His concept of self focused on the ego. The ego served as a mediator between the superego and the id."
+                },
+                {
+                    question: "Which philosopher believed the self is a product of brain activity and studied neurophilosophy?",
+                    options: ["John Locke", "Maurice Merleau-Ponty", "Paul Churchland", "Gilbert Ryle"],
+                    answer: "Paul Churchland",
+                    explanation: "Paul Churchland was a Canadian philosopher. The self is a product of brain activity. He studied neurophilosophy or the philosophy of the mind."
+                },
+                {
+                    question: "Maurice Merleau-Ponty rejected dualism and believed the self is shaped by:",
+                    options: ["Our memories", "Our genes", "Our physical body and senses", "Our social class"],
+                    answer: "Our physical body and senses",
+                    explanation: "Merleau-Ponty's theory states that the self is shaped by our physical body and how we experience the world through our senses."
+                },
+                {
+                    question: "Charles Horton Cooley's 'Looking-Glass Self' theory describes how our self-image is shaped by:",
+                    options: ["Our subconscious mind", "How we think others see us", "Our genetic code", "Our dreams and aspirations"],
+                    answer: "How we think others see us",
+                    explanation: "It describes how our self-image is shaped by how we think others see us. It's like seeing ourselves reflected in a mirror, but the mirror is the opinions and reactions of others."
+                },
+                {
+                    question: "According to Cooley's 'Looking-Glass Self,' what is the second stage, where we consider the reactions and judgments of others?",
+                    options: ["Imagination", "Interpretation", "Self-feeling", "Imitation"],
+                    answer: "Interpretation",
+                    explanation: "Interpretation: We imagine how others judge us. We consider the reactions and judgments of others towards our behaviors."
+                },
+                {
+                    question: "George Herbert Mead's Social Self Theory states that personal identity is influenced by:",
+                    options: ["Solitary introspection", "Social interaction and cultural norms", "Physical maturation", "Genetic factors"],
+                    answer: "Social interaction and cultural norms",
+                    explanation: "It states that personal identity is influenced by social interaction and cultural norms."
+                },
+                {
+                    question: "In Mead's theory, the 'I' self is the spontaneous aspect, while the 'Me' self is the:",
+                    options: ["Conscious self", "Socialized self", "Physical self", "Unconscious self"],
+                    answer: "Socialized self",
+                    explanation: "The 'Me' self is the socialized aspect of the self. It is the self that acts based on how others expect one to behave."
+                },
+                {
+                    question: "According to Mead, at which stage do children copy others' actions but don't understand their meaning?",
+                    options: ["Play Stage", "Game Stage", "Preparatory Stage", "Self-feeling Stage"],
+                    answer: "Preparatory Stage",
+                    explanation: "Preparatory Stage (Imitation). Children copy others but don't understand their actions, words, or tone of voice."
+                },
+                {
+                    question: "Which philosopher viewed the self as a spiritual entity deeply connected to God?",
+                    options: ["Aristotle", "Socrates", "Saint Augustine", "Descartes"],
+                    answer: "Saint Augustine",
+                    explanation: "Augustine, a theologian and philosopher, believed the self is deeply intertwined with God."
+                },
+                {
+                    question: "What is the collective concept of societal norms and expectations that individuals internalize, according to Mead?",
+                    options: ["Significant Others", "The 'Me' self", "The 'I' self", "Generalized Others"],
+                    answer: "Generalized Others",
+                    explanation: "The Generalized Others represents society's collective norms and expectations individuals internalize."
+                },
+                {
+                    question: "In the 'Looking-Glass Self,' which stage involves forming our self-concept based on perceived judgments?",
+                    options: ["Imagination", "Interpretation", "Self-feeling", "Role-taking"],
+                    answer: "Self-feeling",
+                    explanation: "Self-feeling: We develop our self-concept. Based on these perceptions, we form an understanding of ourselves."
+                },
+                {
+                    question: "A child pretending to be a doctor is in which of Mead's stages of self-development?",
+                    options: ["Preparatory Stage", "Play Stage", "Game Stage", "Imitation Stage"],
+                    answer: "Play Stage",
+                    explanation: "Example: A child playing house, acting as the mother and caring for her toy children, or a child pretending to teach other kids or toys."
+                },
+                {
+                    question: "Who proposed that the self is an immortal and independent soul, separate from the body?",
+                    options: ["Aristotle", "Plato", "Socrates", "Descartes"],
+                    answer: "Plato",
+                    explanation: "Plato was an ancient Greek philosopher who argued that the self is immortal and independent of the body."
+                },
+                {
+                    question: "The concept of 'Tabula rasa' means:",
+                    options: ["A thinking being", "A clean slate", "The human spirit", "A unified creature"],
+                    answer: "A clean slate",
+                    explanation: "Tabula rasa means 'blank slate' and is a key concept by John Locke."
+                },
+                {
+                    question: "Which philosopher, known for neurophilosophy, suggested that the self is a product of brain activity?",
+                    options: ["Gilbert Ryle", "John Locke", "Paul Churchland", "Merleau-Ponty"],
+                    answer: "Paul Churchland",
+                    explanation: "Paul Churchland, a Canadian philosopher, believed the self is a product of brain activity."
+                },
+                {
+                    question: "According to Freud, the 'id' is primarily focused on:",
+                    options: ["Rational thought", "Moral judgment", "Unconscious drives and desires", "Social conformity"],
+                    answer: "Unconscious drives and desires",
+                    explanation: "The ego served as a mediator between the superego and the id, with the id representing primal, unconscious desires."
+                },
+                {
+                    question: "What is the key difference between Mead's 'I' self and 'Me' self?",
+                    options: ["'I' is socialized, 'Me' is spontaneous", "'I' is subconscious, 'Me' is conscious", "'I' is spontaneous, 'Me' is socialized", "'I' is body, 'Me' is mind"],
+                    answer: "'I' is spontaneous, 'Me' is socialized",
+                    explanation: "The 'I' self is the spontaneous aspect of the self, while the 'Me' self is the socialized aspect of the self."
+                },
+                {
+                    question: "In the 'Looking-Glass Self' theory, what is the first stage?",
+                    options: ["Interpretation", "Self-feeling", "Imagination", "Role-taking"],
+                    answer: "Imagination",
+                    explanation: "Imagination: We imagine how we appear to others."
+                },
+                {
+                    question: "Who argued that the self is inseparable from our bodily experiences and interactions with the world?",
+                    options: ["Gilbert Ryle", "Maurice Merleau-Ponty", "Immanuel Kant", "Paul Churchland"],
+                    answer: "Maurice Merleau-Ponty",
+                    explanation: "For Merleau-Ponty, the self is shaped by our physical body and how we experience the world through our senses."
+                },
+                {
+                    question: "What did John Locke propose as the basis for the self?",
+                    options: ["The soul", "The brain", "Consciousness and memory", "Divine grace"],
+                    answer: "Consciousness and memory",
+                    explanation: "Locke's theory states that the self is shaped by memories and experience."
+                },
+                {
+                    question: "Which of the following is NOT a stage in Mead's Stages of Self-Development?",
+                    options: ["Preparatory Stage", "Play Stage", "Game Stage", "Self-feeling Stage"],
+                    answer: "Self-feeling Stage",
+                    explanation: "Mead's stages are the Preparatory Stage, Play Stage, and Game Stage. Self-feeling is a stage in Cooley's theory."
+                },
+                {
+                    question: "Which philosopher argued that the self is just an illusion based on the 'Bundle Theory'?",
+                    options: ["John Locke", "David Hume", "Immanuel Kant", "Gilbert Ryle"],
+                    answer: "David Hume",
+                    explanation: "David Hume proposed the Bundle Theory: the self is a bundle of perceptions, thoughts, and sensations."
+                },
+                {
+                    question: "What is the primary function of the 'ego' in Freud's theory?",
+                    options: ["To fulfill basic desires", "To mediate between the id and the superego", "To maintain social norms", "To control the mind-body connection"],
+                    answer: "To mediate between the id and the superego",
+                    explanation: "The ego served as a mediator between the id and the superego."
+                },
+                {
+                    question: "The concept of 'Generalized Others' in Mead's theory refers to:",
+                    options: ["A person's parents", "A person's close friends", "Society's collective norms and expectations", "The individual's conscience"],
+                    answer: "Society's collective norms and expectations",
+                    explanation: "The Generalized Others represents society's collective norms and expectations individuals internalize."
+                },
+                {
+                    question: "Which philosopher is known for his dualistic view of the mind and the body?",
+                    options: ["Aristotle", "Plato", "René Descartes", "Socrates"],
+                    answer: "René Descartes",
+                    explanation: "Descartes proposed dualism: the mind and the body."
+                },
+                {
+                    question: "What did Charles Horton Cooley name his theory on how our self-image is formed?",
+                    options: ["Social Self Theory", "Looking-Glass Self", "Tabula Rasa", "Bundle Theory"],
+                    answer: "Looking-Glass Self",
+                    explanation: "Charles Horton Cooley was an American sociologist known for his theory, 'Looking-Glass Self,' which describes how our self-image is shaped by how we think others see us."
+                },
+                {
+                    question: "In Plato's Tripartite Theory, the part of the soul that seeks honor and victory is the:",
+                    options: ["Reason", "Spirit", "Appetite", "Soul"],
+                    answer: "Spirit",
+                    explanation: "The Spirit is the part of the soul that seeks honor and victory."
+                },
+                {
+                    question: "What is the final stage of Cooley's 'Looking-Glass Self' where we develop our self-concept?",
+                    options: ["Imagination", "Interpretation", "Self-feeling", "Role-taking"],
+                    answer: "Self-feeling",
+                    explanation: "Self-feeling: We develop our self-concept. Our self-concept is shaped by the feedback and responses we get from others."
+                },
+                {
+                    question: "Who believed that through God's grace, we find self-fulfillment?",
+                    options: ["Socrates", "Plato", "Saint Augustine", "Hume"],
+                    answer: "Saint Augustine",
+                    explanation: "Through God's grace, we find self-fulfillment."
+                },
+                {
+                    question: "According to Immanuel Kant, what does the 'Inner Self' include?",
+                    options: ["Our emotions and rational intellect", "Our physical body and senses", "Our social status", "Our memories"],
+                    answer: "Our emotions and rational intellect",
+                    explanation: "The Inner Self includes our emotions and rational intellect."
+                },
+                {
+                    question: "George Herbert Mead's theory on identity is called:",
+                    options: ["Looking-Glass Self", "Social Self Theory", "Bundle Theory", "Tripartite Theory"],
+                    answer: "Social Self Theory",
+                    explanation: "George Herbert Mead was an American philosopher and sociologist known for Social Self Theory."
+                },
+                {
+                    question: "Which of Mead's stages involves a child pretending to be a teacher to a toy?",
+                    options: ["Preparatory Stage", "Play Stage", "Game Stage", "Imitation Stage"],
+                    answer: "Play Stage",
+                    explanation: "Example: A child playing house, acting as the mother and caring for her toy children, or a child pretending to teach other kids or toys."
                 }
-            });
+            ],
+            id: [
+                {
+                    question: "This philosopher coined the phrase 'ghost in the machine.'",
+                    answer: ["Gilbert Ryle", "Ryle"],
+                    explanation: "He coined the phrase 'ghost in the machine.'",
+                },
+                {
+                    question: "This philosopher proposed the 'Bundle Theory' of the self.",
+                    answer: ["David Hume", "Hume"],
+                    explanation: "He proposed the Bundle Theory: the self is a bundle of perceptions, thoughts, and sensations."
+                },
+                {
+                    question: "This philosopher is known for the maxim 'Know thyself.'",
+                    answer: ["Socrates"],
+                    explanation: "He mentioned the philosophical maxim, 'Know thyself.'"
+                },
+                {
+                    question: "This philosopher viewed the self as a 'unified creature' where body and soul are inseparable.",
+                    answer: ["Aristotle"],
+                    explanation: "He believed the self is a unified creature where the body and soul are inseparable from one another."
+                },
+                {
+                    question: "This philosopher proposed the dualistic view of the self, separating the mind and the body.",
+                    answer: ["René Descartes", "Descartes"],
+                    explanation: "He proposed dualism: the mind and the body."
+                },
+                {
+                    question: "This philosopher believed that the self is an immortal soul, independent of the body.",
+                    answer: ["Plato"],
+                    explanation: "He argued that the self is immortal and independent of the body."
+                },
+                {
+                    question: "This philosopher viewed the self as a 'tabula rasa' or a blank slate.",
+                    answer: ["John Locke", "Locke"],
+                    explanation: "Tabula rasa. The self is shaped by memories and experience."
+                },
+                {
+                    question: "This philosopher viewed the self as a product of brain activity.",
+                    answer: ["Paul Churchland", "Churchland"],
+                    explanation: "The self is a product of brain activity. He studied neurophilosophy or the philosophy of the mind."
+                },
+                {
+                    question: "This philosopher argued that the self is shaped by our physical body and senses.",
+                    answer: ["Maurice Merleau-Ponty", "Merleau-Ponty"],
+                    explanation: "The self is shaped by our physical body and how we experience the world through our senses."
+                },
+                {
+                    question: "This sociologist is known for his 'Looking-Glass Self' theory.",
+                    answer: ["Charles Horton Cooley", "Cooley"],
+                    explanation: "Charles Horton Cooley was an American sociologist known for his theory, 'Looking-Glass Self.'"
+                },
+                {
+                    question: "This sociologist developed the Social Self Theory, which includes the 'I' and the 'Me.'",
+                    answer: ["George Herbert Mead", "Mead"],
+                    explanation: "George Herbert Mead was an American philosopher and sociologist known for Social Self Theory."
+                },
+                {
+                    question: "This part of the self is the spontaneous aspect, according to George Herbert Mead.",
+                    answer: ["The I self", "The I", "I"],
+                    explanation: "The 'I' self is the spontaneous aspect of the self."
+                },
+                {
+                    question: "This is the collective concept of society's norms and expectations that individuals internalize, according to George Herbert Mead.",
+                    answer: ["Generalized Others", "Generalized Other"],
+                    explanation: "The Generalized Others represents society's collective norms and expectations individuals internalize."
+                },
+                {
+                    question: "In Cooley's theory, this is the stage where we imagine how we appear to others.",
+                    answer: ["Imagination"],
+                    explanation: "Imagination: We imagine how we appear to others."
+                },
+                {
+                    question: "In Freud's theory, this is the part of the psyche that acts as a mediator between the id and the superego.",
+                    answer: ["Ego"],
+                    explanation: "The ego served as a mediator between the id and the superego."
+                }
+            ]
+        };
+
+        // --- QUIZ LOGIC ---
+        const quizSection = document.getElementById('quiz-section');
+        const resultSection = document.getElementById('result-section');
+        const questionText = document.getElementById('question-text');
+        const inputContainer = document.getElementById('input-container');
+        const answerInput = document.getElementById('answer-input');
+        const optionsContainer = document.getElementById('options-container');
+        const nextButton = document.getElementById('next-button');
+        const questionCount = document.getElementById('question-count');
+        const finalScore = document.getElementById('final-score');
+        const scoreMessage = document.getElementById('score-message');
+        const answersSummary = document.getElementById('answers-summary');
+        const restartButton = document.getElementById('restart-button');
+        const feedbackSection = document.getElementById('feedback-section');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackExplanation = document.getElementById('feedback-explanation');
+        const incorrectTitle = document.getElementById('incorrect-title');
+        const modeToggle = document.getElementById('mode-toggle');
+        const scoreListEl = document.getElementById('score-list');
+
+        let allQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let wrongAnswers = [];
+        let hasAnswered = false;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
         }
 
-        carouselDots.addEventListener('click', (e) => {
-            const dots = Array.from(carouselDots.querySelectorAll('span'));
-            const clickedDotIndex = dots.indexOf(e.target);
-            if (clickedDotIndex !== -1) {
-                currentImageIndex = clickedDotIndex;
-                updateCarousel();
-            }
-        });
+        // Initialize the quiz by shuffling questions and loading the first one.
+        function initializeQuiz() {
+            allQuestions = shuffle([...quizData.mcq]).slice(0, 40).concat(shuffle([...quizData.id]));
+            currentQuestionIndex = 0;
+            score = 0;
+            wrongAnswers = [];
+            loadQuestion();
+            loadScores();
+        }
 
-        // Auto-play the carousel
-        setInterval(() => {
-            currentImageIndex = (currentImageIndex + 1) % images.length;
-            updateCarousel();
-        }, 5000);
+        function loadScores() {
+            try {
+                const scores = JSON.parse(document.cookie.replace(/(?:(?:^|.*;\s*)quizScores\s*=\s*([^;]*).*$)|^.*$/, "$1") || "[]");
+                scoreListEl.innerHTML = '';
+                if (scores.length > 0) {
+                    scores.forEach(s => {
+                        const li = document.createElement('li');
+                        li.textContent = `Score: ${s.score} on ${new Date(s.date).toLocaleDateString()}`;
+                        scoreListEl.appendChild(li);
+                    });
+                } else {
+                    scoreListEl.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic text-sm">No previous scores found.</p>';
+                }
+            } catch (e) {
+                console.error("Failed to parse cookie:", e);
+                scoreListEl.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic text-sm">No previous scores found.</p>';
+            }
+        }
+
+        function saveScore() {
+            const scores = JSON.parse(document.cookie.replace(/(?:(?:^|.*;\s*)quizScores\s*=\s*([^;]*).*$)|^.*$/, "$1") || "[]");
+            const newScore = { date: new Date().toISOString(), score: `${score}/${allQuestions.length}` };
+            scores.push(newScore);
+            document.cookie = `quizScores=${JSON.stringify(scores)};path=/;max-age=31536000`;
+        }
+
+        function loadQuestion() {
+            hasAnswered = false;
+            optionsContainer.innerHTML = '';
+            inputContainer.classList.add('hidden');
+            answerInput.value = '';
+            feedbackSection.classList.add('hidden');
+            nextButton.textContent = 'Submit Answer';
+            nextButton.disabled = false;
+
+            if (currentQuestionIndex >= allQuestions.length) {
+                showResults();
+                return;
+            }
+
+            const currentQuestion = allQuestions[currentQuestionIndex];
+            questionText.textContent = currentQuestion.question;
+            questionCount.textContent = `Question ${currentQuestionIndex + 1} of ${allQuestions.length}`;
+
+            if (currentQuestion.options) {
+                optionsContainer.classList.remove('hidden');
+                shuffle(currentQuestion.options).forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.classList.add('option-button', 'text-left', 'bg-blue-100', 'hover:bg-blue-200', 'dark:bg-blue-800', 'dark:hover:bg-blue-700', 'text-blue-800', 'dark:text-blue-200', 'font-semibold', 'py-3', 'px-4', 'rounded-xl', 'transition-colors', 'duration-200', 'shadow-sm', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-400', 'dark:focus:ring-blue-500');
+                    button.onclick = () => handleAnswer(button, option);
+                    optionsContainer.appendChild(button);
+                });
+            } else {
+                optionsContainer.classList.add('hidden');
+                inputContainer.classList.remove('hidden');
+            }
+        }
+
+        function handleAnswer(button, userChoice) {
+            if (hasAnswered) return;
+            hasAnswered = true;
+
+            const currentQuestion = allQuestions[currentQuestionIndex];
+            let isCorrect = false;
+            let userAnswerText;
+
+            if (currentQuestion.options) {
+                userAnswerText = userChoice;
+                isCorrect = userChoice === currentQuestion.answer;
+                const allOptionButtons = document.querySelectorAll('.option-button');
+                allOptionButtons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.remove('bg-blue-100', 'hover:bg-blue-200', 'dark:bg-blue-800', 'dark:hover:bg-blue-700');
+                    if (btn.textContent === currentQuestion.answer) {
+                        btn.classList.add('correct-answer-bg', 'text-blue-800', 'dark:text-blue-200');
+                    }
+                    if (btn.textContent === userAnswerText && !isCorrect) {
+                        btn.classList.add('wrong-answer-bg', 'text-blue-800', 'dark:text-blue-200');
+                    }
+                });
+            } else { // Identification question
+                userAnswerText = answerInput.value.trim();
+                isCorrect = currentQuestion.answer.some(ans => userAnswerText.toLowerCase() === ans.toLowerCase());
+            }
+
+            if (isCorrect) {
+                score++;
+                feedbackStatus.textContent = "Correct! ✅";
+                feedbackStatus.classList.remove('wrong-answer-text');
+                feedbackStatus.classList.add('correct-answer-text');
+            } else {
+                wrongAnswers.push({
+                    question: currentQuestion.question,
+                    userAnswer: userAnswerText,
+                    correctAnswer: currentQuestion.options ? currentQuestion.answer : currentQuestion.answer[0]
+                });
+                feedbackStatus.textContent = "Incorrect. ❌";
+                feedbackStatus.classList.remove('correct-answer-text');
+                feedbackStatus.classList.add('wrong-answer-text');
+            }
+            
+            feedbackExplanation.textContent = currentQuestion.explanation;
+            feedbackSection.classList.remove('hidden');
+            nextButton.textContent = 'Next Question';
+        }
         
+        function handleNext() {
+            if (!hasAnswered) {
+                // If it's an identification question, handle the answer submission
+                const currentQuestion = allQuestions[currentQuestionIndex];
+                if (!currentQuestion.options) {
+                    handleAnswer(null, null);
+                }
+                return;
+            }
+
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function showResults() {
+            saveScore();
+            quizSection.classList.add('hidden');
+            resultSection.classList.remove('hidden');
+
+            const totalQuestions = allQuestions.length;
+            finalScore.textContent = `You scored ${score} out of ${totalQuestions}!`;
+
+            const percentage = (score / totalQuestions) * 100;
+            if (percentage > 80) {
+                scoreMessage.textContent = 'Excellent job! You have a great understanding of the topic.';
+            } else if (percentage > 50) {
+                scoreMessage.textContent = 'Good effort! You know a lot, but there\'s room for improvement.';
+            } else {
+                scoreMessage.textContent = 'Keep studying! Review the material to improve your score.';
+            }
+            
+            answersSummary.innerHTML = '';
+            if (wrongAnswers.length > 0) {
+                incorrectTitle.classList.remove('hidden');
+                wrongAnswers.forEach(answer => {
+                    const summaryItem = document.createElement('div');
+                    summaryItem.classList.add('p-4', 'rounded-lg', 'mb-4', 'shadow-sm', 'border', 'incorrect-summary-card');
+                    
+                    summaryItem.innerHTML = `
+                        <p class="font-bold mb-2">${answer.question}</p>
+                        <p class="text-sm">Your Answer: <span class="wrong-answer-text font-semibold">${answer.userAnswer}</span></p>
+                        <p class="text-sm">Correct Answer: <span class="correct-answer-text font-semibold">${answer.correctAnswer}</span></p>
+                    `;
+                    answersSummary.appendChild(summaryItem);
+                });
+            } else {
+                incorrectTitle.classList.add('hidden');
+                answersSummary.innerHTML = '<p class="text-lg text-gray-500 dark:text-gray-400">You got all the questions right! Great job!</p>';
+            }
+            loadScores();
+        }
+
+        function restartQuiz() {
+            resultSection.classList.add('hidden');
+            quizSection.classList.remove('hidden');
+            initializeQuiz();
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        nextButton.addEventListener('click', handleNext);
+        restartButton.addEventListener('click', restartQuiz);
+        modeToggle.addEventListener('click', toggleDarkMode);
+
+        // Start the quiz automatically on page load
+        document.addEventListener('DOMContentLoaded', initializeQuiz);
     </script>
 </body>
 </html>
