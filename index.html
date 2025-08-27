@@ -3,701 +3,940 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Understanding the self - Prelims</title>
-    <!-- Use a modern, easy-to-read font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS for mobile-first, responsive design -->
+    <title>Introduction to computing - Prelims - Prelims</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg-color: #f3f4f6; /* Light gray */
-            --container-bg: #ffffff; /* White */
-            --text-color: #1f2937; /* Dark gray */
-            --card-bg: #eff6ff; /* Light blue */
-            --accent-color: #3b82f6; /* Blue */
-            --correct-bg: #dcfce7; /* Light green */
-            --correct-text: #166534; /* Dark green */
-            --wrong-bg: #fee2e2; /* Light red */
-            --wrong-text: #991b1b; /* Dark red */
-            --border-color: #d1d5db; /* Gray border */
-        }
-        body.dark-mode {
-            --bg-color: #121212;
-            --container-bg: #1f2937;
-            --text-color: #e5e7eb;
-            --card-bg: #374151;
-            --accent-color: #60a5fa;
-            --correct-bg: #14532d;
-            --correct-text: #bbf7d0;
-            --wrong-bg: #7f1d1d;
-            --wrong-text: #fecaca;
-            --border-color: #4b5563;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
+            color: #1a202c; /* Default text color */
         }
-        #quiz-container {
-            background-color: var(--container-bg);
-            border: 1px solid var(--border-color);
-            transition: background-color 0.3s, border-color 0.3s;
+        .dark-mode {
+            background-color: #1a202c;
+            color: #e2e8f0; /* Dark mode text color */
         }
-        #question-card {
-            background-color: var(--card-bg);
-            transition: background-color 0.3s;
+        .dark-mode .bg-white {
+            background-color: #2d3748;
         }
-        .option-button, #answer-input, #next-button, #restart-button, #mode-toggle {
-            transition: all 0.2s;
+        .dark-mode .bg-gray-100 {
+            background-color: #4a5568;
         }
-        .option-button:disabled {
-            cursor: not-allowed;
-            opacity: 0.7;
+        .dark-mode .text-gray-900 {
+            color: #e2e8f0;
         }
-        /* Custom styles for correct/incorrect answers */
-        .correct-answer-bg {
-            background-color: var(--correct-bg) !important;
-            border-color: var(--correct-text) !important;
+        .dark-mode .text-gray-700 {
+            color: #cbd5e0;
         }
-        .wrong-answer-bg {
-            background-color: var(--wrong-bg) !important;
-            border-color: var(--wrong-text) !important;
+        .dark-mode .text-gray-800 {
+            color: #e2e8f0; /* Specifically fix this */
         }
-        .correct-answer-text {
-            color: var(--correct-text) !important;
+        .dark-mode .hover\:bg-gray-200:hover {
+            background-color: #616a7c;
         }
-        .wrong-answer-text {
-            color: var(--wrong-text) !important;
+        .dark-mode .border-gray-300 {
+            border-color: #4a5568;
         }
-        .option-button.correct-answer-bg, .option-button.wrong-answer-bg {
-            color: var(--text-color);
-            pointer-events: none; /* Disable clicking after selecting */
+        .dark-mode .placeholder-gray-500::placeholder {
+            color: #a0aec0;
         }
-        .dark-mode .option-button.correct-answer-bg {
-            color: #bbf7d0;
+        .dark-mode .text-purple-600 {
+            color: #9f7aea;
         }
-        .dark-mode .option-button.wrong-answer-bg {
-            color: #fecaca;
+        .dark-mode .border-purple-600 {
+            border-color: #9f7aea;
         }
-        .incorrect-summary-card {
-            background-color: var(--wrong-bg);
-            border-color: var(--wrong-text);
+        .dark-mode .bg-purple-600 {
+            background-color: #9f7aea;
         }
-        .dark-mode .incorrect-summary-card {
-            background-color: #7f1d1d;
-            border-color: #b91c1c;
+        .dark-mode .hover\:bg-purple-700:hover {
+            background-color: #b794f4;
         }
-        /* Fix for question and title text colors */
-        h1, #question-text {
-            color: var(--text-color);
+        /* Dark mode specific for quiz options */
+        .dark-mode .quiz-option {
+            background-color: #4a5568;
+            color: #e2e8f0;
+        }
+        .dark-mode .quiz-option:hover {
+            background-color: #616a7c;
+        }
+        /* New rules to ensure all text colors are handled */
+        .dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode p {
+            color: inherit;
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
-
-    <!-- Dark Mode Toggle Button -->
-    <button id="mode-toggle" class="fixed top-4 right-4 z-50 bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 px-4 py-2 rounded-lg font-medium shadow-md">
-        Toggle Dark Mode
-    </button>
-    
-    <div id="quiz-container" class="rounded-3xl shadow-xl w-full max-w-xl mx-auto p-8 transition-all duration-300 transform scale-100">
-        <!-- Title -->
-        <h1 class="text-3xl font-bold text-center mb-6">Understanding the Self: A Philosophical and Sociological Quiz</h1>
-        
-        <!-- Quiz section -->
-        <div id="quiz-section">
-            <div id="question-card" class="p-6 rounded-2xl mb-6 shadow-inner">
-                <p id="question-count" class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-2"></p>
-                <p id="question-text" class="text-xl font-semibold mb-4"></p>
-                
-                <div id="input-container" class="hidden">
-                    <input type="text" id="answer-input" class="w-full p-3 rounded-lg border-2 border-blue-200 dark:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100" placeholder="Type your answer here...">
+<body class="bg-gray-50 transition-colors duration-300">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-white shadow-md sticky top-0 z-50 transition-colors duration-300">
+            <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <div class="text-2xl font-bold">
+                    Introduction to Computing - Prelims
                 </div>
-                
-                <div id="options-container" class="flex flex-col space-y-3">
-                    <!-- Options buttons will be injected here -->
+                <div class="flex items-center space-x-4">
+                    <button id="document-btn" class="px-4 py-2 rounded-md font-medium text-purple-600 bg-purple-100 transition-colors duration-200">
+                        Briefing Document
+                    </button>
+                    <button id="quiz-btn" class="px-4 py-2 rounded-md font-medium text-gray-700 hover:text-purple-600 transition-colors duration-200">
+                        Quiz
+                    </button>
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 transition-colors duration-200">
+                        <svg id="sun-icon" class="h-6 w-6 text-yellow-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                            <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 7.5a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H8.25a.75.75 0 01-.75-.75zM12 18a6 6 0 100-12 6 6 0 000 12zM2.25 12a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H3a.75.75 0 01-.75-.75zM15 15a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM12 21a.75.75 0 01-.75-.75v-2.25a.75.75 0 011.5 0V20.25a.75.75 0 01-.75.75zM16.5 7.5a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5h-2.25a.75.75 0 01-.75-.75zM7.5 16.5a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H8.25a.75.75 0 01-.75-.75z"/>
+                        </svg>
+                        <svg id="moon-icon" class="h-6 w-6 text-gray-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 21a9 9 0 01-9-9c0-3.328 1.637-6.275 4.15-8.125a.75.75 0 011.04-.15c.162.115.228.324.168.514-.524 1.76-.78 3.593-.78 5.461 0 5.488 4.512 10 10 10 1.868 0 3.633-.257 5.394-.78a.75.75 0 01.514.168c.115.162.15.378-.025.541A9 9 0 0112 21z"/>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto px-6 py-8">
+            <!-- Briefing Document Section -->
+            <section id="document-section" class="space-y-8 max-w-4xl mx-auto">
+                <article class="bg-white p-8 rounded-xl shadow-md space-y-6">
+                    <h1 class="text-3xl font-bold">The Evolution and Modern Landscape of Computing</h1>
+                    <p>This briefing document provides an overview of the history of computing, from its foundational roots in early civilizations to the cutting-edge technologies shaping the modern digital world. It highlights key individuals, innovations, and the profound impact of computing across various industries.</p>
+
+                    <h2 class="text-2xl font-semibold">I. The History of Computing: Foundations and Key Figures</h2>
+                    <p>The concept of computing, defined as "any activity that utilizes computers to manage, process, and communicate critical information," has a rich history spanning millennia. Early civilizations laid the groundwork for numerical systems and calculation, which evolved into sophisticated mechanical devices and theoretical frameworks before the advent of electronic computers.</p>
+
+                    <h3 class="text-xl font-semibold">A. Early Civilizations and Foundational Concepts:</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium text-lg">Babylonians (c. 2000-500 BC)</h4>
+                            <p>This civilization thrived in Mesopotamia (Iraq). They utilized "clay cuneiform tables with mathematical texts" for "basic arithmetic operations, cubes, and square roots." Their numerical system was unique, using only two symbols (1 and 10) combined to form all other numbers. They also employed "counting boards," similar to an abacus, for calculations.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">Egyptians</h4>
+                            <p>They solved practical problems like "measuring time, measuring floods, calculating the land area, bookkeeping, and calculating taxes." They used a base-10 number system with distinct symbols for various magnitudes. The "Rhind Papyrus" served as an instructional text for arithmetic and geometric problems, aiding students in the Pharaoh’s building program.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">Greeks (c. 500-600 BC)</h4>
+                            <p>They contributed significantly to geometry through figures like Pythagoras and Thales. The Pythagoreans believed "that number was the essence of all things." Thales' theorem defined conditions for a right angle within a circle.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">Romans</h4>
+                            <p>Influenced by Greek culture, their "Roman number system was one of their most considerable contributions to computing," using letters to symbolize numbers. However, their numerals were "challenging to use, so an abacus was often used for calculation."</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">Islamic Influence</h4>
+                            <p>Islamic mathematicians developed a "comprehensive theory... which used rational and irrational numbers as algebraic objects and moved away from the Greek concept of mathematics as just being about Geometry." They applied algebra to arithmetic and geometry, and studied curves using equations.</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold">B. Notable Figures and Mechanical Calculation:</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium text-lg">Wilhelm Gottfried Leibniz</h4>
+                            <p>He "developed the binary number system used in digital computers." He designed "The Step Reckoner," the "first calculator to run the basic arithmetic operations" including addition, subtraction, multiplication, division, and root extraction.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">Charles Babbage</h4>
+                            <p>Considered one of the "grandfathers of the computing field," he designed the "Difference Engine" to "precisely compute polynomial functions and logarithmic & trigonometric functions." Ada Lovelace, who worked with him, is widely considered the "first computer programmer."</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">George Boole</h4>
+                            <p>Also a "grandfather of the computing field," Boole developed "Boolean algebra, which is the foundation for modern computing." His work was crucial for "switching theory and digital circuit design."</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">Grace Brewster Murray Hopper</h4>
+                            <p>A computer pioneer and naval officer, she is best known for her "trailblazing involvement in developing computer languages such as COBOL (Common Business-oriented Language)." By the 1970s, COBOL was the "most extensively used computer language."</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">Katherine Johnson</h4>
+                            <p>As a "human computer" for NASA, her geometric calculations helped "figure out the paths for spacecraft to orbit Earth and land on the moon," enabling critical missions.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">Gladys Mae West</h4>
+                            <p>Her "most outstanding contribution was creating a detailed geodetic model of the Earth, which became the basis for the Global Positioning System (GPS) development."</p>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-semibold">II. The Modern Computing Landscape</h2>
+                    <p>The "rapid increase of mobile devices and the ability to connect things" has ushered in a "post-PC era" characterized by interconnected technologies that deliver on-demand services and process vast amounts of data.</p>
+
+                    <h3 class="text-xl font-semibold">A. Core Modern Computing Technologies:</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium text-lg">Cloud Computing</h4>
+                            <p>It is the "application of hardware and software to deliver readily available, on-demand, and measured computing services over the Internet." Examples include Google Drive, iCloud, Google Translate, and streaming services.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">Virtualization</h4>
+                            <p>This technology "simulates hardware functions by creating multiple virtual machines on a physical server." Its essence is to "detach software from hardware by converting ‘physical’ devices into ‘logical’ folders or files."</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">Internet of Things (IoT)</h4>
+                            <p>A "network of an extensive range of physical objectives that automatically share data over the Internet." It facilitates "faster information exchange and communication between ‘things’."</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">Big Data</h4>
+                            <p>Characterized by "massive and complex datasets" with "high volume, variety of data types, and velocity." It is used in banking, healthcare, and education to track and analyze large amounts of information.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">Artificial Intelligence (AI)</h4>
+                            <p>Allows "machines to learn from experience, adjust to new inputs, and do human-like activities." Examples include facial recognition, voice recognition, chatbots, and virtual assistants.</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold">B. Emerging Computing Paradigms:</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium text-lg">Fog Computing</h4>
+                            <p>An "expansion of the idea of cloud computing" where data is stored in "edge devices" closer to end-users. It enables local data analytics and real-time data distribution.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-lg">Edge Computing</h4>
+                            <p>A "decentralized and distributed cloud computing" where the computing infrastructure is "close to data sources." Raw data is "analyzed locally instead of transferred to the cloud."</p>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Quiz Section -->
+            <section id="quiz-section" class="hidden max-w-2xl mx-auto p-8 bg-white rounded-xl shadow-md">
+                <div id="quiz-intro" class="text-center space-y-4">
+                    <h1 class="text-3xl font-bold">Quiz</h1>
+                    <p>Test your knowledge on the history and modern landscape of computing. There are 40 multiple-choice questions followed by an indefinite number of identification questions. Good luck!</p>
+                    <button id="start-quiz-btn" class="px-6 py-3 bg-purple-600 text-white font-medium rounded-md hover:bg-purple-700 transition-colors duration-200">
+                        Start Quiz
+                    </button>
+                    <div id="previous-score-container" class="mt-4 text-sm text-gray-500 hidden">
+                        <p>Your previous score was: <span id="previous-score-display" class="font-bold"></span></p>
+                    </div>
+                </div>
+
+                <div id="quiz-container" class="hidden">
+                    <div id="question-card" class="bg-gray-100 p-6 rounded-lg shadow-inner space-y-4">
+                        <h2 id="question-number" class="text-xl font-bold text-purple-600"></h2>
+                        <p id="question-text" class="text-lg"></p>
+                        <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                        <div id="identification-input-container" class="hidden">
+                            <input type="text" id="identification-input" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent placeholder-gray-500" placeholder="Type your answer here...">
+                        </div>
+                    </div>
+
+                    <div id="feedback-container" class="mt-4 p-4 rounded-md hidden">
+                        <p id="feedback-message" class="font-medium"></p>
+                        <blockquote id="feedback-quote" class="mt-2 text-sm italic border-l-4 pl-4"></blockquote>
+                    </div>
+
+                    <div id="quiz-navigation" class="mt-6 flex justify-between items-center">
+                        <button id="next-question-btn" class="px-6 py-3 bg-purple-600 text-white font-medium rounded-md hover:bg-purple-700 transition-colors duration-200">
+                            Next Question
+                        </button>
+                    </div>
+                </div>
+
+                <div id="quiz-results" class="hidden text-center space-y-4">
+                    <h1 class="text-3xl font-bold">Quiz Results</h1>
+                    <p class="text-lg">You scored <span id="final-score" class="font-bold text-purple-600"></span> out of <span id="total-questions" class="font-bold"></span>.</p>
+                    <div id="wrong-answers-container" class="mt-6 text-left">
+                        <h2 class="text-2xl font-semibold">Questions you got wrong:</h2>
+                        <ul id="wrong-answers-list" class="mt-4 space-y-2 list-disc list-inside"></ul>
+                    </div>
+                    <button id="restart-quiz-btn" class="px-6 py-3 bg-purple-600 text-white font-medium rounded-md hover:bg-purple-700 transition-colors duration-200">
+                        Take Quiz Again
+                    </button>
                 </div>
             </div>
 
-            <!-- Feedback section (hidden initially) -->
-            <div id="feedback-section" class="hidden mb-6 p-4 rounded-xl">
-                <h3 id="feedback-status" class="text-xl font-bold mb-2"></h3>
-                <p id="feedback-explanation" class="text-gray-700 dark:text-gray-300 italic border-l-4 border-gray-300 dark:border-gray-500 pl-4"></p>
+            <!-- Message Box -->
+            <div id="message-box" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+                <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full text-center">
+                    <p id="message-text" class="text-lg"></p>
+                    <button id="close-message-btn" class="mt-4 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                        OK
+                    </button>
+                </div>
             </div>
 
-            <!-- Quiz Controls -->
-            <div class="flex justify-center items-center">
-                <button id="next-button" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-blue-300 disabled:shadow-none">Submit Answer</button>
-            </div>
-        </div>
-
-        <!-- Result section -->
-        <div id="result-section" class="hidden text-center">
-            <h2 class="text-3xl font-bold text-green-600 dark:text-green-400 mb-4">Quiz Complete!</h2>
-            <p id="final-score" class="text-4xl font-extrabold mb-4"></p>
-            <p id="score-message" class="text-lg text-gray-600 dark:text-gray-300 mb-8"></p>
-            
-            <h3 id="incorrect-title" class="text-2xl font-bold mb-4 hidden">Questions You Got Wrong:</h3>
-            <div id="answers-summary" class="text-left max-h-60 overflow-y-auto pr-2">
-                <!-- Answer summary will be injected here -->
-            </div>
-            
-            <div id="progress-history" class="mt-8 text-left">
-                <h3 class="text-xl font-semibold mb-2">Your Past Scores</h3>
-                <ul id="score-list" class="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400"></ul>
-            </div>
-
-            <button id="restart-button" class="mt-8 bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-300">Restart Quiz</button>
-        </div>
+        </main>
     </div>
 
     <script>
-        // Data containing all quiz questions, answers, and explanations.
-        // This is a comprehensive set based on the provided module sources.
-        const quizData = {
-            mcq: [
-                {
-                    question: "Who emphasized the importance of self-knowledge and is known for the maxim, 'Know thyself'?",
-                    options: ["Plato", "Aristotle", "Socrates", "Augustine"],
-                    answer: "Socrates",
-                    explanation: "Socrates was an ancient Greek philosopher who emphasized the importance of self-knowledge. He mentioned the philosophical maxim, 'Know thyself.' He believed that true wisdom comes from introspection and self-examination."
-                },
-                {
-                    question: "According to Plato, the self is composed of three parts. Which part is responsible for our physical desires?",
-                    options: ["Reason", "Spirit", "Appetite", "Consciousness"],
-                    answer: "Appetite",
-                    explanation: "Plato argued that the self is immortal and independent of the body, with three parts of the soul: reason, spirit, and appetite. The appetite is the part responsible for physical desires."
-                },
-                {
-                    question: "Who believed the self is a 'unified creature' where the body and soul are inseparable?",
-                    options: ["René Descartes", "John Locke", "Aristotle", "David Hume"],
-                    answer: "Aristotle",
-                    explanation: "Aristotle believed that the body and soul are inseparable from one another. For him, the self is a unified creature."
-                },
-                {
-                    question: "The famous phrase 'I think, therefore I am' is attributed to which philosopher?",
-                    options: ["Socrates", "Plato", "René Descartes", "Immanuel Kant"],
-                    answer: "René Descartes",
-                    explanation: "René Descartes is a French philosopher, scientist, and mathematician known for the philosophical statement 'I think, therefore I am.'"
-                },
-                {
-                    question: "Which philosopher proposed the 'Tabula rasa' or 'blank slate' theory?",
-                    options: ["John Locke", "David Hume", "Immanuel Kant", "Paul Churchland"],
-                    answer: "John Locke",
-                    explanation: "John Locke was an English philosopher and physician. He proposed the 'Tabula rasa' theory, emphasizing that the self is shaped by memories and experience."
-                },
-                {
-                    question: "David Hume proposed the 'Bundle Theory,' which suggests that the self is:",
-                    options: ["A unified entity", "An illusion", "A product of God", "A social construct"],
-                    answer: "An illusion",
-                    explanation: "He proposed the Bundle Theory: the self is a bundle of perceptions, thoughts, and sensations."
-                },
-                {
-                    question: "Who is known for the phrase 'ghost in the machine,' which criticizes the idea of a separate mind and body?",
-                    options: ["Gilbert Ryle", "Sigmund Freud", "Merleau-Ponty", "Charles Horton Cooley"],
-                    answer: "Gilbert Ryle",
-                    explanation: "Gilbert Ryle was a British philosopher who coined the phrase 'ghost in the machine.' The self is shown through actions and behaviors."
-                },
-                {
-                    question: "According to Immanuel Kant, what does the 'Outer Self' represent?",
-                    options: ["Emotions and intellect", "Our physical and senses", "Our social interactions", "The unconscious mind"],
-                    answer: "Our physical and senses",
-                    explanation: "The Outer Self is our physical and senses."
-                },
-                {
-                    question: "Sigmund Freud's concept of the self focused on the 'ego' as a mediator between which two parts?",
-                    options: ["Inner and Outer self", "The conscious and unconscious", "The superego and the id", "The mind and the body"],
-                    answer: "The superego and the id",
-                    explanation: "His concept of self focused on the ego. The ego served as a mediator between the superego and the id."
-                },
-                {
-                    question: "Which philosopher believed the self is a product of brain activity and studied neurophilosophy?",
-                    options: ["John Locke", "Maurice Merleau-Ponty", "Paul Churchland", "Gilbert Ryle"],
-                    answer: "Paul Churchland",
-                    explanation: "Paul Churchland was a Canadian philosopher. The self is a product of brain activity. He studied neurophilosophy or the philosophy of the mind."
-                },
-                {
-                    question: "Maurice Merleau-Ponty rejected dualism and believed the self is shaped by:",
-                    options: ["Our memories", "Our genes", "Our physical body and senses", "Our social class"],
-                    answer: "Our physical body and senses",
-                    explanation: "Merleau-Ponty's theory states that the self is shaped by our physical body and how we experience the world through our senses."
-                },
-                {
-                    question: "Charles Horton Cooley's 'Looking-Glass Self' theory describes how our self-image is shaped by:",
-                    options: ["Our subconscious mind", "How we think others see us", "Our genetic code", "Our dreams and aspirations"],
-                    answer: "How we think others see us",
-                    explanation: "It describes how our self-image is shaped by how we think others see us. It's like seeing ourselves reflected in a mirror, but the mirror is the opinions and reactions of others."
-                },
-                {
-                    question: "According to Cooley's 'Looking-Glass Self,' what is the second stage, where we consider the reactions and judgments of others?",
-                    options: ["Imagination", "Interpretation", "Self-feeling", "Imitation"],
-                    answer: "Interpretation",
-                    explanation: "Interpretation: We imagine how others judge us. We consider the reactions and judgments of others towards our behaviors."
-                },
-                {
-                    question: "George Herbert Mead's Social Self Theory states that personal identity is influenced by:",
-                    options: ["Solitary introspection", "Social interaction and cultural norms", "Physical maturation", "Genetic factors"],
-                    answer: "Social interaction and cultural norms",
-                    explanation: "It states that personal identity is influenced by social interaction and cultural norms."
-                },
-                {
-                    question: "In Mead's theory, the 'I' self is the spontaneous aspect, while the 'Me' self is the:",
-                    options: ["Conscious self", "Socialized self", "Physical self", "Unconscious self"],
-                    answer: "Socialized self",
-                    explanation: "The 'Me' self is the socialized aspect of the self. It is the self that acts based on how others expect one to behave."
-                },
-                {
-                    question: "According to Mead, at which stage do children copy others' actions but don't understand their meaning?",
-                    options: ["Play Stage", "Game Stage", "Preparatory Stage", "Self-feeling Stage"],
-                    answer: "Preparatory Stage",
-                    explanation: "Preparatory Stage (Imitation). Children copy others but don't understand their actions, words, or tone of voice."
-                },
-                {
-                    question: "Which philosopher viewed the self as a spiritual entity deeply connected to God?",
-                    options: ["Aristotle", "Socrates", "Saint Augustine", "Descartes"],
-                    answer: "Saint Augustine",
-                    explanation: "Augustine, a theologian and philosopher, believed the self is deeply intertwined with God."
-                },
-                {
-                    question: "What is the collective concept of societal norms and expectations that individuals internalize, according to Mead?",
-                    options: ["Significant Others", "The 'Me' self", "The 'I' self", "Generalized Others"],
-                    answer: "Generalized Others",
-                    explanation: "The Generalized Others represents society's collective norms and expectations individuals internalize."
-                },
-                {
-                    question: "In the 'Looking-Glass Self,' which stage involves forming our self-concept based on perceived judgments?",
-                    options: ["Imagination", "Interpretation", "Self-feeling", "Role-taking"],
-                    answer: "Self-feeling",
-                    explanation: "Self-feeling: We develop our self-concept. Based on these perceptions, we form an understanding of ourselves."
-                },
-                {
-                    question: "A child pretending to be a doctor is in which of Mead's stages of self-development?",
-                    options: ["Preparatory Stage", "Play Stage", "Game Stage", "Imitation Stage"],
-                    answer: "Play Stage",
-                    explanation: "Example: A child playing house, acting as the mother and caring for her toy children, or a child pretending to teach other kids or toys."
-                },
-                {
-                    question: "Who proposed that the self is an immortal and independent soul, separate from the body?",
-                    options: ["Aristotle", "Plato", "Socrates", "Descartes"],
-                    answer: "Plato",
-                    explanation: "Plato was an ancient Greek philosopher who argued that the self is immortal and independent of the body."
-                },
-                {
-                    question: "The concept of 'Tabula rasa' means:",
-                    options: ["A thinking being", "A clean slate", "The human spirit", "A unified creature"],
-                    answer: "A clean slate",
-                    explanation: "Tabula rasa means 'blank slate' and is a key concept by John Locke."
-                },
-                {
-                    question: "Which philosopher, known for neurophilosophy, suggested that the self is a product of brain activity?",
-                    options: ["Gilbert Ryle", "John Locke", "Paul Churchland", "Merleau-Ponty"],
-                    answer: "Paul Churchland",
-                    explanation: "Paul Churchland, a Canadian philosopher, believed the self is a product of brain activity."
-                },
-                {
-                    question: "According to Freud, the 'id' is primarily focused on:",
-                    options: ["Rational thought", "Moral judgment", "Unconscious drives and desires", "Social conformity"],
-                    answer: "Unconscious drives and desires",
-                    explanation: "The ego served as a mediator between the superego and the id, with the id representing primal, unconscious desires."
-                },
-                {
-                    question: "What is the key difference between Mead's 'I' self and 'Me' self?",
-                    options: ["'I' is socialized, 'Me' is spontaneous", "'I' is subconscious, 'Me' is conscious", "'I' is spontaneous, 'Me' is socialized", "'I' is body, 'Me' is mind"],
-                    answer: "'I' is spontaneous, 'Me' is socialized",
-                    explanation: "The 'I' self is the spontaneous aspect of the self, while the 'Me' self is the socialized aspect of the self."
-                },
-                {
-                    question: "In the 'Looking-Glass Self' theory, what is the first stage?",
-                    options: ["Interpretation", "Self-feeling", "Imagination", "Role-taking"],
-                    answer: "Imagination",
-                    explanation: "Imagination: We imagine how we appear to others."
-                },
-                {
-                    question: "Who argued that the self is inseparable from our bodily experiences and interactions with the world?",
-                    options: ["Gilbert Ryle", "Maurice Merleau-Ponty", "Immanuel Kant", "Paul Churchland"],
-                    answer: "Maurice Merleau-Ponty",
-                    explanation: "For Merleau-Ponty, the self is shaped by our physical body and how we experience the world through our senses."
-                },
-                {
-                    question: "What did John Locke propose as the basis for the self?",
-                    options: ["The soul", "The brain", "Consciousness and memory", "Divine grace"],
-                    answer: "Consciousness and memory",
-                    explanation: "Locke's theory states that the self is shaped by memories and experience."
-                },
-                {
-                    question: "Which of the following is NOT a stage in Mead's Stages of Self-Development?",
-                    options: ["Preparatory Stage", "Play Stage", "Game Stage", "Self-feeling Stage"],
-                    answer: "Self-feeling Stage",
-                    explanation: "Mead's stages are the Preparatory Stage, Play Stage, and Game Stage. Self-feeling is a stage in Cooley's theory."
-                },
-                {
-                    question: "Which philosopher argued that the self is just an illusion based on the 'Bundle Theory'?",
-                    options: ["John Locke", "David Hume", "Immanuel Kant", "Gilbert Ryle"],
-                    answer: "David Hume",
-                    explanation: "David Hume proposed the Bundle Theory: the self is a bundle of perceptions, thoughts, and sensations."
-                },
-                {
-                    question: "What is the primary function of the 'ego' in Freud's theory?",
-                    options: ["To fulfill basic desires", "To mediate between the id and the superego", "To maintain social norms", "To control the mind-body connection"],
-                    answer: "To mediate between the id and the superego",
-                    explanation: "The ego served as a mediator between the id and the superego."
-                },
-                {
-                    question: "The concept of 'Generalized Others' in Mead's theory refers to:",
-                    options: ["A person's parents", "A person's close friends", "Society's collective norms and expectations", "The individual's conscience"],
-                    answer: "Society's collective norms and expectations",
-                    explanation: "The Generalized Others represents society's collective norms and expectations individuals internalize."
-                },
-                {
-                    question: "Which philosopher is known for his dualistic view of the mind and the body?",
-                    options: ["Aristotle", "Plato", "René Descartes", "Socrates"],
-                    answer: "René Descartes",
-                    explanation: "Descartes proposed dualism: the mind and the body."
-                },
-                {
-                    question: "What did Charles Horton Cooley name his theory on how our self-image is formed?",
-                    options: ["Social Self Theory", "Looking-Glass Self", "Tabula Rasa", "Bundle Theory"],
-                    answer: "Looking-Glass Self",
-                    explanation: "Charles Horton Cooley was an American sociologist known for his theory, 'Looking-Glass Self,' which describes how our self-image is shaped by how we think others see us."
-                },
-                {
-                    question: "In Plato's Tripartite Theory, the part of the soul that seeks honor and victory is the:",
-                    options: ["Reason", "Spirit", "Appetite", "Soul"],
-                    answer: "Spirit",
-                    explanation: "The Spirit is the part of the soul that seeks honor and victory."
-                },
-                {
-                    question: "What is the final stage of Cooley's 'Looking-Glass Self' where we develop our self-concept?",
-                    options: ["Imagination", "Interpretation", "Self-feeling", "Role-taking"],
-                    answer: "Self-feeling",
-                    explanation: "Self-feeling: We develop our self-concept. Our self-concept is shaped by the feedback and responses we get from others."
-                },
-                {
-                    question: "Who believed that through God's grace, we find self-fulfillment?",
-                    options: ["Socrates", "Plato", "Saint Augustine", "Hume"],
-                    answer: "Saint Augustine",
-                    explanation: "Through God's grace, we find self-fulfillment."
-                },
-                {
-                    question: "According to Immanuel Kant, what does the 'Inner Self' include?",
-                    options: ["Our emotions and rational intellect", "Our physical body and senses", "Our social status", "Our memories"],
-                    answer: "Our emotions and rational intellect",
-                    explanation: "The Inner Self includes our emotions and rational intellect."
-                },
-                {
-                    question: "George Herbert Mead's theory on identity is called:",
-                    options: ["Looking-Glass Self", "Social Self Theory", "Bundle Theory", "Tripartite Theory"],
-                    answer: "Social Self Theory",
-                    explanation: "George Herbert Mead was an American philosopher and sociologist known for Social Self Theory."
-                },
-                {
-                    question: "Which of Mead's stages involves a child pretending to be a teacher to a toy?",
-                    options: ["Preparatory Stage", "Play Stage", "Game Stage", "Imitation Stage"],
-                    answer: "Play Stage",
-                    explanation: "Example: A child playing house, acting as the mother and caring for her toy children, or a child pretending to teach other kids or toys."
-                }
-            ],
-            id: [
-                {
-                    question: "This philosopher coined the phrase 'ghost in the machine.'",
-                    answer: ["Gilbert Ryle", "Ryle"],
-                    explanation: "He coined the phrase 'ghost in the machine.'",
-                },
-                {
-                    question: "This philosopher proposed the 'Bundle Theory' of the self.",
-                    answer: ["David Hume", "Hume"],
-                    explanation: "He proposed the Bundle Theory: the self is a bundle of perceptions, thoughts, and sensations."
-                },
-                {
-                    question: "This philosopher is known for the maxim 'Know thyself.'",
-                    answer: ["Socrates"],
-                    explanation: "He mentioned the philosophical maxim, 'Know thyself.'"
-                },
-                {
-                    question: "This philosopher viewed the self as a 'unified creature' where body and soul are inseparable.",
-                    answer: ["Aristotle"],
-                    explanation: "He believed the self is a unified creature where the body and soul are inseparable from one another."
-                },
-                {
-                    question: "This philosopher proposed the dualistic view of the self, separating the mind and the body.",
-                    answer: ["René Descartes", "Descartes"],
-                    explanation: "He proposed dualism: the mind and the body."
-                },
-                {
-                    question: "This philosopher believed that the self is an immortal soul, independent of the body.",
-                    answer: ["Plato"],
-                    explanation: "He argued that the self is immortal and independent of the body."
-                },
-                {
-                    question: "This philosopher viewed the self as a 'tabula rasa' or a blank slate.",
-                    answer: ["John Locke", "Locke"],
-                    explanation: "Tabula rasa. The self is shaped by memories and experience."
-                },
-                {
-                    question: "This philosopher viewed the self as a product of brain activity.",
-                    answer: ["Paul Churchland", "Churchland"],
-                    explanation: "The self is a product of brain activity. He studied neurophilosophy or the philosophy of the mind."
-                },
-                {
-                    question: "This philosopher argued that the self is shaped by our physical body and senses.",
-                    answer: ["Maurice Merleau-Ponty", "Merleau-Ponty"],
-                    explanation: "The self is shaped by our physical body and how we experience the world through our senses."
-                },
-                {
-                    question: "This sociologist is known for his 'Looking-Glass Self' theory.",
-                    answer: ["Charles Horton Cooley", "Cooley"],
-                    explanation: "Charles Horton Cooley was an American sociologist known for his theory, 'Looking-Glass Self.'"
-                },
-                {
-                    question: "This sociologist developed the Social Self Theory, which includes the 'I' and the 'Me.'",
-                    answer: ["George Herbert Mead", "Mead"],
-                    explanation: "George Herbert Mead was an American philosopher and sociologist known for Social Self Theory."
-                },
-                {
-                    question: "This part of the self is the spontaneous aspect, according to George Herbert Mead.",
-                    answer: ["The I self", "The I", "I"],
-                    explanation: "The 'I' self is the spontaneous aspect of the self."
-                },
-                {
-                    question: "This is the collective concept of society's norms and expectations that individuals internalize, according to George Herbert Mead.",
-                    answer: ["Generalized Others", "Generalized Other"],
-                    explanation: "The Generalized Others represents society's collective norms and expectations individuals internalize."
-                },
-                {
-                    question: "In Cooley's theory, this is the stage where we imagine how we appear to others.",
-                    answer: ["Imagination"],
-                    explanation: "Imagination: We imagine how we appear to others."
-                },
-                {
-                    question: "In Freud's theory, this is the part of the psyche that acts as a mediator between the id and the superego.",
-                    answer: ["Ego"],
-                    explanation: "The ego served as a mediator between the id and the superego."
-                }
-            ]
-        };
-
-        // --- QUIZ LOGIC ---
+        const body = document.body;
+        const documentBtn = document.getElementById('document-btn');
+        const quizBtn = document.getElementById('quiz-btn');
+        const documentSection = document.getElementById('document-section');
         const quizSection = document.getElementById('quiz-section');
-        const resultSection = document.getElementById('result-section');
-        const questionText = document.getElementById('question-text');
-        const inputContainer = document.getElementById('input-container');
-        const answerInput = document.getElementById('answer-input');
-        const optionsContainer = document.getElementById('options-container');
-        const nextButton = document.getElementById('next-button');
-        const questionCount = document.getElementById('question-count');
-        const finalScore = document.getElementById('final-score');
-        const scoreMessage = document.getElementById('score-message');
-        const answersSummary = document.getElementById('answers-summary');
-        const restartButton = document.getElementById('restart-button');
-        const feedbackSection = document.getElementById('feedback-section');
-        const feedbackStatus = document.getElementById('feedback-status');
-        const feedbackExplanation = document.getElementById('feedback-explanation');
-        const incorrectTitle = document.getElementById('incorrect-title');
-        const modeToggle = document.getElementById('mode-toggle');
-        const scoreListEl = document.getElementById('score-list');
+        const themeToggle = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
 
-        let allQuestions = [];
+        let currentSection = 'document';
+
+        function showSection(section) {
+            documentSection.classList.add('hidden');
+            quizSection.classList.add('hidden');
+            documentBtn.classList.remove('bg-purple-100', 'text-purple-600');
+            documentBtn.classList.add('text-gray-700', 'hover:text-purple-600');
+            quizBtn.classList.remove('bg-purple-100', 'text-purple-600');
+            quizBtn.classList.add('text-gray-700', 'hover:text-purple-600');
+            
+            if (section === 'document') {
+                documentSection.classList.remove('hidden');
+                documentBtn.classList.add('bg-purple-100', 'text-purple-600');
+            } else {
+                quizSection.classList.remove('hidden');
+                quizBtn.classList.add('bg-purple-100', 'text-purple-600');
+            }
+            currentSection = section;
+        }
+
+        documentBtn.addEventListener('click', () => showSection('document'));
+        quizBtn.addEventListener('click', () => showSection('quiz'));
+        
+        // Initial setup
+        showSection(currentSection);
+
+        // Dark/Light Mode Toggle
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            const isDarkMode = body.classList.contains('dark-mode');
+            if (isDarkMode) {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            } else {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            }
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+        // Set initial theme based on system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.classList.add('dark-mode');
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        } else {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        }
+
+        // Quiz Logic
+        const quizIntro = document.getElementById('quiz-intro');
+        const quizContainer = document.getElementById('quiz-container');
+        const quizResults = document.getElementById('quiz-results');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+        const restartQuizBtn = document.getElementById('restart-quiz-btn');
+        const questionNumberElem = document.getElementById('question-number');
+        const questionTextElem = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const identificationInputContainer = document.getElementById('identification-input-container');
+        const identificationInput = document.getElementById('identification-input');
+        const feedbackContainer = document.getElementById('feedback-container');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const feedbackQuote = document.getElementById('feedback-quote');
+        const finalScoreElem = document.getElementById('final-score');
+        const totalQuestionsElem = document.getElementById('total-questions');
+        const wrongAnswersList = document.getElementById('wrong-answers-list');
+        const previousScoreContainer = document.getElementById('previous-score-container');
+        const previousScoreDisplay = document.getElementById('previous-score-display');
+        const messageBox = document.getElementById('message-box');
+        const messageText = document.getElementById('message-text');
+        const closeMessageBtn = document.getElementById('close-message-btn');
+
         let currentQuestionIndex = 0;
         let score = 0;
+        let quizData = [];
+        let userAnswers = [];
         let wrongAnswers = [];
-        let hasAnswered = false;
 
-        function shuffle(array) {
+        function showMessage(message) {
+            messageText.textContent = message;
+            messageBox.classList.remove('hidden');
+        }
+
+        closeMessageBtn.addEventListener('click', () => {
+            messageBox.classList.add('hidden');
+        });
+
+        // Function to get a cookie
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+        }
+
+        const quizQuestions = [
+            // 40 Multiple Choice Questions
+            {
+                type: "multiple-choice",
+                question: "Which early civilization used 'clay cuneiform tables with mathematical texts' for basic arithmetic?",
+                options: ["Egyptians", "Greeks", "Babylonians", "Romans"],
+                answer: "Babylonians",
+                quote: "This civilization thrived in Mesopotamia... Clay cuneiform tables with mathematical texts were found and deciphered... which contain tables for various mathematical operations such as basic arithmetic operations, cubes, and square roots."
+            },
+            {
+                type: "multiple-choice",
+                question: "What was the unique feature of the Babylonian numerical system?",
+                options: ["It was a base-10 system.", "It used only two symbols (1 and 10).", "It used letters to symbolize numbers.", "It was based on geometry."],
+                answer: "It used only two symbols (1 and 10).",
+                quote: "For their numerical system, they only used two symbols (1 and 10) to symbolize numbers, and these symbols will then be combined to form all other numbers."
+            },
+            {
+                type: "multiple-choice",
+                question: "The 'Rhind Papyrus' is an instructional text for arithmetic and geometric problems from which civilization?",
+                options: ["Romans", "Babylonians", "Egyptians", "Greeks"],
+                answer: "Egyptians",
+                quote: "They also have Rhind Papyrus, a famous Egyptian papyrus, a writing surface like paper. It includes examples of all types of arithmetic and geometric problems."
+            },
+            {
+                type: "multiple-choice",
+                question: "Which of the following figures is credited with the foundation of the Pythagorean theorem?",
+                options: ["Thales", "Wilhelm Gottfried Leibniz", "Pythagoras", "Charles Babbage"],
+                answer: "Pythagoras",
+                quote: "He is credited with the foundation of Pythagorean theorem, although the Babylonians were probably aware of this theorem 1000 years before."
+            },
+            {
+                type: "multiple-choice",
+                question: "What was the most considerable contribution of the Romans to computing?",
+                options: ["The invention of the abacus.", "The development of a base-10 system.", "The Roman number system.", "The study of geometry."],
+                answer: "The Roman number system.",
+                quote: "The Roman number system was one of their most considerable contributions to computing which uses letters to symbolize numbers in which the number consists of a sequence of letters."
+            },
+            {
+                type: "multiple-choice",
+                question: "The 'Step Reckoner', created by Wilhelm Gottfried Leibniz, was the first calculator to perform what operations?",
+                options: ["Addition and subtraction only.", "Addition, subtraction, and multiplication.", "Addition, subtraction, multiplication, and division.", "All basic arithmetic operations and root extraction."],
+                answer: "All basic arithmetic operations and root extraction.",
+                quote: "It was called 'The Step Reckoner' and was the first calculator to run the basic arithmetic operations including addition, subtraction, multiplication, division, and the extraction of roots."
+            },
+            {
+                type: "multiple-choice",
+                question: "Who is considered one of the 'grandfathers of the computing field' for designing the 'Difference Engine'?",
+                options: ["George Boole", "Charles Babbage", "Wilhelm Gottfried Leibniz", "Gladys Mae West"],
+                answer: "Charles Babbage",
+                quote: "He, along with George Boole, is considered one of the grandfathers of the computing field... He designed a device... called 'Difference Engine'."
+            },
+            {
+                type: "multiple-choice",
+                question: "Ada Lovelace is widely considered the first computer programmer for her work with which individual?",
+                options: ["Grace Murray Hopper", "Charles Babbage", "George Boole", "Wilhelm Gottfried Leibniz"],
+                answer: "Charles Babbage",
+                quote: "Ada Lovelace was an analyst working for this analytical engine and is considered the 'first computer programmer' by many."
+            },
+            {
+                type: "multiple-choice",
+                question: "Which individual developed 'Boolean algebra', the foundation for modern computing?",
+                options: ["Charles Babbage", "Wilhelm Gottfried Leibniz", "George Boole", "Gladys Mae West"],
+                answer: "George Boole",
+                quote: "He developed Boolean algebra, which is the foundation for modern computing."
+            },
+            {
+                type: "multiple-choice",
+                question: "Grace Brewster Murray Hopper is best known for her involvement in developing what computer language?",
+                options: ["Java", "Python", "COBOL", "C++"],
+                answer: "COBOL",
+                quote: "She is best known for her trailblazing involvement in developing computer languages such as COBOL (Common Business-oriented Language)."
+            },
+            {
+                type: "multiple-choice",
+                question: "Katherine Johnson was one of NASA's 'human computers' whose calculations were critical for what?",
+                options: ["The development of GPS.", "The invention of the internet.", "Sending astronauts to the moon.", "The creation of social media."],
+                answer: "Sending astronauts to the moon.",
+                quote: "Her calculations allowed NASA to send astronauts to the moon and back."
+            },
+            {
+                type: "multiple-choice",
+                question: "Gladys Mae West's 'most outstanding contribution' was creating a detailed geodetic model of the Earth which became the basis for what?",
+                options: ["Cloud computing.", "The World Wide Web.", "The Global Positioning System (GPS).", "Artificial intelligence."],
+                answer: "The Global Positioning System (GPS).",
+                quote: "Though her most outstanding contribution was creating a detailed geodetic model of the Earth, which became the basis for the Global Positioning System (GPS) development in the 1960s..."
+            },
+            {
+                type: "multiple-choice",
+                question: "Which of the following is defined as 'the application of hardware and software to deliver readily available, on-demand, and measured computing services over the Internet'?",
+                options: ["Virtualization", "Cloud Computing", "Fog Computing", "Edge Computing"],
+                answer: "Cloud Computing",
+                quote: "It is the application of hardware and software to deliver readily available, on-demand, and measured computing services over the Internet."
+            },
+            {
+                type: "multiple-choice",
+                question: "What technology 'simulates hardware functions by creating multiple virtual machines on a physical server'?",
+                options: ["Cloud Computing", "Internet of Things (IoT)", "Virtualization", "Big Data"],
+                answer: "Virtualization",
+                quote: "This technology simulates hardware functions by creating multiple virtual machines on a physical server that acts as a hardware device."
+            },
+            {
+                type: "multiple-choice",
+                question: "What is a 'network of an extensive range of physical objectives that automatically share data over the Internet'?",
+                options: ["Big Data", "Internet of Things (IoT)", "Artificial Intelligence (AI)", "Cloud Computing"],
+                answer: "Internet of Things (IoT)",
+                quote: "It is a network of an extensive range of physical objectives that automatically share data over the Internet."
+            },
+            {
+                type: "multiple-choice",
+                question: "What are 'massive and complex datasets characterized by high volume, variety of data types, and velocity'?",
+                options: ["Big Data", "Cloud Computing", "Artificial Intelligence (AI)", "Fog Computing"],
+                answer: "Big Data",
+                quote: "These are massive and complex datasets characterized by high volume, variety of data types, and velocity as data are collected and analyzed at ever-increasing rates."
+            },
+            {
+                type: "multiple-choice",
+                question: "Which technology allows 'machines to learn from experience, adjust to new inputs, and do human-like activities'?",
+                options: ["Virtualization", "Edge Computing", "Internet of Things (IoT)", "Artificial Intelligence (AI)"],
+                answer: "Artificial Intelligence (AI)",
+                quote: "Machines can learn from experience, adjust to new inputs, and do human-like activities because of this technology."
+            },
+            {
+                type: "multiple-choice",
+                question: "According to the document, what is the foundation of Artificial Intelligence?",
+                options: ["Virtualization", "Cloud Computing", "The Internet of Things", "Big Data"],
+                answer: "Cloud Computing",
+                quote: "To show the interconnection of the modern technologies of computing, it is essential to note that Cloud Computing is the foundation of Artificial Intelligence."
+            },
+            {
+                type: "multiple-choice",
+                question: "What is the primary difference between Fog Computing and Cloud Computing?",
+                options: ["Fog is a type of AI.", "Fog uses physical servers, while Cloud uses virtual ones.", "Fog stores data in edge devices closer to end-users.", "Fog is used for big data analytics."],
+                answer: "Fog stores data in edge devices closer to end-users.",
+                quote: "The data and application sets are stored in edge devices compared to the clouds of cloud computing... the fog is closer to the ground, wherein servers are placed near the end-users."
+            },
+            {
+                type: "multiple-choice",
+                question: "Which modern computing paradigm analyzes raw data locally instead of transferring it to the cloud?",
+                options: ["Cloud Computing", "Edge Computing", "Fog Computing", "Big Data"],
+                answer: "Edge Computing",
+                quote: "The raw data in edge computing is analyzed locally instead of transferred to the cloud."
+            },
+            {
+                type: "multiple-choice",
+                question: "Which industry uses computers to 'organize data effectively' with applications like Microsoft Excel and SQL Database?",
+                options: ["Healthcare", "Education", "Government", "Business Organizations"],
+                answer: "Business Organizations",
+                quote: "Businesses use computers to organize data effectively. Using applications such as Microsoft Excel and SQL Database will lessen the amount of human error in business management."
+            },
+            {
+                type: "multiple-choice",
+                question: "In the banking industry, how have computers contributed to transaction processes?",
+                options: ["By creating new currency.", "By replacing all human tellers.", "By allowing easy deposit/withdrawal with ATMs.", "By eliminating the need for bank accounts."],
+                answer: "By allowing easy deposit/withdrawal with ATMs.",
+                quote: "As one of the most used payment methods, ATMs allow users to deposit and withdraw money anywhere and anytime easily."
+            },
+            {
+                type: "multiple-choice",
+                question: "Which of the following is an example of an innovative learning method enabled by advanced technologies in education?",
+                options: ["Chalkboard learning", "Online degrees and courses", "Physical books", "Oral examinations"],
+                answer: "Online degrees and courses",
+                quote: "Online degrees and courses in schools are also offered to reach students to develop extensive access to advanced education."
+            },
+            {
+                type: "multiple-choice",
+                question: "In healthcare, how do computers aid in diagnosis?",
+                options: ["By replacing all doctors.", "By storing patient records in easily accessible databases.", "By giving prescriptions directly to patients.", "By performing surgery without human assistance."],
+                answer: "By storing patient records in easily accessible databases.",
+                quote: "Records of patients' treatment and medical history are stored in a database easily accessible to doctors."
+            },
+            {
+                type: "multiple-choice",
+                question: "Which field supports computers for 'science, engineering, research, and machines' and includes social humanoids like Sophia the Robot?",
+                options: ["Virtualization", "Robotics", "Artificial Intelligence", "Edge Computing"],
+                answer: "Robotics",
+                quote: "This fast-emerging field supports computers for science, engineering, research, and machines... One of the recent examples of a physical computerized robot is Sophia the Robot..."
+            },
+            {
+                type: "multiple-choice",
+                question: "What is the definition of 'computing' as provided in the document?",
+                options: ["The use of computers for entertainment.", "Any activity that utilizes computers to manage, process, and communicate critical information.", "The design of computer hardware.", "The process of writing code for applications."],
+                answer: "Any activity that utilizes computers to manage, process, and communicate critical information.",
+                quote: "Computing is any activity that utilizes computers to manage, process, and communicate critical information that is an integral part of modern industrial technology."
+            },
+            {
+                type: "multiple-choice",
+                question: "The Babylonians used which of the following for calculations?",
+                options: ["Abacus", "Rhind Papyrus", "Counting boards", "Roman numerals"],
+                answer: "Counting boards",
+                quote: "Counting boards existed in this civilization to assist with counting and simple calculations. It has similarities with an abacus..."
+            },
+            {
+                type: "multiple-choice",
+                question: "Which early civilization's numerals were 'challenging to use, so an abacus was often used for calculation'?",
+                options: ["Babylonians", "Greeks", "Egyptians", "Romans"],
+                answer: "Romans",
+                quote: "Roman numerals were challenging to use, so an abacus was often used for calculation."
+            },
+            {
+                type: "multiple-choice",
+                question: "The Islamic contribution to algebra moved away from the Greek concept of mathematics as being primarily about what?",
+                options: ["Arithmetic", "Geometry", "Logic", "Number theory"],
+                answer: "Geometry",
+                quote: "A comprehensive theory was developed which used rational and irrational numbers as algebraic objects and moved away from the Greek concept of mathematics as just being about Geometry."
+            },
+            {
+                type: "multiple-choice",
+                question: "What was the main flaw of Blaise Pascal's 'Pascaline' that Wilhelm Gottfried Leibniz sought to overcome?",
+                options: ["It was too large.", "It could only run addition and subtraction.", "It was made of wood.", "It was not a mechanical calculator."],
+                answer: "It could only run addition and subtraction.",
+                quote: "He recognized the limitations of Pascaline as it could only run addition and subtraction operations..."
+            },
+            {
+                type: "multiple-choice",
+                question: "What was the 'Difference Engine' designed to compute?",
+                options: ["Algebraic equations", "Symbolic logic", "Polynomial, logarithmic, and trigonometric functions", "Binary numbers"],
+                answer: "Polynomial, logarithmic, and trigonometric functions",
+                quote: "It was used to produce mathematical tables designed to precisely compute polynomial functions and logarithmic & trigonometric functions such as sine or cosine."
+            },
+            {
+                type: "multiple-choice",
+                question: "George Boole's work introduced what quantities to symbolize the universe of thinkable objects and their absence?",
+                options: ["1 and 10", "A and B", "True and False", "1 and 0"],
+                answer: "1 and 0",
+                quote: "His study on logic introduced the quantities '0' and '1.' He used 1 to symbolize the universe of thinkable objects and 0 to symbolize the absence of any things."
+            },
+            {
+                type: "multiple-choice",
+                question: "By the 1970s, which computer language was considered 'the most extensively used' due to Grace Murray Hopper's efforts?",
+                options: ["C++", "COBOL", "Python", "Java"],
+                answer: "COBOL",
+                quote: "By the 1970s, COBOL was considered the 'most extensively used computer language' in the world."
+            },
+            {
+                type: "multiple-choice",
+                question: "What was the term used to describe people, mainly women, hired by NASA to perform complex mathematical calculations?",
+                options: ["Engineers", "Scientists", "Human computers", "Analysts"],
+                answer: "Human computers",
+                quote: "In the 1950s... These people were labeled 'computers', mainly women, who NASA hired to compute complex calculations to make space travel possible."
+            },
+            {
+                type: "multiple-choice",
+                question: "Which of the following is NOT an example of a cloud computing application?",
+                options: ["Google Drive", "Netflix", "A desktop application installed on a single computer", "Google Translate"],
+                answer: "A desktop application installed on a single computer",
+                quote: "The use of the cloud lets users open files and use applications anywhere using whichever device has access to the Internet."
+            },
+            {
+                type: "multiple-choice",
+                question: "Which technology is described as 'decentralized and distributed cloud computing' where the infrastructure is 'close to data sources'?",
+                options: ["Big Data", "Internet of Things (IoT)", "Edge Computing", "Virtualization"],
+                answer: "Edge Computing",
+                quote: "It is decentralized and distributed cloud computing; wherein 'edge' is a general concept. It deals with a computing infrastructure that is close to data sources."
+            },
+            {
+                type: "multiple-choice",
+                question: "What technology allows machines to do 'human-like activities'?",
+                options: ["Virtualization", "Artificial Intelligence (AI)", "Cloud Computing", "Internet of Things (IoT)"],
+                answer: "Artificial Intelligence (AI)",
+                quote: "Machines can learn from experience, adjust to new inputs, and do human-like activities because of this technology."
+            },
+            {
+                type: "multiple-choice",
+                question: "What is the primary characteristic of Big Data?",
+                options: ["Low volume and velocity.", "Physical, non-digital datasets.", "Massive and complex datasets.", "Simple, non-networked data."],
+                answer: "Massive and complex datasets.",
+                quote: "These are massive and complex datasets characterized by high volume, variety of data types, and velocity as data are collected and analyzed at ever-increasing rates."
+            },
+            {
+                type: "multiple-choice",
+                question: "Which of the following is a field that supports computers for science, engineering, and machines, and includes physical robots?",
+                options: ["IoT", "Robotics", "Edge Computing", "Virtualization"],
+                answer: "Robotics",
+                quote: "This fast-emerging field supports computers for science, engineering, research, and machines."
+            },
+            {
+                type: "multiple-choice",
+                question: "What is the interconnection between IoT, Big Data, and AI as described in the document?",
+                options: ["IoT is the foundation of AI.", "Big Data is the foundation of AI.", "IoT provides raw materials that Big Data feeds into AI.", "AI provides the data for IoT."],
+                answer: "IoT provides raw materials that Big Data feeds into AI.",
+                quote: "the Internet of Things provides the raw materials used to produce the fertilizer that Big Data feeds into Artificial Intelligence."
+            },
+
+            // Identification Questions
+            {
+                type: "identification",
+                question: "This civilization thrived in Mesopotamia and used counting boards for calculations.",
+                answer: "Babylonians",
+                quote: "This civilization thrived in Mesopotamia (Iraq)... Counting boards existed in this civilization to assist with counting and simple calculations."
+            },
+            {
+                type: "identification",
+                question: "He developed the binary number system and created the 'Step Reckoner'.",
+                answer: "Wilhelm Gottfried Leibniz",
+                quote: "He was a German philosopher, mathematician, and one of the pioneers in mechanical calculation. He developed the binary number system used in digital computers... It was called 'The Step Reckoner'."
+            },
+            {
+                type: "identification",
+                question: "Considered one of the 'grandfathers of the computing field' for developing 'Boolean algebra'.",
+                answer: "George Boole",
+                quote: "He developed Boolean algebra, which is the foundation for modern computing."
+            },
+            {
+                type: "identification",
+                question: "The 'first computer programmer' for her work with Charles Babbage's 'Difference Engine'.",
+                answer: "Ada Lovelace",
+                quote: "Ada Lovelace was an analyst working for this analytical engine and is considered the 'first computer programmer' by many."
+            },
+            {
+                type: "identification",
+                question: "Her calculations as a 'human computer' at NASA helped figure out the paths for spacecraft to orbit Earth and land on the moon.",
+                answer: "Katherine Johnson",
+                quote: "As one of NASA's 'computers', Johnson was called upon to do the work she would become the most known for. She studied geometry for space travel which helped her figure out the paths for spacecraft to orbit Earth and land on the moon."
+            },
+            {
+                type: "identification",
+                question: "The mathematician whose geodetic model of the Earth became the basis for GPS.",
+                answer: "Gladys Mae West",
+                quote: "Though her most outstanding contribution was creating a detailed geodetic model of the Earth, which became the basis for the Global Positioning System (GPS) development in the 1960s..."
+            },
+            {
+                type: "identification",
+                question: "This technology simulates hardware functions by creating multiple virtual machines on a physical server.",
+                answer: "Virtualization",
+                quote: "This technology simulates hardware functions by creating multiple virtual machines on a physical server that acts as a hardware device."
+            },
+            {
+                type: "identification",
+                question: "A network of physical objects that automatically share data over the internet.",
+                answer: "Internet of Things",
+                quote: "It is a network of an extensive range of physical objectives that automatically share data over the Internet."
+            },
+            {
+                type: "identification",
+                question: "This field uses computers for science, engineering, and research, and includes social humanoid robots.",
+                answer: "Robotics",
+                quote: "This fast-emerging field supports computers for science, engineering, research, and machines. Robots such as factory and machine robots can help perform several tasks considered complex for human abilities."
+            },
+            {
+                type: "identification",
+                question: "This modern computing paradigm analyzes raw data locally, close to data sources.",
+                answer: "Edge Computing",
+                quote: "The raw data in edge computing is analyzed locally instead of transferred to the cloud."
+            },
+            {
+                type: "identification",
+                question: "This early civilization solved practical problems like measuring floods and calculating land area and taxes.",
+                answer: "Egyptians",
+                quote: "Measuring time, measuring floods, calculating the land area, bookkeeping, and calculating taxes are examples of practical problems that were solved by Egyptian mathematics."
+            },
+            {
+                type: "identification",
+                question: "This technology is defined as 'the application of hardware and software to deliver readily available, on-demand, and measured computing services over the Internet'.",
+                answer: "Cloud Computing",
+                quote: "It is the application of hardware and software to deliver readily available, on-demand, and measured computing services over the Internet."
+            },
+            {
+                type: "identification",
+                question: "A German polymath who developed the binary number system used in digital computers.",
+                answer: "Wilhelm Gottfried Leibniz",
+                quote: "He was a German philosopher, mathematician, and one of the pioneers in mechanical calculation. He developed the binary number system used in digital computers."
+            },
+            {
+                type: "identification",
+                question: "This is a network of physical objects that automatically share data over the internet.",
+                answer: "Internet of Things",
+                quote: "It is a network of an extensive range of physical objectives that automatically share data over the Internet."
+            },
+            {
+                type: "identification",
+                question: "This is a fast-emerging field that supports computers for science, engineering, research, and machines.",
+                answer: "Robotics",
+                quote: "This fast-emerging field supports computers for science, engineering, research, and machines."
+            },
+            {
+                type: "identification",
+                question: "This is an expansion of the idea of cloud computing that stores data in 'edge devices' closer to end-users.",
+                answer: "Fog Computing",
+                quote: "It is an expansion of the idea of cloud computing proposed by Cisco. The data and application sets are stored in edge devices compared to the clouds of cloud computing."
+            },
+            {
+                type: "identification",
+                question: "This technology allows machines to learn from experience, adjust to new inputs, and do human-like activities.",
+                answer: "Artificial Intelligence",
+                quote: "Machines can learn from experience, adjust to new inputs, and do human-like activities because of this technology."
+            },
+            {
+                type: "identification",
+                question: "This technology uses 'massive and complex datasets' with high volume, variety, and velocity.",
+                answer: "Big Data",
+                quote: "These are massive and complex datasets characterized by high volume, variety of data types, and velocity as data are collected and analyzed at ever-increasing rates."
+            }
+        ];
+
+        function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [array[i], array[j]] = [array[j], array[i]];
             }
-            return array;
         }
-
-        // Initialize the quiz by shuffling questions and loading the first one.
-        function initializeQuiz() {
-            allQuestions = shuffle([...quizData.mcq]).slice(0, 40).concat(shuffle([...quizData.id]));
+        
+        function startQuiz() {
+            // Shuffle and combine questions
+            const mcQuestions = quizQuestions.filter(q => q.type === 'multiple-choice');
+            const idQuestions = quizQuestions.filter(q => q.type === 'identification');
+            shuffleArray(mcQuestions);
+            shuffleArray(idQuestions);
+            quizData = [...mcQuestions, ...idQuestions];
+            
+            quizIntro.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            quizResults.classList.add('hidden');
             currentQuestionIndex = 0;
             score = 0;
+            userAnswers = [];
             wrongAnswers = [];
+            feedbackContainer.classList.add('hidden');
             loadQuestion();
-            loadScores();
-        }
-
-        function loadScores() {
-            try {
-                const scores = JSON.parse(document.cookie.replace(/(?:(?:^|.*;\s*)quizScores\s*=\s*([^;]*).*$)|^.*$/, "$1") || "[]");
-                scoreListEl.innerHTML = '';
-                if (scores.length > 0) {
-                    scores.forEach(s => {
-                        const li = document.createElement('li');
-                        li.textContent = `Score: ${s.score} on ${new Date(s.date).toLocaleDateString()}`;
-                        scoreListEl.appendChild(li);
-                    });
-                } else {
-                    scoreListEl.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic text-sm">No previous scores found.</p>';
-                }
-            } catch (e) {
-                console.error("Failed to parse cookie:", e);
-                scoreListEl.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic text-sm">No previous scores found.</p>';
-            }
-        }
-
-        function saveScore() {
-            const scores = JSON.parse(document.cookie.replace(/(?:(?:^|.*;\s*)quizScores\s*=\s*([^;]*).*$)|^.*$/, "$1") || "[]");
-            const newScore = { date: new Date().toISOString(), score: `${score}/${allQuestions.length}` };
-            scores.push(newScore);
-            document.cookie = `quizScores=${JSON.stringify(scores)};path=/;max-age=31536000`;
         }
 
         function loadQuestion() {
-            hasAnswered = false;
-            optionsContainer.innerHTML = '';
-            inputContainer.classList.add('hidden');
-            answerInput.value = '';
-            feedbackSection.classList.add('hidden');
-            nextButton.textContent = 'Submit Answer';
-            nextButton.disabled = false;
-
-            if (currentQuestionIndex >= allQuestions.length) {
-                showResults();
+            if (currentQuestionIndex >= quizData.length) {
+                endQuiz();
                 return;
             }
 
-            const currentQuestion = allQuestions[currentQuestionIndex];
-            questionText.textContent = currentQuestion.question;
-            questionCount.textContent = `Question ${currentQuestionIndex + 1} of ${allQuestions.length}`;
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionNumberElem.textContent = `Question ${currentQuestionIndex + 1} of ${quizData.length}`;
+            questionTextElem.textContent = currentQuestion.question;
+            feedbackContainer.classList.add('hidden');
 
-            if (currentQuestion.options) {
+            if (currentQuestion.type === 'multiple-choice') {
                 optionsContainer.classList.remove('hidden');
-                shuffle(currentQuestion.options).forEach(option => {
+                identificationInputContainer.classList.add('hidden');
+                optionsContainer.innerHTML = '';
+                shuffleArray(currentQuestion.options);
+                currentQuestion.options.forEach(option => {
                     const button = document.createElement('button');
                     button.textContent = option;
-                    button.classList.add('option-button', 'text-left', 'bg-blue-100', 'hover:bg-blue-200', 'dark:bg-blue-800', 'dark:hover:bg-blue-700', 'text-blue-800', 'dark:text-blue-200', 'font-semibold', 'py-3', 'px-4', 'rounded-xl', 'transition-colors', 'duration-200', 'shadow-sm', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-400', 'dark:focus:ring-blue-500');
-                    button.onclick = () => handleAnswer(button, option);
+                    button.classList.add('quiz-option', 'px-4', 'py-2', 'bg-gray-200', 'rounded-md', 'hover:bg-gray-300', 'font-medium', 'transition-colors', 'duration-200');
+                    button.addEventListener('click', () => handleAnswer(option));
                     optionsContainer.appendChild(button);
                 });
-            } else {
+            } else if (currentQuestion.type === 'identification') {
                 optionsContainer.classList.add('hidden');
-                inputContainer.classList.remove('hidden');
+                identificationInputContainer.classList.remove('hidden');
+                identificationInput.value = '';
+                identificationInput.focus();
             }
+
+            nextQuestionBtn.textContent = 'Submit Answer';
         }
 
-        function handleAnswer(button, userChoice) {
-            if (hasAnswered) return;
-            hasAnswered = true;
-
-            const currentQuestion = allQuestions[currentQuestionIndex];
+        function handleAnswer(selectedAnswer) {
+            const currentQuestion = quizData[currentQuestionIndex];
             let isCorrect = false;
-            let userAnswerText;
 
-            if (currentQuestion.options) {
-                userAnswerText = userChoice;
-                isCorrect = userChoice === currentQuestion.answer;
-                const allOptionButtons = document.querySelectorAll('.option-button');
-                allOptionButtons.forEach(btn => {
+            if (currentQuestion.type === 'multiple-choice') {
+                isCorrect = selectedAnswer === currentQuestion.answer;
+                
+                // Disable all option buttons
+                Array.from(optionsContainer.children).forEach(btn => {
                     btn.disabled = true;
-                    btn.classList.remove('bg-blue-100', 'hover:bg-blue-200', 'dark:bg-blue-800', 'dark:hover:bg-blue-700');
                     if (btn.textContent === currentQuestion.answer) {
-                        btn.classList.add('correct-answer-bg', 'text-blue-800', 'dark:text-blue-200');
-                    }
-                    if (btn.textContent === userAnswerText && !isCorrect) {
-                        btn.classList.add('wrong-answer-bg', 'text-blue-800', 'dark:text-blue-200');
+                        btn.classList.add('bg-green-500', 'text-white');
+                        btn.classList.remove('bg-gray-200', 'hover:bg-gray-300', 'quiz-option');
+                    } else if (btn.textContent === selectedAnswer) {
+                        btn.classList.add('bg-red-500', 'text-white');
+                        btn.classList.remove('bg-gray-200', 'hover:bg-gray-300', 'quiz-option');
                     }
                 });
-            } else { // Identification question
-                userAnswerText = answerInput.value.trim();
-                isCorrect = currentQuestion.answer.some(ans => userAnswerText.toLowerCase() === ans.toLowerCase());
+            } else if (currentQuestion.type === 'identification') {
+                const userAnswer = identificationInput.value.trim();
+                isCorrect = userAnswer.toLowerCase() === currentQuestion.answer.toLowerCase();
+                
+                identificationInput.disabled = true;
             }
 
             if (isCorrect) {
                 score++;
-                feedbackStatus.textContent = "Correct! ✅";
-                feedbackStatus.classList.remove('wrong-answer-text');
-                feedbackStatus.classList.add('correct-answer-text');
+                feedbackMessage.textContent = 'Correct!';
+                feedbackMessage.classList.remove('text-red-500');
+                feedbackMessage.classList.add('text-green-500');
+                feedbackContainer.classList.add('bg-green-100', 'border-green-500');
             } else {
                 wrongAnswers.push({
                     question: currentQuestion.question,
-                    userAnswer: userAnswerText,
-                    correctAnswer: currentQuestion.options ? currentQuestion.answer : currentQuestion.answer[0]
+                    userAnswer: currentQuestion.type === 'identification' ? identificationInput.value.trim() : selectedAnswer,
+                    correctAnswer: currentQuestion.answer
                 });
-                feedbackStatus.textContent = "Incorrect. ❌";
-                feedbackStatus.classList.remove('correct-answer-text');
-                feedbackStatus.classList.add('wrong-answer-text');
-            }
-            
-            feedbackExplanation.textContent = currentQuestion.explanation;
-            feedbackSection.classList.remove('hidden');
-            nextButton.textContent = 'Next Question';
-        }
-        
-        function handleNext() {
-            if (!hasAnswered) {
-                // If it's an identification question, handle the answer submission
-                const currentQuestion = allQuestions[currentQuestionIndex];
-                if (!currentQuestion.options) {
-                    handleAnswer(null, null);
-                }
-                return;
+                feedbackMessage.textContent = 'Incorrect.';
+                feedbackMessage.classList.remove('text-green-500');
+                feedbackMessage.classList.add('text-red-500');
+                feedbackContainer.classList.add('bg-red-100', 'border-red-500');
             }
 
+            feedbackQuote.textContent = currentQuestion.quote;
+            feedbackContainer.classList.remove('hidden');
+            feedbackContainer.classList.remove('bg-green-100', 'border-green-500', 'bg-red-100', 'border-red-500');
+            if (isCorrect) {
+                 feedbackContainer.classList.add('bg-green-100', 'border-green-500');
+            } else {
+                 feedbackContainer.classList.add('bg-red-100', 'border-red-500');
+            }
+
+            nextQuestionBtn.textContent = 'Next Question';
+            nextQuestionBtn.removeEventListener('click', handleSubmit);
+            nextQuestionBtn.addEventListener('click', handleNext);
+        }
+
+        function handleSubmit() {
+            const currentQuestion = quizData[currentQuestionIndex];
+            if (currentQuestion.type === 'identification') {
+                if (identificationInput.value.trim() === '') {
+                    showMessage('Please enter an answer before submitting.');
+                } else {
+                    handleAnswer(identificationInput.value.trim());
+                }
+            } else {
+                showMessage('Please select an option before submitting.');
+            }
+        }
+
+        function handleNext() {
             currentQuestionIndex++;
             loadQuestion();
         }
 
-        function showResults() {
-            saveScore();
-            quizSection.classList.add('hidden');
-            resultSection.classList.remove('hidden');
+        startQuizBtn.addEventListener('click', startQuiz);
+        nextQuestionBtn.addEventListener('click', handleSubmit);
+        restartQuizBtn.addEventListener('click', startQuiz);
 
-            const totalQuestions = allQuestions.length;
-            finalScore.textContent = `You scored ${score} out of ${totalQuestions}!`;
+        function endQuiz() {
+            quizContainer.classList.add('hidden');
+            quizResults.classList.remove('hidden');
+            finalScoreElem.textContent = score;
+            totalQuestionsElem.textContent = quizData.length;
+            wrongAnswersList.innerHTML = '';
+            wrongAnswers.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>Question:</strong> ${item.question}<br><strong>Your Answer:</strong> ${item.userAnswer}<br><strong>Correct Answer:</strong> ${item.correctAnswer}`;
+                wrongAnswersList.appendChild(li);
+            });
 
-            const percentage = (score / totalQuestions) * 100;
-            if (percentage > 80) {
-                scoreMessage.textContent = 'Excellent job! You have a great understanding of the topic.';
-            } else if (percentage > 50) {
-                scoreMessage.textContent = 'Good effort! You know a lot, but there\'s room for improvement.';
-            } else {
-                scoreMessage.textContent = 'Keep studying! Review the material to improve your score.';
+            // Save score to cookie
+            const previousScore = getCookie('quizScore');
+            if (!previousScore || score > parseInt(previousScore)) {
+                setCookie('quizScore', score, 365);
             }
-            
-            answersSummary.innerHTML = '';
-            if (wrongAnswers.length > 0) {
-                incorrectTitle.classList.remove('hidden');
-                wrongAnswers.forEach(answer => {
-                    const summaryItem = document.createElement('div');
-                    summaryItem.classList.add('p-4', 'rounded-lg', 'mb-4', 'shadow-sm', 'border', 'incorrect-summary-card');
-                    
-                    summaryItem.innerHTML = `
-                        <p class="font-bold mb-2">${answer.question}</p>
-                        <p class="text-sm">Your Answer: <span class="wrong-answer-text font-semibold">${answer.userAnswer}</span></p>
-                        <p class="text-sm">Correct Answer: <span class="correct-answer-text font-semibold">${answer.correctAnswer}</span></p>
-                    `;
-                    answersSummary.appendChild(summaryItem);
-                });
-            } else {
-                incorrectTitle.classList.add('hidden');
-                answersSummary.innerHTML = '<p class="text-lg text-gray-500 dark:text-gray-400">You got all the questions right! Great job!</p>';
-            }
-            loadScores();
         }
 
-        function restartQuiz() {
-            resultSection.classList.add('hidden');
-            quizSection.classList.remove('hidden');
-            initializeQuiz();
+        // Check and display previous score on load
+        const previousScore = getCookie('quizScore');
+        if (previousScore) {
+            previousScoreContainer.classList.remove('hidden');
+            previousScoreDisplay.textContent = `${previousScore}/${40 + quizQuestions.filter(q => q.type === 'identification').length}`;
         }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-        }
-
-        nextButton.addEventListener('click', handleNext);
-        restartButton.addEventListener('click', restartQuiz);
-        modeToggle.addEventListener('click', toggleDarkMode);
-
-        // Start the quiz automatically on page load
-        document.addEventListener('DOMContentLoaded', initializeQuiz);
     </script>
 </body>
 </html>
