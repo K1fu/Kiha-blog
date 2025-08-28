@@ -818,11 +818,11 @@
                     question: 'According to the handout, what is the single rule for creating flowcharts?',
                     options: [
                         'All symbols must be connected.',
-                        'The flow should only be from top to bottom.',
-                        'Each symbol should have only one entry and one exit point, except for the decision symbol.',
-                        'The symbols must be expressed in a specific programming language.'
+                        'The program logic should flow from top to bottom.',
+                        'Each symbol has one entry and one exit, except the decision symbol.',
+                        'Operations must be independent of any programming language.'
                     ],
-                    answer: 'Each symbol should have only one entry and one exit point, except for the decision symbol.',
+                    answer: 'Each symbol has one entry and one exit, except the decision symbol.',
                     explanation: 'Each symbol should contain only one entry point and one exit point, except the decision symbol. It is known as the single rule.'
                 },
                 {
@@ -1085,6 +1085,7 @@
             let score = 0;
             let wrongAnswers = [];
             let selectedOption = null;
+            let isAnswered = false;
 
             // Load mode preference from cookies
             const savedMode = getCookie('darkMode');
@@ -1155,6 +1156,8 @@
                 feedbackElement.style.display = 'none';
                 submitButton.textContent = 'Submit';
                 submitButton.disabled = false;
+                isAnswered = false;
+                selectedOption = null;
                 
                 optionsContainer.innerHTML = '';
                 identificationInput.style.display = 'none';
@@ -1166,7 +1169,7 @@
                         optionElement.classList.add('option');
                         optionElement.textContent = option;
                         optionElement.addEventListener('click', () => {
-                            if (!submitButton.disabled) {
+                            if (!isAnswered) {
                                 document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
                                 optionElement.classList.add('selected');
                                 selectedOption = option;
@@ -1178,12 +1181,12 @@
                     optionsContainer.style.display = 'none';
                     identificationInput.style.display = 'block';
                     identificationInput.value = '';
-                    selectedOption = null;
                 }
             }
 
             // Function to check the answer
             function checkAnswer() {
+                isAnswered = true;
                 const currentQuestion = quizData[currentQuestionIndex];
                 let isCorrect = false;
                 let userAnswer = '';
@@ -1211,8 +1214,6 @@
 
                 showFeedback(currentQuestion.explanation, isCorrect);
                 submitButton.textContent = 'Next Question';
-                submitButton.disabled = true;
-                submitButton.onclick = nextQuestion;
             }
 
             // Function to show feedback
@@ -1244,20 +1245,22 @@
                 updateScoreHistoryDisplay();
             }
 
-            // Function to move to the next question
-            function nextQuestion() {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < quizData.length) {
-                    showQuestion();
-                    submitButton.onclick = checkAnswer;
+            // Function to handle button click
+            submitButton.addEventListener('click', () => {
+                if (submitButton.textContent === 'Submit') {
+                    checkAnswer();
                 } else {
-                    showResults();
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < quizData.length) {
+                        showQuestion();
+                    } else {
+                        showResults();
+                    }
                 }
-            }
+            });
 
             // Initial setup
             showQuestion();
-            submitButton.onclick = checkAnswer;
             updateScoreHistoryDisplay();
         });
     </script>
