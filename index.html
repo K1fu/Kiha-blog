@@ -4,741 +4,1292 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Computer Programming 1 - Prelims</title>
-    <!-- Use a modern, easy-to-read font like Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --button-bg: #3498db;
+            --button-text: #ffffff;
+            --correct-color: #2ecc71;
+            --wrong-color: #e74c3c;
+            --border-color: #bdc3c7;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode {
+            --bg-color: #1a202c;
+            --text-color: #e2e8f0;
+            --card-bg: #2d3748;
+            --button-bg: #4a5568;
+            --button-text: #e2e8f0;
+            --correct-color: #48bb78;
+            --wrong-color: #f56565;
+            --border-color: #4a5568;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
         body {
             font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
         }
-        .dark {
-            @apply bg-gray-900 text-gray-100;
-        }
-        .light {
-            @apply bg-gray-50 text-gray-900;
-        }
+
         .quiz-container {
-            min-height: calc(100vh - 8rem); /* Adjust based on header height */
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--box-shadow);
+            transition: background-color 0.3s, box-shadow 0.3s;
+            position: relative;
         }
-        .explanation-box {
-            @apply bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mt-4 border border-gray-200 dark:border-gray-700;
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
-        .explanation-box p {
-            @apply text-sm italic text-gray-600 dark:text-gray-300;
+        
+        h1 {
+            font-size: 1.8rem;
+            margin: 0;
         }
-        .button-group button {
+
+        #mode-toggle {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 0.9rem;
+        }
+
+        #mode-toggle:hover {
+            opacity: 0.9;
+        }
+
+        #quiz {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #question-text {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .option {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
             transition: background-color 0.2s, transform 0.1s;
+            border: 2px solid transparent;
+            font-size: 1rem;
         }
-        .button-group button:hover {
+
+        body.dark-mode .option {
+            background-color: #4a5568;
+        }
+
+        .option:hover {
             transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        /* Custom scrollbar for incorrect questions list */
-        .incorrect-list::-webkit-scrollbar {
-            width: 8px;
+        
+        .option.selected {
+            border-color: var(--button-bg);
+            background-color: #d1d8df;
         }
-        .incorrect-list::-webkit-scrollbar-track {
-            background: #e0e0e0;
-            border-radius: 10px;
+        
+        body.dark-mode .option.selected {
+             background-color: #6a798d;
         }
-        .incorrect-list::-webkit-scrollbar-thumb {
-            background: #bdbdbd;
-            border-radius: 10px;
+
+        #identification-input {
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            margin-bottom: 20px;
         }
-        .incorrect-list::-webkit-scrollbar-thumb:hover {
-            background: #a0a0a0;
+
+        #submit-btn {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        #submit-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        #submit-btn:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        #feedback, #results {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: #ecf0f1;
+        }
+
+        body.dark-mode #feedback, body.dark-mode #results {
+            background-color: #4a5568;
+        }
+
+        #feedback h3, #results h3 {
+            color: var(--text-color);
+            margin-top: 0;
+        }
+
+        .explanation {
+            font-style: italic;
+            color: #7f8c8d;
+            border-left: 4px solid var(--button-bg);
+            padding-left: 10px;
+            margin-top: 15px;
+        }
+        
+        #results {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        #wrong-questions-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .wrong-question-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 0;
+        }
+        
+        .wrong-question-item:last-child {
+            border-bottom: none;
+        }
+
+        .wrong-question-item p {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .wrong-question-item span {
+            color: var(--wrong-color);
+            font-style: italic;
+            display: block;
+            margin-top: 5px;
+        }
+
+        #score-history {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        #score-history li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #score-history li:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            #question-text {
+                font-size: 1.2rem;
+            }
         }
     </style>
-</head>
-<body class="light">
-    <!-- Main application container -->
-    <div class="min-h-screen flex flex-col items-center p-4 sm:p-8">
-        <!-- Header -->
-        <header class="w-full max-w-4xl flex justify-between items-center py-4 mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold text-indigo-600 dark:text-indigo-400">
-                Computer Programming 1 - Prelims
-            </h1>
-            <button id="themeToggle" class="p-2 rounded-full transition-colors duration-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <!-- Moon icon for light mode, Sun icon for dark mode -->
-                <svg id="moonIcon" class="w-6 h-6 text-gray-800 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                </svg>
-                <svg id="sunIcon" class="w-6 h-6 hidden text-gray-800 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                </svg>
-            </button>
-        </header>
-
-        <!-- Quiz container -->
-        <main id="quiz" class="quiz-container w-full max-w-4xl bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-lg shadow-xl flex flex-col items-center">
-            <!-- Quiz content will be injected here -->
-            <div id="quiz-content" class="w-full flex flex-col items-center">
-                <!-- Start Page -->
-                <div id="startPage" class="text-center">
-                    <h2 class="text-2xl sm:text-3xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Welcome to the Prelims Quiz!</h2>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8">
-                        Test your knowledge on the basics of programming and Java. This quiz has 40 multiple-choice questions followed by identification questions.
-                    </p>
-                    <button id="startButton" class="bg-indigo-600 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:bg-indigo-700 transition duration-300">
-                        Start Quiz
-                    </button>
-                </div>
-
-                <!-- Quiz question area -->
-                <div id="questionContainer" class="hidden w-full">
-                    <div class="w-full text-center mb-6">
-                        <span id="questionCount" class="text-xl font-semibold text-gray-600 dark:text-gray-400"></span>
-                    </div>
-                    <div id="questionText" class="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-gray-200"></div>
-                    <div id="mcq-options" class="button-group w-full space-y-4 mb-6"></div>
-                    <div id="identification-input" class="w-full hidden mb-6">
-                        <input type="text" id="identificationAnswer" class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Type your answer here">
-                    </div>
-                    <div id="answerFeedback" class="text-center text-lg font-semibold mb-4 hidden"></div>
-                    <div id="explanationBox" class="explanation-box hidden">
-                        <p id="explanationText" class="text-gray-600 dark:text-gray-300 italic"></p>
-                    </div>
-                    <button id="nextButton" class="bg-indigo-600 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:bg-indigo-700 transition duration-300 hidden">
-                        Next Question
-                    </button>
-                </div>
-
-                <!-- Results Page -->
-                <div id="resultsPage" class="hidden w-full text-center">
-                    <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-gray-800 dark:text-gray-200">Quiz Completed!</h2>
-                    <p id="finalScore" class="text-xl sm:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4"></p>
-                    <div id="incorrectQuestionsContainer" class="w-full max-w-2xl mx-auto">
-                        <h3 id="incorrectTitle" class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 hidden">Questions you got wrong:</h3>
-                        <div id="incorrectList" class="incorrect-list max-h-80 overflow-y-auto w-full p-4 rounded-lg bg-gray-100 dark:bg-gray-700 text-left space-y-4 hidden"></div>
-                    </div>
-                    <button id="restartButton" class="bg-green-600 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:bg-green-700 transition duration-300 mt-8">
-                        Restart Quiz
-                    </button>
-                </div>
-            </div>
-        </main>
-    </div>
-
     <script>
-        // Quiz data based on the provided documents
-        const quizData = [
-            // Multiple Choice Questions (40 items)
-            {
-                type: 'mcq',
-                question: 'What is the primary function of a computer program?',
-                options: ['To display images on a screen.', 'To perform a specific computation task.', 'To connect to the internet.', 'To store data indefinitely.'],
-                answer: 'To perform a specific computation task.',
-                explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language to let the computer perform a specific computation task.'
-            },
-            {
-                type: 'mcq',
-                question: 'Which of the following is an example of system software?',
-                options: ['Microsoft Word', 'Web browsers', 'Operating Systems', 'Spreadsheet software'],
-                answer: 'Operating Systems',
-                explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language to let the computer perform a specific computation task. Examples include system software, web browsers, utility software, multimedia software, and spreadsheet software.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the "Write Once, Run Anywhere" (WORA) philosophy a feature of?',
-                options: ['Procedural programming', 'Java', 'Machine language', 'C++'],
-                answer: 'Java',
-                explanation: 'Java code can be written once and run on any underlying platform like Windows, iOS, Android, and Linux without rewriting. This feature is called the "Write Once, Run Anywhere" (WORA) Philosophy which became a highly sought feature by developers.'
-            },
-            {
-                type: 'mcq',
-                question: 'In programming, what is a "command"?',
-                options: ['A special word used by the compiler.', 'A variable to store data.', 'A unique instruction given to a computer application to perform a task.', 'A collection of useful functions.'],
-                answer: 'A unique instruction given to a computer application to perform a task.',
-                explanation: 'A command is the unique instruction given to a computer application to perform a task of a function such as "print" to display text on the screen.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the purpose of an Integrated Development Environment (IDE)?',
-                options: ['To design a user interface.', 'To write, compile, and run code in a single application.', 'To share code with other developers.', 'To analyze data.'],
-                answer: 'To write, compile, and run code in a single application.',
-                explanation: 'An Integrated Development Environment (IDE) is a software application that provides comprehensive facilities to computer programmers for software development, such as a text editor for writing code, a compiler or interpreter for converting code, and running and testing the code.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is a "compiler"?',
-                options: ['A program that executes instructions line by line.', 'A program that converts low-level code to machine language.', 'A program that converts high-level languages into machine-readable code.', 'A program that manages computer memory.'],
-                answer: 'A program that converts high-level languages into machine-readable code.',
-                explanation: 'A compiler is a program that converts high-level languages into machine-readable code that a computer can execute.'
-            },
-            {
-                type: 'mcq',
-                question: 'Which of the following is a Low-level language?',
-                options: ['Python', 'Assembly Language', 'Java', 'PHP'],
-                answer: 'Assembly Language',
-                explanation: 'Low-level Language - a programming language closer to machine code and hardware in terms of syntax. Examples of this language include the following: Assembly Language - uses specific instructions to control a computer’s hardware. Machine Language - all instructions are written as binary numbers (1 and 0).'
-            },
-            {
-                type: 'mcq',
-                question: 'Which of the following describes Object-oriented programming (OOP)?',
-                options: ['Organizing code into reusable functions.', 'Evaluating mathematical functions to avoid side effects.', 'Revolving around the concepts of objects that encapsulate data and behavior.', 'Writing code in binary instructions.'],
-                answer: 'Revolving around the concepts of objects that encapsulate data and behavior.',
-                explanation: 'Object-oriented programming (OOP) revolves around the concepts of objects that encapsulate data and behavior that promotes modularity, code reusability, and scalability. Examples include Python, VB.NET, and C#.'
-            },
-            {
-                type: 'mcq',
-                question: 'According to the handout, what is an algorithm?',
-                options: ['A program that executes instructions.', 'A set of steps that generates a finite sequence of computational operations to solve a problem.', 'A diagrammatic representation of code.', 'A special word significant to the compiler.'],
-                answer: 'A set of steps that generates a finite sequence of computational operations to solve a problem.',
-                explanation: 'In programming, an algorithm is a set of steps that generates a finite sequence of simple computational operations leading to the solution of a given problem.'
-            },
-            {
-                type: 'mcq',
-                question: 'Which step in the problem-solving process involves implementing the algorithm in a programming language?',
-                options: ['Problem Analysis', 'Algorithm Design', 'Coding', 'Execution'],
-                answer: 'Coding',
-                explanation: 'The complete steps [of the problem-solving process] include: 1. Problem Analysis - evaluating and outlining the problem and its solution requirements. 2. Algorithm Design - designing an algorithm to solve problems. 3. Coding - implementing the algorithm in a programming language. 4. Execution - verifying whether the algorithm works or not.'
-            },
-            {
-                type: 'mcq',
-                question: 'In Java, what is the keyword that is a type of access or visibility modifier?',
-                options: ['static', 'void', 'public', 'class'],
-                answer: 'public',
-                explanation: 'The public keyword is a type of access or visibility modifier. This keyword is used to define a main() method so that the interpreter can execute the program.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the purpose of the `static` keyword in the Java `main` method?',
-                options: ['It indicates a non-value-returning method.', 'It is used to define a main() method so the interpreter can execute the program.', 'It tells that this is a class method and can be executed without creating an object of the class.', 'It is a reserved word for all variables.'],
-                answer: 'It tells that this is a class method and can be executed without creating an object of the class.',
-                explanation: 'The static keyword tells that this is a class method. The main method is always declared static so that it can be executed without creating an object of the class.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the `void` keyword used for in Java?',
-                options: ['To indicate a value-returning method.', 'To specify a method that does not return any value.', 'To define a variable that can hold any data type.', 'To specify a class that can be accessed publicly.'],
-                answer: 'To specify a method that does not return any value.',
-                explanation: 'The void keyword means that the main is a non-value-returning method, which means the main is not expected to return any value.'
-            },
-            {
-                type: 'mcq',
-                question: 'How are Java programming statements terminated?',
-                options: ['With a period (`.`)', 'With a comma (`,`)', 'With a semicolon (`;`)', 'With a closing parenthesis (`)`)'],
-                answer: 'With a semicolon (`;`)',
-                explanation: 'Every Java statements ends with a semicolon.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the purpose of a flowchart "Decision" symbol?',
-                options: ['To show the start and end of a process.', 'To show any input or output operation.', 'To indicate any process not specially defined.', 'To show any point in the process where a decision must be made to determine further action.'],
-                answer: 'To show any point in the process where a decision must be made to determine further action.',
-                explanation: 'Decision symbol: Shows any point in the process wherein a decision must be made to determine further action.'
-            },
-            {
-                type: 'mcq',
-                question: 'Which flowchart symbol is used to show the start and end of a set of computer-related processes?',
-                options: ['Input/Output', 'Terminal', 'Processing', 'Flow line'],
-                answer: 'Terminal',
-                explanation: 'Terminal symbol: Shows the start and end of a set of computer-related processes.'
-            },
-            {
-                type: 'mcq',
-                question: 'Which of the following is a rule for creating program flowcharts?',
-                options: ['The program logic must show the flow from left to right only.', 'The program logic must show the flow from top to bottom and/or left to right.', 'All symbols must have two exit points.', 'Operations must be expressed using a specific programming language.'],
-                answer: 'The program logic must show the flow from top to bottom and/or left to right.',
-                explanation: 'The program logic should only show the flow from top to bottom and/or left to right.'
-            },
-            {
-                type: 'mcq',
-                question: 'In Java, what is a "literal string"?',
-                options: ['A collection of similar data types.', 'A sequence of characters that appears exactly as written, enclosed by double quotation marks.', 'A reserved word used for variables.', 'An object that performs a specific task.'],
-                answer: 'A sequence of characters that appears exactly as written, enclosed by double quotation marks.',
-                explanation: 'A literal string is a series of characters that appear exactly as written and is always enclosed by double quotation marks (",").'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the purpose of `//` and `/* ... */` in Java code?',
-                options: ['To declare variables.', 'To create a new class.', 'To add comments that are not compiled or executed.', 'To define a method.'],
-                answer: 'To add comments that are not compiled or executed.',
-                explanation: 'Comments provide additional information to make programs easier for programmers and other programmers to understand. Comments will not be compiled and executed when the program is run. A comment line can start with // symbols and continue to the end of the line. This type of comment line is used for a single-line comment. Comments can also be placed between /* and */ symbols if the comments run over multiple lines.'
-            },
-            {
-                type: 'mcq',
-                question: 'What does a flowchart "Input/Output" symbol represent?',
-                options: ['A processing step.', 'The start of a program.', 'Any input/output operation.', 'A decision point.'],
-                answer: 'Any input/output operation.',
-                explanation: 'Input/Output symbol: Shows any input/output operation.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the main purpose of Java APIs?',
-                options: ['To allow developers to create new programming languages.', 'To provide pre-written programs with existing functionality.', 'To compile and execute Java programs.', 'To manage user input.'],
-                answer: 'To provide pre-written programs with existing functionality.',
-                explanation: 'Java APIs are pre-written Java programs that plug and play existing functionality into a code, such as getting the time and date, performing mathematical operations, or manipulating text.'
-            },
-            {
-                type: 'mcq',
-                question: 'Which programming paradigm emphasizes the sequence of steps to execute a program and organizes code into reusable procedures or functions?',
-                options: ['Functional Programming', 'Object-oriented programming (OOP)', 'Procedural Programming', 'Machine Language'],
-                answer: 'Procedural Programming',
-                explanation: 'Procedural Programming or imperative programming, focuses on organizing code into reusable procedures or functions, emphasizing the sequence of steps to execute a program. Examples include BASIC, C and C++, Pascal, and Java.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is a "class" in Java?',
-                options: ['A pre-written program that provides functionality.', 'A collection of similar data types.', 'The basic unit of a Java program that defines a group of objects, data members, and methods.', 'A specific instruction given to the compiler.'],
-                answer: 'The basic unit of a Java program that defines a group of objects, data members, and methods.',
-                explanation: 'A class is the basic unit of a Java program. It also defines a group of objects that includes data members, which are places to store data, and methods which are places to put the program logic.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is a "variable"?',
-                options: ['A special word significant to the Java compiler.', 'A name used to refer to data stored in the memory.', 'A set of grammatical rules for a computer.', 'A diagrammatic representation of an algorithm.'],
-                answer: 'A name used to refer to data stored in the memory.',
-                explanation: 'Reserved words or keywords are special words significant to the Java compiler. Aside from class names, these cannot be used as variables, a name used to refer to data stored in the memory.'
-            },
-            {
-                type: 'mcq',
-                question: 'Which of the following is a rule for naming an identifier in Java?',
-                options: ['It can begin with a digit.', 'It can have white spaces.', 'It cannot be a reserved word.', 'It is not case-sensitive.'],
-                answer: 'It cannot be a reserved word.',
-                explanation: 'An identifier is the name given to a program component... It cannot be a reserved word.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the file extension for a Java source code file?',
-                options: ['.class', '.exe', '.java', '.txt'],
-                answer: '.java',
-                explanation: 'The programming statements or source code are stored on a disk with a .java file extension.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the Java command used to compile a program?',
-                options: ['javac', 'java', 'compile', 'run'],
-                answer: 'javac',
-                explanation: 'Compile the Java program using the javac command: javac [name of the Java file].java.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the Java command used to execute a compiled program?',
-                options: ['javac', 'java', 'run', 'execute'],
-                answer: 'java',
-                explanation: 'Execute the compiled Java program using the java command (interpreter): java [name of the Java file].'
-            },
-            {
-                type: 'mcq',
-                question: 'What does the Java Virtual Machine (JVM) do?',
-                options: ['It only compiles code.', 'It only interprets code.', 'It is a virtual machine that runs Java applications by translating bytecode into machine language.', 'It provides a graphical user interface.'],
-                answer: 'It is a virtual machine that runs Java applications by translating bytecode into machine language.',
-                explanation: 'A JVM is an environment that translates Java bytecode, an intermediate-level language, into machine language and executes it.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the role of an "Assembler"?',
-                options: ['It translates high-level languages into machine code.', 'It directly executes instructions in a high-level language.', 'It converts instructions written in low-level assembly code into machine language.', 'It is a collection of useful functions.'],
-                answer: 'It converts instructions written in low-level assembly code into machine language.',
-                explanation: 'An assembler is a program that converts instructions written in low-level assembly code into relocatable machine language.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is a "flow line" used for in a flowchart?',
-                options: ['To show the start of a process.', 'To connect the symbols.', 'To indicate a decision.', 'To show an input operation.'],
-                answer: 'To connect the symbols.',
-                explanation: 'Flow line: Used for connecting the symbols.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the "single rule" for creating program flowcharts?',
-                options: ['Only one entry point and one exit point, except for the decision symbol.', 'The flowchart must contain at least five symbols.', 'It must start with an input symbol and end with an output symbol.', 'It must use only one type of symbol.'],
-                answer: 'Only one entry point and one exit point, except for the decision symbol.',
-                explanation: 'Each symbol should contain only one entry point and one exit point, except the decision symbol. It is known as the single rule.'
-            },
-            {
-                type: 'mcq',
-                question: 'What do the parentheses `()` after a method name signify?',
-                options: ['It is a class name.', 'It is a variable.', 'It is an object.', 'Method names are always followed by parentheses.'],
-                answer: 'Method names are always followed by parentheses.',
-                explanation: 'println() is a method. Method names are always followed by parentheses.'
-            },
-            {
-                type: 'mcq',
-                question: 'In Java, what is the role of the square brackets `[]` in `String[] args`?',
-                options: ['They indicate that `args` is an object.', 'They indicate that `args` is a variable.', 'They indicate that `args` is a string.', 'They indicate that `args` is an array.'],
-                answer: 'They indicate that `args` is an array.',
-                explanation: 'The square brackets [ indicate args is an array. An array is a collection of similar data types, while a string is a sequence of characters containing letters, numbers, and symbols.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the best way to understand a programming language, according to the handout?',
-                options: ['By memorizing keywords.', 'By writing a complex program.', 'By dissecting and examining its sample program.', 'By reading documentation about its APIs.'],
-                answer: 'By dissecting and examining its sample program.',
-                explanation: 'The best way to understand a programming language is by dissecting and examining its sample program.'
-            },
-            {
-                type: 'mcq',
-                question: 'What does a "Terminal" symbol represent in a flowchart?',
-                options: ['A process', 'Input/Output', 'A decision', 'Start and end of a process'],
-                answer: 'Start and end of a process',
-                explanation: 'Terminal: Shows the start and end of a set of computer-related processes.'
-            },
-            {
-                type: 'mcq',
-                question: 'What is the role of the `println()` method?',
-                options: ['To read input from the user.', 'To perform mathematical operations.', 'To display text on the screen.', 'To declare a new variable.'],
-                answer: 'To display text on the screen.',
-                explanation: 'System.out.println("First Java Application"); //for display.'
-            },
-            {
-                type: 'mcq',
-                question: 'Which of the following describes the Java Runtime Environment (JRE)?',
-                options: ['A compiler that converts code to bytecode.', 'The software that Java programs require to run correctly.', 'A tool for debugging Java applications.', 'A virtual machine that executes code.'],
-                answer: 'The software that Java programs require to run correctly.',
-                explanation: 'It is the software that Java programs require to run correctly. It provides the class libraries and other resources that any Java program needs.'
-            },
-            {
-                type: 'mcq',
-                question: 'How are braces `{}` used in a Java program?',
-                options: ['To identify single-line comments.', 'To enclose a literal string.', 'To define parameters for a method.', 'To identify blocks of code and data.'],
-                answer: 'To identify blocks of code and data.',
-                explanation: 'Still, on line 1, braces are used to identify blocks of code and data. It requires matching opening ({) and closing braces (}).'
-            },
-            {
-                type: 'mcq',
-                question: 'According to the handout, what is a "programming language"?',
-                options: ['A set of grammatical rules that commands a computer to behave in a specific way.', 'A collection of useful functions.', 'A program that converts code to binary numbers.', 'A software application that provides tools for developers.'],
-                answer: 'A set of grammatical rules that commands a computer to behave in a specific way.',
-                explanation: 'A computer language is a set of grammatical rules that commands a computer or a device to behave in a specific way. It also refers to programming language.'
-            },
+        document.addEventListener('DOMContentLoaded', () => {
+            const quizData = [
+                // --- Multiple Choice Questions (40 items) ---
+                {
+                    type: 'multiple-choice',
+                    question: 'According to the provided handout, what is a computer program?',
+                    options: [
+                        'A collection of symbols and characters to create a valid statement.',
+                        'A sequential set of instructions, known as codes, written in a computer language.',
+                        'A set of rules defining the syntax of a programming language.',
+                        'A program that converts high-level languages into machine-readable code.'
+                    ],
+                    answer: 'A sequential set of instructions, known as codes, written in a computer language.',
+                    explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language to let the computer perform a specific computation task.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the "art and science of instructing computers to perform tasks using a specific programming language"?',
+                    options: [
+                        'Flowcharting',
+                        'Debugging',
+                        'Programming',
+                        'System Analysis'
+                    ],
+                    answer: 'Programming',
+                    explanation: 'It is the art and science of instructing computers to perform tasks using a specific programming language. It creates codes that tell a computer how to solve problems and accomplish various operations.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'Which programming paradigm focuses on organizing code into reusable procedures or functions and emphasizes the sequence of steps?',
+                    options: [
+                        'Object-oriented programming (OOP)',
+                        'Functional Programming',
+                        'Procedural Programming',
+                        'Declarative Programming'
+                    ],
+                    answer: 'Procedural Programming',
+                    explanation: 'Procedural Programming or imperative programming, focuses on organizing code into reusable procedures or functions, emphasizing the sequence of steps to execute a program.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What type of language is described as being closer to machine code and hardware in terms of syntax?',
+                    options: [
+                        'High-level Language',
+                        'Assembly Language',
+                        'Low-level Language',
+                        'Natural Language'
+                    ],
+                    answer: 'Low-level Language',
+                    explanation: 'Low-level Language - a programming language closer to machine code and hardware in terms of syntax.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is a program that directly executes instructions in a high-level language without converting them into a machine language?',
+                    options: [
+                        'Compiler',
+                        'Interpreter',
+                        'Assembler',
+                        'IDE'
+                    ],
+                    answer: 'Interpreter',
+                    explanation: 'Interpreter - It is a program that directly executes instructions in a high-level language without converting them into a machine language.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'In Java, what is the reserved word that represents the basic unit of a program?',
+                    options: [
+                        'main',
+                        'void',
+                        'class',
+                        'public'
+                    ],
+                    answer: 'class',
+                    explanation: 'Line 1 begins with the reserved word or keyword class. A class is the basic unit of a Java program.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is an identifier in Java?',
+                    options: [
+                        'A special word significant to the Java compiler.',
+                        'A program that converts high-level languages.',
+                        'The name given to a program component, such as a class, object, or variable.',
+                        'A collection of useful resources.'
+                    ],
+                    answer: 'The name given to a program component, such as a class, object, or variable.',
+                    explanation: 'An identifier is the name given to a program component, such as a class, object, or variable.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What does the `void` keyword signify in a Java method declaration?',
+                    options: [
+                        'It is a class method.',
+                        'It is an access modifier.',
+                        'It is a non-value-returning method.',
+                        'It indicates that a method has parameters.'
+                    ],
+                    answer: 'It is a non-value-returning method.',
+                    explanation: 'The void keyword means that the main is a non-value-returning method, which means the main is not expected to return any value.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is a "literal string" in Java?',
+                    options: [
+                        'A program that directly executes instructions.',
+                        'A set of rules defining the syntax of a language.',
+                        'A series of characters that appear exactly as written and is always enclosed by double quotation marks.',
+                        'A comment in the code.'
+                    ],
+                    answer: 'A series of characters that appear exactly as written and is always enclosed by double quotation marks.',
+                    explanation: 'A literal string is a series of characters that appear exactly as written and is always enclosed by double quotation marks (",").'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the purpose of comments in a program?',
+                    options: [
+                        'They are executable instructions.',
+                        'They are used to define a class name.',
+                        'They provide additional information to make programs easier to understand.',
+                        'They convert source code into bytecode.'
+                    ],
+                    answer: 'They provide additional information to make programs easier for programmers and other programmers to understand.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the purpose of the `javac` command?',
+                    options: [
+                        'To execute a compiled Java program.',
+                        'To save a Java file with a .txt extension.',
+                        'To compile a Java program.',
+                        'To set the path of the JDK.'
+                    ],
+                    answer: 'To compile a Java program.',
+                    explanation: 'Compile the Java program using the javac command: javac [name of the Java file].java'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What does the `java` command do?',
+                    options: [
+                        'It compiles the Java program.',
+                        'It executes the compiled Java program.',
+                        'It sets the JDK path.',
+                        'It creates a new class.'
+                    ],
+                    answer: 'It executes the compiled Java program.',
+                    explanation: 'Execute the compiled Java program using the java command (interpreter): java [name of the Java file]'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the term for a set of steps that generates a finite sequence of simple computational operations to solve a problem?',
+                    options: [
+                        'Pseudocode',
+                        'Flowchart',
+                        'Algorithm',
+                        'Program'
+                    ],
+                    answer: 'Algorithm',
+                    explanation: 'In programming, an algorithm is a set of steps that generates a finite sequence of simple computational operations leading to the solution of a given problem.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the name for the diagrammatic representation of the steps of an algorithm?',
+                    options: [
+                        'Pseudocode',
+                        'Flowchart',
+                        'Syntax',
+                        'Command'
+                    ],
+                    answer: 'Flowchart',
+                    explanation: 'It is a diagrammatic representation of the steps of an algorithm.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'Which flowchart symbol shows the start and end of a set of computer-related processes?',
+                    options: [
+                        'Input/Output',
+                        'Terminal',
+                        'Process',
+                        'Decision'
+                    ],
+                    answer: 'Terminal',
+                    explanation: 'Terminal - Shows the start and end of a set of computer-related processes.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What does the On-page Connector symbol do in a flowchart?',
+                    options: [
+                        'Shows any point in the process where a decision is made.',
+                        'Connects parts of a flowchart continued on the same page.',
+                        'Connects parts of a flowchart continued to separate pages.',
+                        'Shows any input/output operation.'
+                    ],
+                    answer: 'Connects parts of a flowchart continued on the same page.',
+                    explanation: 'On-page Connector - Connects parts of a flowchart continued on the same page.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the purpose of the `public` keyword in the main method of a Java program?',
+                    options: [
+                        'It tells that this is a class method.',
+                        'It makes the method non-value-returning.',
+                        'It is used to define a main() method so that the interpreter can execute the program.',
+                        'It indicates that it is an array.'
+                    ],
+                    answer: 'It is used to define a main() method so that the interpreter can execute the program.',
+                    explanation: 'The public keyword is a type of access or visibility modifier. This keyword is used to define a main() method so that the interpreter can execute the program.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'Which of the following is NOT a requirement for naming an identifier in Java?',
+                    options: [
+                        'An identifier must not be a reserved word.',
+                        'An identifier cannot contain spaces.',
+                        'An identifier can start with a digit.',
+                        'An identifier can contain digits, uppercase letters, lowercase letters, and the underscore and dollar-sign characters.'
+                    ],
+                    answer: 'An identifier can start with a digit.',
+                    explanation: 'The handout states that an identifier must start with an alphabet, an underscore, or a dollar sign. Therefore, it cannot start with a digit.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the purpose of the `System.out.println()` statement in Java?',
+                    options: [
+                        'To read input from the user.',
+                        'To create a new class.',
+                        'To print text to the console and add a new line.',
+                        'To compile the program.'
+                    ],
+                    answer: 'To print text to the console and add a new line.',
+                    explanation: 'The statement System.out.println() prints the output of the program on the monitor. The "ln" at the end means that the cursor will go to the next line after the output is displayed.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'According to the handout, Java was created by which company?',
+                    options: [
+                        'Microsoft',
+                        'Google',
+                        'Sun Microsystems',
+                        'IBM'
+                    ],
+                    answer: 'Sun Microsystems',
+                    explanation: 'It was created by Sun Microsystems in 1995 as a multi-platform, object-oriented, and network-centric language that can be used as a platform in itself.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is a sequential set of instructions, known as codes, written in a computer language?',
+                    options: [
+                        'Computer program',
+                        'Programming language',
+                        'Flowchart',
+                        'Algorithm'
+                    ],
+                    answer: 'Computer program',
+                    explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language to let the computer perform a specific computation task.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the art and science of instructing computers to perform tasks using a specific programming language?',
+                    options: [
+                        'Debugging',
+                        'Programming',
+                        'Flowcharting',
+                        'Algorithm creation'
+                    ],
+                    answer: 'Programming',
+                    explanation: 'It is the art and science of instructing computers to perform tasks using a specific programming language.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is a programming language that is closer to machine code and hardware in terms of syntax?',
+                    options: [
+                        'High-level language',
+                        'Low-level language',
+                        'Intermediate language',
+                        'Scripting language'
+                    ],
+                    answer: 'Low-level language',
+                    explanation: 'Low-level Language - a programming language closer to machine code and hardware in terms of syntax.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is a program that directly executes instructions in a high-level language without converting them into a machine language?',
+                    options: [
+                        'Compiler',
+                        'Interpreter',
+                        'Assembler',
+                        'Debugger'
+                    ],
+                    answer: 'Interpreter',
+                    explanation: 'Interpreter - It is a program that directly executes instructions in a high-level language without converting them into a machine language.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is a `Terminal` symbol used for in a flowchart?',
+                    options: [
+                        'To show a decision point.',
+                        'To show input and output operations.',
+                        'To indicate a process.',
+                        'To show the start and end of a process.'
+                    ],
+                    answer: 'To show the start and end of a process.',
+                    explanation: 'Terminal - Shows the start and end of a set of computer-related processes.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What does the `Input/Output` symbol represent in a flowchart?',
+                    options: [
+                        'Start/end of a process',
+                        'Decision point',
+                        'Input/output operations',
+                        'Processing step'
+                    ],
+                    answer: 'Input/output operations',
+                    explanation: 'Input/Output - Shows any input/output operation performed during the process.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the purpose of the `Process` symbol in a flowchart?',
+                    options: [
+                        'To show a decision point.',
+                        'To indicate input/output.',
+                        'To show any type of function that needs to be performed.',
+                        'To connect to another part of the flowchart.'
+                    ],
+                    answer: 'To show any type of function that needs to be performed.',
+                    explanation: 'Process - Shows any type of function that needs to be performed to transform a certain value.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the main function of the `Decision` symbol in a flowchart?',
+                    options: [
+                        'To show the start of the program.',
+                        'To show a simple process.',
+                        'To show a point where a choice is made, leading to different paths.',
+                        'To represent an output operation.'
+                    ],
+                    answer: 'To show a point where a choice is made, leading to different paths.',
+                    explanation: 'Decision - Shows any point in the process where a decision is made and requires further action.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the purpose of the `Off-page Connector` symbol?',
+                    options: [
+                        'To connect parts of a flowchart on the same page.',
+                        'To show a decision point.',
+                        'To connect parts of a flowchart continued to separate pages.',
+                        'To represent a loop.'
+                    ],
+                    answer: 'To connect parts of a flowchart continued to separate pages.',
+                    explanation: 'Off-page Connector - Connects parts of a flowchart continued to separate pages.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the purpose of the `Flow line` symbol?',
+                    options: [
+                        'To represent a process.',
+                        'To show the direction of flow.',
+                        'To show an input/output operation.',
+                        'To connect parts of the flowchart on the same page.'
+                    ],
+                    answer: 'To show the direction of flow.',
+                    explanation: 'Flow line - Shows the direction of flow from one symbol to another.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'In Java, what is the purpose of a class?',
+                    options: [
+                        'It is a special word significant to the compiler.',
+                        'It is the basic unit of a Java program.',
+                        'It prints text to the console.',
+                        'It executes the program.'
+                    ],
+                    answer: 'It is the basic unit of a Java program.',
+                    explanation: 'A class is the basic unit of a Java program.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is a "literal" in Java?',
+                    options: [
+                        'A variable name.',
+                        'A series of characters that appears exactly as written.',
+                        'A symbol used in flowcharts.',
+                        'A keyword.'
+                    ],
+                    answer: 'A series of characters that appears exactly as written.',
+                    explanation: 'A literal string is a series of characters that appear exactly as written and is always enclosed by double quotation marks (",").'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'In Java, what is the role of the `main` method?',
+                    options: [
+                        'It is used to declare a variable.',
+                        'It is the starting point of program execution.',
+                        'It is used to define a class.',
+                        'It is a non-value-returning method.'
+                    ],
+                    answer: 'It is the starting point of program execution.',
+                    explanation: 'The main() method is the starting point for program execution.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'Which of the following is a rule for creating program flowcharts?',
+                    options: [
+                        'The program logic should only show the flow from bottom to top.',
+                        'Each symbol should contain only one entry point and one exit point, including the decision symbol.',
+                        'Only the standard symbols should be used.',
+                        'The operations should be expressed in a specific programming language.'
+                    ],
+                    answer: 'Only the standard symbols should be used.',
+                    explanation: 'Only the standard symbols should be used in program flowcharts.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What does the `set path=%path%; [JDK bin directory]` command do?',
+                    options: [
+                        'It compiles the Java program.',
+                        'It executes the Java program.',
+                        'It sets the path of the JDK.',
+                        'It saves the Java file.'
+                    ],
+                    answer: 'It sets the path of the JDK.',
+                    explanation: 'This setting tells the operating system where to find the Java compiler and the classes. Setting the path of JDK is defined as set path=%path%; [JDK bin directory]'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is a computer language?',
+                    options: [
+                        'A set of rules for debugging a program.',
+                        'A program that converts code to bytecode.',
+                        'A set of grammatical rules that commands a computer or a device to behave in a specific way.',
+                        'A program that executes a high-level language.'
+                    ],
+                    answer: 'A set of grammatical rules that commands a computer or a device to behave in a specific way.',
+                    explanation: 'A computer language is a set of grammatical rules that commands a computer or a device to behave in a specific way.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'Which of the following is an advantage of using Java?',
+                    options: [
+                        'It is a low-level language.',
+                        'It has an active community and high-quality learning resources.',
+                        'It only supports web development.',
+                        'It is a proprietary language.'
+                    ],
+                    answer: 'It has an active community and high-quality learning resources.',
+                    explanation: 'Active Community Support: Given its popularity and longevity, Java has many active users and a community that can support developers. High-Quality Learning Resources: Learning resources such as detailed documentation, comprehensive books, and courses are available to new programmers for additional support.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the Java Runtime Environment (JRE)?',
+                    options: [
+                        'A program that translates Java code to machine code.',
+                        'A set of rules for a flowchart.',
+                        'A software that Java programs require to run correctly.',
+                        'The name of a class in Java.'
+                    ],
+                    answer: 'A software that Java programs require to run correctly.',
+                    explanation: 'It is the software that Java programs require to run correctly. It provides the class libraries and other resources that any Java program needs.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'In Java, what is the role of the `main` method?',
+                    options: [
+                        'It is used to declare a variable.',
+                        'It is the starting point of program execution.',
+                        'It is used to define a class.',
+                        'It is a non-value-returning method.'
+                    ],
+                    answer: 'It is the starting point of program execution.',
+                    explanation: 'The main() method is the starting point for program execution.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What are the two basic components of a Java program based on the handout?',
+                    options: [
+                        'Statements and expressions',
+                        'Classes and methods',
+                        'Variables and functions',
+                        'Loops and conditionals'
+                    ],
+                    answer: 'Classes and methods',
+                    explanation: 'The two basic components of a Java program are classes and methods. A Java program is composed of classes, and each class contains methods.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the purpose of a flowchart?',
+                    options: [
+                        'To write code for a program.',
+                        'To represent an algorithm in a diagram.',
+                        'To define the syntax of a language.',
+                        'To debug a program.'
+                    ],
+                    answer: 'To represent an algorithm in a diagram.',
+                    explanation: 'It is a diagrammatic representation of the steps of an algorithm.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'Which of the following is a key component of a program?',
+                    options: [
+                        'The flowchart symbols.',
+                        'The programmer\'s name.',
+                        'A sequential set of instructions.',
+                        'The computer\'s operating system.'
+                    ],
+                    answer: 'A sequential set of instructions.',
+                    explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'Which of the following describes a high-level language?',
+                    options: [
+                        'It is closer to machine code.',
+                        'It is difficult for humans to understand.',
+                        'It uses syntax closer to human language.',
+                        'It can only be executed by an assembler.'
+                    ],
+                    answer: 'It uses syntax closer to human language.',
+                    explanation: 'A high-level language uses syntax and statements that are closer to human language, making it easier for programmers to read and write.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is a compiler?',
+                    options: [
+                        'A program that directly executes high-level language.',
+                        'A program that translates source code into machine-readable code.',
+                        'A set of rules for a flowchart.',
+                        'A command that executes a Java program.'
+                    ],
+                    answer: 'A program that translates source code into machine-readable code.',
+                    explanation: 'A compiler is a program that translates a high-level language into machine-readable code.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What does the term "Object-oriented programming (OOP)" mean?',
+                    options: [
+                        'A programming paradigm that focuses on organizing code into reusable procedures or functions.',
+                        'A programming paradigm that uses objects to represent data and procedures.',
+                        'A programming language that is closer to machine code.',
+                        'A program that translates code directly.'
+                    ],
+                    answer: 'A programming paradigm that uses objects to represent data and procedures.',
+                    explanation: 'Object-oriented programming (OOP), or object-based programming, is a paradigm that uses objects to represent data and procedures.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the main advantage of using a flowchart?',
+                    options: [
+                        'It allows a programmer to skip the algorithm phase.',
+                        'It makes the code more efficient.',
+                        'It provides a clear visual representation of the program\'s logic.',
+                        'It automatically debugs the program.'
+                    ],
+                    answer: 'It provides a clear visual representation of the program\'s logic.',
+                    explanation: 'A flowchart provides a clear visual representation of the program\'s logic, making it easier to understand and follow.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is a `reserved word` in Java?',
+                    options: [
+                        'A name for a variable.',
+                        'A special word that is significant to the Java compiler.',
+                        'A symbol used in a flowchart.',
+                        'A comment in the code.'
+                    ],
+                    answer: 'A special word that is significant to the Java compiler.',
+                    explanation: 'Reserved Word - a special word significant to the Java compiler that cannot be used as an identifier.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'According to the handout, what is the single rule for creating flowcharts?',
+                    options: [
+                        'All symbols must be connected.',
+                        'The flow should only be from top to bottom.',
+                        'Each symbol should have only one entry and one exit point, except for the decision symbol.',
+                        'The symbols must be expressed in a specific programming language.'
+                    ],
+                    answer: 'Each symbol should have only one entry and one exit point, except for the decision symbol.',
+                    explanation: 'Each symbol should contain only one entry point and one exit point, except the decision symbol. It is known as the single rule.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the purpose of the `Input/Output` symbol?',
+                    options: [
+                        'To show a decision point.',
+                        'To show the start or end of a program.',
+                        'To show any input/output operation performed during the process.',
+                        'To perform a mathematical function.'
+                    ],
+                    answer: 'To show any input/output operation performed during the process.',
+                    explanation: 'Input/Output - Shows any input/output operation performed during the process.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the primary role of a programmer?',
+                    options: [
+                        'To create hardware.',
+                        'To debug a program.',
+                        'To write code that tells a computer how to solve problems.',
+                        'To design a website\'s layout.'
+                    ],
+                    answer: 'To write code that tells a computer how to solve problems.',
+                    explanation: 'By writing code in programming languages, programmers can develop computer programs or software applications, design websites, analyze data, and automate processes, among other operations.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'Which type of software is an example of a computer program?',
+                    options: [
+                        'A physical keyboard.',
+                        'System software.',
+                        'A computer monitor.',
+                        'A USB flash drive.'
+                    ],
+                    answer: 'System software.',
+                    explanation: 'Examples include system software, web browsers, utility software, multimedia software, and spreadsheet software.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'Which of the following is a major career opportunity for a programmer?',
+                    options: [
+                        'Civil engineering.',
+                        'Software development.',
+                        'Financial accounting.',
+                        'Culinary arts.'
+                    ],
+                    answer: 'Software development.',
+                    explanation: 'Proficiency in programming opens up myriad career opportunities, from software development and web development to data science and artificial intelligence.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'In Java, what does the keyword `void` signify for a method?',
+                    options: [
+                        'It returns a value.',
+                        'It can accept any number of arguments.',
+                        'It does not return any value.',
+                        'It makes the method public.'
+                    ],
+                    answer: 'It does not return any value.',
+                    explanation: 'The void keyword means that the main is a non-value-returning method, which means the main is not expected to return any value.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'Which of the following is an example of a literal string?',
+                    options: [
+                        'Hello World',
+                        '"Hello World"',
+                        'Hello_World',
+                        'Hello World!'
+                    ],
+                    answer: '"Hello World"',
+                    explanation: 'A literal string is a series of characters that appear exactly as written and is always enclosed by double quotation marks (",").'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the output of the `System.out.println("Hello");` statement?',
+                    options: [
+                        'Hello',
+                        'System.out.println("Hello")',
+                        'Hello (on a new line)',
+                        'An error message.'
+                    ],
+                    answer: 'Hello (on a new line)',
+                    explanation: 'The statement System.out.println() prints the output of the program on the monitor. The "ln" at the end means that the cursor will go to the next line after the output is displayed.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is a method in Java?',
+                    options: [
+                        'The name of a class.',
+                        'A block of code or a function that performs a specific task.',
+                        'A variable.',
+                        'A literal string.'
+                    ],
+                    answer: 'A block of code or a function that performs a specific task.',
+                    explanation: 'A method is a block of code or a function that performs a specific task. A method is composed of one or more statements.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the role of the semicolon (;) in Java?',
+                    options: [
+                        'It separates a method from a class.',
+                        'It is used to create a comment.',
+                        'It marks the end of a statement.',
+                        'It indicates the start of a program.'
+                    ],
+                    answer: 'It marks the end of a statement.',
+                    explanation: 'The semicolon (;) is a separator that marks the end of a statement. Every statement must end with a semicolon.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the purpose of the curly braces `{}` in Java?',
+                    options: [
+                        'To define a literal string.',
+                        'To mark the beginning and end of a code block.',
+                        'To show an array.',
+                        'To indicate a comment.'
+                    ],
+                    answer: 'To mark the beginning and end of a code block.',
+                    explanation: 'The curly braces `{}` are used to mark the beginning and end of a block of code or a method.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'In Java, what is the main purpose of the `//` symbol?',
+                    options: [
+                        'To indicate a multi-line comment.',
+                        'To mark the end of a statement.',
+                        'To create a single-line comment.',
+                        'To define an array.'
+                    ],
+                    answer: 'To create a single-line comment.',
+                    explanation: 'A single-line comment begins with two forward slashes (//).'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is a "source code"?',
+                    options: [
+                        'The compiled version of a program.',
+                        'A program written in a programming language.',
+                        'The output of a program.',
+                        'A set of rules for debugging.'
+                    ],
+                    answer: 'A program written in a programming language.',
+                    explanation: 'The source code is a program that is written in a programming language.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the purpose of the `main()` method in Java?',
+                    options: [
+                        'To define a class.',
+                        'To execute the program.',
+                        'To declare a variable.',
+                        'To create a new object.'
+                    ],
+                    answer: 'To execute the program.',
+                    explanation: 'This method is used to define a main() method so that the interpreter can execute the program.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the primary function of a high-level language?',
+                    options: [
+                        'To be directly executed by the computer hardware.',
+                        'To be easily understood and written by humans.',
+                        'To be used for low-level systems programming.',
+                        'To be compiled by an assembler.'
+                    ],
+                    answer: 'To be easily understood and written by humans.',
+                    explanation: 'A high-level language uses syntax and statements that are closer to human language, making it easier for programmers to read and write.'
+                },
+                {
+                    type: 'multiple-choice',
+                    question: 'What is the "single rule" for creating flowcharts?',
+                    options: [
+                        'Use only standard symbols.',
+                        'The program logic should flow from top to bottom.',
+                        'Each symbol has one entry and one exit, except the decision symbol.',
+                        'Operations must be independent of any programming language.'
+                    ],
+                    answer: 'Each symbol has one entry and one exit, except the decision symbol.',
+                    explanation: 'Each symbol should contain only one entry point and one exit point, except the decision symbol. It is known as the single rule.'
+                },
+                
+                // --- Identification Questions (Indefinite Number) ---
+                {
+                    type: 'identification',
+                    question: 'What is the name for a sequential set of instructions, known as codes, written in a computer language?',
+                    answer: 'Computer Program',
+                    explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language to let the computer perform a specific computation task.'
+                },
+                {
+                    type: 'identification',
+                    question: 'What is the art and science of instructing computers to perform tasks using a specific programming language?',
+                    answer: 'Programming',
+                    explanation: 'It is the art and science of instructing computers to perform tasks using a specific programming language. It creates codes that tell a computer how to solve problems and accomplish various operations.'
+                },
+                {
+                    type: 'identification',
+                    question: 'What is the diagrammatic representation of the steps of an algorithm?',
+                    answer: 'Flowchart',
+                    explanation: 'It is a diagrammatic representation of the steps of an algorithm.'
+                },
+                {
+                    type: 'identification',
+                    question: 'What is a program that directly executes instructions in a high-level language without converting them into a machine language?',
+                    answer: 'Interpreter',
+                    explanation: 'Interpreter - It is a program that directly executes instructions in a high-level language without converting them into a machine language.'
+                },
+                {
+                    type: 'identification',
+                    question: 'What is the name for a programming language closer to machine code and hardware in terms of syntax?',
+                    answer: 'Low-level language',
+                    explanation: 'Low-level Language - a programming language closer to machine code and hardware in terms of syntax.'
+                },
+                {
+                    type: 'identification',
+                    question: 'What is the term for a set of steps that generates a finite sequence of simple computational operations to solve a problem?',
+                    answer: 'Algorithm',
+                    explanation: 'In programming, an algorithm is a set of steps that generates a finite sequence of simple computational operations leading to the solution of a given problem.'
+                },
+                {
+                    type: 'identification',
+                    question: 'What is the name of the symbol that shows the start and end of a set of computer-related processes in a flowchart?',
+                    answer: 'Terminal',
+                    explanation: 'Terminal - Shows the start and end of a set of computer-related processes.'
+                },
+                {
+                    type: 'identification',
+                    question: 'What is the name given to a program component, such as a class, object, or variable in Java?',
+                    answer: 'Identifier',
+                    explanation: 'An identifier is the name given to a program component, such as a class, object, or variable.'
+                },
+                {
+                    type: 'identification',
+                    question: 'What is the purpose of the `javac` command?',
+                    answer: 'To compile a Java program.',
+                    explanation: 'Compile the Java program using the javac command: javac [name of the Java file].java'
+                },
+                {
+                    type: 'identification',
+                    question: 'What company created Java in 1995?',
+                    answer: 'Sun Microsystems',
+                    explanation: 'It was created by Sun Microsystems in 1995 as a multi-platform, object-oriented, and network-centric language that can be used as a platform in itself.'
+                },
+            ];
 
-            // Identification Questions
-            {
-                type: 'identification',
-                question: 'What is the name for a sequential set of instructions, also known as codes, written to perform a specific computation task?',
-                answer: 'computer program',
-                explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language to let the computer perform a specific computation task.'
-            },
-            {
-                type: 'identification',
-                question: 'What is the term for a set of rules defining the valid combinations of symbols or characters to create a valid statement in a language?',
-                answer: 'syntax',
-                explanation: 'Syntax: It is a set of rules defining the various combinations and of symbols or characters to create a valid statement in a language.'
-            },
-            {
-                type: 'identification',
-                question: 'What is the program that directly executes instructions in a high-level language without converting them into a machine language?',
-                answer: 'interpreter',
-                explanation: 'Interpreter: It is a program that directly executes instructions in a high-level language without converting them into a machine language.'
-            },
-            {
-                type: 'identification',
-                question: 'This programming paradigm revolves around the concepts of objects that encapsulate data and behavior.',
-                answer: 'object-oriented programming',
-                explanation: 'Object-oriented programming (OOP) revolves around the concepts of objects that encapsulate data and behavior that promotes modularity, code reusability, and scalability.'
-            },
-            {
-                type: 'identification',
-                question: 'This is a program that converts instructions written in low-level assembly code into relocatable machine language.',
-                answer: 'assembler',
-                explanation: 'Assembler: It is a program that converts instructions written in low-level assembly code into relocatable machine language.'
-            },
-            {
-                type: 'identification',
-                question: 'What is the term for a diagrammatic representation of the steps of an algorithm?',
-                answer: 'flowchart',
-                explanation: 'Flowchart: It is a diagrammatic representation of the steps of an algorithm.'
-            },
-            {
-                type: 'identification',
-                question: 'In Java, what are pre-written programs that plug and play existing functionality into a code?',
-                answer: 'java apis',
-                explanation: 'Java APIs are pre-written Java programs that plug and play existing functionality into a code, such as getting the time and date, performing mathematical operations, or manipulating text.'
-            },
-            {
-                type: 'identification',
-                question: 'What is the name given to a program component, such as a class, object, or variable, that cannot be a reserved word or start with a digit?',
-                answer: 'identifier',
-                explanation: 'An identifier is the name given to a program component, such as a class, object, or variable... It must begin with a letter of the English alphabet, an underscore ( ), or a dollar sign ($), but not with a digit... It cannot be a reserved word.'
-            },
-            {
-                type: 'identification',
-                question: 'What is the name for special words that are significant to the Java compiler and cannot be used as variables?',
-                answer: 'reserved words',
-                explanation: 'Reserved words or keywords are special words significant to the Java compiler. Aside from class names, these cannot be used as variables, a name used to refer to data stored in the memory.'
-            },
-            {
-                type: 'identification',
-                question: 'What is the name for the virtual machine that runs Java applications as a run-time engine, combining both compilers and interpreters?',
-                answer: 'java virtual machine',
-                explanation: 'Java was the first programming language to combine both [compilers and interpreters] using a Java Virtual Machine (JVM). A JVM is an environment that translates Java bytecode, an intermediate-level language, into machine language and executes it.'
+            const questionTextElement = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            const identificationInput = document.getElementById('identification-input');
+            const submitButton = document.getElementById('submit-btn');
+            const feedbackElement = document.getElementById('feedback');
+            const explanationElement = document.getElementById('explanation');
+            const resultsElement = document.getElementById('results');
+            const finalScoreElement = document.getElementById('final-score');
+            const wrongQuestionsList = document.getElementById('wrong-questions-list');
+            const scoreHistoryList = document.getElementById('score-history');
+            const modeToggle = document.getElementById('mode-toggle');
+
+            let currentQuestionIndex = 0;
+            let score = 0;
+            let wrongAnswers = [];
+            let selectedOption = null;
+
+            // Load mode preference from cookies
+            const savedMode = getCookie('darkMode');
+            if (savedMode === 'true') {
+                document.body.classList.add('dark-mode');
             }
-        ];
 
-        // UI elements
-        const themeToggle = document.getElementById('themeToggle');
-        const moonIcon = document.getElementById('moonIcon');
-        const sunIcon = document.getElementById('sunIcon');
-        const startButton = document.getElementById('startButton');
-        const startPage = document.getElementById('startPage');
-        const quizContainer = document.getElementById('quiz-content');
-        const questionContainer = document.getElementById('questionContainer');
-        const questionCountSpan = document.getElementById('questionCount');
-        const questionTextDiv = document.getElementById('questionText');
-        const mcqOptionsDiv = document.getElementById('mcq-options');
-        const identificationInput = document.getElementById('identification-input');
-        const identificationAnswerInput = document.getElementById('identificationAnswer');
-        const answerFeedbackDiv = document.getElementById('answerFeedback');
-        const explanationBox = document.getElementById('explanationBox');
-        const explanationText = document.getElementById('explanationText');
-        const nextButton = document.getElementById('nextButton');
-        const resultsPage = document.getElementById('resultsPage');
-        const finalScoreP = document.getElementById('finalScore');
-        const incorrectQuestionsContainer = document.getElementById('incorrectQuestionsContainer');
-        const incorrectTitle = document.getElementById('incorrectTitle');
-        const incorrectList = document.getElementById('incorrectList');
-        const restartButton = document.getElementById('restartButton');
-
-        // State variables
-        let mcqQuestions = [];
-        let identificationQuestions = [];
-        let allQuestions = [];
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let incorrectQuestions = [];
-
-        // --- Core Quiz Logic ---
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-
-        function loadQuizData() {
-            mcqQuestions = quizData.filter(q => q.type === 'mcq');
-            identificationQuestions = quizData.filter(q => q.type === 'identification');
-            shuffleArray(mcqQuestions);
-            shuffleArray(identificationQuestions);
-            allQuestions = [...mcqQuestions, ...identificationQuestions];
-        }
-
-        function showQuestion() {
-            // Hide previous feedback
-            answerFeedbackDiv.classList.add('hidden');
-            explanationBox.classList.add('hidden');
-            nextButton.classList.add('hidden');
-            mcqOptionsDiv.innerHTML = '';
-            identificationAnswerInput.value = '';
-
-            const currentQuestion = allQuestions[currentQuestionIndex];
-            questionCountSpan.textContent = `Question ${currentQuestionIndex + 1} of ${allQuestions.length}`;
-            questionTextDiv.textContent = currentQuestion.question;
-
-            if (currentQuestion.type === 'mcq') {
-                identificationInput.classList.add('hidden');
-                mcqOptionsDiv.classList.remove('hidden');
-                // Create option buttons
-                shuffleArray(currentQuestion.options).forEach(option => {
-                    const button = document.createElement('button');
-                    button.textContent = option;
-                    button.className = 'w-full py-3 px-6 text-left rounded-full font-medium border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500';
-                    button.onclick = () => handleAnswer(option);
-                    mcqOptionsDiv.appendChild(button);
-                });
-            } else { // Identification question
-                mcqOptionsDiv.classList.add('hidden');
-                identificationInput.classList.remove('hidden');
-                nextButton.onclick = () => handleIdentificationAnswer();
-                nextButton.textContent = 'Submit';
-                nextButton.classList.remove('hidden');
-            }
-        }
-
-        function handleAnswer(selectedOption) {
-            const currentQuestion = allQuestions[currentQuestionIndex];
-            const isCorrect = selectedOption === currentQuestion.answer;
-
-            // Disable all buttons to prevent multiple clicks
-            Array.from(mcqOptionsDiv.children).forEach(button => {
-                button.disabled = true;
-                if (button.textContent === currentQuestion.answer) {
-                    button.classList.add('bg-green-500', 'text-white');
-                    button.classList.remove('dark:bg-gray-700', 'dark:text-gray-200', 'hover:bg-gray-200', 'dark:hover:bg-gray-600');
-                } else if (button.textContent === selectedOption) {
-                    button.classList.add('bg-red-500', 'text-white');
-                    button.classList.remove('dark:bg-gray-700', 'dark:text-gray-200', 'hover:bg-gray-200', 'dark:hover:bg-gray-600');
-                }
+            // Function to handle mode toggle
+            modeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                setCookie('darkMode', isDarkMode, 365);
             });
 
-            if (isCorrect) {
-                score++;
-                answerFeedbackDiv.textContent = 'Correct!';
-                answerFeedbackDiv.classList.remove('text-red-500');
-                answerFeedbackDiv.classList.add('text-green-500');
-            } else {
-                answerFeedbackDiv.textContent = 'Incorrect.';
-                answerFeedbackDiv.classList.remove('text-green-500');
-                answerFeedbackDiv.classList.add('text-red-500');
-                incorrectQuestions.push({
-                    question: currentQuestion.question,
-                    yourAnswer: selectedOption,
-                    correctAnswer: currentQuestion.answer
-                });
+            // Function to get a cookie value
+            function getCookie(name) {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
             }
-            showExplanation(currentQuestion.explanation);
-            answerFeedbackDiv.classList.remove('hidden');
-            nextButton.classList.remove('hidden');
-            nextButton.textContent = 'Next Question';
-            nextButton.onclick = nextQuestion;
-        }
 
-        function handleIdentificationAnswer() {
-            const currentQuestion = allQuestions[currentQuestionIndex];
-            const userAnswer = identificationAnswerInput.value.trim().toLowerCase();
-            const correctAnswer = currentQuestion.answer.toLowerCase();
-            const isCorrect = userAnswer === correctAnswer;
-
-            if (isCorrect) {
-                score++;
-                answerFeedbackDiv.textContent = 'Correct!';
-                answerFeedbackDiv.classList.remove('text-red-500');
-                answerFeedbackDiv.classList.add('text-green-500');
-            } else {
-                answerFeedbackDiv.textContent = `Incorrect. The correct answer is: ${currentQuestion.answer}`;
-                answerFeedbackDiv.classList.remove('text-green-500');
-                answerFeedbackDiv.classList.add('text-red-500');
-                incorrectQuestions.push({
-                    question: currentQuestion.question,
-                    yourAnswer: identificationAnswerInput.value,
-                    correctAnswer: currentQuestion.answer
-                });
+            // Function to set a cookie
+            function setCookie(name, value, days) {
+                let expires = "";
+                if (days) {
+                    const date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = "; expires=" + date.toUTCString();
+                }
+                document.cookie = name + "=" + (value || "") + expires + "; path=/";
             }
-            showExplanation(currentQuestion.explanation);
-            answerFeedbackDiv.classList.remove('hidden');
-            nextButton.classList.remove('hidden');
-            nextButton.textContent = 'Next Question';
-            nextButton.onclick = nextQuestion;
-        }
 
-        function showExplanation(explanation) {
-            explanationText.textContent = explanation;
-            explanationBox.classList.remove('hidden');
-        }
-
-        function nextQuestion() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < allQuestions.length) {
-                showQuestion();
-            } else {
-                endQuiz();
+            // Function to load score history from cookies
+            function loadScoreHistory() {
+                const historyString = getCookie('quizHistory');
+                return historyString ? JSON.parse(historyString) : [];
             }
-        }
 
-        function endQuiz() {
-            questionContainer.classList.add('hidden');
-            resultsPage.classList.remove('hidden');
-            finalScoreP.textContent = `You scored ${score} out of ${allQuestions.length}!`;
-
-            if (incorrectQuestions.length > 0) {
-                incorrectTitle.classList.remove('hidden');
-                incorrectList.classList.remove('hidden');
-                incorrectList.innerHTML = '';
-                incorrectQuestions.forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'bg-gray-50 dark:bg-gray-600 p-3 rounded-md border border-gray-200 dark:border-gray-500';
-                    div.innerHTML = `
-                        <p class="font-semibold text-gray-800 dark:text-gray-100 mb-1">Question: ${item.question}</p>
-                        <p class="text-sm text-red-500">Your Answer: ${item.yourAnswer}</p>
-                        <p class="text-sm text-green-500">Correct Answer: ${item.correctAnswer}</p>
-                    `;
-                    incorrectList.appendChild(div);
-                });
+            // Function to save score history to cookies
+            function saveScoreHistory(history) {
+                setCookie('quizHistory', JSON.stringify(history), 365);
             }
-            saveProgress(score, allQuestions.length);
-        }
-
-        function restartQuiz() {
-            currentQuestionIndex = 0;
-            score = 0;
-            incorrectQuestions = [];
-            resultsPage.classList.add('hidden');
-            startPage.classList.remove('hidden');
-            // This will ensure the quiz questions are re-shuffled for a new session
-            loadQuizData(); 
-            // Also reset cookie to clear progress
-            setCookie('quizProgress', JSON.stringify({ score: 0, progress: 0 }), -1);
-        }
-
-        // --- Dark Mode / Light Mode Toggle ---
-        function toggleTheme() {
-            const isDark = document.body.classList.contains('dark');
-            if (isDark) {
-                document.body.classList.remove('dark');
-                document.body.classList.add('light');
-                moonIcon.classList.remove('hidden');
-                sunIcon.classList.add('hidden');
-            } else {
-                document.body.classList.remove('light');
-                document.body.classList.add('dark');
-                moonIcon.classList.add('hidden');
-                sunIcon.classList.remove('hidden');
-            }
-        }
-        themeToggle.addEventListener('click', toggleTheme);
-
-        // --- Cookie Management ---
-        function setCookie(name, value, days) {
-            let expires = '';
-            if (days) {
-                const date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = `; expires=${date.toUTCString()}`;
-            }
-            document.cookie = `${name}=${value}${expires}; path=/`;
-        }
-
-        function getCookie(name) {
-            const nameEQ = `${name}=`;
-            const ca = document.cookie.split(';');
-            for(let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        }
-
-        function saveProgress(currentScore, totalQuestions) {
-            const progress = {
-                score: currentScore,
-                progress: currentQuestionIndex,
-                total: totalQuestions
-            };
-            setCookie('quizProgress', JSON.stringify(progress), 30); // Save for 30 days
-        }
-
-        function loadProgress() {
-            const progressCookie = getCookie('quizProgress');
-            if (progressCookie) {
-                const progress = JSON.parse(progressCookie);
-                if (progress.progress > 0) {
-                    score = progress.score;
-                    currentQuestionIndex = progress.progress;
-                    // Optional: You could ask the user if they want to resume
-                    console.log(`Resuming quiz from question ${currentQuestionIndex + 1} with a score of ${score}.`);
+            
+            // Function to update the score history display
+            function updateScoreHistoryDisplay() {
+                const history = loadScoreHistory();
+                scoreHistoryList.innerHTML = '';
+                if (history.length === 0) {
+                    scoreHistoryList.innerHTML = '<li>No previous scores found.</li>';
+                } else {
+                    history.forEach((entry, index) => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `Quiz ${index + 1}: ${entry.score}/${quizData.length}`;
+                        scoreHistoryList.appendChild(listItem);
+                    });
                 }
             }
-        }
 
-        // --- Event Listeners and Initialization ---
-        startButton.addEventListener('click', () => {
-            startPage.classList.add('hidden');
-            questionContainer.classList.remove('hidden');
+            // Function to show a question
+            function showQuestion() {
+                const currentQuestion = quizData[currentQuestionIndex];
+                questionTextElement.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
+                feedbackElement.style.display = 'none';
+                submitButton.textContent = 'Submit';
+                submitButton.disabled = false;
+                
+                optionsContainer.innerHTML = '';
+                identificationInput.style.display = 'none';
+
+                if (currentQuestion.type === 'multiple-choice') {
+                    optionsContainer.style.display = 'grid';
+                    currentQuestion.options.forEach(option => {
+                        const optionElement = document.createElement('div');
+                        optionElement.classList.add('option');
+                        optionElement.textContent = option;
+                        optionElement.addEventListener('click', () => {
+                            if (!submitButton.disabled) {
+                                document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                                optionElement.classList.add('selected');
+                                selectedOption = option;
+                            }
+                        });
+                        optionsContainer.appendChild(optionElement);
+                    });
+                } else if (currentQuestion.type === 'identification') {
+                    optionsContainer.style.display = 'none';
+                    identificationInput.style.display = 'block';
+                    identificationInput.value = '';
+                    selectedOption = null;
+                }
+            }
+
+            // Function to check the answer
+            function checkAnswer() {
+                const currentQuestion = quizData[currentQuestionIndex];
+                let isCorrect = false;
+                let userAnswer = '';
+
+                if (currentQuestion.type === 'multiple-choice') {
+                    userAnswer = selectedOption;
+                    if (userAnswer === currentQuestion.answer) {
+                        isCorrect = true;
+                    }
+                } else if (currentQuestion.type === 'identification') {
+                    userAnswer = identificationInput.value.trim().toLowerCase();
+                    if (userAnswer === currentQuestion.answer.toLowerCase()) {
+                        isCorrect = true;
+                    }
+                }
+
+                if (isCorrect) {
+                    score++;
+                } else {
+                    wrongAnswers.push({
+                        question: currentQuestion.question,
+                        correctAnswer: currentQuestion.answer
+                    });
+                }
+
+                showFeedback(currentQuestion.explanation, isCorrect);
+                submitButton.textContent = 'Next Question';
+                submitButton.disabled = true;
+                submitButton.onclick = nextQuestion;
+            }
+
+            // Function to show feedback
+            function showFeedback(explanation, isCorrect) {
+                feedbackElement.style.display = 'block';
+                explanationElement.innerHTML = `<span style="font-weight: bold; color: ${isCorrect ? 'var(--correct-color)' : 'var(--wrong-color)'};">${isCorrect ? 'Correct!' : 'Incorrect!'}</span><br><br><span class="explanation">${explanation}</span>`;
+            }
+
+            // Function to show final results
+            function showResults() {
+                const totalQuestions = quizData.length;
+                finalScoreElement.textContent = `${score}/${totalQuestions}`;
+                wrongQuestionsList.innerHTML = '';
+                wrongAnswers.forEach(item => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('wrong-question-item');
+                    listItem.innerHTML = `<p>${item.question}</p><span>Correct Answer: ${item.correctAnswer}</span>`;
+                    wrongQuestionsList.appendChild(listItem);
+                });
+
+                document.getElementById('quiz').style.display = 'none';
+                feedbackElement.style.display = 'none';
+                resultsElement.style.display = 'block';
+                
+                // Save and display history
+                const history = loadScoreHistory();
+                history.push({ score: score, total: totalQuestions });
+                saveScoreHistory(history);
+                updateScoreHistoryDisplay();
+            }
+
+            // Function to move to the next question
+            function nextQuestion() {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < quizData.length) {
+                    showQuestion();
+                    submitButton.onclick = checkAnswer;
+                } else {
+                    showResults();
+                }
+            }
+
+            // Initial setup
             showQuestion();
+            submitButton.onclick = checkAnswer;
+            updateScoreHistoryDisplay();
         });
-
-        restartButton.addEventListener('click', restartQuiz);
-        
-        window.onload = () => {
-            loadQuizData();
-            loadProgress();
-            // Optional: If progress is loaded, you could offer to resume the quiz instead of showing the start page
-        };
     </script>
+</head>
+<body>
+
+    <main class="quiz-container">
+        <header>
+            <h1>Computer Programming 1 - Prelims</h1>
+            <button id="mode-toggle">Toggle Dark Mode</button>
+        </header>
+
+        <div id="quiz">
+            <h2 id="question-text"></h2>
+            <div id="options-container" class="options-grid"></div>
+            <input type="text" id="identification-input" placeholder="Your Answer" style="display:none;">
+            <button id="submit-btn">Submit</button>
+        </div>
+
+        <div id="feedback" style="display:none;">
+            <p id="explanation"></p>
+        </div>
+
+        <div id="results" style="display:none;">
+            <h2>Quiz Results</h2>
+            <p>Your score: <span id="final-score"></span></p>
+            <h3>Questions you got wrong:</h3>
+            <ul id="wrong-questions-list"></ul>
+            <h3>Your Progress:</h3>
+            <ul id="score-history"></ul>
+        </div>
+    </main>
+
 </body>
 </html>
