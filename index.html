@@ -3,940 +3,742 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Introduction to computing - Prelims - Prelims</title>
+    <title>Computer Programming 1 - Prelims</title>
+    <!-- Use a modern, easy-to-read font like Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             transition: background-color 0.3s, color 0.3s;
-            color: #1a202c; /* Default text color */
         }
-        .dark-mode {
-            background-color: #1a202c;
-            color: #e2e8f0; /* Dark mode text color */
+        .dark {
+            @apply bg-gray-900 text-gray-100;
         }
-        .dark-mode .bg-white {
-            background-color: #2d3748;
+        .light {
+            @apply bg-gray-50 text-gray-900;
         }
-        .dark-mode .bg-gray-100 {
-            background-color: #4a5568;
+        .quiz-container {
+            min-height: calc(100vh - 8rem); /* Adjust based on header height */
         }
-        .dark-mode .text-gray-900 {
-            color: #e2e8f0;
+        .explanation-box {
+            @apply bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mt-4 border border-gray-200 dark:border-gray-700;
         }
-        .dark-mode .text-gray-700 {
-            color: #cbd5e0;
+        .explanation-box p {
+            @apply text-sm italic text-gray-600 dark:text-gray-300;
         }
-        .dark-mode .text-gray-800 {
-            color: #e2e8f0; /* Specifically fix this */
+        .button-group button {
+            transition: background-color 0.2s, transform 0.1s;
         }
-        .dark-mode .hover\:bg-gray-200:hover {
-            background-color: #616a7c;
+        .button-group button:hover {
+            transform: translateY(-2px);
         }
-        .dark-mode .border-gray-300 {
-            border-color: #4a5568;
+        /* Custom scrollbar for incorrect questions list */
+        .incorrect-list::-webkit-scrollbar {
+            width: 8px;
         }
-        .dark-mode .placeholder-gray-500::placeholder {
-            color: #a0aec0;
+        .incorrect-list::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 10px;
         }
-        .dark-mode .text-purple-600 {
-            color: #9f7aea;
+        .incorrect-list::-webkit-scrollbar-thumb {
+            background: #bdbdbd;
+            border-radius: 10px;
         }
-        .dark-mode .border-purple-600 {
-            border-color: #9f7aea;
-        }
-        .dark-mode .bg-purple-600 {
-            background-color: #9f7aea;
-        }
-        .dark-mode .hover\:bg-purple-700:hover {
-            background-color: #b794f4;
-        }
-        /* Dark mode specific for quiz options */
-        .dark-mode .quiz-option {
-            background-color: #4a5568;
-            color: #e2e8f0;
-        }
-        .dark-mode .quiz-option:hover {
-            background-color: #616a7c;
-        }
-        /* New rules to ensure all text colors are handled */
-        .dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode p {
-            color: inherit;
+        .incorrect-list::-webkit-scrollbar-thumb:hover {
+            background: #a0a0a0;
         }
     </style>
 </head>
-<body class="bg-gray-50 transition-colors duration-300">
-    <div class="min-h-screen flex flex-col">
+<body class="light">
+    <!-- Main application container -->
+    <div class="min-h-screen flex flex-col items-center p-4 sm:p-8">
         <!-- Header -->
-        <header class="bg-white shadow-md sticky top-0 z-50 transition-colors duration-300">
-            <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-                <div class="text-2xl font-bold">
-                    Introduction to Computing - Prelims
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button id="document-btn" class="px-4 py-2 rounded-md font-medium text-purple-600 bg-purple-100 transition-colors duration-200">
-                        Briefing Document
-                    </button>
-                    <button id="quiz-btn" class="px-4 py-2 rounded-md font-medium text-gray-700 hover:text-purple-600 transition-colors duration-200">
-                        Quiz
-                    </button>
-                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 transition-colors duration-200">
-                        <svg id="sun-icon" class="h-6 w-6 text-yellow-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                            <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 7.5a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H8.25a.75.75 0 01-.75-.75zM12 18a6 6 0 100-12 6 6 0 000 12zM2.25 12a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H3a.75.75 0 01-.75-.75zM15 15a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM12 21a.75.75 0 01-.75-.75v-2.25a.75.75 0 011.5 0V20.25a.75.75 0 01-.75.75zM16.5 7.5a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5h-2.25a.75.75 0 01-.75-.75zM7.5 16.5a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H8.25a.75.75 0 01-.75-.75z"/>
-                        </svg>
-                        <svg id="moon-icon" class="h-6 w-6 text-gray-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 21a9 9 0 01-9-9c0-3.328 1.637-6.275 4.15-8.125a.75.75 0 011.04-.15c.162.115.228.324.168.514-.524 1.76-.78 3.593-.78 5.461 0 5.488 4.512 10 10 10 1.868 0 3.633-.257 5.394-.78a.75.75 0 01.514.168c.115.162.15.378-.025.541A9 9 0 0112 21z"/>
-                        </svg>
-                    </button>
-                </div>
-            </nav>
+        <header class="w-full max-w-4xl flex justify-between items-center py-4 mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-indigo-600 dark:text-indigo-400">
+                Computer Programming 1 - Prelims
+            </h1>
+            <button id="themeToggle" class="p-2 rounded-full transition-colors duration-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <!-- Moon icon for light mode, Sun icon for dark mode -->
+                <svg id="moonIcon" class="w-6 h-6 text-gray-800 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+                <svg id="sunIcon" class="w-6 h-6 hidden text-gray-800 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+            </button>
         </header>
 
-        <!-- Main Content -->
-        <main class="flex-grow container mx-auto px-6 py-8">
-            <!-- Briefing Document Section -->
-            <section id="document-section" class="space-y-8 max-w-4xl mx-auto">
-                <article class="bg-white p-8 rounded-xl shadow-md space-y-6">
-                    <h1 class="text-3xl font-bold">The Evolution and Modern Landscape of Computing</h1>
-                    <p>This briefing document provides an overview of the history of computing, from its foundational roots in early civilizations to the cutting-edge technologies shaping the modern digital world. It highlights key individuals, innovations, and the profound impact of computing across various industries.</p>
-
-                    <h2 class="text-2xl font-semibold">I. The History of Computing: Foundations and Key Figures</h2>
-                    <p>The concept of computing, defined as "any activity that utilizes computers to manage, process, and communicate critical information," has a rich history spanning millennia. Early civilizations laid the groundwork for numerical systems and calculation, which evolved into sophisticated mechanical devices and theoretical frameworks before the advent of electronic computers.</p>
-
-                    <h3 class="text-xl font-semibold">A. Early Civilizations and Foundational Concepts:</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <h4 class="font-medium text-lg">Babylonians (c. 2000-500 BC)</h4>
-                            <p>This civilization thrived in Mesopotamia (Iraq). They utilized "clay cuneiform tables with mathematical texts" for "basic arithmetic operations, cubes, and square roots." Their numerical system was unique, using only two symbols (1 and 10) combined to form all other numbers. They also employed "counting boards," similar to an abacus, for calculations.</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">Egyptians</h4>
-                            <p>They solved practical problems like "measuring time, measuring floods, calculating the land area, bookkeeping, and calculating taxes." They used a base-10 number system with distinct symbols for various magnitudes. The "Rhind Papyrus" served as an instructional text for arithmetic and geometric problems, aiding students in the Pharaoh’s building program.</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">Greeks (c. 500-600 BC)</h4>
-                            <p>They contributed significantly to geometry through figures like Pythagoras and Thales. The Pythagoreans believed "that number was the essence of all things." Thales' theorem defined conditions for a right angle within a circle.</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">Romans</h4>
-                            <p>Influenced by Greek culture, their "Roman number system was one of their most considerable contributions to computing," using letters to symbolize numbers. However, their numerals were "challenging to use, so an abacus was often used for calculation."</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">Islamic Influence</h4>
-                            <p>Islamic mathematicians developed a "comprehensive theory... which used rational and irrational numbers as algebraic objects and moved away from the Greek concept of mathematics as just being about Geometry." They applied algebra to arithmetic and geometry, and studied curves using equations.</p>
-                        </div>
-                    </div>
-
-                    <h3 class="text-xl font-semibold">B. Notable Figures and Mechanical Calculation:</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <h4 class="font-medium text-lg">Wilhelm Gottfried Leibniz</h4>
-                            <p>He "developed the binary number system used in digital computers." He designed "The Step Reckoner," the "first calculator to run the basic arithmetic operations" including addition, subtraction, multiplication, division, and root extraction.</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">Charles Babbage</h4>
-                            <p>Considered one of the "grandfathers of the computing field," he designed the "Difference Engine" to "precisely compute polynomial functions and logarithmic & trigonometric functions." Ada Lovelace, who worked with him, is widely considered the "first computer programmer."</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">George Boole</h4>
-                            <p>Also a "grandfather of the computing field," Boole developed "Boolean algebra, which is the foundation for modern computing." His work was crucial for "switching theory and digital circuit design."</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">Grace Brewster Murray Hopper</h4>
-                            <p>A computer pioneer and naval officer, she is best known for her "trailblazing involvement in developing computer languages such as COBOL (Common Business-oriented Language)." By the 1970s, COBOL was the "most extensively used computer language."</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">Katherine Johnson</h4>
-                            <p>As a "human computer" for NASA, her geometric calculations helped "figure out the paths for spacecraft to orbit Earth and land on the moon," enabling critical missions.</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">Gladys Mae West</h4>
-                            <p>Her "most outstanding contribution was creating a detailed geodetic model of the Earth, which became the basis for the Global Positioning System (GPS) development."</p>
-                        </div>
-                    </div>
-
-                    <h2 class="text-2xl font-semibold">II. The Modern Computing Landscape</h2>
-                    <p>The "rapid increase of mobile devices and the ability to connect things" has ushered in a "post-PC era" characterized by interconnected technologies that deliver on-demand services and process vast amounts of data.</p>
-
-                    <h3 class="text-xl font-semibold">A. Core Modern Computing Technologies:</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <h4 class="font-medium text-lg">Cloud Computing</h4>
-                            <p>It is the "application of hardware and software to deliver readily available, on-demand, and measured computing services over the Internet." Examples include Google Drive, iCloud, Google Translate, and streaming services.</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">Virtualization</h4>
-                            <p>This technology "simulates hardware functions by creating multiple virtual machines on a physical server." Its essence is to "detach software from hardware by converting ‘physical’ devices into ‘logical’ folders or files."</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">Internet of Things (IoT)</h4>
-                            <p>A "network of an extensive range of physical objectives that automatically share data over the Internet." It facilitates "faster information exchange and communication between ‘things’."</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">Big Data</h4>
-                            <p>Characterized by "massive and complex datasets" with "high volume, variety of data types, and velocity." It is used in banking, healthcare, and education to track and analyze large amounts of information.</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">Artificial Intelligence (AI)</h4>
-                            <p>Allows "machines to learn from experience, adjust to new inputs, and do human-like activities." Examples include facial recognition, voice recognition, chatbots, and virtual assistants.</p>
-                        </div>
-                    </div>
-
-                    <h3 class="text-xl font-semibold">B. Emerging Computing Paradigms:</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <h4 class="font-medium text-lg">Fog Computing</h4>
-                            <p>An "expansion of the idea of cloud computing" where data is stored in "edge devices" closer to end-users. It enables local data analytics and real-time data distribution.</p>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-lg">Edge Computing</h4>
-                            <p>A "decentralized and distributed cloud computing" where the computing infrastructure is "close to data sources." Raw data is "analyzed locally instead of transferred to the cloud."</p>
-                        </div>
-                    </div>
-                </article>
-            </section>
-
-            <!-- Quiz Section -->
-            <section id="quiz-section" class="hidden max-w-2xl mx-auto p-8 bg-white rounded-xl shadow-md">
-                <div id="quiz-intro" class="text-center space-y-4">
-                    <h1 class="text-3xl font-bold">Quiz</h1>
-                    <p>Test your knowledge on the history and modern landscape of computing. There are 40 multiple-choice questions followed by an indefinite number of identification questions. Good luck!</p>
-                    <button id="start-quiz-btn" class="px-6 py-3 bg-purple-600 text-white font-medium rounded-md hover:bg-purple-700 transition-colors duration-200">
+        <!-- Quiz container -->
+        <main id="quiz" class="quiz-container w-full max-w-4xl bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-lg shadow-xl flex flex-col items-center">
+            <!-- Quiz content will be injected here -->
+            <div id="quiz-content" class="w-full flex flex-col items-center">
+                <!-- Start Page -->
+                <div id="startPage" class="text-center">
+                    <h2 class="text-2xl sm:text-3xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Welcome to the Prelims Quiz!</h2>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8">
+                        Test your knowledge on the basics of programming and Java. This quiz has 40 multiple-choice questions followed by identification questions.
+                    </p>
+                    <button id="startButton" class="bg-indigo-600 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:bg-indigo-700 transition duration-300">
                         Start Quiz
                     </button>
-                    <div id="previous-score-container" class="mt-4 text-sm text-gray-500 hidden">
-                        <p>Your previous score was: <span id="previous-score-display" class="font-bold"></span></p>
-                    </div>
                 </div>
 
-                <div id="quiz-container" class="hidden">
-                    <div id="question-card" class="bg-gray-100 p-6 rounded-lg shadow-inner space-y-4">
-                        <h2 id="question-number" class="text-xl font-bold text-purple-600"></h2>
-                        <p id="question-text" class="text-lg"></p>
-                        <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                        <div id="identification-input-container" class="hidden">
-                            <input type="text" id="identification-input" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent placeholder-gray-500" placeholder="Type your answer here...">
-                        </div>
+                <!-- Quiz question area -->
+                <div id="questionContainer" class="hidden w-full">
+                    <div class="w-full text-center mb-6">
+                        <span id="questionCount" class="text-xl font-semibold text-gray-600 dark:text-gray-400"></span>
                     </div>
-
-                    <div id="feedback-container" class="mt-4 p-4 rounded-md hidden">
-                        <p id="feedback-message" class="font-medium"></p>
-                        <blockquote id="feedback-quote" class="mt-2 text-sm italic border-l-4 pl-4"></blockquote>
+                    <div id="questionText" class="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-gray-200"></div>
+                    <div id="mcq-options" class="button-group w-full space-y-4 mb-6"></div>
+                    <div id="identification-input" class="w-full hidden mb-6">
+                        <input type="text" id="identificationAnswer" class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Type your answer here">
                     </div>
-
-                    <div id="quiz-navigation" class="mt-6 flex justify-between items-center">
-                        <button id="next-question-btn" class="px-6 py-3 bg-purple-600 text-white font-medium rounded-md hover:bg-purple-700 transition-colors duration-200">
-                            Next Question
-                        </button>
+                    <div id="answerFeedback" class="text-center text-lg font-semibold mb-4 hidden"></div>
+                    <div id="explanationBox" class="explanation-box hidden">
+                        <p id="explanationText" class="text-gray-600 dark:text-gray-300 italic"></p>
                     </div>
+                    <button id="nextButton" class="bg-indigo-600 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:bg-indigo-700 transition duration-300 hidden">
+                        Next Question
+                    </button>
                 </div>
 
-                <div id="quiz-results" class="hidden text-center space-y-4">
-                    <h1 class="text-3xl font-bold">Quiz Results</h1>
-                    <p class="text-lg">You scored <span id="final-score" class="font-bold text-purple-600"></span> out of <span id="total-questions" class="font-bold"></span>.</p>
-                    <div id="wrong-answers-container" class="mt-6 text-left">
-                        <h2 class="text-2xl font-semibold">Questions you got wrong:</h2>
-                        <ul id="wrong-answers-list" class="mt-4 space-y-2 list-disc list-inside"></ul>
+                <!-- Results Page -->
+                <div id="resultsPage" class="hidden w-full text-center">
+                    <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-gray-800 dark:text-gray-200">Quiz Completed!</h2>
+                    <p id="finalScore" class="text-xl sm:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4"></p>
+                    <div id="incorrectQuestionsContainer" class="w-full max-w-2xl mx-auto">
+                        <h3 id="incorrectTitle" class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 hidden">Questions you got wrong:</h3>
+                        <div id="incorrectList" class="incorrect-list max-h-80 overflow-y-auto w-full p-4 rounded-lg bg-gray-100 dark:bg-gray-700 text-left space-y-4 hidden"></div>
                     </div>
-                    <button id="restart-quiz-btn" class="px-6 py-3 bg-purple-600 text-white font-medium rounded-md hover:bg-purple-700 transition-colors duration-200">
-                        Take Quiz Again
+                    <button id="restartButton" class="bg-green-600 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:bg-green-700 transition duration-300 mt-8">
+                        Restart Quiz
                     </button>
                 </div>
             </div>
-
-            <!-- Message Box -->
-            <div id="message-box" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
-                <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full text-center">
-                    <p id="message-text" class="text-lg"></p>
-                    <button id="close-message-btn" class="mt-4 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
-                        OK
-                    </button>
-                </div>
-            </div>
-
         </main>
     </div>
 
     <script>
-        const body = document.body;
-        const documentBtn = document.getElementById('document-btn');
-        const quizBtn = document.getElementById('quiz-btn');
-        const documentSection = document.getElementById('document-section');
-        const quizSection = document.getElementById('quiz-section');
-        const themeToggle = document.getElementById('theme-toggle');
-        const sunIcon = document.getElementById('sun-icon');
-        const moonIcon = document.getElementById('moon-icon');
-
-        let currentSection = 'document';
-
-        function showSection(section) {
-            documentSection.classList.add('hidden');
-            quizSection.classList.add('hidden');
-            documentBtn.classList.remove('bg-purple-100', 'text-purple-600');
-            documentBtn.classList.add('text-gray-700', 'hover:text-purple-600');
-            quizBtn.classList.remove('bg-purple-100', 'text-purple-600');
-            quizBtn.classList.add('text-gray-700', 'hover:text-purple-600');
-            
-            if (section === 'document') {
-                documentSection.classList.remove('hidden');
-                documentBtn.classList.add('bg-purple-100', 'text-purple-600');
-            } else {
-                quizSection.classList.remove('hidden');
-                quizBtn.classList.add('bg-purple-100', 'text-purple-600');
-            }
-            currentSection = section;
-        }
-
-        documentBtn.addEventListener('click', () => showSection('document'));
-        quizBtn.addEventListener('click', () => showSection('quiz'));
-        
-        // Initial setup
-        showSection(currentSection);
-
-        // Dark/Light Mode Toggle
-        function toggleTheme() {
-            body.classList.toggle('dark-mode');
-            const isDarkMode = body.classList.contains('dark-mode');
-            if (isDarkMode) {
-                sunIcon.style.display = 'block';
-                moonIcon.style.display = 'none';
-            } else {
-                sunIcon.style.display = 'none';
-                moonIcon.style.display = 'block';
-            }
-        }
-
-        themeToggle.addEventListener('click', toggleTheme);
-        // Set initial theme based on system preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            body.classList.add('dark-mode');
-            sunIcon.style.display = 'block';
-            moonIcon.style.display = 'none';
-        } else {
-            sunIcon.style.display = 'none';
-            moonIcon.style.display = 'block';
-        }
-
-        // Quiz Logic
-        const quizIntro = document.getElementById('quiz-intro');
-        const quizContainer = document.getElementById('quiz-container');
-        const quizResults = document.getElementById('quiz-results');
-        const startQuizBtn = document.getElementById('start-quiz-btn');
-        const nextQuestionBtn = document.getElementById('next-question-btn');
-        const restartQuizBtn = document.getElementById('restart-quiz-btn');
-        const questionNumberElem = document.getElementById('question-number');
-        const questionTextElem = document.getElementById('question-text');
-        const optionsContainer = document.getElementById('options-container');
-        const identificationInputContainer = document.getElementById('identification-input-container');
-        const identificationInput = document.getElementById('identification-input');
-        const feedbackContainer = document.getElementById('feedback-container');
-        const feedbackMessage = document.getElementById('feedback-message');
-        const feedbackQuote = document.getElementById('feedback-quote');
-        const finalScoreElem = document.getElementById('final-score');
-        const totalQuestionsElem = document.getElementById('total-questions');
-        const wrongAnswersList = document.getElementById('wrong-answers-list');
-        const previousScoreContainer = document.getElementById('previous-score-container');
-        const previousScoreDisplay = document.getElementById('previous-score-display');
-        const messageBox = document.getElementById('message-box');
-        const messageText = document.getElementById('message-text');
-        const closeMessageBtn = document.getElementById('close-message-btn');
-
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let quizData = [];
-        let userAnswers = [];
-        let wrongAnswers = [];
-
-        function showMessage(message) {
-            messageText.textContent = message;
-            messageBox.classList.remove('hidden');
-        }
-
-        closeMessageBtn.addEventListener('click', () => {
-            messageBox.classList.add('hidden');
-        });
-
-        // Function to get a cookie
-        function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for(let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        }
-
-        // Function to set a cookie
-        function setCookie(name, value, days) {
-            let expires = "";
-            if (days) {
-                const date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
-        }
-
-        const quizQuestions = [
-            // 40 Multiple Choice Questions
+        // Quiz data based on the provided documents
+        const quizData = [
+            // Multiple Choice Questions (40 items)
             {
-                type: "multiple-choice",
-                question: "Which early civilization used 'clay cuneiform tables with mathematical texts' for basic arithmetic?",
-                options: ["Egyptians", "Greeks", "Babylonians", "Romans"],
-                answer: "Babylonians",
-                quote: "This civilization thrived in Mesopotamia... Clay cuneiform tables with mathematical texts were found and deciphered... which contain tables for various mathematical operations such as basic arithmetic operations, cubes, and square roots."
+                type: 'mcq',
+                question: 'What is the primary function of a computer program?',
+                options: ['To display images on a screen.', 'To perform a specific computation task.', 'To connect to the internet.', 'To store data indefinitely.'],
+                answer: 'To perform a specific computation task.',
+                explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language to let the computer perform a specific computation task.'
             },
             {
-                type: "multiple-choice",
-                question: "What was the unique feature of the Babylonian numerical system?",
-                options: ["It was a base-10 system.", "It used only two symbols (1 and 10).", "It used letters to symbolize numbers.", "It was based on geometry."],
-                answer: "It used only two symbols (1 and 10).",
-                quote: "For their numerical system, they only used two symbols (1 and 10) to symbolize numbers, and these symbols will then be combined to form all other numbers."
+                type: 'mcq',
+                question: 'Which of the following is an example of system software?',
+                options: ['Microsoft Word', 'Web browsers', 'Operating Systems', 'Spreadsheet software'],
+                answer: 'Operating Systems',
+                explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language to let the computer perform a specific computation task. Examples include system software, web browsers, utility software, multimedia software, and spreadsheet software.'
             },
             {
-                type: "multiple-choice",
-                question: "The 'Rhind Papyrus' is an instructional text for arithmetic and geometric problems from which civilization?",
-                options: ["Romans", "Babylonians", "Egyptians", "Greeks"],
-                answer: "Egyptians",
-                quote: "They also have Rhind Papyrus, a famous Egyptian papyrus, a writing surface like paper. It includes examples of all types of arithmetic and geometric problems."
+                type: 'mcq',
+                question: 'What is the "Write Once, Run Anywhere" (WORA) philosophy a feature of?',
+                options: ['Procedural programming', 'Java', 'Machine language', 'C++'],
+                answer: 'Java',
+                explanation: 'Java code can be written once and run on any underlying platform like Windows, iOS, Android, and Linux without rewriting. This feature is called the "Write Once, Run Anywhere" (WORA) Philosophy which became a highly sought feature by developers.'
             },
             {
-                type: "multiple-choice",
-                question: "Which of the following figures is credited with the foundation of the Pythagorean theorem?",
-                options: ["Thales", "Wilhelm Gottfried Leibniz", "Pythagoras", "Charles Babbage"],
-                answer: "Pythagoras",
-                quote: "He is credited with the foundation of Pythagorean theorem, although the Babylonians were probably aware of this theorem 1000 years before."
+                type: 'mcq',
+                question: 'In programming, what is a "command"?',
+                options: ['A special word used by the compiler.', 'A variable to store data.', 'A unique instruction given to a computer application to perform a task.', 'A collection of useful functions.'],
+                answer: 'A unique instruction given to a computer application to perform a task.',
+                explanation: 'A command is the unique instruction given to a computer application to perform a task of a function such as "print" to display text on the screen.'
             },
             {
-                type: "multiple-choice",
-                question: "What was the most considerable contribution of the Romans to computing?",
-                options: ["The invention of the abacus.", "The development of a base-10 system.", "The Roman number system.", "The study of geometry."],
-                answer: "The Roman number system.",
-                quote: "The Roman number system was one of their most considerable contributions to computing which uses letters to symbolize numbers in which the number consists of a sequence of letters."
+                type: 'mcq',
+                question: 'What is the purpose of an Integrated Development Environment (IDE)?',
+                options: ['To design a user interface.', 'To write, compile, and run code in a single application.', 'To share code with other developers.', 'To analyze data.'],
+                answer: 'To write, compile, and run code in a single application.',
+                explanation: 'An Integrated Development Environment (IDE) is a software application that provides comprehensive facilities to computer programmers for software development, such as a text editor for writing code, a compiler or interpreter for converting code, and running and testing the code.'
             },
             {
-                type: "multiple-choice",
-                question: "The 'Step Reckoner', created by Wilhelm Gottfried Leibniz, was the first calculator to perform what operations?",
-                options: ["Addition and subtraction only.", "Addition, subtraction, and multiplication.", "Addition, subtraction, multiplication, and division.", "All basic arithmetic operations and root extraction."],
-                answer: "All basic arithmetic operations and root extraction.",
-                quote: "It was called 'The Step Reckoner' and was the first calculator to run the basic arithmetic operations including addition, subtraction, multiplication, division, and the extraction of roots."
+                type: 'mcq',
+                question: 'What is a "compiler"?',
+                options: ['A program that executes instructions line by line.', 'A program that converts low-level code to machine language.', 'A program that converts high-level languages into machine-readable code.', 'A program that manages computer memory.'],
+                answer: 'A program that converts high-level languages into machine-readable code.',
+                explanation: 'A compiler is a program that converts high-level languages into machine-readable code that a computer can execute.'
             },
             {
-                type: "multiple-choice",
-                question: "Who is considered one of the 'grandfathers of the computing field' for designing the 'Difference Engine'?",
-                options: ["George Boole", "Charles Babbage", "Wilhelm Gottfried Leibniz", "Gladys Mae West"],
-                answer: "Charles Babbage",
-                quote: "He, along with George Boole, is considered one of the grandfathers of the computing field... He designed a device... called 'Difference Engine'."
+                type: 'mcq',
+                question: 'Which of the following is a Low-level language?',
+                options: ['Python', 'Assembly Language', 'Java', 'PHP'],
+                answer: 'Assembly Language',
+                explanation: 'Low-level Language - a programming language closer to machine code and hardware in terms of syntax. Examples of this language include the following: Assembly Language - uses specific instructions to control a computer’s hardware. Machine Language - all instructions are written as binary numbers (1 and 0).'
             },
             {
-                type: "multiple-choice",
-                question: "Ada Lovelace is widely considered the first computer programmer for her work with which individual?",
-                options: ["Grace Murray Hopper", "Charles Babbage", "George Boole", "Wilhelm Gottfried Leibniz"],
-                answer: "Charles Babbage",
-                quote: "Ada Lovelace was an analyst working for this analytical engine and is considered the 'first computer programmer' by many."
+                type: 'mcq',
+                question: 'Which of the following describes Object-oriented programming (OOP)?',
+                options: ['Organizing code into reusable functions.', 'Evaluating mathematical functions to avoid side effects.', 'Revolving around the concepts of objects that encapsulate data and behavior.', 'Writing code in binary instructions.'],
+                answer: 'Revolving around the concepts of objects that encapsulate data and behavior.',
+                explanation: 'Object-oriented programming (OOP) revolves around the concepts of objects that encapsulate data and behavior that promotes modularity, code reusability, and scalability. Examples include Python, VB.NET, and C#.'
             },
             {
-                type: "multiple-choice",
-                question: "Which individual developed 'Boolean algebra', the foundation for modern computing?",
-                options: ["Charles Babbage", "Wilhelm Gottfried Leibniz", "George Boole", "Gladys Mae West"],
-                answer: "George Boole",
-                quote: "He developed Boolean algebra, which is the foundation for modern computing."
+                type: 'mcq',
+                question: 'According to the handout, what is an algorithm?',
+                options: ['A program that executes instructions.', 'A set of steps that generates a finite sequence of computational operations to solve a problem.', 'A diagrammatic representation of code.', 'A special word significant to the compiler.'],
+                answer: 'A set of steps that generates a finite sequence of computational operations to solve a problem.',
+                explanation: 'In programming, an algorithm is a set of steps that generates a finite sequence of simple computational operations leading to the solution of a given problem.'
             },
             {
-                type: "multiple-choice",
-                question: "Grace Brewster Murray Hopper is best known for her involvement in developing what computer language?",
-                options: ["Java", "Python", "COBOL", "C++"],
-                answer: "COBOL",
-                quote: "She is best known for her trailblazing involvement in developing computer languages such as COBOL (Common Business-oriented Language)."
+                type: 'mcq',
+                question: 'Which step in the problem-solving process involves implementing the algorithm in a programming language?',
+                options: ['Problem Analysis', 'Algorithm Design', 'Coding', 'Execution'],
+                answer: 'Coding',
+                explanation: 'The complete steps [of the problem-solving process] include: 1. Problem Analysis - evaluating and outlining the problem and its solution requirements. 2. Algorithm Design - designing an algorithm to solve problems. 3. Coding - implementing the algorithm in a programming language. 4. Execution - verifying whether the algorithm works or not.'
             },
             {
-                type: "multiple-choice",
-                question: "Katherine Johnson was one of NASA's 'human computers' whose calculations were critical for what?",
-                options: ["The development of GPS.", "The invention of the internet.", "Sending astronauts to the moon.", "The creation of social media."],
-                answer: "Sending astronauts to the moon.",
-                quote: "Her calculations allowed NASA to send astronauts to the moon and back."
+                type: 'mcq',
+                question: 'In Java, what is the keyword that is a type of access or visibility modifier?',
+                options: ['static', 'void', 'public', 'class'],
+                answer: 'public',
+                explanation: 'The public keyword is a type of access or visibility modifier. This keyword is used to define a main() method so that the interpreter can execute the program.'
             },
             {
-                type: "multiple-choice",
-                question: "Gladys Mae West's 'most outstanding contribution' was creating a detailed geodetic model of the Earth which became the basis for what?",
-                options: ["Cloud computing.", "The World Wide Web.", "The Global Positioning System (GPS).", "Artificial intelligence."],
-                answer: "The Global Positioning System (GPS).",
-                quote: "Though her most outstanding contribution was creating a detailed geodetic model of the Earth, which became the basis for the Global Positioning System (GPS) development in the 1960s..."
+                type: 'mcq',
+                question: 'What is the purpose of the `static` keyword in the Java `main` method?',
+                options: ['It indicates a non-value-returning method.', 'It is used to define a main() method so the interpreter can execute the program.', 'It tells that this is a class method and can be executed without creating an object of the class.', 'It is a reserved word for all variables.'],
+                answer: 'It tells that this is a class method and can be executed without creating an object of the class.',
+                explanation: 'The static keyword tells that this is a class method. The main method is always declared static so that it can be executed without creating an object of the class.'
             },
             {
-                type: "multiple-choice",
-                question: "Which of the following is defined as 'the application of hardware and software to deliver readily available, on-demand, and measured computing services over the Internet'?",
-                options: ["Virtualization", "Cloud Computing", "Fog Computing", "Edge Computing"],
-                answer: "Cloud Computing",
-                quote: "It is the application of hardware and software to deliver readily available, on-demand, and measured computing services over the Internet."
+                type: 'mcq',
+                question: 'What is the `void` keyword used for in Java?',
+                options: ['To indicate a value-returning method.', 'To specify a method that does not return any value.', 'To define a variable that can hold any data type.', 'To specify a class that can be accessed publicly.'],
+                answer: 'To specify a method that does not return any value.',
+                explanation: 'The void keyword means that the main is a non-value-returning method, which means the main is not expected to return any value.'
             },
             {
-                type: "multiple-choice",
-                question: "What technology 'simulates hardware functions by creating multiple virtual machines on a physical server'?",
-                options: ["Cloud Computing", "Internet of Things (IoT)", "Virtualization", "Big Data"],
-                answer: "Virtualization",
-                quote: "This technology simulates hardware functions by creating multiple virtual machines on a physical server that acts as a hardware device."
+                type: 'mcq',
+                question: 'How are Java programming statements terminated?',
+                options: ['With a period (`.`)', 'With a comma (`,`)', 'With a semicolon (`;`)', 'With a closing parenthesis (`)`)'],
+                answer: 'With a semicolon (`;`)',
+                explanation: 'Every Java statements ends with a semicolon.'
             },
             {
-                type: "multiple-choice",
-                question: "What is a 'network of an extensive range of physical objectives that automatically share data over the Internet'?",
-                options: ["Big Data", "Internet of Things (IoT)", "Artificial Intelligence (AI)", "Cloud Computing"],
-                answer: "Internet of Things (IoT)",
-                quote: "It is a network of an extensive range of physical objectives that automatically share data over the Internet."
+                type: 'mcq',
+                question: 'What is the purpose of a flowchart "Decision" symbol?',
+                options: ['To show the start and end of a process.', 'To show any input or output operation.', 'To indicate any process not specially defined.', 'To show any point in the process where a decision must be made to determine further action.'],
+                answer: 'To show any point in the process where a decision must be made to determine further action.',
+                explanation: 'Decision symbol: Shows any point in the process wherein a decision must be made to determine further action.'
             },
             {
-                type: "multiple-choice",
-                question: "What are 'massive and complex datasets characterized by high volume, variety of data types, and velocity'?",
-                options: ["Big Data", "Cloud Computing", "Artificial Intelligence (AI)", "Fog Computing"],
-                answer: "Big Data",
-                quote: "These are massive and complex datasets characterized by high volume, variety of data types, and velocity as data are collected and analyzed at ever-increasing rates."
+                type: 'mcq',
+                question: 'Which flowchart symbol is used to show the start and end of a set of computer-related processes?',
+                options: ['Input/Output', 'Terminal', 'Processing', 'Flow line'],
+                answer: 'Terminal',
+                explanation: 'Terminal symbol: Shows the start and end of a set of computer-related processes.'
             },
             {
-                type: "multiple-choice",
-                question: "Which technology allows 'machines to learn from experience, adjust to new inputs, and do human-like activities'?",
-                options: ["Virtualization", "Edge Computing", "Internet of Things (IoT)", "Artificial Intelligence (AI)"],
-                answer: "Artificial Intelligence (AI)",
-                quote: "Machines can learn from experience, adjust to new inputs, and do human-like activities because of this technology."
+                type: 'mcq',
+                question: 'Which of the following is a rule for creating program flowcharts?',
+                options: ['The program logic must show the flow from left to right only.', 'The program logic must show the flow from top to bottom and/or left to right.', 'All symbols must have two exit points.', 'Operations must be expressed using a specific programming language.'],
+                answer: 'The program logic must show the flow from top to bottom and/or left to right.',
+                explanation: 'The program logic should only show the flow from top to bottom and/or left to right.'
             },
             {
-                type: "multiple-choice",
-                question: "According to the document, what is the foundation of Artificial Intelligence?",
-                options: ["Virtualization", "Cloud Computing", "The Internet of Things", "Big Data"],
-                answer: "Cloud Computing",
-                quote: "To show the interconnection of the modern technologies of computing, it is essential to note that Cloud Computing is the foundation of Artificial Intelligence."
+                type: 'mcq',
+                question: 'In Java, what is a "literal string"?',
+                options: ['A collection of similar data types.', 'A sequence of characters that appears exactly as written, enclosed by double quotation marks.', 'A reserved word used for variables.', 'An object that performs a specific task.'],
+                answer: 'A sequence of characters that appears exactly as written, enclosed by double quotation marks.',
+                explanation: 'A literal string is a series of characters that appear exactly as written and is always enclosed by double quotation marks (",").'
             },
             {
-                type: "multiple-choice",
-                question: "What is the primary difference between Fog Computing and Cloud Computing?",
-                options: ["Fog is a type of AI.", "Fog uses physical servers, while Cloud uses virtual ones.", "Fog stores data in edge devices closer to end-users.", "Fog is used for big data analytics."],
-                answer: "Fog stores data in edge devices closer to end-users.",
-                quote: "The data and application sets are stored in edge devices compared to the clouds of cloud computing... the fog is closer to the ground, wherein servers are placed near the end-users."
+                type: 'mcq',
+                question: 'What is the purpose of `//` and `/* ... */` in Java code?',
+                options: ['To declare variables.', 'To create a new class.', 'To add comments that are not compiled or executed.', 'To define a method.'],
+                answer: 'To add comments that are not compiled or executed.',
+                explanation: 'Comments provide additional information to make programs easier for programmers and other programmers to understand. Comments will not be compiled and executed when the program is run. A comment line can start with // symbols and continue to the end of the line. This type of comment line is used for a single-line comment. Comments can also be placed between /* and */ symbols if the comments run over multiple lines.'
             },
             {
-                type: "multiple-choice",
-                question: "Which modern computing paradigm analyzes raw data locally instead of transferring it to the cloud?",
-                options: ["Cloud Computing", "Edge Computing", "Fog Computing", "Big Data"],
-                answer: "Edge Computing",
-                quote: "The raw data in edge computing is analyzed locally instead of transferred to the cloud."
+                type: 'mcq',
+                question: 'What does a flowchart "Input/Output" symbol represent?',
+                options: ['A processing step.', 'The start of a program.', 'Any input/output operation.', 'A decision point.'],
+                answer: 'Any input/output operation.',
+                explanation: 'Input/Output symbol: Shows any input/output operation.'
             },
             {
-                type: "multiple-choice",
-                question: "Which industry uses computers to 'organize data effectively' with applications like Microsoft Excel and SQL Database?",
-                options: ["Healthcare", "Education", "Government", "Business Organizations"],
-                answer: "Business Organizations",
-                quote: "Businesses use computers to organize data effectively. Using applications such as Microsoft Excel and SQL Database will lessen the amount of human error in business management."
+                type: 'mcq',
+                question: 'What is the main purpose of Java APIs?',
+                options: ['To allow developers to create new programming languages.', 'To provide pre-written programs with existing functionality.', 'To compile and execute Java programs.', 'To manage user input.'],
+                answer: 'To provide pre-written programs with existing functionality.',
+                explanation: 'Java APIs are pre-written Java programs that plug and play existing functionality into a code, such as getting the time and date, performing mathematical operations, or manipulating text.'
             },
             {
-                type: "multiple-choice",
-                question: "In the banking industry, how have computers contributed to transaction processes?",
-                options: ["By creating new currency.", "By replacing all human tellers.", "By allowing easy deposit/withdrawal with ATMs.", "By eliminating the need for bank accounts."],
-                answer: "By allowing easy deposit/withdrawal with ATMs.",
-                quote: "As one of the most used payment methods, ATMs allow users to deposit and withdraw money anywhere and anytime easily."
+                type: 'mcq',
+                question: 'Which programming paradigm emphasizes the sequence of steps to execute a program and organizes code into reusable procedures or functions?',
+                options: ['Functional Programming', 'Object-oriented programming (OOP)', 'Procedural Programming', 'Machine Language'],
+                answer: 'Procedural Programming',
+                explanation: 'Procedural Programming or imperative programming, focuses on organizing code into reusable procedures or functions, emphasizing the sequence of steps to execute a program. Examples include BASIC, C and C++, Pascal, and Java.'
             },
             {
-                type: "multiple-choice",
-                question: "Which of the following is an example of an innovative learning method enabled by advanced technologies in education?",
-                options: ["Chalkboard learning", "Online degrees and courses", "Physical books", "Oral examinations"],
-                answer: "Online degrees and courses",
-                quote: "Online degrees and courses in schools are also offered to reach students to develop extensive access to advanced education."
+                type: 'mcq',
+                question: 'What is a "class" in Java?',
+                options: ['A pre-written program that provides functionality.', 'A collection of similar data types.', 'The basic unit of a Java program that defines a group of objects, data members, and methods.', 'A specific instruction given to the compiler.'],
+                answer: 'The basic unit of a Java program that defines a group of objects, data members, and methods.',
+                explanation: 'A class is the basic unit of a Java program. It also defines a group of objects that includes data members, which are places to store data, and methods which are places to put the program logic.'
             },
             {
-                type: "multiple-choice",
-                question: "In healthcare, how do computers aid in diagnosis?",
-                options: ["By replacing all doctors.", "By storing patient records in easily accessible databases.", "By giving prescriptions directly to patients.", "By performing surgery without human assistance."],
-                answer: "By storing patient records in easily accessible databases.",
-                quote: "Records of patients' treatment and medical history are stored in a database easily accessible to doctors."
+                type: 'mcq',
+                question: 'What is a "variable"?',
+                options: ['A special word significant to the Java compiler.', 'A name used to refer to data stored in the memory.', 'A set of grammatical rules for a computer.', 'A diagrammatic representation of an algorithm.'],
+                answer: 'A name used to refer to data stored in the memory.',
+                explanation: 'Reserved words or keywords are special words significant to the Java compiler. Aside from class names, these cannot be used as variables, a name used to refer to data stored in the memory.'
             },
             {
-                type: "multiple-choice",
-                question: "Which field supports computers for 'science, engineering, research, and machines' and includes social humanoids like Sophia the Robot?",
-                options: ["Virtualization", "Robotics", "Artificial Intelligence", "Edge Computing"],
-                answer: "Robotics",
-                quote: "This fast-emerging field supports computers for science, engineering, research, and machines... One of the recent examples of a physical computerized robot is Sophia the Robot..."
+                type: 'mcq',
+                question: 'Which of the following is a rule for naming an identifier in Java?',
+                options: ['It can begin with a digit.', 'It can have white spaces.', 'It cannot be a reserved word.', 'It is not case-sensitive.'],
+                answer: 'It cannot be a reserved word.',
+                explanation: 'An identifier is the name given to a program component... It cannot be a reserved word.'
             },
             {
-                type: "multiple-choice",
-                question: "What is the definition of 'computing' as provided in the document?",
-                options: ["The use of computers for entertainment.", "Any activity that utilizes computers to manage, process, and communicate critical information.", "The design of computer hardware.", "The process of writing code for applications."],
-                answer: "Any activity that utilizes computers to manage, process, and communicate critical information.",
-                quote: "Computing is any activity that utilizes computers to manage, process, and communicate critical information that is an integral part of modern industrial technology."
+                type: 'mcq',
+                question: 'What is the file extension for a Java source code file?',
+                options: ['.class', '.exe', '.java', '.txt'],
+                answer: '.java',
+                explanation: 'The programming statements or source code are stored on a disk with a .java file extension.'
             },
             {
-                type: "multiple-choice",
-                question: "The Babylonians used which of the following for calculations?",
-                options: ["Abacus", "Rhind Papyrus", "Counting boards", "Roman numerals"],
-                answer: "Counting boards",
-                quote: "Counting boards existed in this civilization to assist with counting and simple calculations. It has similarities with an abacus..."
+                type: 'mcq',
+                question: 'What is the Java command used to compile a program?',
+                options: ['javac', 'java', 'compile', 'run'],
+                answer: 'javac',
+                explanation: 'Compile the Java program using the javac command: javac [name of the Java file].java.'
             },
             {
-                type: "multiple-choice",
-                question: "Which early civilization's numerals were 'challenging to use, so an abacus was often used for calculation'?",
-                options: ["Babylonians", "Greeks", "Egyptians", "Romans"],
-                answer: "Romans",
-                quote: "Roman numerals were challenging to use, so an abacus was often used for calculation."
+                type: 'mcq',
+                question: 'What is the Java command used to execute a compiled program?',
+                options: ['javac', 'java', 'run', 'execute'],
+                answer: 'java',
+                explanation: 'Execute the compiled Java program using the java command (interpreter): java [name of the Java file].'
             },
             {
-                type: "multiple-choice",
-                question: "The Islamic contribution to algebra moved away from the Greek concept of mathematics as being primarily about what?",
-                options: ["Arithmetic", "Geometry", "Logic", "Number theory"],
-                answer: "Geometry",
-                quote: "A comprehensive theory was developed which used rational and irrational numbers as algebraic objects and moved away from the Greek concept of mathematics as just being about Geometry."
+                type: 'mcq',
+                question: 'What does the Java Virtual Machine (JVM) do?',
+                options: ['It only compiles code.', 'It only interprets code.', 'It is a virtual machine that runs Java applications by translating bytecode into machine language.', 'It provides a graphical user interface.'],
+                answer: 'It is a virtual machine that runs Java applications by translating bytecode into machine language.',
+                explanation: 'A JVM is an environment that translates Java bytecode, an intermediate-level language, into machine language and executes it.'
             },
             {
-                type: "multiple-choice",
-                question: "What was the main flaw of Blaise Pascal's 'Pascaline' that Wilhelm Gottfried Leibniz sought to overcome?",
-                options: ["It was too large.", "It could only run addition and subtraction.", "It was made of wood.", "It was not a mechanical calculator."],
-                answer: "It could only run addition and subtraction.",
-                quote: "He recognized the limitations of Pascaline as it could only run addition and subtraction operations..."
+                type: 'mcq',
+                question: 'What is the role of an "Assembler"?',
+                options: ['It translates high-level languages into machine code.', 'It directly executes instructions in a high-level language.', 'It converts instructions written in low-level assembly code into machine language.', 'It is a collection of useful functions.'],
+                answer: 'It converts instructions written in low-level assembly code into machine language.',
+                explanation: 'An assembler is a program that converts instructions written in low-level assembly code into relocatable machine language.'
             },
             {
-                type: "multiple-choice",
-                question: "What was the 'Difference Engine' designed to compute?",
-                options: ["Algebraic equations", "Symbolic logic", "Polynomial, logarithmic, and trigonometric functions", "Binary numbers"],
-                answer: "Polynomial, logarithmic, and trigonometric functions",
-                quote: "It was used to produce mathematical tables designed to precisely compute polynomial functions and logarithmic & trigonometric functions such as sine or cosine."
+                type: 'mcq',
+                question: 'What is a "flow line" used for in a flowchart?',
+                options: ['To show the start of a process.', 'To connect the symbols.', 'To indicate a decision.', 'To show an input operation.'],
+                answer: 'To connect the symbols.',
+                explanation: 'Flow line: Used for connecting the symbols.'
             },
             {
-                type: "multiple-choice",
-                question: "George Boole's work introduced what quantities to symbolize the universe of thinkable objects and their absence?",
-                options: ["1 and 10", "A and B", "True and False", "1 and 0"],
-                answer: "1 and 0",
-                quote: "His study on logic introduced the quantities '0' and '1.' He used 1 to symbolize the universe of thinkable objects and 0 to symbolize the absence of any things."
+                type: 'mcq',
+                question: 'What is the "single rule" for creating program flowcharts?',
+                options: ['Only one entry point and one exit point, except for the decision symbol.', 'The flowchart must contain at least five symbols.', 'It must start with an input symbol and end with an output symbol.', 'It must use only one type of symbol.'],
+                answer: 'Only one entry point and one exit point, except for the decision symbol.',
+                explanation: 'Each symbol should contain only one entry point and one exit point, except the decision symbol. It is known as the single rule.'
             },
             {
-                type: "multiple-choice",
-                question: "By the 1970s, which computer language was considered 'the most extensively used' due to Grace Murray Hopper's efforts?",
-                options: ["C++", "COBOL", "Python", "Java"],
-                answer: "COBOL",
-                quote: "By the 1970s, COBOL was considered the 'most extensively used computer language' in the world."
+                type: 'mcq',
+                question: 'What do the parentheses `()` after a method name signify?',
+                options: ['It is a class name.', 'It is a variable.', 'It is an object.', 'Method names are always followed by parentheses.'],
+                answer: 'Method names are always followed by parentheses.',
+                explanation: 'println() is a method. Method names are always followed by parentheses.'
             },
             {
-                type: "multiple-choice",
-                question: "What was the term used to describe people, mainly women, hired by NASA to perform complex mathematical calculations?",
-                options: ["Engineers", "Scientists", "Human computers", "Analysts"],
-                answer: "Human computers",
-                quote: "In the 1950s... These people were labeled 'computers', mainly women, who NASA hired to compute complex calculations to make space travel possible."
+                type: 'mcq',
+                question: 'In Java, what is the role of the square brackets `[]` in `String[] args`?',
+                options: ['They indicate that `args` is an object.', 'They indicate that `args` is a variable.', 'They indicate that `args` is a string.', 'They indicate that `args` is an array.'],
+                answer: 'They indicate that `args` is an array.',
+                explanation: 'The square brackets [ indicate args is an array. An array is a collection of similar data types, while a string is a sequence of characters containing letters, numbers, and symbols.'
             },
             {
-                type: "multiple-choice",
-                question: "Which of the following is NOT an example of a cloud computing application?",
-                options: ["Google Drive", "Netflix", "A desktop application installed on a single computer", "Google Translate"],
-                answer: "A desktop application installed on a single computer",
-                quote: "The use of the cloud lets users open files and use applications anywhere using whichever device has access to the Internet."
+                type: 'mcq',
+                question: 'What is the best way to understand a programming language, according to the handout?',
+                options: ['By memorizing keywords.', 'By writing a complex program.', 'By dissecting and examining its sample program.', 'By reading documentation about its APIs.'],
+                answer: 'By dissecting and examining its sample program.',
+                explanation: 'The best way to understand a programming language is by dissecting and examining its sample program.'
             },
             {
-                type: "multiple-choice",
-                question: "Which technology is described as 'decentralized and distributed cloud computing' where the infrastructure is 'close to data sources'?",
-                options: ["Big Data", "Internet of Things (IoT)", "Edge Computing", "Virtualization"],
-                answer: "Edge Computing",
-                quote: "It is decentralized and distributed cloud computing; wherein 'edge' is a general concept. It deals with a computing infrastructure that is close to data sources."
+                type: 'mcq',
+                question: 'What does a "Terminal" symbol represent in a flowchart?',
+                options: ['A process', 'Input/Output', 'A decision', 'Start and end of a process'],
+                answer: 'Start and end of a process',
+                explanation: 'Terminal: Shows the start and end of a set of computer-related processes.'
             },
             {
-                type: "multiple-choice",
-                question: "What technology allows machines to do 'human-like activities'?",
-                options: ["Virtualization", "Artificial Intelligence (AI)", "Cloud Computing", "Internet of Things (IoT)"],
-                answer: "Artificial Intelligence (AI)",
-                quote: "Machines can learn from experience, adjust to new inputs, and do human-like activities because of this technology."
+                type: 'mcq',
+                question: 'What is the role of the `println()` method?',
+                options: ['To read input from the user.', 'To perform mathematical operations.', 'To display text on the screen.', 'To declare a new variable.'],
+                answer: 'To display text on the screen.',
+                explanation: 'System.out.println("First Java Application"); //for display.'
             },
             {
-                type: "multiple-choice",
-                question: "What is the primary characteristic of Big Data?",
-                options: ["Low volume and velocity.", "Physical, non-digital datasets.", "Massive and complex datasets.", "Simple, non-networked data."],
-                answer: "Massive and complex datasets.",
-                quote: "These are massive and complex datasets characterized by high volume, variety of data types, and velocity as data are collected and analyzed at ever-increasing rates."
+                type: 'mcq',
+                question: 'Which of the following describes the Java Runtime Environment (JRE)?',
+                options: ['A compiler that converts code to bytecode.', 'The software that Java programs require to run correctly.', 'A tool for debugging Java applications.', 'A virtual machine that executes code.'],
+                answer: 'The software that Java programs require to run correctly.',
+                explanation: 'It is the software that Java programs require to run correctly. It provides the class libraries and other resources that any Java program needs.'
             },
             {
-                type: "multiple-choice",
-                question: "Which of the following is a field that supports computers for science, engineering, and machines, and includes physical robots?",
-                options: ["IoT", "Robotics", "Edge Computing", "Virtualization"],
-                answer: "Robotics",
-                quote: "This fast-emerging field supports computers for science, engineering, research, and machines."
+                type: 'mcq',
+                question: 'How are braces `{}` used in a Java program?',
+                options: ['To identify single-line comments.', 'To enclose a literal string.', 'To define parameters for a method.', 'To identify blocks of code and data.'],
+                answer: 'To identify blocks of code and data.',
+                explanation: 'Still, on line 1, braces are used to identify blocks of code and data. It requires matching opening ({) and closing braces (}).'
             },
             {
-                type: "multiple-choice",
-                question: "What is the interconnection between IoT, Big Data, and AI as described in the document?",
-                options: ["IoT is the foundation of AI.", "Big Data is the foundation of AI.", "IoT provides raw materials that Big Data feeds into AI.", "AI provides the data for IoT."],
-                answer: "IoT provides raw materials that Big Data feeds into AI.",
-                quote: "the Internet of Things provides the raw materials used to produce the fertilizer that Big Data feeds into Artificial Intelligence."
+                type: 'mcq',
+                question: 'According to the handout, what is a "programming language"?',
+                options: ['A set of grammatical rules that commands a computer to behave in a specific way.', 'A collection of useful functions.', 'A program that converts code to binary numbers.', 'A software application that provides tools for developers.'],
+                answer: 'A set of grammatical rules that commands a computer to behave in a specific way.',
+                explanation: 'A computer language is a set of grammatical rules that commands a computer or a device to behave in a specific way. It also refers to programming language.'
             },
 
             // Identification Questions
             {
-                type: "identification",
-                question: "This civilization thrived in Mesopotamia and used counting boards for calculations.",
-                answer: "Babylonians",
-                quote: "This civilization thrived in Mesopotamia (Iraq)... Counting boards existed in this civilization to assist with counting and simple calculations."
+                type: 'identification',
+                question: 'What is the name for a sequential set of instructions, also known as codes, written to perform a specific computation task?',
+                answer: 'computer program',
+                explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language to let the computer perform a specific computation task.'
             },
             {
-                type: "identification",
-                question: "He developed the binary number system and created the 'Step Reckoner'.",
-                answer: "Wilhelm Gottfried Leibniz",
-                quote: "He was a German philosopher, mathematician, and one of the pioneers in mechanical calculation. He developed the binary number system used in digital computers... It was called 'The Step Reckoner'."
+                type: 'identification',
+                question: 'What is the term for a set of rules defining the valid combinations of symbols or characters to create a valid statement in a language?',
+                answer: 'syntax',
+                explanation: 'Syntax: It is a set of rules defining the various combinations and of symbols or characters to create a valid statement in a language.'
             },
             {
-                type: "identification",
-                question: "Considered one of the 'grandfathers of the computing field' for developing 'Boolean algebra'.",
-                answer: "George Boole",
-                quote: "He developed Boolean algebra, which is the foundation for modern computing."
+                type: 'identification',
+                question: 'What is the program that directly executes instructions in a high-level language without converting them into a machine language?',
+                answer: 'interpreter',
+                explanation: 'Interpreter: It is a program that directly executes instructions in a high-level language without converting them into a machine language.'
             },
             {
-                type: "identification",
-                question: "The 'first computer programmer' for her work with Charles Babbage's 'Difference Engine'.",
-                answer: "Ada Lovelace",
-                quote: "Ada Lovelace was an analyst working for this analytical engine and is considered the 'first computer programmer' by many."
+                type: 'identification',
+                question: 'This programming paradigm revolves around the concepts of objects that encapsulate data and behavior.',
+                answer: 'object-oriented programming',
+                explanation: 'Object-oriented programming (OOP) revolves around the concepts of objects that encapsulate data and behavior that promotes modularity, code reusability, and scalability.'
             },
             {
-                type: "identification",
-                question: "Her calculations as a 'human computer' at NASA helped figure out the paths for spacecraft to orbit Earth and land on the moon.",
-                answer: "Katherine Johnson",
-                quote: "As one of NASA's 'computers', Johnson was called upon to do the work she would become the most known for. She studied geometry for space travel which helped her figure out the paths for spacecraft to orbit Earth and land on the moon."
+                type: 'identification',
+                question: 'This is a program that converts instructions written in low-level assembly code into relocatable machine language.',
+                answer: 'assembler',
+                explanation: 'Assembler: It is a program that converts instructions written in low-level assembly code into relocatable machine language.'
             },
             {
-                type: "identification",
-                question: "The mathematician whose geodetic model of the Earth became the basis for GPS.",
-                answer: "Gladys Mae West",
-                quote: "Though her most outstanding contribution was creating a detailed geodetic model of the Earth, which became the basis for the Global Positioning System (GPS) development in the 1960s..."
+                type: 'identification',
+                question: 'What is the term for a diagrammatic representation of the steps of an algorithm?',
+                answer: 'flowchart',
+                explanation: 'Flowchart: It is a diagrammatic representation of the steps of an algorithm.'
             },
             {
-                type: "identification",
-                question: "This technology simulates hardware functions by creating multiple virtual machines on a physical server.",
-                answer: "Virtualization",
-                quote: "This technology simulates hardware functions by creating multiple virtual machines on a physical server that acts as a hardware device."
+                type: 'identification',
+                question: 'In Java, what are pre-written programs that plug and play existing functionality into a code?',
+                answer: 'java apis',
+                explanation: 'Java APIs are pre-written Java programs that plug and play existing functionality into a code, such as getting the time and date, performing mathematical operations, or manipulating text.'
             },
             {
-                type: "identification",
-                question: "A network of physical objects that automatically share data over the internet.",
-                answer: "Internet of Things",
-                quote: "It is a network of an extensive range of physical objectives that automatically share data over the Internet."
+                type: 'identification',
+                question: 'What is the name given to a program component, such as a class, object, or variable, that cannot be a reserved word or start with a digit?',
+                answer: 'identifier',
+                explanation: 'An identifier is the name given to a program component, such as a class, object, or variable... It must begin with a letter of the English alphabet, an underscore ( ), or a dollar sign ($), but not with a digit... It cannot be a reserved word.'
             },
             {
-                type: "identification",
-                question: "This field uses computers for science, engineering, and research, and includes social humanoid robots.",
-                answer: "Robotics",
-                quote: "This fast-emerging field supports computers for science, engineering, research, and machines. Robots such as factory and machine robots can help perform several tasks considered complex for human abilities."
+                type: 'identification',
+                question: 'What is the name for special words that are significant to the Java compiler and cannot be used as variables?',
+                answer: 'reserved words',
+                explanation: 'Reserved words or keywords are special words significant to the Java compiler. Aside from class names, these cannot be used as variables, a name used to refer to data stored in the memory.'
             },
             {
-                type: "identification",
-                question: "This modern computing paradigm analyzes raw data locally, close to data sources.",
-                answer: "Edge Computing",
-                quote: "The raw data in edge computing is analyzed locally instead of transferred to the cloud."
-            },
-            {
-                type: "identification",
-                question: "This early civilization solved practical problems like measuring floods and calculating land area and taxes.",
-                answer: "Egyptians",
-                quote: "Measuring time, measuring floods, calculating the land area, bookkeeping, and calculating taxes are examples of practical problems that were solved by Egyptian mathematics."
-            },
-            {
-                type: "identification",
-                question: "This technology is defined as 'the application of hardware and software to deliver readily available, on-demand, and measured computing services over the Internet'.",
-                answer: "Cloud Computing",
-                quote: "It is the application of hardware and software to deliver readily available, on-demand, and measured computing services over the Internet."
-            },
-            {
-                type: "identification",
-                question: "A German polymath who developed the binary number system used in digital computers.",
-                answer: "Wilhelm Gottfried Leibniz",
-                quote: "He was a German philosopher, mathematician, and one of the pioneers in mechanical calculation. He developed the binary number system used in digital computers."
-            },
-            {
-                type: "identification",
-                question: "This is a network of physical objects that automatically share data over the internet.",
-                answer: "Internet of Things",
-                quote: "It is a network of an extensive range of physical objectives that automatically share data over the Internet."
-            },
-            {
-                type: "identification",
-                question: "This is a fast-emerging field that supports computers for science, engineering, research, and machines.",
-                answer: "Robotics",
-                quote: "This fast-emerging field supports computers for science, engineering, research, and machines."
-            },
-            {
-                type: "identification",
-                question: "This is an expansion of the idea of cloud computing that stores data in 'edge devices' closer to end-users.",
-                answer: "Fog Computing",
-                quote: "It is an expansion of the idea of cloud computing proposed by Cisco. The data and application sets are stored in edge devices compared to the clouds of cloud computing."
-            },
-            {
-                type: "identification",
-                question: "This technology allows machines to learn from experience, adjust to new inputs, and do human-like activities.",
-                answer: "Artificial Intelligence",
-                quote: "Machines can learn from experience, adjust to new inputs, and do human-like activities because of this technology."
-            },
-            {
-                type: "identification",
-                question: "This technology uses 'massive and complex datasets' with high volume, variety, and velocity.",
-                answer: "Big Data",
-                quote: "These are massive and complex datasets characterized by high volume, variety of data types, and velocity as data are collected and analyzed at ever-increasing rates."
+                type: 'identification',
+                question: 'What is the name for the virtual machine that runs Java applications as a run-time engine, combining both compilers and interpreters?',
+                answer: 'java virtual machine',
+                explanation: 'Java was the first programming language to combine both [compilers and interpreters] using a Java Virtual Machine (JVM). A JVM is an environment that translates Java bytecode, an intermediate-level language, into machine language and executes it.'
             }
         ];
 
+        // UI elements
+        const themeToggle = document.getElementById('themeToggle');
+        const moonIcon = document.getElementById('moonIcon');
+        const sunIcon = document.getElementById('sunIcon');
+        const startButton = document.getElementById('startButton');
+        const startPage = document.getElementById('startPage');
+        const quizContainer = document.getElementById('quiz-content');
+        const questionContainer = document.getElementById('questionContainer');
+        const questionCountSpan = document.getElementById('questionCount');
+        const questionTextDiv = document.getElementById('questionText');
+        const mcqOptionsDiv = document.getElementById('mcq-options');
+        const identificationInput = document.getElementById('identification-input');
+        const identificationAnswerInput = document.getElementById('identificationAnswer');
+        const answerFeedbackDiv = document.getElementById('answerFeedback');
+        const explanationBox = document.getElementById('explanationBox');
+        const explanationText = document.getElementById('explanationText');
+        const nextButton = document.getElementById('nextButton');
+        const resultsPage = document.getElementById('resultsPage');
+        const finalScoreP = document.getElementById('finalScore');
+        const incorrectQuestionsContainer = document.getElementById('incorrectQuestionsContainer');
+        const incorrectTitle = document.getElementById('incorrectTitle');
+        const incorrectList = document.getElementById('incorrectList');
+        const restartButton = document.getElementById('restartButton');
+
+        // State variables
+        let mcqQuestions = [];
+        let identificationQuestions = [];
+        let allQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let incorrectQuestions = [];
+
+        // --- Core Quiz Logic ---
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [array[i], array[j]] = [array[j], array[i]];
             }
         }
-        
-        function startQuiz() {
-            // Shuffle and combine questions
-            const mcQuestions = quizQuestions.filter(q => q.type === 'multiple-choice');
-            const idQuestions = quizQuestions.filter(q => q.type === 'identification');
-            shuffleArray(mcQuestions);
-            shuffleArray(idQuestions);
-            quizData = [...mcQuestions, ...idQuestions];
-            
-            quizIntro.classList.add('hidden');
-            quizContainer.classList.remove('hidden');
-            quizResults.classList.add('hidden');
-            currentQuestionIndex = 0;
-            score = 0;
-            userAnswers = [];
-            wrongAnswers = [];
-            feedbackContainer.classList.add('hidden');
-            loadQuestion();
+
+        function loadQuizData() {
+            mcqQuestions = quizData.filter(q => q.type === 'mcq');
+            identificationQuestions = quizData.filter(q => q.type === 'identification');
+            shuffleArray(mcqQuestions);
+            shuffleArray(identificationQuestions);
+            allQuestions = [...mcqQuestions, ...identificationQuestions];
         }
 
-        function loadQuestion() {
-            if (currentQuestionIndex >= quizData.length) {
-                endQuiz();
-                return;
-            }
+        function showQuestion() {
+            // Hide previous feedback
+            answerFeedbackDiv.classList.add('hidden');
+            explanationBox.classList.add('hidden');
+            nextButton.classList.add('hidden');
+            mcqOptionsDiv.innerHTML = '';
+            identificationAnswerInput.value = '';
 
-            const currentQuestion = quizData[currentQuestionIndex];
-            questionNumberElem.textContent = `Question ${currentQuestionIndex + 1} of ${quizData.length}`;
-            questionTextElem.textContent = currentQuestion.question;
-            feedbackContainer.classList.add('hidden');
+            const currentQuestion = allQuestions[currentQuestionIndex];
+            questionCountSpan.textContent = `Question ${currentQuestionIndex + 1} of ${allQuestions.length}`;
+            questionTextDiv.textContent = currentQuestion.question;
 
-            if (currentQuestion.type === 'multiple-choice') {
-                optionsContainer.classList.remove('hidden');
-                identificationInputContainer.classList.add('hidden');
-                optionsContainer.innerHTML = '';
-                shuffleArray(currentQuestion.options);
-                currentQuestion.options.forEach(option => {
+            if (currentQuestion.type === 'mcq') {
+                identificationInput.classList.add('hidden');
+                mcqOptionsDiv.classList.remove('hidden');
+                // Create option buttons
+                shuffleArray(currentQuestion.options).forEach(option => {
                     const button = document.createElement('button');
                     button.textContent = option;
-                    button.classList.add('quiz-option', 'px-4', 'py-2', 'bg-gray-200', 'rounded-md', 'hover:bg-gray-300', 'font-medium', 'transition-colors', 'duration-200');
-                    button.addEventListener('click', () => handleAnswer(option));
-                    optionsContainer.appendChild(button);
+                    button.className = 'w-full py-3 px-6 text-left rounded-full font-medium border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500';
+                    button.onclick = () => handleAnswer(option);
+                    mcqOptionsDiv.appendChild(button);
                 });
-            } else if (currentQuestion.type === 'identification') {
-                optionsContainer.classList.add('hidden');
-                identificationInputContainer.classList.remove('hidden');
-                identificationInput.value = '';
-                identificationInput.focus();
+            } else { // Identification question
+                mcqOptionsDiv.classList.add('hidden');
+                identificationInput.classList.remove('hidden');
+                nextButton.onclick = () => handleIdentificationAnswer();
+                nextButton.textContent = 'Submit';
+                nextButton.classList.remove('hidden');
             }
-
-            nextQuestionBtn.textContent = 'Submit Answer';
         }
 
-        function handleAnswer(selectedAnswer) {
-            const currentQuestion = quizData[currentQuestionIndex];
-            let isCorrect = false;
+        function handleAnswer(selectedOption) {
+            const currentQuestion = allQuestions[currentQuestionIndex];
+            const isCorrect = selectedOption === currentQuestion.answer;
 
-            if (currentQuestion.type === 'multiple-choice') {
-                isCorrect = selectedAnswer === currentQuestion.answer;
-                
-                // Disable all option buttons
-                Array.from(optionsContainer.children).forEach(btn => {
-                    btn.disabled = true;
-                    if (btn.textContent === currentQuestion.answer) {
-                        btn.classList.add('bg-green-500', 'text-white');
-                        btn.classList.remove('bg-gray-200', 'hover:bg-gray-300', 'quiz-option');
-                    } else if (btn.textContent === selectedAnswer) {
-                        btn.classList.add('bg-red-500', 'text-white');
-                        btn.classList.remove('bg-gray-200', 'hover:bg-gray-300', 'quiz-option');
-                    }
-                });
-            } else if (currentQuestion.type === 'identification') {
-                const userAnswer = identificationInput.value.trim();
-                isCorrect = userAnswer.toLowerCase() === currentQuestion.answer.toLowerCase();
-                
-                identificationInput.disabled = true;
-            }
+            // Disable all buttons to prevent multiple clicks
+            Array.from(mcqOptionsDiv.children).forEach(button => {
+                button.disabled = true;
+                if (button.textContent === currentQuestion.answer) {
+                    button.classList.add('bg-green-500', 'text-white');
+                    button.classList.remove('dark:bg-gray-700', 'dark:text-gray-200', 'hover:bg-gray-200', 'dark:hover:bg-gray-600');
+                } else if (button.textContent === selectedOption) {
+                    button.classList.add('bg-red-500', 'text-white');
+                    button.classList.remove('dark:bg-gray-700', 'dark:text-gray-200', 'hover:bg-gray-200', 'dark:hover:bg-gray-600');
+                }
+            });
 
             if (isCorrect) {
                 score++;
-                feedbackMessage.textContent = 'Correct!';
-                feedbackMessage.classList.remove('text-red-500');
-                feedbackMessage.classList.add('text-green-500');
-                feedbackContainer.classList.add('bg-green-100', 'border-green-500');
+                answerFeedbackDiv.textContent = 'Correct!';
+                answerFeedbackDiv.classList.remove('text-red-500');
+                answerFeedbackDiv.classList.add('text-green-500');
             } else {
-                wrongAnswers.push({
+                answerFeedbackDiv.textContent = 'Incorrect.';
+                answerFeedbackDiv.classList.remove('text-green-500');
+                answerFeedbackDiv.classList.add('text-red-500');
+                incorrectQuestions.push({
                     question: currentQuestion.question,
-                    userAnswer: currentQuestion.type === 'identification' ? identificationInput.value.trim() : selectedAnswer,
+                    yourAnswer: selectedOption,
                     correctAnswer: currentQuestion.answer
                 });
-                feedbackMessage.textContent = 'Incorrect.';
-                feedbackMessage.classList.remove('text-green-500');
-                feedbackMessage.classList.add('text-red-500');
-                feedbackContainer.classList.add('bg-red-100', 'border-red-500');
             }
+            showExplanation(currentQuestion.explanation);
+            answerFeedbackDiv.classList.remove('hidden');
+            nextButton.classList.remove('hidden');
+            nextButton.textContent = 'Next Question';
+            nextButton.onclick = nextQuestion;
+        }
 
-            feedbackQuote.textContent = currentQuestion.quote;
-            feedbackContainer.classList.remove('hidden');
-            feedbackContainer.classList.remove('bg-green-100', 'border-green-500', 'bg-red-100', 'border-red-500');
+        function handleIdentificationAnswer() {
+            const currentQuestion = allQuestions[currentQuestionIndex];
+            const userAnswer = identificationAnswerInput.value.trim().toLowerCase();
+            const correctAnswer = currentQuestion.answer.toLowerCase();
+            const isCorrect = userAnswer === correctAnswer;
+
             if (isCorrect) {
-                 feedbackContainer.classList.add('bg-green-100', 'border-green-500');
+                score++;
+                answerFeedbackDiv.textContent = 'Correct!';
+                answerFeedbackDiv.classList.remove('text-red-500');
+                answerFeedbackDiv.classList.add('text-green-500');
             } else {
-                 feedbackContainer.classList.add('bg-red-100', 'border-red-500');
+                answerFeedbackDiv.textContent = `Incorrect. The correct answer is: ${currentQuestion.answer}`;
+                answerFeedbackDiv.classList.remove('text-green-500');
+                answerFeedbackDiv.classList.add('text-red-500');
+                incorrectQuestions.push({
+                    question: currentQuestion.question,
+                    yourAnswer: identificationAnswerInput.value,
+                    correctAnswer: currentQuestion.answer
+                });
             }
-
-            nextQuestionBtn.textContent = 'Next Question';
-            nextQuestionBtn.removeEventListener('click', handleSubmit);
-            nextQuestionBtn.addEventListener('click', handleNext);
+            showExplanation(currentQuestion.explanation);
+            answerFeedbackDiv.classList.remove('hidden');
+            nextButton.classList.remove('hidden');
+            nextButton.textContent = 'Next Question';
+            nextButton.onclick = nextQuestion;
         }
 
-        function handleSubmit() {
-            const currentQuestion = quizData[currentQuestionIndex];
-            if (currentQuestion.type === 'identification') {
-                if (identificationInput.value.trim() === '') {
-                    showMessage('Please enter an answer before submitting.');
-                } else {
-                    handleAnswer(identificationInput.value.trim());
-                }
-            } else {
-                showMessage('Please select an option before submitting.');
-            }
+        function showExplanation(explanation) {
+            explanationText.textContent = explanation;
+            explanationBox.classList.remove('hidden');
         }
 
-        function handleNext() {
+        function nextQuestion() {
             currentQuestionIndex++;
-            loadQuestion();
+            if (currentQuestionIndex < allQuestions.length) {
+                showQuestion();
+            } else {
+                endQuiz();
+            }
         }
-
-        startQuizBtn.addEventListener('click', startQuiz);
-        nextQuestionBtn.addEventListener('click', handleSubmit);
-        restartQuizBtn.addEventListener('click', startQuiz);
 
         function endQuiz() {
-            quizContainer.classList.add('hidden');
-            quizResults.classList.remove('hidden');
-            finalScoreElem.textContent = score;
-            totalQuestionsElem.textContent = quizData.length;
-            wrongAnswersList.innerHTML = '';
-            wrongAnswers.forEach(item => {
-                const li = document.createElement('li');
-                li.innerHTML = `<strong>Question:</strong> ${item.question}<br><strong>Your Answer:</strong> ${item.userAnswer}<br><strong>Correct Answer:</strong> ${item.correctAnswer}`;
-                wrongAnswersList.appendChild(li);
-            });
+            questionContainer.classList.add('hidden');
+            resultsPage.classList.remove('hidden');
+            finalScoreP.textContent = `You scored ${score} out of ${allQuestions.length}!`;
 
-            // Save score to cookie
-            const previousScore = getCookie('quizScore');
-            if (!previousScore || score > parseInt(previousScore)) {
-                setCookie('quizScore', score, 365);
+            if (incorrectQuestions.length > 0) {
+                incorrectTitle.classList.remove('hidden');
+                incorrectList.classList.remove('hidden');
+                incorrectList.innerHTML = '';
+                incorrectQuestions.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'bg-gray-50 dark:bg-gray-600 p-3 rounded-md border border-gray-200 dark:border-gray-500';
+                    div.innerHTML = `
+                        <p class="font-semibold text-gray-800 dark:text-gray-100 mb-1">Question: ${item.question}</p>
+                        <p class="text-sm text-red-500">Your Answer: ${item.yourAnswer}</p>
+                        <p class="text-sm text-green-500">Correct Answer: ${item.correctAnswer}</p>
+                    `;
+                    incorrectList.appendChild(div);
+                });
+            }
+            saveProgress(score, allQuestions.length);
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            incorrectQuestions = [];
+            resultsPage.classList.add('hidden');
+            startPage.classList.remove('hidden');
+            // This will ensure the quiz questions are re-shuffled for a new session
+            loadQuizData(); 
+            // Also reset cookie to clear progress
+            setCookie('quizProgress', JSON.stringify({ score: 0, progress: 0 }), -1);
+        }
+
+        // --- Dark Mode / Light Mode Toggle ---
+        function toggleTheme() {
+            const isDark = document.body.classList.contains('dark');
+            if (isDark) {
+                document.body.classList.remove('dark');
+                document.body.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            } else {
+                document.body.classList.remove('light');
+                document.body.classList.add('dark');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            }
+        }
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // --- Cookie Management ---
+        function setCookie(name, value, days) {
+            let expires = '';
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = `; expires=${date.toUTCString()}`;
+            }
+            document.cookie = `${name}=${value}${expires}; path=/`;
+        }
+
+        function getCookie(name) {
+            const nameEQ = `${name}=`;
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function saveProgress(currentScore, totalQuestions) {
+            const progress = {
+                score: currentScore,
+                progress: currentQuestionIndex,
+                total: totalQuestions
+            };
+            setCookie('quizProgress', JSON.stringify(progress), 30); // Save for 30 days
+        }
+
+        function loadProgress() {
+            const progressCookie = getCookie('quizProgress');
+            if (progressCookie) {
+                const progress = JSON.parse(progressCookie);
+                if (progress.progress > 0) {
+                    score = progress.score;
+                    currentQuestionIndex = progress.progress;
+                    // Optional: You could ask the user if they want to resume
+                    console.log(`Resuming quiz from question ${currentQuestionIndex + 1} with a score of ${score}.`);
+                }
             }
         }
 
-        // Check and display previous score on load
-        const previousScore = getCookie('quizScore');
-        if (previousScore) {
-            previousScoreContainer.classList.remove('hidden');
-            previousScoreDisplay.textContent = `${previousScore}/${40 + quizQuestions.filter(q => q.type === 'identification').length}`;
-        }
+        // --- Event Listeners and Initialization ---
+        startButton.addEventListener('click', () => {
+            startPage.classList.add('hidden');
+            questionContainer.classList.remove('hidden');
+            showQuestion();
+        });
+
+        restartButton.addEventListener('click', restartQuiz);
+        
+        window.onload = () => {
+            loadQuizData();
+            loadProgress();
+            // Optional: If progress is loaded, you could offer to resume the quiz instead of showing the start page
+        };
     </script>
 </body>
 </html>
