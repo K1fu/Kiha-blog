@@ -3,1296 +3,701 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computer Programming 1 - Prelims</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <title>Understanding the self - Prelims</title>
+    <!-- Use a modern, easy-to-read font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS for mobile-first, responsive design -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
-            --bg-color: #f0f4f8;
-            --text-color: #2c3e50;
-            --card-bg: #ffffff;
-            --button-bg: #3498db;
-            --button-text: #ffffff;
-            --correct-color: #2ecc71;
-            --wrong-color: #e74c3c;
-            --border-color: #bdc3c7;
-            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --bg-color: #f3f4f6; /* Light gray */
+            --container-bg: #ffffff; /* White */
+            --text-color: #1f2937; /* Dark gray */
+            --card-bg: #eff6ff; /* Light blue */
+            --accent-color: #3b82f6; /* Blue */
+            --correct-bg: #dcfce7; /* Light green */
+            --correct-text: #166534; /* Dark green */
+            --wrong-bg: #fee2e2; /* Light red */
+            --wrong-text: #991b1b; /* Dark red */
+            --border-color: #d1d5db; /* Gray border */
         }
-
         body.dark-mode {
-            --bg-color: #1a202c;
-            --text-color: #e2e8f0;
-            --card-bg: #2d3748;
-            --button-bg: #4a5568;
-            --button-text: #e2e8f0;
-            --correct-color: #48bb78;
-            --wrong-color: #f56565;
-            --border-color: #4a5568;
-            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --bg-color: #121212;
+            --container-bg: #1f2937;
+            --text-color: #e5e7eb;
+            --card-bg: #374151;
+            --accent-color: #60a5fa;
+            --correct-bg: #14532d;
+            --correct-text: #bbf7d0;
+            --wrong-bg: #7f1d1d;
+            --wrong-text: #fecaca;
+            --border-color: #4b5563;
         }
-
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
         }
-
-        .quiz-container {
-            width: 100%;
-            max-width: 800px;
-            padding: 20px;
+        #quiz-container {
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        #question-card {
             background-color: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: var(--box-shadow);
-            transition: background-color 0.3s, box-shadow 0.3s;
-            position: relative;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        h1 {
-            font-size: 1.8rem;
-            margin: 0;
-        }
-
-        #mode-toggle {
-            background-color: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
             transition: background-color 0.3s;
-            font-size: 0.9rem;
         }
-
-        #mode-toggle:hover {
-            opacity: 0.9;
+        .option-button, #answer-input, #next-button, #restart-button, #mode-toggle {
+            transition: all 0.2s;
         }
-
-        #quiz {
-            display: flex;
-            flex-direction: column;
-        }
-
-        #question-text {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            text-align: left;
-            line-height: 1.5;
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-
-        .option {
-            background-color: #ecf0f1;
-            padding: 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            border: 2px solid transparent;
-            font-size: 1rem;
-        }
-
-        body.dark-mode .option {
-            background-color: #4a5568;
-        }
-
-        .option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .option.selected {
-            border-color: var(--button-bg);
-            background-color: #d1d8df;
-        }
-        
-        body.dark-mode .option.selected {
-             background-color: #6a798d;
-        }
-
-        #identification-input {
-            padding: 12px;
-            border-radius: 8px;
-            border: 2px solid var(--border-color);
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            font-size: 1rem;
-            margin-bottom: 20px;
-        }
-
-        #submit-btn {
-            background-color: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            padding: 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: background-color 0.3s;
-            margin-top: 20px;
-        }
-
-        #submit-btn:disabled {
-            background-color: #95a5a6;
+        .option-button:disabled {
             cursor: not-allowed;
+            opacity: 0.7;
         }
-
-        #submit-btn:hover:not(:disabled) {
-            opacity: 0.9;
+        /* Custom styles for correct/incorrect answers */
+        .correct-answer-bg {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-text) !important;
         }
-
-        #feedback, #results {
-            margin-top: 30px;
-            padding: 20px;
-            border-radius: 12px;
-            background-color: #ecf0f1;
+        .wrong-answer-bg {
+            background-color: var(--wrong-bg) !important;
+            border-color: var(--wrong-text) !important;
         }
-
-        body.dark-mode #feedback, body.dark-mode #results {
-            background-color: #4a5568;
+        .correct-answer-text {
+            color: var(--correct-text) !important;
         }
-
-        #feedback h3, #results h3 {
+        .wrong-answer-text {
+            color: var(--wrong-text) !important;
+        }
+        .option-button.correct-answer-bg, .option-button.wrong-answer-bg {
             color: var(--text-color);
-            margin-top: 0;
+            pointer-events: none; /* Disable clicking after selecting */
         }
-
-        .explanation {
-            font-style: italic;
-            color: #7f8c8d;
-            border-left: 4px solid var(--button-bg);
-            padding-left: 10px;
-            margin-top: 15px;
+        .dark-mode .option-button.correct-answer-bg {
+            color: #bbf7d0;
         }
-        
-        #results {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 100%;
+        .dark-mode .option-button.wrong-answer-bg {
+            color: #fecaca;
         }
-
-        #wrong-questions-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .incorrect-summary-card {
+            background-color: var(--wrong-bg);
+            border-color: var(--wrong-text);
         }
-
-        .wrong-question-item {
-            border-bottom: 1px solid var(--border-color);
-            padding: 10px 0;
+        .dark-mode .incorrect-summary-card {
+            background-color: #7f1d1d;
+            border-color: #b91c1c;
         }
-        
-        .wrong-question-item:last-child {
-            border-bottom: none;
-        }
-
-        .wrong-question-item p {
-            margin: 0;
-            font-weight: bold;
-        }
-
-        .wrong-question-item span {
-            color: var(--wrong-color);
-            font-style: italic;
-            display: block;
-            margin-top: 5px;
-        }
-
-        #score-history {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        #score-history li {
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        #score-history li:last-child {
-            border-bottom: none;
-        }
-
-        @media (max-width: 768px) {
-            .quiz-container {
-                padding: 15px;
-            }
-            h1 {
-                font-size: 1.5rem;
-            }
-            #question-text {
-                font-size: 1.2rem;
-            }
+        /* Fix for question and title text colors */
+        h1, #question-text {
+            color: var(--text-color);
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const quizData = [
-                // --- Multiple Choice Questions (40 items) ---
-                {
-                    type: 'multiple-choice',
-                    question: 'According to the provided handout, what is a computer program?',
-                    options: [
-                        'A collection of symbols and characters to create a valid statement.',
-                        'A sequential set of instructions, known as codes, written in a computer language.',
-                        'A set of rules defining the syntax of a programming language.',
-                        'A program that converts high-level languages into machine-readable code.'
-                    ],
-                    answer: 'A sequential set of instructions, known as codes, written in a computer language.',
-                    explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language to let the computer perform a specific computation task.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the "art and science of instructing computers to perform tasks using a specific programming language"?',
-                    options: [
-                        'Flowcharting',
-                        'Debugging',
-                        'Programming',
-                        'System Analysis'
-                    ],
-                    answer: 'Programming',
-                    explanation: 'It is the art and science of instructing computers to perform tasks using a specific programming language. It creates codes that tell a computer how to solve problems and accomplish various operations.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'Which programming paradigm focuses on organizing code into reusable procedures or functions and emphasizes the sequence of steps?',
-                    options: [
-                        'Object-oriented programming (OOP)',
-                        'Functional Programming',
-                        'Procedural Programming',
-                        'Declarative Programming'
-                    ],
-                    answer: 'Procedural Programming',
-                    explanation: 'Procedural Programming or imperative programming, focuses on organizing code into reusable procedures or functions, emphasizing the sequence of steps to execute a program.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What type of language is described as being closer to machine code and hardware in terms of syntax?',
-                    options: [
-                        'High-level Language',
-                        'Assembly Language',
-                        'Low-level Language',
-                        'Natural Language'
-                    ],
-                    answer: 'Low-level Language',
-                    explanation: 'Low-level Language - a programming language closer to machine code and hardware in terms of syntax.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is a program that directly executes instructions in a high-level language without converting them into a machine language?',
-                    options: [
-                        'Compiler',
-                        'Interpreter',
-                        'Assembler',
-                        'IDE'
-                    ],
-                    answer: 'Interpreter',
-                    explanation: 'Interpreter - It is a program that directly executes instructions in a high-level language without converting them into a machine language.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'In Java, what is the reserved word that represents the basic unit of a program?',
-                    options: [
-                        'main',
-                        'void',
-                        'class',
-                        'public'
-                    ],
-                    answer: 'class',
-                    explanation: 'Line 1 begins with the reserved word or keyword class. A class is the basic unit of a Java program.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is an identifier in Java?',
-                    options: [
-                        'A special word significant to the Java compiler.',
-                        'A program that converts high-level languages.',
-                        'The name given to a program component, such as a class, object, or variable.',
-                        'A collection of useful resources.'
-                    ],
-                    answer: 'The name given to a program component, such as a class, object, or variable.',
-                    explanation: 'An identifier is the name given to a program component, such as a class, object, or variable.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What does the `void` keyword signify in a Java method declaration?',
-                    options: [
-                        'It is a class method.',
-                        'It is an access modifier.',
-                        'It is a non-value-returning method.',
-                        'It indicates that a method has parameters.'
-                    ],
-                    answer: 'It is a non-value-returning method.',
-                    explanation: 'The void keyword means that the main is a non-value-returning method, which means the main is not expected to return any value.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is a "literal string" in Java?',
-                    options: [
-                        'A program that directly executes instructions.',
-                        'A set of rules defining the syntax of a language.',
-                        'A series of characters that appear exactly as written and is always enclosed by double quotation marks.',
-                        'A comment in the code.'
-                    ],
-                    answer: 'A series of characters that appear exactly as written and is always enclosed by double quotation marks.',
-                    explanation: 'A literal string is a series of characters that appear exactly as written and is always enclosed by double quotation marks (",").'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the purpose of comments in a program?',
-                    options: [
-                        'They are executable instructions.',
-                        'They are used to define a class name.',
-                        'They provide additional information to make programs easier to understand.',
-                        'They convert source code into bytecode.'
-                    ],
-                    answer: 'They provide additional information to make programs easier for programmers and other programmers to understand.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the purpose of the `javac` command?',
-                    options: [
-                        'To execute a compiled Java program.',
-                        'To save a Java file with a .txt extension.',
-                        'To compile a Java program.',
-                        'To set the path of the JDK.'
-                    ],
-                    answer: 'To compile a Java program.',
-                    explanation: 'Compile the Java program using the javac command: javac [name of the Java file].java'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What does the `java` command do?',
-                    options: [
-                        'It compiles the Java program.',
-                        'It executes the compiled Java program.',
-                        'It sets the JDK path.',
-                        'It creates a new class.'
-                    ],
-                    answer: 'It executes the compiled Java program.',
-                    explanation: 'Execute the compiled Java program using the java command (interpreter): java [name of the Java file]'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the term for a set of steps that generates a finite sequence of simple computational operations to solve a problem?',
-                    options: [
-                        'Pseudocode',
-                        'Flowchart',
-                        'Algorithm',
-                        'Program'
-                    ],
-                    answer: 'Algorithm',
-                    explanation: 'In programming, an algorithm is a set of steps that generates a finite sequence of simple computational operations leading to the solution of a given problem.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the name for the diagrammatic representation of the steps of an algorithm?',
-                    options: [
-                        'Pseudocode',
-                        'Flowchart',
-                        'Syntax',
-                        'Command'
-                    ],
-                    answer: 'Flowchart',
-                    explanation: 'It is a diagrammatic representation of the steps of an algorithm.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'Which flowchart symbol shows the start and end of a set of computer-related processes?',
-                    options: [
-                        'Input/Output',
-                        'Terminal',
-                        'Process',
-                        'Decision'
-                    ],
-                    answer: 'Terminal',
-                    explanation: 'Terminal - Shows the start and end of a set of computer-related processes.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What does the On-page Connector symbol do in a flowchart?',
-                    options: [
-                        'Shows any point in the process where a decision is made.',
-                        'Connects parts of a flowchart continued on the same page.',
-                        'Connects parts of a flowchart continued to separate pages.',
-                        'Shows any input/output operation.'
-                    ],
-                    answer: 'Connects parts of a flowchart continued on the same page.',
-                    explanation: 'On-page Connector - Connects parts of a flowchart continued on the same page.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the purpose of the `public` keyword in the main method of a Java program?',
-                    options: [
-                        'It tells that this is a class method.',
-                        'It makes the method non-value-returning.',
-                        'It is used to define a main() method so that the interpreter can execute the program.',
-                        'It indicates that it is an array.'
-                    ],
-                    answer: 'It is used to define a main() method so that the interpreter can execute the program.',
-                    explanation: 'The public keyword is a type of access or visibility modifier. This keyword is used to define a main() method so that the interpreter can execute the program.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'Which of the following is NOT a requirement for naming an identifier in Java?',
-                    options: [
-                        'An identifier must not be a reserved word.',
-                        'An identifier cannot contain spaces.',
-                        'An identifier can start with a digit.',
-                        'An identifier can contain digits, uppercase letters, lowercase letters, and the underscore and dollar-sign characters.'
-                    ],
-                    answer: 'An identifier can start with a digit.',
-                    explanation: 'The handout states that an identifier must start with an alphabet, an underscore, or a dollar sign. Therefore, it cannot start with a digit.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the purpose of the `System.out.println()` statement in Java?',
-                    options: [
-                        'To read input from the user.',
-                        'To create a new class.',
-                        'To print text to the console and add a new line.',
-                        'To compile the program.'
-                    ],
-                    answer: 'To print text to the console and add a new line.',
-                    explanation: 'The statement System.out.println() prints the output of the program on the monitor. The "ln" at the end means that the cursor will go to the next line after the output is displayed.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'According to the handout, Java was created by which company?',
-                    options: [
-                        'Microsoft',
-                        'Google',
-                        'Sun Microsystems',
-                        'IBM'
-                    ],
-                    answer: 'Sun Microsystems',
-                    explanation: 'It was created by Sun Microsystems in 1995 as a multi-platform, object-oriented, and network-centric language that can be used as a platform in itself.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is a sequential set of instructions, known as codes, written in a computer language?',
-                    options: [
-                        'Computer program',
-                        'Programming language',
-                        'Flowchart',
-                        'Algorithm'
-                    ],
-                    answer: 'Computer program',
-                    explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language to let the computer perform a specific computation task.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the art and science of instructing computers to perform tasks using a specific programming language?',
-                    options: [
-                        'Debugging',
-                        'Programming',
-                        'Flowcharting',
-                        'Algorithm creation'
-                    ],
-                    answer: 'Programming',
-                    explanation: 'It is the art and science of instructing computers to perform tasks using a specific programming language.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is a programming language that is closer to machine code and hardware in terms of syntax?',
-                    options: [
-                        'High-level language',
-                        'Low-level language',
-                        'Intermediate language',
-                        'Scripting language'
-                    ],
-                    answer: 'Low-level language',
-                    explanation: 'Low-level Language - a programming language closer to machine code and hardware in terms of syntax.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is a program that directly executes instructions in a high-level language without converting them into a machine language?',
-                    options: [
-                        'Compiler',
-                        'Interpreter',
-                        'Assembler',
-                        'Debugger'
-                    ],
-                    answer: 'Interpreter',
-                    explanation: 'Interpreter - It is a program that directly executes instructions in a high-level language without converting them into a machine language.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is a `Terminal` symbol used for in a flowchart?',
-                    options: [
-                        'To show a decision point.',
-                        'To show input and output operations.',
-                        'To indicate a process.',
-                        'To show the start and end of a process.'
-                    ],
-                    answer: 'To show the start and end of a process.',
-                    explanation: 'Terminal - Shows the start and end of a set of computer-related processes.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What does the `Input/Output` symbol represent in a flowchart?',
-                    options: [
-                        'Start/end of a process',
-                        'Decision point',
-                        'Input/output operations',
-                        'Processing step'
-                    ],
-                    answer: 'Input/output operations',
-                    explanation: 'Input/Output - Shows any input/output operation performed during the process.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the purpose of the `Process` symbol in a flowchart?',
-                    options: [
-                        'To show a decision point.',
-                        'To indicate input/output.',
-                        'To show any type of function that needs to be performed.',
-                        'To connect to another part of the flowchart.'
-                    ],
-                    answer: 'To show any type of function that needs to be performed.',
-                    explanation: 'Process - Shows any type of function that needs to be performed to transform a certain value.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the main function of the `Decision` symbol in a flowchart?',
-                    options: [
-                        'To show the start of the program.',
-                        'To show a simple process.',
-                        'To show a point where a choice is made, leading to different paths.',
-                        'To represent an output operation.'
-                    ],
-                    answer: 'To show a point where a choice is made, leading to different paths.',
-                    explanation: 'Decision - Shows any point in the process where a decision is made and requires further action.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the purpose of the `Off-page Connector` symbol?',
-                    options: [
-                        'To connect parts of a flowchart on the same page.',
-                        'To show a decision point.',
-                        'To connect parts of a flowchart continued to separate pages.',
-                        'To represent a loop.'
-                    ],
-                    answer: 'To connect parts of a flowchart continued to separate pages.',
-                    explanation: 'Off-page Connector - Connects parts of a flowchart continued to separate pages.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the purpose of the `Flow line` symbol?',
-                    options: [
-                        'To represent a process.',
-                        'To show the direction of flow.',
-                        'To show an input/output operation.',
-                        'To connect parts of the flowchart on the same page.'
-                    ],
-                    answer: 'To show the direction of flow.',
-                    explanation: 'Flow line - Shows the direction of flow from one symbol to another.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'In Java, what is the purpose of a class?',
-                    options: [
-                        'It is a special word significant to the compiler.',
-                        'It is the basic unit of a Java program.',
-                        'It prints text to the console.',
-                        'It executes the program.'
-                    ],
-                    answer: 'It is the basic unit of a Java program.',
-                    explanation: 'A class is the basic unit of a Java program.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is a "literal" in Java?',
-                    options: [
-                        'A variable name.',
-                        'A series of characters that appears exactly as written.',
-                        'A symbol used in flowcharts.',
-                        'A keyword.'
-                    ],
-                    answer: 'A series of characters that appears exactly as written.',
-                    explanation: 'A literal string is a series of characters that appear exactly as written and is always enclosed by double quotation marks (",").'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'In Java, what is the role of the `main` method?',
-                    options: [
-                        'It is used to declare a variable.',
-                        'It is the starting point of program execution.',
-                        'It is used to define a class.',
-                        'It is a non-value-returning method.'
-                    ],
-                    answer: 'It is the starting point of program execution.',
-                    explanation: 'The main() method is the starting point for program execution.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'Which of the following is a rule for creating program flowcharts?',
-                    options: [
-                        'The program logic should only show the flow from bottom to top.',
-                        'Each symbol should contain only one entry point and one exit point, including the decision symbol.',
-                        'Only the standard symbols should be used.',
-                        'The operations should be expressed in a specific programming language.'
-                    ],
-                    answer: 'Only the standard symbols should be used.',
-                    explanation: 'Only the standard symbols should be used in program flowcharts.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What does the `set path=%path%; [JDK bin directory]` command do?',
-                    options: [
-                        'It compiles the Java program.',
-                        'It executes the Java program.',
-                        'It sets the path of the JDK.',
-                        'It saves the Java file.'
-                    ],
-                    answer: 'It sets the path of the JDK.',
-                    explanation: 'This setting tells the operating system where to find the Java compiler and the classes. Setting the path of JDK is defined as set path=%path%; [JDK bin directory]'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is a computer language?',
-                    options: [
-                        'A set of rules for debugging a program.',
-                        'A program that converts code to bytecode.',
-                        'A set of grammatical rules that commands a computer or a device to behave in a specific way.',
-                        'A program that executes a high-level language.'
-                    ],
-                    answer: 'A set of grammatical rules that commands a computer or a device to behave in a specific way.',
-                    explanation: 'A computer language is a set of grammatical rules that commands a computer or a device to behave in a specific way.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'Which of the following is an advantage of using Java?',
-                    options: [
-                        'It is a low-level language.',
-                        'It has an active community and high-quality learning resources.',
-                        'It only supports web development.',
-                        'It is a proprietary language.'
-                    ],
-                    answer: 'It has an active community and high-quality learning resources.',
-                    explanation: 'Active Community Support: Given its popularity and longevity, Java has many active users and a community that can support developers. High-Quality Learning Resources: Learning resources such as detailed documentation, comprehensive books, and courses are available to new programmers for additional support.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the Java Runtime Environment (JRE)?',
-                    options: [
-                        'A program that translates Java code to machine code.',
-                        'A set of rules for a flowchart.',
-                        'A software that Java programs require to run correctly.',
-                        'The name of a class in Java.'
-                    ],
-                    answer: 'A software that Java programs require to run correctly.',
-                    explanation: 'It is the software that Java programs require to run correctly. It provides the class libraries and other resources that any Java program needs.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'In Java, what is the role of the `main` method?',
-                    options: [
-                        'It is used to declare a variable.',
-                        'It is the starting point of program execution.',
-                        'It is used to define a class.',
-                        'It is a non-value-returning method.'
-                    ],
-                    answer: 'It is the starting point of program execution.',
-                    explanation: 'The main() method is the starting point for program execution.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What are the two basic components of a Java program based on the handout?',
-                    options: [
-                        'Statements and expressions',
-                        'Classes and methods',
-                        'Variables and functions',
-                        'Loops and conditionals'
-                    ],
-                    answer: 'Classes and methods',
-                    explanation: 'The two basic components of a Java program are classes and methods. A Java program is composed of classes, and each class contains methods.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the purpose of a flowchart?',
-                    options: [
-                        'To write code for a program.',
-                        'To represent an algorithm in a diagram.',
-                        'To define the syntax of a language.',
-                        'To debug a program.'
-                    ],
-                    answer: 'To represent an algorithm in a diagram.',
-                    explanation: 'It is a diagrammatic representation of the steps of an algorithm.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'Which of the following is a key component of a program?',
-                    options: [
-                        'The flowchart symbols.',
-                        'The programmer\'s name.',
-                        'A sequential set of instructions.',
-                        'The computer\'s operating system.'
-                    ],
-                    answer: 'A sequential set of instructions.',
-                    explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'Which of the following describes a high-level language?',
-                    options: [
-                        'It is closer to machine code.',
-                        'It is difficult for humans to understand.',
-                        'It uses syntax closer to human language.',
-                        'It can only be executed by an assembler.'
-                    ],
-                    answer: 'It uses syntax closer to human language.',
-                    explanation: 'A high-level language uses syntax and statements that are closer to human language, making it easier for programmers to read and write.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is a compiler?',
-                    options: [
-                        'A program that directly executes high-level language.',
-                        'A program that translates source code into machine-readable code.',
-                        'A set of rules for a flowchart.',
-                        'A command that executes a Java program.'
-                    ],
-                    answer: 'A program that translates source code into machine-readable code.',
-                    explanation: 'A compiler is a program that translates a high-level language into machine-readable code.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What does the term "Object-oriented programming (OOP)" mean?',
-                    options: [
-                        'A programming paradigm that focuses on organizing code into reusable procedures or functions.',
-                        'A programming paradigm that uses objects to represent data and procedures.',
-                        'A programming language that is closer to machine code.',
-                        'A program that translates code directly.'
-                    ],
-                    answer: 'A programming paradigm that uses objects to represent data and procedures.',
-                    explanation: 'Object-oriented programming (OOP), or object-based programming, is a paradigm that uses objects to represent data and procedures.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the main advantage of using a flowchart?',
-                    options: [
-                        'It allows a programmer to skip the algorithm phase.',
-                        'It makes the code more efficient.',
-                        'It provides a clear visual representation of the program\'s logic.',
-                        'It automatically debugs the program.'
-                    ],
-                    answer: 'It provides a clear visual representation of the program\'s logic.',
-                    explanation: 'A flowchart provides a clear visual representation of the program\'s logic, making it easier to understand and follow.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is a `reserved word` in Java?',
-                    options: [
-                        'A name for a variable.',
-                        'A special word that is significant to the Java compiler.',
-                        'A symbol used in a flowchart.',
-                        'A comment in the code.'
-                    ],
-                    answer: 'A special word that is significant to the Java compiler.',
-                    explanation: 'Reserved Word - a special word significant to the Java compiler that cannot be used as an identifier.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'According to the handout, what is the single rule for creating flowcharts?',
-                    options: [
-                        'All symbols must be connected.',
-                        'The program logic should flow from top to bottom.',
-                        'Each symbol has one entry and one exit, except the decision symbol.',
-                        'Operations must be independent of any programming language.'
-                    ],
-                    answer: 'Each symbol has one entry and one exit, except the decision symbol.',
-                    explanation: 'Each symbol should contain only one entry point and one exit point, except the decision symbol. It is known as the single rule.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the purpose of the `Input/Output` symbol?',
-                    options: [
-                        'To show a decision point.',
-                        'To show the start or end of a program.',
-                        'To show any input/output operation performed during the process.',
-                        'To perform a mathematical function.'
-                    ],
-                    answer: 'To show any input/output operation performed during the process.',
-                    explanation: 'Input/Output - Shows any input/output operation performed during the process.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the primary role of a programmer?',
-                    options: [
-                        'To create hardware.',
-                        'To debug a program.',
-                        'To write code that tells a computer how to solve problems.',
-                        'To design a website\'s layout.'
-                    ],
-                    answer: 'To write code that tells a computer how to solve problems.',
-                    explanation: 'By writing code in programming languages, programmers can develop computer programs or software applications, design websites, analyze data, and automate processes, among other operations.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'Which type of software is an example of a computer program?',
-                    options: [
-                        'A physical keyboard.',
-                        'System software.',
-                        'A computer monitor.',
-                        'A USB flash drive.'
-                    ],
-                    answer: 'System software.',
-                    explanation: 'Examples include system software, web browsers, utility software, multimedia software, and spreadsheet software.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'Which of the following is a major career opportunity for a programmer?',
-                    options: [
-                        'Civil engineering.',
-                        'Software development.',
-                        'Financial accounting.',
-                        'Culinary arts.'
-                    ],
-                    answer: 'Software development.',
-                    explanation: 'Proficiency in programming opens up myriad career opportunities, from software development and web development to data science and artificial intelligence.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'In Java, what does the keyword `void` signify for a method?',
-                    options: [
-                        'It returns a value.',
-                        'It can accept any number of arguments.',
-                        'It does not return any value.',
-                        'It makes the method public.'
-                    ],
-                    answer: 'It does not return any value.',
-                    explanation: 'The void keyword means that the main is a non-value-returning method, which means the main is not expected to return any value.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'Which of the following is an example of a literal string?',
-                    options: [
-                        'Hello World',
-                        '"Hello World"',
-                        'Hello_World',
-                        'Hello World!'
-                    ],
-                    answer: '"Hello World"',
-                    explanation: 'A literal string is a series of characters that appear exactly as written and is always enclosed by double quotation marks (",").'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the output of the `System.out.println("Hello");` statement?',
-                    options: [
-                        'Hello',
-                        'System.out.println("Hello")',
-                        'Hello (on a new line)',
-                        'An error message.'
-                    ],
-                    answer: 'Hello (on a new line)',
-                    explanation: 'The statement System.out.println() prints the output of the program on the monitor. The "ln" at the end means that the cursor will go to the next line after the output is displayed.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is a method in Java?',
-                    options: [
-                        'The name of a class.',
-                        'A block of code or a function that performs a specific task.',
-                        'A variable.',
-                        'A literal string.'
-                    ],
-                    answer: 'A block of code or a function that performs a specific task.',
-                    explanation: 'A method is a block of code or a function that performs a specific task. A method is composed of one or more statements.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the role of the semicolon (;) in Java?',
-                    options: [
-                        'It separates a method from a class.',
-                        'It is used to create a comment.',
-                        'It marks the end of a statement.',
-                        'It indicates the start of a program.'
-                    ],
-                    answer: 'It marks the end of a statement.',
-                    explanation: 'The semicolon (;) is a separator that marks the end of a statement. Every statement must end with a semicolon.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the purpose of the curly braces `{}` in Java?',
-                    options: [
-                        'To define a literal string.',
-                        'To mark the beginning and end of a code block.',
-                        'To show an array.',
-                        'To indicate a comment.'
-                    ],
-                    answer: 'To mark the beginning and end of a code block.',
-                    explanation: 'The curly braces `{}` are used to mark the beginning and end of a block of code or a method.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'In Java, what is the main purpose of the `//` symbol?',
-                    options: [
-                        'To indicate a multi-line comment.',
-                        'To mark the end of a statement.',
-                        'To create a single-line comment.',
-                        'To define an array.'
-                    ],
-                    answer: 'To create a single-line comment.',
-                    explanation: 'A single-line comment begins with two forward slashes (//).'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is a "source code"?',
-                    options: [
-                        'The compiled version of a program.',
-                        'A program written in a programming language.',
-                        'The output of a program.',
-                        'A set of rules for debugging.'
-                    ],
-                    answer: 'A program written in a programming language.',
-                    explanation: 'The source code is a program that is written in a programming language.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the purpose of the `main()` method in Java?',
-                    options: [
-                        'To define a class.',
-                        'To execute the program.',
-                        'To declare a variable.',
-                        'To create a new object.'
-                    ],
-                    answer: 'To execute the program.',
-                    explanation: 'This method is used to define a main() method so that the interpreter can execute the program.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the primary function of a high-level language?',
-                    options: [
-                        'To be directly executed by the computer hardware.',
-                        'To be easily understood and written by humans.',
-                        'To be used for low-level systems programming.',
-                        'To be compiled by an assembler.'
-                    ],
-                    answer: 'To be easily understood and written by humans.',
-                    explanation: 'A high-level language uses syntax and statements that are closer to human language, making it easier for programmers to read and write.'
-                },
-                {
-                    type: 'multiple-choice',
-                    question: 'What is the "single rule" for creating flowcharts?',
-                    options: [
-                        'Use only standard symbols.',
-                        'The program logic should flow from top to bottom.',
-                        'Each symbol has one entry and one exit, except the decision symbol.',
-                        'Operations must be independent of any programming language.'
-                    ],
-                    answer: 'Each symbol has one entry and one exit, except the decision symbol.',
-                    explanation: 'Each symbol should contain only one entry point and one exit point, except the decision symbol. It is known as the single rule.'
-                },
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <!-- Dark Mode Toggle Button -->
+    <button id="mode-toggle" class="fixed top-4 right-4 z-50 bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 px-4 py-2 rounded-lg font-medium shadow-md">
+        Toggle Dark Mode
+    </button>
+    
+    <div id="quiz-container" class="rounded-3xl shadow-xl w-full max-w-xl mx-auto p-8 transition-all duration-300 transform scale-100">
+        <!-- Title -->
+        <h1 class="text-3xl font-bold text-center mb-6">Understanding the Self: A Philosophical and Sociological Quiz</h1>
+        
+        <!-- Quiz section -->
+        <div id="quiz-section">
+            <div id="question-card" class="p-6 rounded-2xl mb-6 shadow-inner">
+                <p id="question-count" class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-2"></p>
+                <p id="question-text" class="text-xl font-semibold mb-4"></p>
                 
-                // --- Identification Questions (Indefinite Number) ---
-                {
-                    type: 'identification',
-                    question: 'What is the name for a sequential set of instructions, known as codes, written in a computer language?',
-                    answer: 'Computer Program',
-                    explanation: 'A computer program is a sequential set of instructions, known as codes, written or "programmed" in a computer language to let the computer perform a specific computation task.'
-                },
-                {
-                    type: 'identification',
-                    question: 'What is the art and science of instructing computers to perform tasks using a specific programming language?',
-                    answer: 'Programming',
-                    explanation: 'It is the art and science of instructing computers to perform tasks using a specific programming language. It creates codes that tell a computer how to solve problems and accomplish various operations.'
-                },
-                {
-                    type: 'identification',
-                    question: 'What is the diagrammatic representation of the steps of an algorithm?',
-                    answer: 'Flowchart',
-                    explanation: 'It is a diagrammatic representation of the steps of an algorithm.'
-                },
-                {
-                    type: 'identification',
-                    question: 'What is a program that directly executes instructions in a high-level language without converting them into a machine language?',
-                    answer: 'Interpreter',
-                    explanation: 'Interpreter - It is a program that directly executes instructions in a high-level language without converting them into a machine language.'
-                },
-                {
-                    type: 'identification',
-                    question: 'What is the name for a programming language closer to machine code and hardware in terms of syntax?',
-                    answer: 'Low-level language',
-                    explanation: 'Low-level Language - a programming language closer to machine code and hardware in terms of syntax.'
-                },
-                {
-                    type: 'identification',
-                    question: 'What is the term for a set of steps that generates a finite sequence of simple computational operations to solve a problem?',
-                    answer: 'Algorithm',
-                    explanation: 'In programming, an algorithm is a set of steps that generates a finite sequence of simple computational operations leading to the solution of a given problem.'
-                },
-                {
-                    type: 'identification',
-                    question: 'What is the name of the symbol that shows the start and end of a set of computer-related processes in a flowchart?',
-                    answer: 'Terminal',
-                    explanation: 'Terminal - Shows the start and end of a set of computer-related processes.'
-                },
-                {
-                    type: 'identification',
-                    question: 'What is the name given to a program component, such as a class, object, or variable in Java?',
-                    answer: 'Identifier',
-                    explanation: 'An identifier is the name given to a program component, such as a class, object, or variable.'
-                },
-                {
-                    type: 'identification',
-                    question: 'What is the purpose of the `javac` command?',
-                    answer: 'To compile a Java program.',
-                    explanation: 'Compile the Java program using the javac command: javac [name of the Java file].java'
-                },
-                {
-                    type: 'identification',
-                    question: 'What company created Java in 1995?',
-                    answer: 'Sun Microsystems',
-                    explanation: 'It was created by Sun Microsystems in 1995 as a multi-platform, object-oriented, and network-centric language that can be used as a platform in itself.'
-                },
-            ];
+                <div id="input-container" class="hidden">
+                    <input type="text" id="answer-input" class="w-full p-3 rounded-lg border-2 border-blue-200 dark:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100" placeholder="Type your answer here...">
+                </div>
+                
+                <div id="options-container" class="flex flex-col space-y-3">
+                    <!-- Options buttons will be injected here -->
+                </div>
+            </div>
 
-            const questionTextElement = document.getElementById('question-text');
-            const optionsContainer = document.getElementById('options-container');
-            const identificationInput = document.getElementById('identification-input');
-            const submitButton = document.getElementById('submit-btn');
-            const feedbackElement = document.getElementById('feedback');
-            const explanationElement = document.getElementById('explanation');
-            const resultsElement = document.getElementById('results');
-            const finalScoreElement = document.getElementById('final-score');
-            const wrongQuestionsList = document.getElementById('wrong-questions-list');
-            const scoreHistoryList = document.getElementById('score-history');
-            const modeToggle = document.getElementById('mode-toggle');
+            <!-- Feedback section (hidden initially) -->
+            <div id="feedback-section" class="hidden mb-6 p-4 rounded-xl">
+                <h3 id="feedback-status" class="text-xl font-bold mb-2"></h3>
+                <p id="feedback-explanation" class="text-gray-700 dark:text-gray-300 italic border-l-4 border-gray-300 dark:border-gray-500 pl-4"></p>
+            </div>
 
-            let currentQuestionIndex = 0;
-            let score = 0;
-            let wrongAnswers = [];
-            let selectedOption = null;
-            let isAnswered = false;
+            <!-- Quiz Controls -->
+            <div class="flex justify-center items-center">
+                <button id="next-button" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-blue-300 disabled:shadow-none">Submit Answer</button>
+            </div>
+        </div>
 
-            // Load mode preference from cookies
-            const savedMode = getCookie('darkMode');
-            if (savedMode === 'true') {
-                document.body.classList.add('dark-mode');
-            }
+        <!-- Result section -->
+        <div id="result-section" class="hidden text-center">
+            <h2 class="text-3xl font-bold text-green-600 dark:text-green-400 mb-4">Quiz Complete!</h2>
+            <p id="final-score" class="text-4xl font-extrabold mb-4"></p>
+            <p id="score-message" class="text-lg text-gray-600 dark:text-gray-300 mb-8"></p>
+            
+            <h3 id="incorrect-title" class="text-2xl font-bold mb-4 hidden">Questions You Got Wrong:</h3>
+            <div id="answers-summary" class="text-left max-h-60 overflow-y-auto pr-2">
+                <!-- Answer summary will be injected here -->
+            </div>
+            
+            <div id="progress-history" class="mt-8 text-left">
+                <h3 class="text-xl font-semibold mb-2">Your Past Scores</h3>
+                <ul id="score-list" class="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400"></ul>
+            </div>
 
-            // Function to handle mode toggle
-            modeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
-                const isDarkMode = document.body.classList.contains('dark-mode');
-                setCookie('darkMode', isDarkMode, 365);
-            });
+            <button id="restart-button" class="mt-8 bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-300">Restart Quiz</button>
+        </div>
+    </div>
 
-            // Function to get a cookie value
-            function getCookie(name) {
-                const nameEQ = name + "=";
-                const ca = document.cookie.split(';');
-                for (let i = 0; i < ca.length; i++) {
-                    let c = ca[i];
-                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    <script>
+        // Data containing all quiz questions, answers, and explanations.
+        // This is a comprehensive set based on the provided module sources.
+        const quizData = {
+            mcq: [
+                {
+                    question: "Who emphasized the importance of self-knowledge and is known for the maxim, 'Know thyself'?",
+                    options: ["Plato", "Aristotle", "Socrates", "Augustine"],
+                    answer: "Socrates",
+                    explanation: "Socrates was an ancient Greek philosopher who emphasized the importance of self-knowledge. He mentioned the philosophical maxim, 'Know thyself.' He believed that true wisdom comes from introspection and self-examination."
+                },
+                {
+                    question: "According to Plato, the self is composed of three parts. Which part is responsible for our physical desires?",
+                    options: ["Reason", "Spirit", "Appetite", "Consciousness"],
+                    answer: "Appetite",
+                    explanation: "Plato argued that the self is immortal and independent of the body, with three parts of the soul: reason, spirit, and appetite. The appetite is the part responsible for physical desires."
+                },
+                {
+                    question: "Who believed the self is a 'unified creature' where the body and soul are inseparable?",
+                    options: ["René Descartes", "John Locke", "Aristotle", "David Hume"],
+                    answer: "Aristotle",
+                    explanation: "Aristotle believed that the body and soul are inseparable from one another. For him, the self is a unified creature."
+                },
+                {
+                    question: "The famous phrase 'I think, therefore I am' is attributed to which philosopher?",
+                    options: ["Socrates", "Plato", "René Descartes", "Immanuel Kant"],
+                    answer: "René Descartes",
+                    explanation: "René Descartes is a French philosopher, scientist, and mathematician known for the philosophical statement 'I think, therefore I am.'"
+                },
+                {
+                    question: "Which philosopher proposed the 'Tabula rasa' or 'blank slate' theory?",
+                    options: ["John Locke", "David Hume", "Immanuel Kant", "Paul Churchland"],
+                    answer: "John Locke",
+                    explanation: "John Locke was an English philosopher and physician. He proposed the 'Tabula rasa' theory, emphasizing that the self is shaped by memories and experience."
+                },
+                {
+                    question: "David Hume proposed the 'Bundle Theory,' which suggests that the self is:",
+                    options: ["A unified entity", "An illusion", "A product of God", "A social construct"],
+                    answer: "An illusion",
+                    explanation: "He proposed the Bundle Theory: the self is a bundle of perceptions, thoughts, and sensations."
+                },
+                {
+                    question: "Who is known for the phrase 'ghost in the machine,' which criticizes the idea of a separate mind and body?",
+                    options: ["Gilbert Ryle", "Sigmund Freud", "Merleau-Ponty", "Charles Horton Cooley"],
+                    answer: "Gilbert Ryle",
+                    explanation: "Gilbert Ryle was a British philosopher who coined the phrase 'ghost in the machine.' The self is shown through actions and behaviors."
+                },
+                {
+                    question: "According to Immanuel Kant, what does the 'Outer Self' represent?",
+                    options: ["Emotions and intellect", "Our physical and senses", "Our social interactions", "The unconscious mind"],
+                    answer: "Our physical and senses",
+                    explanation: "The Outer Self is our physical and senses."
+                },
+                {
+                    question: "Sigmund Freud's concept of the self focused on the 'ego' as a mediator between which two parts?",
+                    options: ["Inner and Outer self", "The conscious and unconscious", "The superego and the id", "The mind and the body"],
+                    answer: "The superego and the id",
+                    explanation: "His concept of self focused on the ego. The ego served as a mediator between the superego and the id."
+                },
+                {
+                    question: "Which philosopher believed the self is a product of brain activity and studied neurophilosophy?",
+                    options: ["John Locke", "Maurice Merleau-Ponty", "Paul Churchland", "Gilbert Ryle"],
+                    answer: "Paul Churchland",
+                    explanation: "Paul Churchland was a Canadian philosopher. The self is a product of brain activity. He studied neurophilosophy or the philosophy of the mind."
+                },
+                {
+                    question: "Maurice Merleau-Ponty rejected dualism and believed the self is shaped by:",
+                    options: ["Our memories", "Our genes", "Our physical body and senses", "Our social class"],
+                    answer: "Our physical body and senses",
+                    explanation: "Merleau-Ponty's theory states that the self is shaped by our physical body and how we experience the world through our senses."
+                },
+                {
+                    question: "Charles Horton Cooley's 'Looking-Glass Self' theory describes how our self-image is shaped by:",
+                    options: ["Our subconscious mind", "How we think others see us", "Our genetic code", "Our dreams and aspirations"],
+                    answer: "How we think others see us",
+                    explanation: "It describes how our self-image is shaped by how we think others see us. It's like seeing ourselves reflected in a mirror, but the mirror is the opinions and reactions of others."
+                },
+                {
+                    question: "According to Cooley's 'Looking-Glass Self,' what is the second stage, where we consider the reactions and judgments of others?",
+                    options: ["Imagination", "Interpretation", "Self-feeling", "Imitation"],
+                    answer: "Interpretation",
+                    explanation: "Interpretation: We imagine how others judge us. We consider the reactions and judgments of others towards our behaviors."
+                },
+                {
+                    question: "George Herbert Mead's Social Self Theory states that personal identity is influenced by:",
+                    options: ["Solitary introspection", "Social interaction and cultural norms", "Physical maturation", "Genetic factors"],
+                    answer: "Social interaction and cultural norms",
+                    explanation: "It states that personal identity is influenced by social interaction and cultural norms."
+                },
+                {
+                    question: "In Mead's theory, the 'I' self is the spontaneous aspect, while the 'Me' self is the:",
+                    options: ["Conscious self", "Socialized self", "Physical self", "Unconscious self"],
+                    answer: "Socialized self",
+                    explanation: "The 'Me' self is the socialized aspect of the self. It is the self that acts based on how others expect one to behave."
+                },
+                {
+                    question: "According to Mead, at which stage do children copy others' actions but don't understand their meaning?",
+                    options: ["Play Stage", "Game Stage", "Preparatory Stage", "Self-feeling Stage"],
+                    answer: "Preparatory Stage",
+                    explanation: "Preparatory Stage (Imitation). Children copy others but don't understand their actions, words, or tone of voice."
+                },
+                {
+                    question: "Which philosopher viewed the self as a spiritual entity deeply connected to God?",
+                    options: ["Aristotle", "Socrates", "Saint Augustine", "Descartes"],
+                    answer: "Saint Augustine",
+                    explanation: "Augustine, a theologian and philosopher, believed the self is deeply intertwined with God."
+                },
+                {
+                    question: "What is the collective concept of societal norms and expectations that individuals internalize, according to Mead?",
+                    options: ["Significant Others", "The 'Me' self", "The 'I' self", "Generalized Others"],
+                    answer: "Generalized Others",
+                    explanation: "The Generalized Others represents society's collective norms and expectations individuals internalize."
+                },
+                {
+                    question: "In the 'Looking-Glass Self,' which stage involves forming our self-concept based on perceived judgments?",
+                    options: ["Imagination", "Interpretation", "Self-feeling", "Role-taking"],
+                    answer: "Self-feeling",
+                    explanation: "Self-feeling: We develop our self-concept. Based on these perceptions, we form an understanding of ourselves."
+                },
+                {
+                    question: "A child pretending to be a doctor is in which of Mead's stages of self-development?",
+                    options: ["Preparatory Stage", "Play Stage", "Game Stage", "Imitation Stage"],
+                    answer: "Play Stage",
+                    explanation: "Example: A child playing house, acting as the mother and caring for her toy children, or a child pretending to teach other kids or toys."
+                },
+                {
+                    question: "Who proposed that the self is an immortal and independent soul, separate from the body?",
+                    options: ["Aristotle", "Plato", "Socrates", "Descartes"],
+                    answer: "Plato",
+                    explanation: "Plato was an ancient Greek philosopher who argued that the self is immortal and independent of the body."
+                },
+                {
+                    question: "The concept of 'Tabula rasa' means:",
+                    options: ["A thinking being", "A clean slate", "The human spirit", "A unified creature"],
+                    answer: "A clean slate",
+                    explanation: "Tabula rasa means 'blank slate' and is a key concept by John Locke."
+                },
+                {
+                    question: "Which philosopher, known for neurophilosophy, suggested that the self is a product of brain activity?",
+                    options: ["Gilbert Ryle", "John Locke", "Paul Churchland", "Merleau-Ponty"],
+                    answer: "Paul Churchland",
+                    explanation: "Paul Churchland, a Canadian philosopher, believed the self is a product of brain activity."
+                },
+                {
+                    question: "According to Freud, the 'id' is primarily focused on:",
+                    options: ["Rational thought", "Moral judgment", "Unconscious drives and desires", "Social conformity"],
+                    answer: "Unconscious drives and desires",
+                    explanation: "The ego served as a mediator between the superego and the id, with the id representing primal, unconscious desires."
+                },
+                {
+                    question: "What is the key difference between Mead's 'I' self and 'Me' self?",
+                    options: ["'I' is socialized, 'Me' is spontaneous", "'I' is subconscious, 'Me' is conscious", "'I' is spontaneous, 'Me' is socialized", "'I' is body, 'Me' is mind"],
+                    answer: "'I' is spontaneous, 'Me' is socialized",
+                    explanation: "The 'I' self is the spontaneous aspect of the self, while the 'Me' self is the socialized aspect of the self."
+                },
+                {
+                    question: "In the 'Looking-Glass Self' theory, what is the first stage?",
+                    options: ["Interpretation", "Self-feeling", "Imagination", "Role-taking"],
+                    answer: "Imagination",
+                    explanation: "Imagination: We imagine how we appear to others."
+                },
+                {
+                    question: "Who argued that the self is inseparable from our bodily experiences and interactions with the world?",
+                    options: ["Gilbert Ryle", "Maurice Merleau-Ponty", "Immanuel Kant", "Paul Churchland"],
+                    answer: "Maurice Merleau-Ponty",
+                    explanation: "For Merleau-Ponty, the self is shaped by our physical body and how we experience the world through our senses."
+                },
+                {
+                    question: "What did John Locke propose as the basis for the self?",
+                    options: ["The soul", "The brain", "Consciousness and memory", "Divine grace"],
+                    answer: "Consciousness and memory",
+                    explanation: "Locke's theory states that the self is shaped by memories and experience."
+                },
+                {
+                    question: "Which of the following is NOT a stage in Mead's Stages of Self-Development?",
+                    options: ["Preparatory Stage", "Play Stage", "Game Stage", "Self-feeling Stage"],
+                    answer: "Self-feeling Stage",
+                    explanation: "Mead's stages are the Preparatory Stage, Play Stage, and Game Stage. Self-feeling is a stage in Cooley's theory."
+                },
+                {
+                    question: "Which philosopher argued that the self is just an illusion based on the 'Bundle Theory'?",
+                    options: ["John Locke", "David Hume", "Immanuel Kant", "Gilbert Ryle"],
+                    answer: "David Hume",
+                    explanation: "David Hume proposed the Bundle Theory: the self is a bundle of perceptions, thoughts, and sensations."
+                },
+                {
+                    question: "What is the primary function of the 'ego' in Freud's theory?",
+                    options: ["To fulfill basic desires", "To mediate between the id and the superego", "To maintain social norms", "To control the mind-body connection"],
+                    answer: "To mediate between the id and the superego",
+                    explanation: "The ego served as a mediator between the id and the superego."
+                },
+                {
+                    question: "The concept of 'Generalized Others' in Mead's theory refers to:",
+                    options: ["A person's parents", "A person's close friends", "Society's collective norms and expectations", "The individual's conscience"],
+                    answer: "Society's collective norms and expectations",
+                    explanation: "The Generalized Others represents society's collective norms and expectations individuals internalize."
+                },
+                {
+                    question: "Which philosopher is known for his dualistic view of the mind and the body?",
+                    options: ["Aristotle", "Plato", "René Descartes", "Socrates"],
+                    answer: "René Descartes",
+                    explanation: "Descartes proposed dualism: the mind and the body."
+                },
+                {
+                    question: "What did Charles Horton Cooley name his theory on how our self-image is formed?",
+                    options: ["Social Self Theory", "Looking-Glass Self", "Tabula Rasa", "Bundle Theory"],
+                    answer: "Looking-Glass Self",
+                    explanation: "Charles Horton Cooley was an American sociologist known for his theory, 'Looking-Glass Self,' which describes how our self-image is shaped by how we think others see us."
+                },
+                {
+                    question: "In Plato's Tripartite Theory, the part of the soul that seeks honor and victory is the:",
+                    options: ["Reason", "Spirit", "Appetite", "Soul"],
+                    answer: "Spirit",
+                    explanation: "The Spirit is the part of the soul that seeks honor and victory."
+                },
+                {
+                    question: "What is the final stage of Cooley's 'Looking-Glass Self' where we develop our self-concept?",
+                    options: ["Imagination", "Interpretation", "Self-feeling", "Role-taking"],
+                    answer: "Self-feeling",
+                    explanation: "Self-feeling: We develop our self-concept. Our self-concept is shaped by the feedback and responses we get from others."
+                },
+                {
+                    question: "Who believed that through God's grace, we find self-fulfillment?",
+                    options: ["Socrates", "Plato", "Saint Augustine", "Hume"],
+                    answer: "Saint Augustine",
+                    explanation: "Through God's grace, we find self-fulfillment."
+                },
+                {
+                    question: "According to Immanuel Kant, what does the 'Inner Self' include?",
+                    options: ["Our emotions and rational intellect", "Our physical body and senses", "Our social status", "Our memories"],
+                    answer: "Our emotions and rational intellect",
+                    explanation: "The Inner Self includes our emotions and rational intellect."
+                },
+                {
+                    question: "George Herbert Mead's theory on identity is called:",
+                    options: ["Looking-Glass Self", "Social Self Theory", "Bundle Theory", "Tripartite Theory"],
+                    answer: "Social Self Theory",
+                    explanation: "George Herbert Mead was an American philosopher and sociologist known for Social Self Theory."
+                },
+                {
+                    question: "Which of Mead's stages involves a child pretending to be a teacher to a toy?",
+                    options: ["Preparatory Stage", "Play Stage", "Game Stage", "Imitation Stage"],
+                    answer: "Play Stage",
+                    explanation: "Example: A child playing house, acting as the mother and caring for her toy children, or a child pretending to teach other kids or toys."
                 }
-                return null;
-            }
-
-            // Function to set a cookie
-            function setCookie(name, value, days) {
-                let expires = "";
-                if (days) {
-                    const date = new Date();
-                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                    expires = "; expires=" + date.toUTCString();
+            ],
+            id: [
+                {
+                    question: "This philosopher coined the phrase 'ghost in the machine.'",
+                    answer: ["Gilbert Ryle", "Ryle"],
+                    explanation: "He coined the phrase 'ghost in the machine.'",
+                },
+                {
+                    question: "This philosopher proposed the 'Bundle Theory' of the self.",
+                    answer: ["David Hume", "Hume"],
+                    explanation: "He proposed the Bundle Theory: the self is a bundle of perceptions, thoughts, and sensations."
+                },
+                {
+                    question: "This philosopher is known for the maxim 'Know thyself.'",
+                    answer: ["Socrates"],
+                    explanation: "He mentioned the philosophical maxim, 'Know thyself.'"
+                },
+                {
+                    question: "This philosopher viewed the self as a 'unified creature' where body and soul are inseparable.",
+                    answer: ["Aristotle"],
+                    explanation: "He believed the self is a unified creature where the body and soul are inseparable from one another."
+                },
+                {
+                    question: "This philosopher proposed the dualistic view of the self, separating the mind and the body.",
+                    answer: ["René Descartes", "Descartes"],
+                    explanation: "He proposed dualism: the mind and the body."
+                },
+                {
+                    question: "This philosopher believed that the self is an immortal soul, independent of the body.",
+                    answer: ["Plato"],
+                    explanation: "He argued that the self is immortal and independent of the body."
+                },
+                {
+                    question: "This philosopher viewed the self as a 'tabula rasa' or a blank slate.",
+                    answer: ["John Locke", "Locke"],
+                    explanation: "Tabula rasa. The self is shaped by memories and experience."
+                },
+                {
+                    question: "This philosopher viewed the self as a product of brain activity.",
+                    answer: ["Paul Churchland", "Churchland"],
+                    explanation: "The self is a product of brain activity. He studied neurophilosophy or the philosophy of the mind."
+                },
+                {
+                    question: "This philosopher argued that the self is shaped by our physical body and senses.",
+                    answer: ["Maurice Merleau-Ponty", "Merleau-Ponty"],
+                    explanation: "The self is shaped by our physical body and how we experience the world through our senses."
+                },
+                {
+                    question: "This sociologist is known for his 'Looking-Glass Self' theory.",
+                    answer: ["Charles Horton Cooley", "Cooley"],
+                    explanation: "Charles Horton Cooley was an American sociologist known for his theory, 'Looking-Glass Self.'"
+                },
+                {
+                    question: "This sociologist developed the Social Self Theory, which includes the 'I' and the 'Me.'",
+                    answer: ["George Herbert Mead", "Mead"],
+                    explanation: "George Herbert Mead was an American philosopher and sociologist known for Social Self Theory."
+                },
+                {
+                    question: "This part of the self is the spontaneous aspect, according to George Herbert Mead.",
+                    answer: ["The I self", "The I", "I"],
+                    explanation: "The 'I' self is the spontaneous aspect of the self."
+                },
+                {
+                    question: "This is the collective concept of society's norms and expectations that individuals internalize, according to George Herbert Mead.",
+                    answer: ["Generalized Others", "Generalized Other"],
+                    explanation: "The Generalized Others represents society's collective norms and expectations individuals internalize."
+                },
+                {
+                    question: "In Cooley's theory, this is the stage where we imagine how we appear to others.",
+                    answer: ["Imagination"],
+                    explanation: "Imagination: We imagine how we appear to others."
+                },
+                {
+                    question: "In Freud's theory, this is the part of the psyche that acts as a mediator between the id and the superego.",
+                    answer: ["Ego"],
+                    explanation: "The ego served as a mediator between the id and the superego."
                 }
-                document.cookie = name + "=" + (value || "") + expires + "; path=/";
+            ]
+        };
+
+        // --- QUIZ LOGIC ---
+        const quizSection = document.getElementById('quiz-section');
+        const resultSection = document.getElementById('result-section');
+        const questionText = document.getElementById('question-text');
+        const inputContainer = document.getElementById('input-container');
+        const answerInput = document.getElementById('answer-input');
+        const optionsContainer = document.getElementById('options-container');
+        const nextButton = document.getElementById('next-button');
+        const questionCount = document.getElementById('question-count');
+        const finalScore = document.getElementById('final-score');
+        const scoreMessage = document.getElementById('score-message');
+        const answersSummary = document.getElementById('answers-summary');
+        const restartButton = document.getElementById('restart-button');
+        const feedbackSection = document.getElementById('feedback-section');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackExplanation = document.getElementById('feedback-explanation');
+        const incorrectTitle = document.getElementById('incorrect-title');
+        const modeToggle = document.getElementById('mode-toggle');
+        const scoreListEl = document.getElementById('score-list');
+
+        let allQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let wrongAnswers = [];
+        let hasAnswered = false;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Initialize the quiz by shuffling questions and loading the first one.
+        function initializeQuiz() {
+            allQuestions = shuffle([...quizData.mcq]).slice(0, 40).concat(shuffle([...quizData.id]));
+            currentQuestionIndex = 0;
+            score = 0;
+            wrongAnswers = [];
+            loadQuestion();
+            loadScores();
+        }
+
+        function loadScores() {
+            try {
+                const scores = JSON.parse(document.cookie.replace(/(?:(?:^|.*;\s*)quizScores\s*=\s*([^;]*).*$)|^.*$/, "$1") || "[]");
+                scoreListEl.innerHTML = '';
+                if (scores.length > 0) {
+                    scores.forEach(s => {
+                        const li = document.createElement('li');
+                        li.textContent = `Score: ${s.score} on ${new Date(s.date).toLocaleDateString()}`;
+                        scoreListEl.appendChild(li);
+                    });
+                } else {
+                    scoreListEl.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic text-sm">No previous scores found.</p>';
+                }
+            } catch (e) {
+                console.error("Failed to parse cookie:", e);
+                scoreListEl.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic text-sm">No previous scores found.</p>';
+            }
+        }
+
+        function saveScore() {
+            const scores = JSON.parse(document.cookie.replace(/(?:(?:^|.*;\s*)quizScores\s*=\s*([^;]*).*$)|^.*$/, "$1") || "[]");
+            const newScore = { date: new Date().toISOString(), score: `${score}/${allQuestions.length}` };
+            scores.push(newScore);
+            document.cookie = `quizScores=${JSON.stringify(scores)};path=/;max-age=31536000`;
+        }
+
+        function loadQuestion() {
+            hasAnswered = false;
+            optionsContainer.innerHTML = '';
+            inputContainer.classList.add('hidden');
+            answerInput.value = '';
+            feedbackSection.classList.add('hidden');
+            nextButton.textContent = 'Submit Answer';
+            nextButton.disabled = false;
+
+            if (currentQuestionIndex >= allQuestions.length) {
+                showResults();
+                return;
             }
 
-            // Function to load score history from cookies
-            function loadScoreHistory() {
-                const historyString = getCookie('quizHistory');
-                return historyString ? JSON.parse(historyString) : [];
+            const currentQuestion = allQuestions[currentQuestionIndex];
+            questionText.textContent = currentQuestion.question;
+            questionCount.textContent = `Question ${currentQuestionIndex + 1} of ${allQuestions.length}`;
+
+            if (currentQuestion.options) {
+                optionsContainer.classList.remove('hidden');
+                shuffle(currentQuestion.options).forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.classList.add('option-button', 'text-left', 'bg-blue-100', 'hover:bg-blue-200', 'dark:bg-blue-800', 'dark:hover:bg-blue-700', 'text-blue-800', 'dark:text-blue-200', 'font-semibold', 'py-3', 'px-4', 'rounded-xl', 'transition-colors', 'duration-200', 'shadow-sm', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-400', 'dark:focus:ring-blue-500');
+                    button.onclick = () => handleAnswer(button, option);
+                    optionsContainer.appendChild(button);
+                });
+            } else {
+                optionsContainer.classList.add('hidden');
+                inputContainer.classList.remove('hidden');
+            }
+        }
+
+        function handleAnswer(button, userChoice) {
+            if (hasAnswered) return;
+            hasAnswered = true;
+
+            const currentQuestion = allQuestions[currentQuestionIndex];
+            let isCorrect = false;
+            let userAnswerText;
+
+            if (currentQuestion.options) {
+                userAnswerText = userChoice;
+                isCorrect = userChoice === currentQuestion.answer;
+                const allOptionButtons = document.querySelectorAll('.option-button');
+                allOptionButtons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.remove('bg-blue-100', 'hover:bg-blue-200', 'dark:bg-blue-800', 'dark:hover:bg-blue-700');
+                    if (btn.textContent === currentQuestion.answer) {
+                        btn.classList.add('correct-answer-bg', 'text-blue-800', 'dark:text-blue-200');
+                    }
+                    if (btn.textContent === userAnswerText && !isCorrect) {
+                        btn.classList.add('wrong-answer-bg', 'text-blue-800', 'dark:text-blue-200');
+                    }
+                });
+            } else { // Identification question
+                userAnswerText = answerInput.value.trim();
+                isCorrect = currentQuestion.answer.some(ans => userAnswerText.toLowerCase() === ans.toLowerCase());
             }
 
-            // Function to save score history to cookies
-            function saveScoreHistory(history) {
-                setCookie('quizHistory', JSON.stringify(history), 365);
+            if (isCorrect) {
+                score++;
+                feedbackStatus.textContent = "Correct! ✅";
+                feedbackStatus.classList.remove('wrong-answer-text');
+                feedbackStatus.classList.add('correct-answer-text');
+            } else {
+                wrongAnswers.push({
+                    question: currentQuestion.question,
+                    userAnswer: userAnswerText,
+                    correctAnswer: currentQuestion.options ? currentQuestion.answer : currentQuestion.answer[0]
+                });
+                feedbackStatus.textContent = "Incorrect. ❌";
+                feedbackStatus.classList.remove('correct-answer-text');
+                feedbackStatus.classList.add('wrong-answer-text');
             }
             
-            // Function to update the score history display
-            function updateScoreHistoryDisplay() {
-                const history = loadScoreHistory();
-                scoreHistoryList.innerHTML = '';
-                if (history.length === 0) {
-                    scoreHistoryList.innerHTML = '<li>No previous scores found.</li>';
-                } else {
-                    history.forEach((entry, index) => {
-                        const listItem = document.createElement('li');
-                        listItem.textContent = `Quiz ${index + 1}: ${entry.score}/${quizData.length}`;
-                        scoreHistoryList.appendChild(listItem);
-                    });
+            feedbackExplanation.textContent = currentQuestion.explanation;
+            feedbackSection.classList.remove('hidden');
+            nextButton.textContent = 'Next Question';
+        }
+        
+        function handleNext() {
+            if (!hasAnswered) {
+                // If it's an identification question, handle the answer submission
+                const currentQuestion = allQuestions[currentQuestionIndex];
+                if (!currentQuestion.options) {
+                    handleAnswer(null, null);
                 }
+                return;
             }
 
-            // Function to show a question
-            function showQuestion() {
-                const currentQuestion = quizData[currentQuestionIndex];
-                questionTextElement.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
-                feedbackElement.style.display = 'none';
-                submitButton.textContent = 'Submit';
-                submitButton.disabled = false;
-                isAnswered = false;
-                selectedOption = null;
-                
-                optionsContainer.innerHTML = '';
-                identificationInput.style.display = 'none';
+            currentQuestionIndex++;
+            loadQuestion();
+        }
 
-                if (currentQuestion.type === 'multiple-choice') {
-                    optionsContainer.style.display = 'grid';
-                    currentQuestion.options.forEach(option => {
-                        const optionElement = document.createElement('div');
-                        optionElement.classList.add('option');
-                        optionElement.textContent = option;
-                        optionElement.addEventListener('click', () => {
-                            if (!isAnswered) {
-                                document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-                                optionElement.classList.add('selected');
-                                selectedOption = option;
-                            }
-                        });
-                        optionsContainer.appendChild(optionElement);
-                    });
-                } else if (currentQuestion.type === 'identification') {
-                    optionsContainer.style.display = 'none';
-                    identificationInput.style.display = 'block';
-                    identificationInput.value = '';
-                }
+        function showResults() {
+            saveScore();
+            quizSection.classList.add('hidden');
+            resultSection.classList.remove('hidden');
+
+            const totalQuestions = allQuestions.length;
+            finalScore.textContent = `You scored ${score} out of ${totalQuestions}!`;
+
+            const percentage = (score / totalQuestions) * 100;
+            if (percentage > 80) {
+                scoreMessage.textContent = 'Excellent job! You have a great understanding of the topic.';
+            } else if (percentage > 50) {
+                scoreMessage.textContent = 'Good effort! You know a lot, but there\'s room for improvement.';
+            } else {
+                scoreMessage.textContent = 'Keep studying! Review the material to improve your score.';
             }
-
-            // Function to check the answer
-            function checkAnswer() {
-                isAnswered = true;
-                const currentQuestion = quizData[currentQuestionIndex];
-                let isCorrect = false;
-                let userAnswer = '';
-
-                if (currentQuestion.type === 'multiple-choice') {
-                    userAnswer = selectedOption;
-                    if (userAnswer === currentQuestion.answer) {
-                        isCorrect = true;
-                    }
-                } else if (currentQuestion.type === 'identification') {
-                    userAnswer = identificationInput.value.trim().toLowerCase();
-                    if (userAnswer === currentQuestion.answer.toLowerCase()) {
-                        isCorrect = true;
-                    }
-                }
-
-                if (isCorrect) {
-                    score++;
-                } else {
-                    wrongAnswers.push({
-                        question: currentQuestion.question,
-                        correctAnswer: currentQuestion.answer
-                    });
-                }
-
-                showFeedback(currentQuestion.explanation, isCorrect);
-                submitButton.textContent = 'Next Question';
-            }
-
-            // Function to show feedback
-            function showFeedback(explanation, isCorrect) {
-                feedbackElement.style.display = 'block';
-                explanationElement.innerHTML = `<span style="font-weight: bold; color: ${isCorrect ? 'var(--correct-color)' : 'var(--wrong-color)'};">${isCorrect ? 'Correct!' : 'Incorrect!'}</span><br><br><span class="explanation">${explanation}</span>`;
-            }
-
-            // Function to show final results
-            function showResults() {
-                const totalQuestions = quizData.length;
-                finalScoreElement.textContent = `${score}/${totalQuestions}`;
-                wrongQuestionsList.innerHTML = '';
-                wrongAnswers.forEach(item => {
-                    const listItem = document.createElement('li');
-                    listItem.classList.add('wrong-question-item');
-                    listItem.innerHTML = `<p>${item.question}</p><span>Correct Answer: ${item.correctAnswer}</span>`;
-                    wrongQuestionsList.appendChild(listItem);
+            
+            answersSummary.innerHTML = '';
+            if (wrongAnswers.length > 0) {
+                incorrectTitle.classList.remove('hidden');
+                wrongAnswers.forEach(answer => {
+                    const summaryItem = document.createElement('div');
+                    summaryItem.classList.add('p-4', 'rounded-lg', 'mb-4', 'shadow-sm', 'border', 'incorrect-summary-card');
+                    
+                    summaryItem.innerHTML = `
+                        <p class="font-bold mb-2">${answer.question}</p>
+                        <p class="text-sm">Your Answer: <span class="wrong-answer-text font-semibold">${answer.userAnswer}</span></p>
+                        <p class="text-sm">Correct Answer: <span class="correct-answer-text font-semibold">${answer.correctAnswer}</span></p>
+                    `;
+                    answersSummary.appendChild(summaryItem);
                 });
-
-                document.getElementById('quiz').style.display = 'none';
-                feedbackElement.style.display = 'none';
-                resultsElement.style.display = 'block';
-                
-                // Save and display history
-                const history = loadScoreHistory();
-                history.push({ score: score, total: totalQuestions });
-                saveScoreHistory(history);
-                updateScoreHistoryDisplay();
+            } else {
+                incorrectTitle.classList.add('hidden');
+                answersSummary.innerHTML = '<p class="text-lg text-gray-500 dark:text-gray-400">You got all the questions right! Great job!</p>';
             }
+            loadScores();
+        }
 
-            // Function to handle button click
-            submitButton.addEventListener('click', () => {
-                if (submitButton.textContent === 'Submit') {
-                    checkAnswer();
-                } else {
-                    currentQuestionIndex++;
-                    if (currentQuestionIndex < quizData.length) {
-                        showQuestion();
-                    } else {
-                        showResults();
-                    }
-                }
-            });
+        function restartQuiz() {
+            resultSection.classList.add('hidden');
+            quizSection.classList.remove('hidden');
+            initializeQuiz();
+        }
 
-            // Initial setup
-            showQuestion();
-            updateScoreHistoryDisplay();
-        });
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        nextButton.addEventListener('click', handleNext);
+        restartButton.addEventListener('click', restartQuiz);
+        modeToggle.addEventListener('click', toggleDarkMode);
+
+        // Start the quiz automatically on page load
+        document.addEventListener('DOMContentLoaded', initializeQuiz);
     </script>
-</head>
-<body>
-
-    <main class="quiz-container">
-        <header>
-            <h1>Computer Programming 1 - Prelims</h1>
-            <button id="mode-toggle">Toggle Dark Mode</button>
-        </header>
-
-        <div id="quiz">
-            <h2 id="question-text"></h2>
-            <div id="options-container" class="options-grid"></div>
-            <input type="text" id="identification-input" placeholder="Your Answer" style="display:none;">
-            <button id="submit-btn">Submit</button>
-        </div>
-
-        <div id="feedback" style="display:none;">
-            <p id="explanation"></p>
-        </div>
-
-        <div id="results" style="display:none;">
-            <h2>Quiz Results</h2>
-            <p>Your score: <span id="final-score"></span></p>
-            <h3>Questions you got wrong:</h3>
-            <ul id="wrong-questions-list"></ul>
-            <h3>Your Progress:</h3>
-            <ul id="score-history"></ul>
-        </div>
-    </main>
-
 </body>
 </html>
