@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Understanding the Self - Prelims</title>
+    <title>The Contemporary World - Prelims</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -141,7 +141,7 @@
         }
 
         #submit-button, .quiz-button, #restart-button {
-            display: block;
+            display: none; /* Hide by default */
             width: 100%;
             padding: 15px;
             font-size: 1em;
@@ -256,7 +256,7 @@
 </div>
 
 <div class="quiz-container" id="quiz-container">
-    <h1 id="quiz-title">Understanding the Self - Prelims</h1>
+    <h1 id="quiz-title">The Contemporary World - Prelims</h1>
     <div class="progress-container">
         <div class="progress-bar" id="progress-bar"></div>
     </div>
@@ -315,405 +315,811 @@
         return "";
     }
 
-    // Quiz Data
+    //
+    // --- START OF QUIZ DATA ---
+    //
     const quizData = {
         multipleChoice: [
             {
-                question: "Which philosopher is associated with the maxim 'Know thyself' and believed true wisdom comes from introspection?",
-                options: ["Plato", "Socrates", "Aristotle", "Augustine"],
-                answer: "Socrates",
-                explanation: "Socrates was an ancient Greek philosopher who emphasized the importance of self-knowledge. He mentioned the philosophical maxim, 'Know thyself.' He believed that true wisdom comes from introspection and self-examination."
+                question: "According to the provided text, what is a fundamental aspect of globalization?",
+                options: [
+                    "The removal of obstacles that hindered communication between different countries.",
+                    "The exclusive focus on economic integration.",
+                    "The preservation of regional customs and cultural uniformity.",
+                    "The reduction of air travel and shipping worldwide."
+                ],
+                answer: "The removal of obstacles that hindered communication between different countries.",
+                explanation: "The text defines globalization as the removal of obstacles that once hindered communication between different countries and individuals."
             },
             {
-                question: "According to Plato's Tripartite Theory of the Soul, which part of the self seeks contemplation of the Form of the Good?",
-                options: ["Reason", "Spirit", "Appetite", "Ego"],
-                answer: "Reason",
-                explanation: "Plato believed that the self comprises three parts: reason, spirit, and appetite. Plato's tripartite theory of the soul suggests that harmony among these parts leads to a virtuous life and a just society."
+                question: "Which of the following is NOT listed as an important element of globalization in the document?",
+                options: [
+                    "Political interdependence.",
+                    "Technological progress.",
+                    "Cultural homogeneity.",
+                    "Economic integration."
+                ],
+                answer: "Cultural homogeneity.",
+                explanation: "While cultural exchange is an element of globalization, cultural homogeneity is listed as a challenge, not an element."
             },
             {
-                question: "Aristotle argued that the self is a unified creature composed of what two inseparable entities?",
-                options: ["Mind and Soul", "Body and Soul", "Reason and Spirit", "Inner and Outer Self"],
-                answer: "Body and Soul",
-                explanation: "Aristotle argued that the self or the human person is a composite of body and soul and that the two are inseparable. Indeed, for Aristotle, the self is a unified creature."
+                question: "What is the primary benefit of globalization in healthcare, as described in the text?",
+                options: [
+                    "The creation of a centralized global healthcare system.",
+                    "Greater accessibility to medical technologies and advances.",
+                    "The elimination of health tourism and cross-border healthcare.",
+                    "A decrease in ethical considerations in healthcare."
+                ],
+                answer: "Greater accessibility to medical technologies and advances.",
+                explanation: "The text states that one of the main advantages of globalization in the healthcare industry is greater accessibility to medical advances and technology."
             },
             {
-                question: "Descartes famously declared 'Cogito, ergo sum'. What does this phrase mean?",
-                options: ["I feel, therefore I am", "I think, therefore I am", "I am, therefore I think", "I love, therefore I am"],
-                answer: "I think, therefore I am",
-                explanation: "He famously declared, 'Cogito, ergo sum' (I think, therefore I am), asserting that self-awareness is the only proof of existence."
+                question: "According to the handout, what is a significant challenge to education systems brought about by globalization?",
+                options: [
+                    "An increase in research and innovation.",
+                    "The encouragement of cross-cultural dialogue.",
+                    "The potential for cultural homogenization.",
+                    "A reduction in language proficiency."
+                ],
+                answer: "The potential for cultural homogenization.",
+                explanation: "The document notes that globalized education approaches and curricula have the potential to cause cultural homogeneity, where prevailing global standards eclipse local identities."
             },
             {
-                question: "Which philosopher proposed the 'Tabula rasa' concept, suggesting the self is a blank slate shaped by experience?",
-                options: ["David Hume", "John Locke", "Immanuel Kant", "Gilbert Ryle"],
-                answer: "John Locke",
-                explanation: "John Locke was an English philosopher and physician who proposed a theory of the self based on consciousness and personal identity. He believed that people begin life as a Tabula rasa or a blank slate."
+                question: "What does the text identify as a major reason for the national education crisis in the Philippines?",
+                options: [
+                    "Excessive funding for education.",
+                    "The emphasis on creativity and critical thinking in curricula.",
+                    "Unequal access to educational opportunities.",
+                    "A decrease in teacher-student ratios."
+                ],
+                answer: "Unequal access to educational opportunities.",
+                explanation: "The text states that there are still gaps in educational access, especially between rural and urban regions, which is a major challenge."
             },
             {
-                question: "David Hume's 'Bundle Theory' suggests the self is just a collection of what?",
-                options: ["Emotions and desires", "Memories and consciousness", "Perceptions, thoughts, and sensations", "Mind and body"],
-                answer: "Perceptions, thoughts, and sensations",
-                explanation: "He proposed the Bundle Theory: the self is a bundle of perceptions, thoughts, and sensations."
+                question: "Which of the following is a characteristic of 'Financialization' as defined in the provided text?",
+                options: [
+                    "A reduction in the use of financial instruments.",
+                    "The expansion of traditional productive activities.",
+                    "The growing influence of financial markets and motives.",
+                    "A decrease in trading and speculation."
+                ],
+                answer: "The growing influence of financial markets and motives.",
+                explanation: "Financialization refers to the growing influence of financial markets and financial motives in the operation of economies, involving the expansion of financial activities like trading and speculation."
             },
             {
-                question: "Which philosopher coined the phrase 'ghost in the machine,' arguing that the self is shown through actions and behaviors?",
-                options: ["Paul Churchland", "Gilbert Ryle", "Maurice Merleau-Ponty", "Sigmund Freud"],
-                answer: "Gilbert Ryle",
-                explanation: "He coined the phrase 'ghost in the machine.' He argued that the self is shown through actions and behaviors."
+                question: "What is the primary role of the global interstate system, as described in the handout?",
+                options: [
+                    "To promote a single global government.",
+                    "To serve as the political framework for nation-state interactions.",
+                    "To eliminate all international alliances and treaties.",
+                    "To drive economic interconnectedness across borders."
+                ],
+                answer: "To serve as the political framework for nation-state interactions.",
+                explanation: "The global interstate system is described as the political framework within which nation-states interact and negotiate their interests on the international stage."
             },
             {
-                question: "What did Paul Churchland propose about the self, based on his study of neurophilosophy?",
-                options: ["The self is a divine entity", "The self is a product of brain activity", "The self is a social construct", "The self is an illusion"],
-                answer: "The self is a product of brain activity",
-                explanation: "Churchland is a Canadian philosopher known for his work in neurophilosophy. He proposed that the self is a product of brain activity."
+                question: "What is the key difference between 'internationalism' and 'globalism' according to the text?",
+                options: [
+                    "Internationalism is an ideology, while globalism is a form of cooperation.",
+                    "Internationalism focuses on cooperation, while globalism is an ideology promoting the free flow of people, goods, and information.",
+                    "Internationalism involves a single global government, while globalism involves alliances.",
+                    "Internationalism applies only to e-sports teams, and globalism applies only to supermarkets."
+                ],
+                answer: "Internationalism focuses on cooperation, while globalism is an ideology promoting the free flow of people, goods, and information.",
+                explanation: "Internationalism is defined as a cooperation between nations, while globalism is an ideology based on the belief that the flow of people, goods, and information should move freely across borders."
             },
             {
-                question: "According to Maurice Merleau-Ponty, the self is inseparable from what two aspects?",
-                options: ["Mind and thoughts", "Memories and experiences", "Physical body and senses", "Inner and outer selves"],
-                answer: "Physical body and senses",
-                explanation: "For him, the self is shaped by our physical body and how we experience the world through our senses."
+                question: "Which factor influences market integration by shaping consumer preferences and behaviors?",
+                options: [
+                    "Trade Liberalization.",
+                    "Global Value Chains.",
+                    "Cultural Convergence and Divergence.",
+                    "Financialization."
+                ],
+                answer: "Cultural Convergence and Divergence.",
+                explanation: "The text states that cultural convergence and divergence influence market integration by shaping consumer preferences and behaviors."
             },
             {
-                question: "Which sociologist is known for the 'Looking-Glass Self' theory?",
-                options: ["George Herbert Mead", "Charles Horton Cooley", "Sigmund Freud", "Immanuel Kant"],
-                answer: "Charles Horton Cooley",
-                explanation: "Charles Horton Cooley (1864-1929) was an American sociologist known for his theory, 'Looking-Glass Self,' which describes how our self-image is shaped by how we think others see us."
+                question: "According to the provided text, what is 'Trade Liberalization'?",
+                options: [
+                    "The international dispersion of production processes.",
+                    "The removal of barriers to international trade, like tariffs and quotas.",
+                    "The growing influence of financial markets.",
+                    "The establishment of international financial institutions."
+                ],
+                answer: "The removal of barriers to international trade, like tariffs and quotas.",
+                explanation: "Trade liberalization is defined as the removal or reduction of barriers to international trade."
             },
             {
-                question: "George Herbert Mead's Social Self Theory states that personal identity is formed through what?",
-                options: ["Genetics and biology", "Social interaction and cultural expectations", "Individual introspection", "Divine intervention"],
-                answer: "Social interaction and cultural expectations",
-                explanation: "George Herbert Mead... developed the Social Self Theory, which asserts that personal identity is formed through social interaction and cultural expectations."
+                question: "The handout mentions that the Philippine educational curriculum has been criticized for emphasizing what over critical thinking and creativity?",
+                options: [
+                    "Digital literacy.",
+                    "Skill mismatch.",
+                    "Memorization.",
+                    "International standards."
+                ],
+                answer: "Memorization.",
+                explanation: "The text states the present educational curriculum has come under fire for emphasizing memorization over critical thinking, creativity, and 21st-century abilities."
             },
             {
-                question: "In Mead's Social Self Theory, the 'I' self is the spontaneous aspect, while the 'Me' self is what?",
-                options: ["The imaginative self", "The uninfluenced self", "The spiritual self", "The socialized aspect"],
-                answer: "The socialized aspect",
-                explanation: "The 'I' is the spontaneous aspect of the self... while the 'Me' is a socialized aspect shaped by social expectations and norms."
+                question: "What is a 'brain drain' as described in the text?",
+                options: [
+                    "A shortage of teachers in certain nations.",
+                    "The migration of highly educated people from their home countries.",
+                    "The loss of indigenous knowledge due to cultural homogenization.",
+                    "An increase in digital literacy training."
+                ],
+                answer: "The migration of highly educated people from their home countries.",
+                explanation: "The document describes a brain drain as the migration of talented professionals across borders, causing them to leave their home countries and worsening skill shortages."
             },
             {
-                question: "Which of Mead's stages of self-development is characterized by children copying others without understanding their actions?",
-                options: ["Game Stage", "Play Stage", "Preparatory Stage", "Self-feeling Stage"],
-                answer: "Preparatory Stage",
-                explanation: "Preparatory Stage (Imitation) - The preparatory stage starts from birth to age two (2). Within this stage, children copy others but don't understand their actions, words, or tone of voice."
+                question: "The concept of 'Multilateralism' in global governance is defined as promoting what?",
+                options: [
+                    "The dominance of a single state's interests.",
+                    "Cooperation and shared responsibility among multiple actors.",
+                    "Unilateral actions by individual states.",
+                    "National interests over collective efforts."
+                ],
+                answer: "Cooperation and shared responsibility among multiple actors.",
+                explanation: "Multilateral approaches promote cooperation and shared responsibility among multiple actors."
             },
             {
-                question: "According to Socrates, what does acknowledging ignorance improve?",
-                options: ["Self-confidence and arrogance", "Receptivity to new perspectives and personal development", "Conformity to social norms and beliefs", "Wisdom and intellectual superiority"],
-                answer: "Receptivity to new perspectives and personal development",
-                explanation: "Acknowledging ignorance improves receptivity to new perspectives, situational adaptation, and personal development."
+                question: "Which of the following is NOT an example of an International Financial Institution (IFI) mentioned in the text?",
+                options: [
+                    "The World Bank (WB).",
+                    "The World Health Organization (WHO).",
+                    "The International Monetary Fund (IMF).",
+                    "The Asian Development Bank (ADB)."
+                ],
+                answer: "The World Health Organization (WHO).",
+                explanation: "The World Health Organization is listed as a reference, not an International Financial Institution. The others are explicitly mentioned as IFIs."
             },
             {
-                question: "Plato's Tripartite Theory of the Soul divides the self into which three parts?",
-                options: ["Mind, body, and soul", "Reason, spirit, and appetite", "Inner self, outer self, and ego", "Conscious, unconscious, and preconscious"],
-                answer: "Reason, spirit, and appetite",
-                explanation: "Plato believed that the self comprises three parts: reason, spirit, and appetite."
+                question: "What is the 'Responsibility to Protect' (R2P) concept concerned with, according to the document?",
+                options: [
+                    "Protecting states from foreign intervention.",
+                    "Addressing mass atrocities and protecting vulnerable populations.",
+                    "Establishing free trade agreements.",
+                    "Enforcing unilateral actions by states."
+                ],
+                answer: "Addressing mass atrocities and protecting vulnerable populations.",
+                explanation: "R2P shapes global governance by establishing norms for addressing mass atrocities and protecting vulnerable populations."
             },
             {
-                question: "How did St. Augustine view the self?",
-                options: ["As a bundle of perceptions", "As a product of brain activity", "As deeply intertwined with God", "As a blank slate"],
-                answer: "As deeply intertwined with God",
-                explanation: "Augustine of Hippo was a theologian and philosopher who viewed the self as deeply intertwined with God. He believed that the human soul longs for union with God, its ultimate source of fulfillment and happiness."
+                question: "Which of the following is a challenge to education that results from globalization, as described in the text?",
+                options: [
+                    "Skill mismatch.",
+                    "Human Capital Development.",
+                    "Internationalization of Education.",
+                    "Language Proficiency."
+                ],
+                answer: "Skill mismatch.",
+                explanation: "The handout lists 'Skill Mismatch' as a challenge to education, where schools may not adapt to the new skills demanded by the labor market."
             },
             {
-                question: "Sigmund Freud's concept of the self is primarily focused on which part?",
-                options: ["The id", "The superego", "The ego", "The libido"],
-                answer: "The ego",
-                explanation: "His concept of self focused on the ego. The ego served as a mediator between the superego and the id."
+                question: "The term 'Globalization' is defined as the worldwide interconnection and interdependence of which three main things?",
+                options: [
+                    "Continents, oceans, and atmospheres.",
+                    "Nations, communities, and economies.",
+                    "Governments, businesses, and militaries.",
+                    "Individuals, cultures, and traditions."
+                ],
+                answer: "Nations, communities, and economies.",
+                explanation: "Globalization is defined as the worldwide interconnection and interdependence of nations, communities, and economies."
             },
             {
-                question: "Which philosopher believed that personal identity is based on consciousness and memory?",
-                options: ["Immanuel Kant", "John Locke", "David Hume", "Gilbert Ryle"],
-                answer: "John Locke",
-                explanation: "John Locke was an English philosopher and physician who proposed a theory of the self based on consciousness and personal identity."
+                question: "What is the main purpose of International Financial Institutions (IFIs)?",
+                options: [
+                    "To provide military aid to countries in need.",
+                    "To promote a single global currency.",
+                    "To provide financial aid to other countries in need of monetary support.",
+                    "To enforce trade restrictions and tariffs."
+                ],
+                answer: "To provide financial aid to other countries in need of monetary support.",
+                explanation: "IFIs are institutions established to provide financial aid to other countries in need of monetary support."
             },
             {
-                question: "Immanuel Kant's concept of the 'Inner Self' includes our emotions and what other aspect?",
-                options: ["Our physical body", "Our social interactions", "Our rational intellect", "Our past memories"],
-                answer: "Our rational intellect",
-                explanation: "The Inner Self includes our emotions and rational intellect."
+                question: "What is a 'Global Commons' as described in the provided text?",
+                options: [
+                    "A shared market for goods and services.",
+                    "Resources like the atmosphere, oceans, and outer space that require collective action to preserve.",
+                    "A system of international laws for trade disputes.",
+                    "A type of humanitarian intervention."
+                ],
+                answer: "Resources like the atmosphere, oceans, and outer space that require collective action to preserve.",
+                explanation: "Global commons are defined as shared resources like the atmosphere, oceans, and outer space, highlighting the need for collective action among nations to manage and preserve them."
             },
             {
-                question: "According to Merleau-Ponty, what is the 'dance' in the provided example used to illustrate?",
-                options: ["The separation of mind and body", "How the self is shaped by thoughts alone", "The embodiment of identity through bodily experiences", "The illusion of a physical self"],
-                answer: "The embodiment of identity through bodily experiences",
-                explanation: "The dance becomes a way for them to embody and express their identity, showing how our sense of self is inseparable from our bodily experiences and interactions with the world."
+                question: "According to the handout, what is the main purpose of Trade Liberalization?",
+                options: [
+                    "To increase tariffs and quotas.",
+                    "To promote free and open exchange of goods and services.",
+                    "To create global value chains.",
+                    "To reduce economic growth and efficiency."
+                ],
+                answer: "To promote free and open exchange of goods and services.",
+                explanation: "Trade liberalization is the removal of barriers to international trade to promote free and open exchange of goods and services."
             },
             {
-                question: "What did Charles Horton Cooley's 'Looking-Glass Self' theory describe?",
-                options: ["How the self is a unified entity", "How the self is shaped by social interactions", "How the self is an illusion", "How the self is shaped by how we think others see us"],
-                answer: "How the self is shaped by how we think others see us",
-                explanation: "It describes how our self-image is shaped by how we think others see us."
+                question: "What is a key difference between `Regionalism` and `Globalism` in the context of the global interstate system?",
+                options: [
+                    "Regionalism promotes cooperation within specific geographic areas, while globalism advocates for broader collaboration.",
+                    "Regionalism advocates for the free flow of goods, while globalism promotes trade restrictions.",
+                    "Regionalism is the political framework of states, while globalism is an ideology.",
+                    "Regionalism focuses on security challenges, while globalism focuses on power dynamics."
+                ],
+                answer: "Regionalism promotes cooperation within specific geographic areas, while globalism advocates for broader collaboration.",
+                explanation: "The handout explains that Regionalism promotes cooperation within specific geographic areas, while Globalism advocates for broader collaboration and collective action to address transnational challenges."
             },
             {
-                question: "In Cooley's 'Looking-Glass Self' theory, which stage involves envisioning how others might view our actions and behaviors?",
-                options: ["Interpretation", "Self-feeling", "Imagination", "Self-concept"],
-                answer: "Imagination",
-                explanation: "Imagination: We imagine how we appear to others - We envision how others might view our actions and behaviors."
+                question: "The provided text cites a practice called 'No Child Left Behind' in the Philippines. What does the text say about this practice?",
+                options: [
+                    "It has led to a steady increase in student performance.",
+                    "It is a government policy that aims to have competent students.",
+                    "It is a policy that prevents mass promotion.",
+                    "It ensures equal access to educational opportunities for all."
+                ],
+                answer: "It is a government policy that aims to have competent students.",
+                explanation: "The text states that 'No Child Left Behind' is a government policy that aims to have competent and academically able students."
             },
             {
-                question: "What happens in the 'Interpretation' stage of Cooley's theory?",
-                options: ["We form our self-concept", "We consider the judgments of others", "We imagine our future self", "We develop our values"],
-                answer: "We consider the judgments of others",
-                explanation: "Interpretation: We imagine how others judge us - We consider the reactions and judgments of others towards our behaviors."
+                question: "What is the term for the international dispersion of production processes across different countries?",
+                options: [
+                    "Trade Liberalization.",
+                    "Financialization.",
+                    "Global Value Chains.",
+                    "Market Integration."
+                ],
+                answer: "Global Value Chains.",
+                explanation: "The document defines Global Value Chains as the international dispersion of production processes across different countries."
             },
             {
-                question: "In Mead's Social Self Theory, what do 'significant others' refer to?",
-                options: ["Society's collective norms", "Individuals with direct influence", "Abstract social roles", "Strangers we meet in public"],
-                answer: "Individuals with direct influence",
-                explanation: "The Significant Others have direct influence on the person (e.g.,parents, siblings, friends, etc.)"
+                question: "According to the document, what is 'Cultural Exchange' in the context of globalization?",
+                options: [
+                    "The loss of regional customs and knowledge.",
+                    "The sharing of beliefs, customs, and ideas beyond geographical limits.",
+                    "The standardization of all cultures.",
+                    "The creation of a single global language."
+                ],
+                answer: "The sharing of beliefs, customs, and ideas beyond geographical limits.",
+                explanation: "Cultural globalization entails the sharing of beliefs, customs, and ideas, allowing individuals to experience a variety of cultures beyond geographical limits."
             },
             {
-                question: "Which stage of Mead's self-development is characterized by children pretending and taking on roles, but not yet following rules?",
-                options: ["Preparatory Stage", "Play Stage", "Game Stage", "Imitation Stage"],
-                answer: "Play Stage",
-                explanation: "Play Stage (Taking on Roles). Children pretend and still do not follow rules within organized games."
+                question: "What is the primary challenge posed by the 'Digital Divide' to education, as per the text?",
+                options: [
+                    "It improves learning possibilities.",
+                    "It leads to a surplus of digital resources.",
+                    "It exacerbates inequalities in education due to unequal access to technology.",
+                    "It promotes digital literacy for all."
+                ],
+                answer: "It exacerbates inequalities in education due to unequal access to technology.",
+                explanation: "The digital gap between those who have access to technology and those who do not makes inequalities in education worse."
             },
             {
-                question: "In the 'Game Stage' of Mead's theory, children begin to comprehend and follow the rules of games and form the concept of what?",
-                options: ["Significant others", "Looking-glass self", "Generalized others", "Social ego"],
-                answer: "Generalized others",
-                explanation: "Children start to comprehend and follow the rules of games, take on roles independently, and consider others' perspectives, forming the concept of 'generalized others.'"
+                question: "The text identifies which of the following as a major challenge faced by the Philippine education system?",
+                options: [
+                    "Increase Funding.",
+                    "Equitable Access to Education.",
+                    "Teacher Training and Support.",
+                    "Inadequate Funding."
+                ],
+                answer: "Inadequate Funding.",
+                explanation: "The document lists Inadequate Funding as a challenge because it hampers the government's ability to offer high-quality education to everyone."
             },
             {
-                question: "What is the primary difference between the 'I' self and the 'Me' self in Mead's theory?",
-                options: ["'I' is unconscious, 'Me' is conscious", "'I' is socialized, 'Me' is spontaneous", "'I' is spontaneous, 'Me' is socialized", "'I' is rational, 'Me' is emotional"],
-                answer: "'I' is spontaneous, 'Me' is socialized",
-                explanation: "The 'I' is the spontaneous aspect of the self... The 'Me' is a socialized aspect shaped by social expectations and norms."
+                question: "What does the handout suggest is a reason for the 'Skill Mismatch' challenge?",
+                options: [
+                    "A decrease in the demand for new skills in the labor market.",
+                    "Educational institutions adapting too quickly to changes.",
+                    "The rapid changes brought about by globalization.",
+                    "A surplus of highly skilled professionals."
+                ],
+                answer: "The rapid changes brought about by globalization.",
+                explanation: "Skill mismatch is a challenge due to the quick changes brought about by globalization, which demands new abilities and skills."
             },
             {
-                question: "What field of study did Paul Churchland use to propose his theory on the self?",
-                options: ["Sociology", "Psychology", "Neurophilosophy", "Anthropology"],
-                answer: "Neurophilosophy",
-                explanation: "He studied neurophilosophy or the philosophy of the mind."
+                question: "Which of the following is an example of 'Economic Integration' mentioned in the text?",
+                options: [
+                    "The sharing of beliefs and customs.",
+                    "The development of social media.",
+                    "The formation of international organizations for trade disputes.",
+                    "Global supply networks and multinational firms."
+                ],
+                answer: "Global supply networks and multinational firms.",
+                explanation: "Economic integration is exemplified by global supply networks, multinational firms, and international trade agreements."
             },
             {
-                question: "What is the key idea of Merleau-Ponty's perspective on the self?",
-                options: ["The self is a separate entity from the body.", "The self is an illusion.", "The self is deeply connected to God.", "The self is inseparable from the body and physical world."],
-                answer: "The self is inseparable from the body and physical world.",
-                explanation: "He emphasized that our sense of self is connected to our interactions with the environment rather than a separate entity. He rejected the idea of dualism."
+                question: "According to the provided text, what is a consequence of the 'Privatization and Commercialization' of education?",
+                options: [
+                    "It ensures that financial gain is not a priority.",
+                    "It leads to a reduction in for-profit schools.",
+                    "It can compromise education quality and equality.",
+                    "It focuses solely on learning objectives."
+                ],
+                answer: "It can compromise education quality and equality.",
+                explanation: "The text states that the rising privatization and commercialization of education can compromise education quality and equality by putting financial gain ahead of learning objectives."
             },
             {
-                question: "According to Immanuel Kant, what is the 'Outer Self'?",
-                options: ["Our emotions and rational intellect", "Our spiritual essence", "Our physical body and senses", "Our unconscious desires"],
-                answer: "Our physical body and senses",
-                explanation: "The Outer Self is our physical and senses."
+                question: "What does the text suggest is a key to solving the Philippines' national education crisis?",
+                options: [
+                    "A strategy that focuses on one single issue.",
+                    "A multifaceted strategy that tackles structural issues.",
+                    "A reduction in teacher training and support.",
+                    "Maintaining the outdated curriculum."
+                ],
+                answer: "A multifaceted strategy that tackles structural issues.",
+                explanation: "The crisis calls for a multifaceted strategy that tackles structural issues, such as those related to funding, curriculum, access, and teacher quality."
             },
             {
-                question: "Which of these is NOT a stage of the Looking-Glass Self by Cooley?",
-                options: ["Imagination", "Interpretation", "Self-feeling", "Role-taking"],
-                answer: "Role-taking",
-                explanation: "The three stages of the Looking-Glass Self are Imagination, Interpretation, and Self-feeling. Role-taking is a concept from Mead's theory."
+                question: "The handout describes which of the following as a benefit of globalization for education?",
+                options: [
+                    "Cultural Homogenization.",
+                    "Inequality.",
+                    "Human Capital Development.",
+                    "Digital Divide."
+                ],
+                answer: "Human Capital Development.",
+                explanation: "The document lists Human Capital Development as a benefit, stating that education helps people acquire the information, skills, and competencies to engage in the global economy."
             },
             {
-                question: "What concept did George Herbert Mead propose to explain how individuals learn to see themselves from the perspectives of others and adjust their behavior?",
-                options: ["Generalized others", "Significant others", "Role-taking", "Looking-Glass Self"],
-                answer: "Role-taking",
-                explanation: "Role-taking: Individuals learn to see themselves from the perspectives of others and adjust one's behavior accordingly."
+                question: "What is the purpose of 'Global Value Chains'?",
+                options: [
+                    "To promote free trade and exchange of goods.",
+                    "To increase efficiency and competitiveness by specializing in production tasks.",
+                    "To provide financial aid to other countries.",
+                    "To remove barriers to communication between countries."
+                ],
+                answer: "To increase efficiency and competitiveness by specializing in production tasks.",
+                explanation: "Global Value Chains allow businesses to specialize in specific tasks and components, increasing efficiency and competitiveness in the global marketplace."
             },
             {
-                question: "Which of the following is an example of the 'Play Stage' as described by Mead?",
-                options: ["A child playing baseball with defined positions.", "A child copying a parent's gestures.", "A child pretending to be a superhero.", "A child understanding the rules of a board game."],
-                answer: "A child pretending to be a superhero.",
-                explanation: "Play Stage (Taking on Roles) - Children pretend and still do not follow rules within organized games. A child pretending to be a superhero is an example of taking on a role."
+                question: "According to the provided text, what is a negative consequence of IFIs sometimes placing too many conditions on their loans?",
+                options: [
+                    "It helps countries recover from natural disasters.",
+                    "It can affect countries' policies and priorities.",
+                    "It helps build schools and hospitals.",
+                    "It ensures that loans are not paid back with interest."
+                ],
+                answer: "It can affect countries' policies and priorities.",
+                explanation: "The text states that some people believe IFIs sometimes place too many conditions on their loans, which can affect countries' policies and priorities."
             },
             {
-                question: "In Freud's theory, what part of the self serves as a mediator between the superego and the id?",
-                options: ["Consciousness", "Ego", "Unconscious", "Libido"],
-                answer: "Ego",
-                explanation: "The ego served as a mediator between the superego and the id."
+                question: "What is one of the main ethical considerations brought up by globalization in healthcare?",
+                options: [
+                    "The promotion of universal health coverage.",
+                    "The right to health and affordability.",
+                    "Increased access to medical technologies.",
+                    "The growth of health tourism."
+                ],
+                answer: "The right to health and affordability.",
+                explanation: "Ethical questions raised by globalization include social justice, human rights, and health fairness, such as affordability and the right to health."
             },
             {
-                question: "What is the core belief of St. Augustine regarding the self?",
-                options: ["The self is an illusion.", "The self is a product of brain activity.", "The self is a divine creation that finds fulfillment through God.", "The self is a blank slate at birth."],
-                answer: "The self is a divine creation that finds fulfillment through God.",
-                explanation: "He believed that the human soul longs for union with God, its ultimate source of fulfillment and happiness."
+                question: "Which of the following is listed as a benefit of globalization on healthcare?",
+                options: [
+                    "Health Inequalities.",
+                    "Health Tourism and Cross-Border Healthcare.",
+                    "Ethical Considerations.",
+                    "Global Health Governance."
+                ],
+                answer: "Health Tourism and Cross-Border Healthcare.",
+                explanation: "The document explicitly lists 'Health Tourism and Cross-Border Healthcare' as a benefit of globalization on healthcare."
             },
             {
-                question: "How did Aristotle's view of the self differ from Plato's?",
-                options: ["Aristotle believed the self was immortal and independent of the body, while Plato did not.", "Aristotle believed the self was a bundle of perceptions, while Plato did not.", "Aristotle believed the self was a unified creature, inseparable from the body, while Plato believed the self was immortal and independent of the body.", "Aristotle believed the self was a product of brain activity, while Plato did not."],
-                answer: "Aristotle believed the self was a unified creature, inseparable from the body, while Plato believed the self was immortal and independent of the body.",
-                explanation: "Aristotle argued that the self or the human person is a composite of body and soul and that the two are inseparable... Plato argued that the self is immortal and independent of the body."
+                question: "What does the document identify as a challenge to global health governance?",
+                options: [
+                    "The local character of infectious illnesses.",
+                    "The need for unilateral actions to solve health issues.",
+                    "The worldwide character of infectious illnesses and health risks.",
+                    "The complete elimination of antibiotic resistance."
+                ],
+                answer: "The worldwide character of infectious illnesses and health risks.",
+                explanation: "The necessity for efficient global health governance structures is highlighted by the worldwide character of infectious illnesses and health risks."
             },
             {
-                question: "According to Merleau-Ponty, what is the 'dance' in the provided example used to illustrate?",
-                options: ["The separation of mind and body.", "How the self is shaped by thoughts alone.", "The embodiment of identity through bodily experiences.", "The illusion of a physical self."],
-                answer: "The embodiment of identity through bodily experiences.",
-                explanation: "The dance becomes a way for them to embody and express their identity, showing how our sense of self is inseparable from our bodily experiences and interactions with the world."
+                question: "How does the document define 'Unilateralism' in the context of global governance?",
+                options: [
+                    "Shared responsibility among multiple actors.",
+                    "Actions by individual states that may undermine collective efforts.",
+                    "Collective efforts of states to address challenges.",
+                    "Promotion of cooperation and shared responsibility."
+                ],
+                answer: "Actions by individual states that may undermine collective efforts.",
+                explanation: "The text states that unilateral actions by individual states may undermine collective efforts in global governance initiatives."
             },
             {
-                question: "In the 'Game Stage' of Mead's theory, children begin to comprehend and follow the rules of games and form the concept of what?",
-                options: ["Significant others", "Looking-glass self", "Generalized others", "Social ego"],
-                answer: "Generalized others",
-                explanation: "Children start to comprehend and follow the rules of games, take on roles independently, and consider others' perspectives, forming the concept of 'generalized others.'"
+                question: "The provided text suggests that 'unequal access to education' is a challenge in the Philippines due to which of the following?",
+                options: [
+                    "An abundance of adequate infrastructure and transportation.",
+                    "High socioeconomic status for all.",
+                    "A lack of adequate infrastructure, transportation barriers, and socioeconomic factors.",
+                    "A lack of teacher shortages."
+                ],
+                answer: "A lack of adequate infrastructure, transportation barriers, and socioeconomic factors.",
+                explanation: "The text states that unfair access to educational opportunities arose due to a lack of adequate infrastructure, transportation barriers, and socioeconomic factors."
             },
             {
-                question: "What did Charles Horton Cooley's 'Looking-Glass Self' theory describe?",
-                options: ["How the self is a unified entity", "How the self is shaped by social interactions", "How the self is an illusion", "How the self is shaped by how we think others see us"],
-                answer: "How the self is shaped by how we think others see us",
-                explanation: "It describes how our self-image is shaped by how we think others see us."
+                question: "How does globalization affect income disparities, as per the handout?",
+                options: [
+                    "It alleviates income inequalities by favoring wealthier consumers.",
+                    "It can exacerbate income inequalities by favoring wealthier consumers and regions.",
+                    "It ensures equal access to goods and services for all.",
+                    "It eliminates all income disparities."
+                ],
+                answer: "It can exacerbate income inequalities by favoring wealthier consumers and regions.",
+                explanation: "The text says that while market integration can present opportunities for growth, it can also exacerbate income inequalities by favoring wealthier consumers and regions."
             },
             {
-                question: "What is the key idea of Merleau-Ponty's perspective on the self?",
-                options: ["The self is a separate entity from the body.", "The self is an illusion.", "The self is deeply connected to God.", "The self is inseparable from the body and physical world."],
-                answer: "The self is inseparable from the body and physical world.",
-                explanation: "He emphasized that our sense of self is connected to our interactions with the environment rather than a separate entity. He rejected the idea of dualism."
+                question: "What is the primary characteristic of the global economy, according to the document?",
+                options: [
+                    "It is a complex web of interactions where goods, services, and capital flow seamlessly across national boundaries.",
+                    "It is a system with strict barriers to international trade.",
+                    "It is a system that only benefits traditional productive activities.",
+                    "It is a system that works independently of other nations."
+                ],
+                answer: "It is a complex web of interactions where goods, services, and capital flow seamlessly across national boundaries.",
+                explanation: "The global economy is described as a complex web of interactions where goods, services, and capital flow seamlessly across national boundaries."
             },
             {
-                question: "According to Immanuel Kant, what is the 'Outer Self'?",
-                options: ["Our emotions and rational intellect", "Our spiritual essence", "Our physical body and senses", "Our unconscious desires"],
-                answer: "Our physical body and senses",
-                explanation: "The Outer Self is our physical and senses."
+                question: "What is a major challenge for education in multilingual cultures due to globalization?",
+                options: [
+                    "Promoting new languages.",
+                    "The marginalization of minority languages.",
+                    "The increase in language proficiency.",
+                    "The promotion of intercultural communication."
+                ],
+                answer: "The marginalization of minority languages.",
+                explanation: "The document states that in multilingual cultures, dominant languages like English can marginalize minority languages and cultures."
             },
             {
-                question: "Which of these is NOT a stage of the Looking-Glass Self by Cooley?",
-                options: ["Imagination", "Interpretation", "Self-feeling", "Role-taking"],
-                answer: "Role-taking",
-                explanation: "The three stages of the Looking-Glass Self are Imagination, Interpretation, and Self-feeling. Role-taking is a concept from Mead's theory."
+                question: "According to the provided text, what is one of the key recommendations to address the national education crisis in the Philippines?",
+                options: [
+                    "Reduce funding for education.",
+                    "Emphasize outdated curricula.",
+                    "Reform the curriculum to prioritize 21st-century skills.",
+                    "Limit access to education for underrepresented populations."
+                ],
+                answer: "Reform the curriculum to prioritize 21st-century skills.",
+                explanation: "The text recommends that the curriculum should be updated to reflect 21st-century skills, prioritize digital literacy, critical thinking, and creativity."
             },
             {
-                question: "What concept did George Herbert Mead propose to explain how individuals learn to see themselves from the perspectives of others and adjust their behavior?",
-                options: ["Generalized others", "Significant others", "Role-taking", "Looking-Glass Self"],
-                answer: "Role-taking",
-                explanation: "Role-taking: Individuals learn to see themselves from the perspectives of others and adjust one's behavior accordingly."
+                question: "According to the text, which of the following is a key element of globalization?",
+                options: [
+                    "A decrease in cross-border trade.",
+                    "Political interdependence.",
+                    "Barriers that hinder communication.",
+                    "A focus on regionalism over globalism."
+                ],
+                answer: "Political interdependence.",
+                explanation: "The document lists political interdependence as an important element of globalization."
             },
             {
-                question: "Which of the following is an example of the 'Play Stage' as described by Mead?",
-                options: ["A child playing baseball with defined positions.", "A child copying a parent's gestures.", "A child pretending to be a superhero.", "A child understanding the rules of a board game."],
-                answer: "A child pretending to be a superhero.",
-                explanation: "Play Stage (Taking on Roles) - Children pretend and still do not follow rules within organized games. A child pretending to be a superhero is an example of taking on a role."
+                question: "What is a main characteristic of 'Trade Liberalization' as a factor in the global economy?",
+                options: [
+                    "The imposition of tariffs and quotas.",
+                    "The removal or reduction of barriers to international trade.",
+                    "The international dispersion of production processes.",
+                    "The growing influence of financial markets."
+                ],
+                answer: "The removal or reduction of barriers to international trade.",
+                explanation: "Trade Liberalization refers to the removal (or reduction) of barriers to international trade, such as tariffs, quotas, and trade restrictions."
             },
             {
-                question: "In Freud's theory, what part of the self serves as a mediator between the superego and the id?",
-                options: ["Consciousness", "Ego", "Unconscious", "Libido"],
-                answer: "Ego",
-                explanation: "The ego served as a mediator between the superego and the id."
+                question: "The provided text indicates that 'Cultural Convergence and Divergence' impact market integration by doing what?",
+                options: [
+                    "Limiting consumer options.",
+                    "Leading to a single global culture.",
+                    "Shaping consumer preferences and behaviors.",
+                    "Reducing the demand for goods and services."
+                ],
+                answer: "Shaping consumer preferences and behaviors.",
+                explanation: "These two factors influence market integration by shaping consumer preferences and behaviors, impacting the demand for goods and services in global markets."
             },
             {
-                question: "What is the core belief of St. Augustine regarding the self?",
-                options: ["The self is an illusion.", "The self is a product of brain activity.", "The self is a divine creation that finds fulfillment through God.", "The self is a blank slate at birth."],
-                answer: "The self is a divine creation that finds fulfillment through God.",
-                explanation: "He believed that the human soul longs for union with God, its ultimate source of fulfillment and happiness."
+                question: "What is 'Financialization' primarily concerned with?",
+                options: [
+                    "The expansion of traditional productive activities.",
+                    "The growing influence of financial markets and financial motives.",
+                    "The distribution of goods and services.",
+                    "The removal of trade barriers."
+                ],
+                answer: "The growing influence of financial markets and financial motives.",
+                explanation: "Financialization refers to the growing influence of financial markets and financial motives in the operation of domestic and international economies."
             },
             {
-                question: "How did Aristotle's view of the self differ from Plato's?",
-                options: ["Aristotle believed the self was immortal and independent of the body, while Plato did not.", "Aristotle believed the self was a bundle of perceptions, while Plato did not.", "Aristotle believed the self was a unified creature, inseparable from the body, while Plato believed the self was immortal and independent of the body.", "Aristotle believed the self was a product of brain activity, while Plato did not."],
-                answer: "Aristotle believed the self was a unified creature, inseparable from the body, while Plato believed the self was immortal and independent of the body.",
-                explanation: "Aristotle argued that the self or the human person is a composite of body and soul and that the two are inseparable... Plato argued that the self is immortal and independent of the body."
+                question: "How does globalization affect income disparities, as per the handout?",
+                options: [
+                    "It alleviates income inequalities by favoring wealthier consumers.",
+                    "It can exacerbate income inequalities by favoring wealthier consumers and regions.",
+                    "It ensures equal access to goods and services for all.",
+                    "It eliminates all income disparities."
+                ],
+                answer: "It can exacerbate income inequalities by favoring wealthier consumers and regions.",
+                explanation: "The text says that while market integration can present opportunities for growth, it can also exacerbate income inequalities by favoring wealthier consumers and regions."
+            },
+            {
+                question: "What is the primary characteristic of the global economy, according to the document?",
+                options: [
+                    "It is a complex web of interactions where goods, services, and capital flow seamlessly across national boundaries.",
+                    "It is a system with strict barriers to international trade.",
+                    "It is a system that only benefits traditional productive activities.",
+                    "It is a system that works independently of other nations."
+                ],
+                answer: "It is a complex web of interactions where goods, services, and capital flow seamlessly across national boundaries.",
+                explanation: "The global economy is described as a complex web of interactions where goods, services, and capital flow seamlessly across national boundaries."
+            },
+            {
+                question: "What is a major challenge for education in multilingual cultures due to globalization?",
+                options: [
+                    "Promoting new languages.",
+                    "The marginalization of minority languages.",
+                    "The increase in language proficiency.",
+                    "The promotion of intercultural communication."
+                ],
+                answer: "The marginalization of minority languages.",
+                explanation: "The document states that in multilingual cultures, dominant languages like English can marginalize minority languages and cultures."
+            },
+            {
+                question: "According to the provided text, what is one of the key recommendations to address the national education crisis in the Philippines?",
+                options: [
+                    "Reduce funding for education.",
+                    "Emphasize outdated curricula.",
+                    "Reform the curriculum to prioritize 21st-century skills.",
+                    "Limit access to education for underrepresented populations."
+                ],
+                answer: "Reform the curriculum to prioritize 21st-century skills.",
+                explanation: "The text recommends that the curriculum should be updated to reflect 21st-century skills, prioritize digital literacy, critical thinking, and creativity."
+            },
+            {
+                question: "The handout mentions that `Contemporary Global Governance` is necessary because issues like climate change and pandemics do what?",
+                options: [
+                    "Are easy to solve with unilateral actions.",
+                    "Affect only individual nations.",
+                    "Are limited to specific geographic regions.",
+                    "Transcend national boundaries."
+                ],
+                answer: "Transcend national boundaries.",
+                explanation: "The text states that issues like climate change and pandemics transcend national boundaries, necessitating coordinated action."
+            },
+            {
+                question: "What is the term for the process where a person may effectively engage in the global economy by acquiring skills and competencies through education?",
+                options: [
+                    "Cultural Exchange.",
+                    "Human Capital Development.",
+                    "Skill Mismatch.",
+                    "Internationalization of Education."
+                ],
+                answer: "Human Capital Development.",
+                explanation: "Human Capital Development is described as a person acquiring information, skills, and competencies through education to effectively engage in the global economy."
+            },
+            {
+                question: "The handout mentions that the Philippine educational curriculum has been criticized for emphasizing what over critical thinking and creativity?",
+                options: [
+                    "Digital literacy.",
+                    "Skill mismatch.",
+                    "Memorization.",
+                    "International standards."
+                ],
+                answer: "Memorization.",
+                explanation: "The text states the present educational curriculum has come under fire for emphasizing memorization over critical thinking, creativity, and 21st-century abilities."
+            },
+            {
+                question: "What is a 'brain drain' as described in the text?",
+                options: [
+                    "A shortage of teachers in certain nations.",
+                    "The migration of highly educated people from their home countries.",
+                    "The loss of indigenous knowledge due to cultural homogenization.",
+                    "An increase in digital literacy training."
+                ],
+                answer: "The migration of highly educated people from their home countries.",
+                explanation: "The document describes a brain drain as the migration of talented professionals across borders, causing them to leave their home countries and worsening skill shortages."
+            },
+            {
+                question: "The concept of 'Multilateralism' in global governance is defined as promoting what?",
+                options: [
+                    "The dominance of a single state's interests.",
+                    "Cooperation and shared responsibility among multiple actors.",
+                    "Unilateral actions by individual states.",
+                    "National interests over collective efforts."
+                ],
+                answer: "Cooperation and shared responsibility among multiple actors.",
+                explanation: "Multilateral approaches promote cooperation and shared responsibility among multiple actors."
+            },
+            {
+                question: "Which of the following is NOT an example of an International Financial Institution (IFI) mentioned in the text?",
+                options: [
+                    "The World Bank (WB).",
+                    "The World Health Organization (WHO).",
+                    "The International Monetary Fund (IMF).",
+                    "The Asian Development Bank (ADB)."
+                ],
+                answer: "The World Health Organization (WHO).",
+                explanation: "The World Health Organization is listed as a reference, not an International Financial Institution. The others are explicitly mentioned as IFIs."
+            },
+            {
+                question: "What is the 'Responsibility to Protect' (R2P) concept concerned with, according to the document?",
+                options: [
+                    "Protecting states from foreign intervention.",
+                    "Addressing mass atrocities and protecting vulnerable populations.",
+                    "Establishing free trade agreements.",
+                    "Enforcing unilateral actions by states."
+                ],
+                answer: "Addressing mass atrocities and protecting vulnerable populations.",
+                explanation: "R2P shapes global governance by establishing norms for addressing mass atrocities and protecting vulnerable populations."
+            },
+            {
+                question: "What does the text suggest is a key to solving the Philippines' national education crisis?",
+                options: [
+                    "A strategy that focuses on one single issue.",
+                    "A multifaceted strategy that tackles structural issues.",
+                    "A reduction in teacher training and support.",
+                    "Maintaining the outdated curriculum."
+                ],
+                answer: "A multifaceted strategy that tackles structural issues.",
+                explanation: "The crisis calls for a multifaceted strategy that tackles structural issues, such as those related to funding, curriculum, access, and teacher quality."
+            },
+            {
+                question: "How does globalization affect income disparities, as per the handout?",
+                options: [
+                    "It alleviates income inequalities by favoring wealthier consumers.",
+                    "It can exacerbate income inequalities by favoring wealthier consumers and regions.",
+                    "It ensures equal access to goods and services for all.",
+                    "It eliminates all income disparities."
+                ],
+                answer: "It can exacerbate income inequalities by favoring wealthier consumers and regions.",
+                explanation: "The text says that while market integration can present opportunities for growth, it can also exacerbate income inequalities by favoring wealthier consumers and regions."
+            },
+            {
+                question: "What is the primary characteristic of the global economy, according to the document?",
+                options: [
+                    "It is a complex web of interactions where goods, services, and capital flow seamlessly across national boundaries.",
+                    "It is a system with strict barriers to international trade.",
+                    "It is a system that only benefits traditional productive activities.",
+                    "It is a system that works independently of other nations."
+                ],
+                answer: "It is a complex web of interactions where goods, services, and capital flow seamlessly across national boundaries.",
+                explanation: "The global economy is described as a complex web of interactions where goods, services, and capital flow seamlessly across national boundaries."
+            },
+            {
+                question: "What is a major challenge for education in multilingual cultures due to globalization?",
+                options: [
+                    "Promoting new languages.",
+                    "The marginalization of minority languages.",
+                    "The increase in language proficiency.",
+                    "The promotion of intercultural communication."
+                ],
+                answer: "The marginalization of minority languages.",
+                explanation: "The document states that in multilingual cultures, dominant languages like English can marginalize minority languages and cultures."
+            },
+            {
+                question: "According to the provided text, what is one of the key recommendations to address the national education crisis in the Philippines?",
+                options: [
+                    "Reduce funding for education.",
+                    "Emphasize outdated curricula.",
+                    "Reform the curriculum to prioritize 21st-century skills.",
+                    "Limit access to education for underrepresented populations."
+                ],
+                answer: "Reform the curriculum to prioritize 21st-century skills.",
+                explanation: "The text recommends that the curriculum should be updated to reflect 21st-century skills, prioritize digital literacy, critical thinking, and creativity."
+            },
+            {
+                question: "What is the primary driver of market integration?",
+                options: [
+                    "Physical borders and geographical constraints.",
+                    "Technological innovations such as the internet and digital platforms.",
+                    "A decrease in the flow of goods and services.",
+                    "A rise in tariffs and trade restrictions."
+                ],
+                answer: "Technological innovations such as the internet and digital platforms.",
+                explanation: "With the advent of technological innovations such as the internet and digital platforms, markets have become increasingly borderless, driving market integration."
             }
         ],
         identification: [
             {
-                question: "This philosopher is known for the philosophical maxim, 'Know thyself,' and believed true wisdom comes from introspection.",
-                answer: "Socrates",
-                explanation: "Socrates was an ancient Greek philosopher who emphasized the importance of self-knowledge. He mentioned the philosophical maxim, 'Know thyself.'"
+                question: "The term that refers to the worldwide interconnection and interdependence of nations, communities, and economies.",
+                answer: "Globalization",
+                explanation: "Globalization is defined as the worldwide interconnection and interdependence of nations, communities, and economies."
             },
             {
-                question: "This philosopher proposed the Tripartite Theory of the Soul, which includes reason, spirit, and appetite.",
-                answer: "Plato",
-                explanation: "Plato believed that the self comprises three parts: reason, spirit, and appetite. Plato's tripartite theory of the soul suggests that harmony among these parts leads to a virtuous life and a just society."
+                question: "The type of political system that constitutes the framework within which nation-states interact and negotiate their interests on the international stage.",
+                answer: "Global interstate system",
+                explanation: "The global interstate system constitutes the political framework within which nation-states interact."
             },
             {
-                question: "This philosopher argued that the self is a unified creature and a composite of body and soul, which are inseparable.",
-                answer: "Aristotle",
-                explanation: "Aristotle argued that the self or the human person is a composite of body and soul and that the two are inseparable. Indeed, for Aristotle, the self is a unified creature."
+                question: "The ideology based on the belief that the flow of people, goods, and information should move freely across borders.",
+                answer: "Globalism",
+                explanation: "Globalism is the ideology that the flow of people, goods, and information should move freely across borders."
             },
             {
-                question: "This philosopher is known for his famous declaration 'Cogito, ergo sum' ('I think, therefore I am').",
-                answer: "René Descartes",
-                explanation: "Descartes famously declared, 'Cogito, ergo sum' (I think, therefore I am), asserting that self-awareness is the only proof of existence."
+                question: "The collective efforts of states, international organizations, and non-state actors to address transnational challenges and promote cooperation on a global scale.",
+                answer: "Contemporary Global Governance",
+                explanation: "Contemporary global governance represents the collective efforts of states, international organizations, and non-state actors to address challenges on a global scale."
             },
             {
-                question: "This philosopher and physician proposed the 'Tabula rasa' theory, stating that the self is a blank slate shaped by memories and experience.",
-                answer: "John Locke",
-                explanation: "Locke was an English philosopher and physician who proposed a theory of the self based on consciousness and personal identity. He believed that people begin life as a Tabula rasa or a blank slate."
+                question: "This refers to the removal of barriers to international trade, such as tariffs and quotas, to promote free and open exchange of goods and services between countries.",
+                answer: "Trade Liberalization",
+                explanation: "Trade Liberalization is the removal of barriers to international trade to promote free and open exchange of goods and services."
             },
             {
-                question: "This philosopher is known for his 'Bundle Theory,' suggesting the self is merely a bundle of perceptions.",
-                answer: "David Hume",
-                explanation: "He proposed the Bundle Theory: the self is a bundle of perceptions, thoughts, and sensations."
+                question: "The international dispersion of production processes across different countries, where various stages of production are interconnected.",
+                answer: "Global Value Chains",
+                explanation: "Global Value Chains refer to the international dispersion of production processes across different countries."
             },
             {
-                question: "This British philosopher coined the phrase 'ghost in the machine' and argued that the self is demonstrated through our actions and behaviors.",
-                answer: "Gilbert Ryle",
-                explanation: "He coined the phrase 'ghost in the machine.' He argued that the self is shown through actions and behaviors."
+                question: "The growing influence of financial markets and financial motives in the operation of domestic and international economies.",
+                answer: "Financialization",
+                explanation: "Financialization refers to the growing influence of financial markets and financial motives."
             },
             {
-                question: "This Canadian philosopher studied neurophilosophy and argued that the self is a product of brain activity.",
-                answer: "Paul Churchland",
-                explanation: "Churchland is a Canadian philosopher known for his work in neurophilosophy. He proposed that the self is a product of brain activity."
+                question: "The term for a person acquiring the information, skills, and competencies to effectively engage in the global economy through education.",
+                answer: "Human Capital Development",
+                explanation: "Human Capital Development is the process by which a person acquires the necessary skills and competencies through education to effectively engage in the global economy."
             },
             {
-                question: "This French philosopher rejected dualism and argued that the self is shaped by our physical body and senses.",
-                answer: "Maurice Merleau-Ponty",
-                explanation: "For him, the self is shaped by our physical body and how we experience the world through our senses."
+                question: "The challenge in education where prevailing global standards may eclipse local identities and cultures, potentially leading to a loss of indigenous knowledge.",
+                answer: "Cultural Homogenization",
+                explanation: "Cultural Homogenization is the term used to describe the challenge where global standards can eclipse local cultures, leading to a loss of indigenous knowledge."
             },
             {
-                question: "This sociologist is the creator of the 'Looking-Glass Self' theory.",
-                answer: "Charles Horton Cooley",
-                explanation: "Charles Horton Cooley (1864-1929) was an American sociologist known for his theory, 'Looking-Glass Self,' which describes how our self-image is shaped by how we think others see us."
+                question: "An institution established by more than one host country to provide financial aid to other countries in need of monetary support.",
+                answer: "International Financial Institution (IFI)",
+                explanation: "IFIs are institutions established by more than one host country to provide financial aid to others."
             },
             {
-                question: "This philosopher and sociologist developed the Social Self Theory, which emphasizes that personal identity is formed through social interaction and cultural norms.",
-                answer: "George Herbert Mead",
-                explanation: "George Herbert Mead... developed the Social Self Theory, which asserts that personal identity is formed through social interaction and cultural expectations."
+                question: "The term for the migration of highly educated people from their home countries, which can worsen skill shortages.",
+                answer: "Brain Drain",
+                explanation: "Brain drain is the phenomenon of highly educated people leaving their home countries, which can worsen skill shortages."
             },
             {
-                question: "This is the spontaneous aspect of the self in Mead's theory, the part that acts without considering social consequences.",
-                answer: "I",
-                explanation: "The 'I' is the spontaneous aspect of the self. It is the part that acts without considering social consequences."
+                question: "The concept that establishes norms for addressing mass atrocities and protecting vulnerable populations.",
+                answer: "Responsibility to Protect (R2P)",
+                explanation: "R2P shapes global governance by establishing norms for addressing mass atrocities and protecting vulnerable populations."
             },
             {
-                question: "In Mead's theory, this is the socialized aspect of the self, acting based on how others expect one to behave.",
-                answer: "Me",
-                explanation: "The 'Me' is a socialized aspect shaped by social expectations and norms. It is the self that acts based on how others expect one to behave."
+                question: "A political, economic, and cultural cooperation between nations to handle issues such as keeping peace, protecting the environment, or helping poor countries.",
+                answer: "Internationalism",
+                explanation: "Internationalism is defined as a political, economic, and cultural cooperation between nations."
             },
             {
-                question: "This is the first stage of Mead's self-development, where children copy others without understanding their actions.",
-                answer: "Preparatory Stage",
-                explanation: "Preparatory Stage (Imitation) - The preparatory stage starts from birth to age two (2). Within this stage, children copy others but don't understand their actions, words, or tone of voice."
+                question: "The challenge in the Philippine education system where the curriculum has been criticized for emphasizing memorization over critical thinking and creativity.",
+                answer: "Outdated Curricula",
+                explanation: "Outdated curricula are a challenge because they emphasize memorization over critical thinking and creativity."
             },
             {
-                question: "The second stage of Mead's self-development, where children pretend and take on roles but don't follow rules of organized games.",
-                answer: "Play Stage",
-                explanation: "Play Stage (Taking on Roles) - Children pretend and still do not follow rules within organized games."
+                question: "The challenge in education that results from a gap between the skills taught in schools and the skills demanded by the labor market.",
+                answer: "Skill Mismatch",
+                explanation: "Skill Mismatch is a discrepancy between the skills taught in schools and the skills that businesses want."
             },
             {
-                question: "The third stage of Mead's self-development, where children begin to understand and follow the rules of games and comprehend multiple roles.",
-                answer: "Game Stage",
-                explanation: "Game Stage (Understanding Multiple Roles) - The game stage typically begins at age seven (7). Children start to comprehend and follow the rules of games, take on roles independently, and consider others' perspectives."
+                question: "This term describes a complex web of interactions where goods, services, and capital flow seamlessly across national boundaries.",
+                answer: "Global Economy",
+                explanation: "The global economy is described as a complex web of interactions where goods, services, and capital flow seamlessly across national boundaries."
             },
             {
-                question: "A concept by Mead that represents society's collective norms and expectations that individuals internalize.",
-                answer: "Generalized Others",
-                explanation: "The Generalized Others represents society's collective norms and expectations individuals internalize."
+                question: "This concept facilitates the diffusion of economic activities and fosters interconnectedness among consumers, producers, and investors worldwide.",
+                answer: "Market Integration",
+                explanation: "Market Integration is the concept that facilitates the diffusion of economic activities and fosters interconnectedness among consumers, producers, and investors worldwide."
             },
             {
-                question: "In Mead's theory, these are individuals who have a direct influence on a person, such as parents or siblings.",
-                answer: "Significant Others",
-                explanation: "The Significant Others have direct influence on the person (e.g., parents, siblings, friends, etc.)"
+                question: "Resources like the atmosphere, oceans, and outer space that require collective action among nations to preserve.",
+                answer: "Global Commons",
+                explanation: "Global Commons are shared resources that require collective action among nations to preserve."
             },
             {
-                question: "This philosopher and theologian viewed the self as deeply intertwined with God.",
-                answer: "Augustine",
-                explanation: "Augustine of Hippo was a theologian and philosopher who viewed the self as deeply intertwined with God. He believed that the human soul longs for union with God, its ultimate source of fulfillment and happiness."
+                question: "The term that describes actions by individual states that may undermine collective efforts to address global challenges.",
+                answer: "Unilateralism",
+                explanation: "The text defines unilateralism as actions by individual states that may undermine collective efforts in global governance."
             },
             {
-                question: "The third stage of Cooley's Looking-Glass Self, where we form an understanding of ourselves based on our perceptions.",
-                answer: "Self-feeling",
-                explanation: "Self-feeling: We develop our self-concept - Based on these perceptions, we form an understanding of ourselves."
-            },
-            {
-                question: "The first stage of Cooley's Looking-Glass Self, where we envision how others might view our actions.",
-                answer: "Imagination",
-                explanation: "Imagination: We imagine how we appear to others - We envision how others might view our actions and behaviors."
-            },
-            {
-                question: "The second stage of Cooley's Looking-Glass Self, where we consider the reactions and judgments of others towards our behaviors.",
-                answer: "Interpretation",
-                explanation: "Interpretation: We imagine how others judge us - We consider the reactions and judgments of others towards our behaviors."
+                question: "The process where educational approaches and curricula from one culture are adopted by others, which is considered a benefit of globalization.",
+                answer: "Internationalization of Education",
+                explanation: "The internationalization of education is a benefit of globalization, as it promotes cross-cultural dialogue and collaboration."
             }
         ]
     };
+    //
+    // --- END OF QUIZ DATA ---
+    //
 
     let currentQuestionIndex = 0;
     let score = 0;
@@ -759,18 +1165,22 @@
     });
 
     function showQuestion() {
+        if (totalQuestions === 0) {
+            quizArea.innerHTML = "<h2>No questions found! Please add questions to the quizData object.</h2>";
+            return;
+        }
+        
         answered = false;
         optionsContainer.style.display = 'flex';
         identificationContainer.style.display = 'none';
         identificationInput.value = '';
-        submitButton.style.display = 'block';
-        submitButton.disabled = false;
         feedbackSection.style.display = 'none';
         feedbackSection.classList.remove('correct', 'incorrect');
         
         let currentQuizData;
         if (currentQuestionIndex < quizData.multipleChoice.length) {
             isIdentificationSection = false;
+            submitButton.style.display = 'none'; // Hide submit button for MCQs
             currentQuizData = quizData.multipleChoice[currentQuestionIndex];
             optionsContainer.innerHTML = '';
             currentQuizData.options.forEach(option => {
@@ -783,10 +1193,10 @@
             progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. The identification questions will begin after question ${quizData.multipleChoice.length}.`;
         } else {
             isIdentificationSection = true;
+            submitButton.style.display = 'block'; // Show submit button for identification questions
             currentQuizData = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
             optionsContainer.style.display = 'none';
             identificationContainer.style.display = 'block';
-            submitButton.disabled = false;
             progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. You are now in the identification questions section.`;
         }
         
@@ -797,7 +1207,6 @@
     function selectOption(selectedButton, selectedAnswer) {
         if (answered) return;
         answered = true;
-        submitButton.disabled = true;
 
         const currentQuestion = quizData.multipleChoice[currentQuestionIndex];
         const isCorrect = selectedAnswer === currentQuestion.answer;
@@ -836,7 +1245,6 @@
 
     submitButton.onclick = () => {
         if (!isIdentificationSection) {
-            // This button is only for ID questions. MCQs use selectOption.
             return;
         }
 
@@ -845,10 +1253,10 @@
         submitButton.disabled = true;
 
         const currentQuestion = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
-        const userAnswer = identificationInput.value.trim().toLowerCase();
-        const correctAnswer = currentQuestion.answer.toLowerCase();
+        const userAnswer = identificationInput.value.trim();
+        const correctAnswer = currentQuestion.answer.trim();
 
-        const isCorrect = userAnswer === correctAnswer;
+        const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
         
         if (isCorrect) {
             score++;
@@ -857,7 +1265,7 @@
         } else {
             feedbackText.textContent = `Incorrect. The correct answer was: ${currentQuestion.answer}`;
             feedbackSection.classList.add('incorrect');
-            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: identificationInput.value.trim(), type: 'identification' });
+            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: userAnswer, type: 'identification' });
         }
         explanationText.textContent = currentQuestion.explanation;
         feedbackSection.style.display = 'block';
