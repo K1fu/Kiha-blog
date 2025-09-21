@@ -1,0 +1,1830 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Programming Quiz</title>
+    <style>
+        :root {
+            --primary-color: #005A9C;
+            --secondary-color: #FFC72C;
+            --background-color: #F4F7F6;
+            --card-background: #FFFFFF;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+            --text-color: #333;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSytemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-background);
+            padding: 24px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .question-section, .identification-section {
+            margin-bottom: 30px;
+        }
+        
+        .question-card {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .question-card h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: var(--text-color);
+            text-align: left;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options-list li {
+            margin-bottom: 8px;
+        }
+
+        .option-button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--card-background);
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-size: 1em;
+        }
+
+        .option-button:hover {
+            background-color: #f0f0f0;
+            border-color: var(--primary-color);
+        }
+
+        .option-button.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+
+        .option-button.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+            border-color: var(--incorrect-color);
+        }
+        
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            display: none;
+            font-style: italic;
+        }
+
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        .identification-input {
+            width: calc(100% - 24px);
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            margin-top: 10px;
+        }
+        
+        .submit-btn, .action-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: white;
+            background-color: var(--primary-color);
+        }
+        
+        .submit-btn:hover, .action-btn:hover {
+            background-color: #00467c;
+        }
+        
+        .id-item {
+            margin-bottom: 20px;
+        }
+        
+        .id-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .quiz-results {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #eee;
+        }
+
+        .wrong-answers-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .wrong-answers-list li {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff8f8;
+            border: 1px solid var(--incorrect-color);
+            border-radius: var(--border-radius);
+        }
+
+        .wrong-answers-list strong {
+            color: var(--incorrect-color);
+        }
+        
+        .quote-block {
+            background-color: #eef;
+            padding: 15px;
+            border-left: 4px solid var(--secondary-color);
+            margin-top: 15px;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .start-screen, .end-screen {
+            text-align: center;
+        }
+        
+        .start-screen p {
+            font-size: 1.1em;
+        }
+
+        .score-display {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        #quiz-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .history-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .history-list li {
+            background-color: #f0f4f7;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div id="start-screen" class="start-screen">
+        <h1>Java Programming Quiz</h1>
+        <p>Test your knowledge on Java data types, operators, and expressions based on the provided handouts.</p>
+        <button id="start-quiz-btn" class="action-btn">Start Quiz</button>
+        <div id="history-section" style="margin-top: 30px;">
+            <h2>Your Previous Scores</h2>
+            <ul id="score-history" class="history-list">
+                <p>No previous scores found.</p>
+            </ul>
+            <button id="clear-history-btn" class="action-btn" style="background-color: #dc3545; display: none;">Clear History</button>
+        </div>
+    </div>
+
+    <div id="quiz-content" style="display: none;">
+        <div id="mcq-section" class="question-section">
+            <h2>Multiple-Choice Questions</h2>
+            </div>
+
+        <div id="id-section" class="identification-section">
+            <h2>Identification</h2>
+            <div id="id-questions-container">
+                </div>
+            <button id="add-id-btn" class="action-btn">Add Another Question</button>
+        </div>
+
+        <button id="submit-all-btn" class="submit-btn">Submit All Questions</button>
+    </div>
+
+    <div id="end-screen" class="end-screen" style="display: none;">
+        <h2>Quiz Complete!</h2>
+        <div class="score-display" id="final-score"></div>
+        <div id="wrong-answers">
+            <h3>Things to Review:</h3>
+            <ul id="wrong-answers-list" class="wrong-answers-list"></ul>
+        </div>
+        <div id="quiz-actions">
+            <button id="restart-quiz-btn" class="action-btn">Restart Quiz</button>
+            <button id="back-to-start-btn" class="action-btn">Back to Start</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const sources = [
+        `STI
+IT2402
+Data Types
+Data encoded to a program is stored in memory and can have and be in several types-for example, using a
+ person's basic information such as name, age, and address.
+The name will be stored as characters, the age
+ will be stored as a numeric value, and the address will be stored as an alphanumeric value.
+Data Types describe possible operations on the data and the storage method.
+The data types in Java are
+ classified into two (2): primitive or standard data types and abstract or derived data types.
+Primitive Data Types (Agarwal & Bansal, 2023)
+Primitive Data Types are built into the Java language. These are data that are not objects and have no
+ methods.
+The Java compiler has detailed instructions on the valid operations this data type supports.
+Here are the eight (8) Primitive types that Java defines.
+
+The following table:
+"Data Type
+","Description
+","Size
+","Default Value
+","Range
+"
+"Byte
+","Byte Length Integer
+","8 bit
+","0
+","-128 to +127 signed
+"
+"Short
+","Short Integer
+","16 bit
+","0
+","-32768 to +32767
+"
+"Int
+","Integer (number)
+","32 bit
+","0
+","-2,147,483,648 to 2,147,484
+"
+"Long
+","Long Integer
+","64 bit
+","OL
+","$-2^{63}$ to $2^{63-1}$
+"
+"Float
+","Single Precision Floating Point
+","32 bit
+","0.0f
+","+1-about $10^{39}$
+"
+"Double
+","Double-Precision Floating Point
+","64 bit
+","0.0d
+","1-about 10317
+"
+"Char
+","A simple character
+","8 bit
+","\\u0000
+","0 to 65535
+"
+"Boolean
+","A Boolean (true or false)
+","1 bit
+","false
+",
+
+Table 1. Data types
+Integer Types
+Java defines Byte, Short, Int, and Long as Integer data types.
+Since Java does not support unsigned integers,
+ these four (4) are signed, positive, and negative values.
+Java does not support unsigned integers as these are
+ mostly used to specify the behaviors of the high-order-bit.
+High-order bit defines the sign of an integer
+ value, and Java manages it differently by adding a special "unsigned right shift" operation.
+a. Byte: The smallest integer type that represents a small number.
+It is used to declare a variable
+ holding a natural number between -128 and 127. Byte variables are declared by use of the byte
+ keyword.
+Syntax: byte b;
+b. Short: An integer is considered Short if its value is between -32768 and 32767. Short data types
+ declare a variable that can hold numbers in that range.
+Syntax: short a;
+For example:
+public class ShortSample {
+public static void main(String[] args) {
+short total_stu = 1192;
+System.out.println("The total number of students are + total_stu);
+}
+}
+A hexadecimal number can also be initialized as a Short variable instead of a normal decimal integer.
+So, the 3001 integer can be written as 0x4A8. Ox is used in Java to represent hexadecimal.
+03 Handout 1
+student.feedback@sti.edu
+*Property of STI
+ Page 1 of 6
+
+--- PAGE 2 ---
+
+ASTI
+IT2402
+c. Int: This data type can handle larger numbers and is considered the best choice when an integer is
+ needed because when Byte and Short values are used in an expression, they are promoted to Int
+ automatically.
+For example:
+public class IntSample {
+public static void main(String[] args) {
+int days =279;
+System.out.println("The days are " + days);
+}
+}
+d. Long: This data type holds a number higher than a regular integer.
+The Long integer is a variable that
+ can hold a very large number.
+A capital letter 'L' is placed right after the value.
+For example:
+public class LongSample {
+public static void main(String[] args) {
+long distance = 84564L;
+ System.out.println("The distance is " + distance);
+}
+}
+Floating Point Types
+d are
+ used
+OF
+wh
+STI
+Floating points are also called "real numbers", and are used when evaluating an expression that needs
+ fractional accuracy such as the computation of square root or a transcendental (sine and cosine).
+Float and
+ Double are both floating-point types.
+square root ori
+a. Float is described as a single precision floating point.
+A real number qualifies as a single precession
+ when it only needs a limited number of bits.
+Single precision takes half the space of a double
+ he space of a
+ precision and is much faster on some processors.
+Floats are used to represent dollars and cents, so a small letter 'f' is placed to the right of the value
+ when initializing the variable.
+For example:
+public class FloatSample {
+public static void main(String[ args) {
+float pi=3.14f;
+System.out.println("The value of pi is "The value
++ pi);
+}
+}
+b. Double: Double precision can be faster than single precision on modern processors that have been
+ optimized for high-speed mathematical calculations.
+It can handle larger numbers than Float.
+For example:
+public class DoubleSample {
+public static void main(String[] args) {
+double pi=3.141590; // a d/D suffix is optional.
+ System.out.println(pi);
+}
+}
+03 Handout 1
+student.feedback@sti.edu
+*Property of STI
+ Page 2 of 6
+
+--- PAGE 3 ---
+
+public class CharUnicode{
+ public static void main(String a[]) {
+  char gender = 'f';
+  System.out.println("Gender is " + gender);
+ }
+}
+
+
+ASTI
+Character Types
+IT2402
+Character types can be divided into two (2): (a) A Byte for a character (ASCII) and (b) a type in itself
+ (Unicode).
+a. A character is recognized by its ASCII (American Standard Code for Information Interchange - a code
+ that assigns numbers to letters, digits, etc.) number.
+It allows Byte data types to be used to declare a
+ variable that would hold a single character to initialize such variable or assign a single quoted
+ character.
+For example:
+public class CharByte {
+public static void main(String  arg) {
+ byte Gender = 'F';
+System.out.println("Gender is " + Gender);
+}
+}
+b. To support characters that are not traditionally used in (US) English and do not work with compilers,
+ the Unicode character format was created which includes Latin-based and non-Latin-based
+ languages.
+The Char data type was created to support Unicode characters in Java.
+To initialize, assign the character variable in single quotes.
+For example:
+public class CharUnicode{
+public static void main(String a[]) {
+ char gender ='f';
+System.out.println("Gender is " + gender);
+}
+}
+Boolean
+This data type is used for logical values and can only hold true or false values.
+It is a type returned by all
+ relational operators such as =,> and <.
+For example:
+public class BoolSample{
+public static void main(String[] args) {
+boolean b;
+b= false;
+System.out.println("b is " + b);
+b= true;
+System.out.println("b is " + b);
+}
+}
+Abstract Data Types
+These are based on primitive data types but with more functionality.
+For example, String is an abstract data
+ type that can store letters, digits, and other characters such as a slash (/), comma (,), parentheses (()), semi-
+ colon (;), dollar sign ($), and a hashtag (#).
+Performing calculations on a variable of the string data type is not allowed, even if the data stored in it has
+ digits.
+String, however, provides methods for linking two (2) strings, searching for one string within another,
+ and extracting a portion of a string.
+03 Handout 1
+student.feedback@sti.edu
+*Property of STI
+ Page 3 of 6
+
+--- PAGE 4 ---
+
+ASTI
+Constants and Variables (Agarwal & Bansal, 2023)
+IT2402
+Java uses constants and variables for storing and manipulating data in a program.
+The values of variables can
+ be changed in a program, but the value of constants, cannot.
+Unique names must be assigned to variables and constants. If the name "digit" refers to an area in memory
+ where a numeric value is stored, then "digit" is a variable.
+A variable is defined by the combination of an
+ identifier, a type, and an optional initialization depending on the task to be performed.
+Regardless of the data type, each variable used in a program must be declared.
+The "digit" variable must be
+ declared with an Int data type since it refers to a memory storing an integer value.
+Variable Naming Conventions
+Just like identifiers, naming variables must follow specific rules and conventions.
+The program will not
+ compile if the programming language rules are not followed.
+In general, here are the rules for naming variables.
+•
+The name of a variable must be meaningful, short, and without any embedded space or symbol like
+ $?,$ !, @, #, %, ^, &, (), [, ], {, },., 1, "c/, and \. However, underscores (_) can be used wherever a space
+ is required. For example, monthly_Salary.
+Variable names must be unique. For example, to store five (5) different numbers, five (5) unique
+ variable names need to be used for each.
+A variable name must begin with a letter, a dollar sign, or an underscore, which may be followed by
+ a sequence of letters (any case) or digits (0-9), '\$', or an underscore.
+Keywords cannot be used for variable names. For example, a variable called "switch" cannot be
+ declared.
+For Java, here are the variable naming conventions.
+ Variable names should be meaningful.
+•
+The names must reflect the data that the variables contain.
+To store the gender of an employee, the
+ variable name could be emp_gender.
+Variable names are nouns and must begin with a lowercase letter.
+If a variable name contains two or more words, begin each word with an uppercase letter.
+However,
+ the first word will start with a lowercase letter.
+Here are some examples of valid and invalid variable names:
+
+Valid: address, student_age, emp_name
+Invalid: # phone, 1st Name.
+Declaring and Initializing a
+Name
+ariable es
+As mentioned, all variables in Java must be declared first before they can be used.
+The basic format of a
+ variable declaration is as follows:
+Type identifier [= value]  , identier] [= value); // The brackets are optional.
+The type refers to the data type. The identifier is the name of the variable.
+Using an equal sign allows
+ assigning a value to a variable.
+To declare more than one (1) variable of the same data type, a comma (,)
+ separated list is used.
+By following this format, examples include int a, b, c; int d=7; byte z=22;
+03 Handout 1
+student.feedback@sti.edu
+*Property of STI
+ Page 4 of 6
+
+--- PAGE 5 ---
+
+ASTI
+IT2402
+Variables cannot also be used without initializing them. Java assigns a default value to the primitive data
+ types class variables when creating an object or a class.
+The following displays the default initial values that are used to initialize the data members of a class.
+
+The following table:
+"Data Type
+","Default Initial Value
+"
+"Byte
+","0
+"
+"Short
+","0
+"
+"Int
+","0
+"
+"Long
+","OL
+"
+"Float
+","0.0
+"
+"Double
+","0.0
+"
+"Char
+","'u0000'
+"
+"Boolean
+","false
+"
+"Abstract Data Type
+","Null
+"
+
+O is replaced by the actual value to be used.
+The values are only automatically assigned to the data members
+ of a class that are of the primitive data types.
+Java returns an error if the variable declared in a method is not
+ initialized.
+Literals
+In Java, variables can be assigned with constant values. The constant values to be assigned must have the
+ data type of the variable.
+Literals are the values that may be assigned to primitive- or string-type variables
+ and constants, such as in the following:
+1. Boolean literals are true or false and cannot use numbers to represent them.
+2. Integer literals are numeric data that can be represented as octal, hexadecimal, and binary literals.
+Octal is the number with a zero prefixed. Hexadecimal is the number prefixed with Ox.
+Binary Literal
+ is the number that starts with OB or Ob.
+An underscore (_) can be used to improve the readability of
+ the numeric data.
+For example:
+int six=6;
+int x=8xfff
+int
+b1=0_100101
+// Octal Literal
+// Hexadecilmal Literal
+// Binary Literal
+int b2=0b01010101; // Binary literal
+A reminder that an underscore (_) at the start and end of a literal is not allowed, such as:
+int i=_1_00_000; //illegal, begin with ""
+int j=2_00_4201_; //illegal, end with ""
+3. Floating-point literals are numbers that have a decimal fraction. A suffix letter F (lower or
+ uppercase) to the number;
+otherwise, the compiler will flag about loss of precision.
+float f=42.642658
+//compiler error, possible loss of precision
+float g=6437.2395065F //valid, has the suffix "F"
+4. Character literals must also be enclosed in single quotes (','). The Unicode value of the character is
+ also allowed.
+char varN= '\\u004E'; // The Letter N
+03 Handout 1
+student.feedback@sti.edu
+*Property of STI
+ Page 5 of 6
+
+--- PAGE 6 ---
+
+STI
+A backslash (\\) can also be used to represent a character that can be typed in as a literal, such as:
+char c="1";
+// A double quote
+char d='\\n';
+// A newline
+char e='\\t';
+// A tab
+IT2402
+5. On the other hand, string literals are enclosed in double quotes (","). Strings are included as literal
+as they can still be typed directly into the code, even though it is not a primitive type.
+String s="All emotions are valid";
+PROPERTY OF S
+PROPERTY OF STI
+PROPERTY OF STI
+References:
+Agarwal, S. & Bansal, H. (2023). Java in depth. BPB Publications.
+ DG Junior (2023).
+Basics of programming: A comprehensive guide for beginners. DG Junior.
+03 Handout 1
+student.feedback@sti.edu
+*Property of STI
+ Page 6 of 6`,
+        `STI
+IT2402
+Operators and Expressions
+Operators (Agarwal & Bansal, 2023)
+Operators are symbols used to compute and compare values and test multiple conditions. Java supports
+ several categories of operators.
+Arithmetic Operators
+All mathematical operations are performed using operators in this category. An operand is the value to be
+ computed.
+
+The following table:
+"Name
+","Operator
+","Description
+","Example
+"
+"Addition
+","+
+","Adds an operand
+","$x=y+z$
+"
+"Subtraction
+",,"Substracts the right operand from the left operand
+","$x=y-z$
+"
+"Multiplication
+","*
+","Multiples the operands
+","$x=y*3$
+"
+"Division
+","/
+","Divides the left operand by the right operance
+","$x=y/z$
+"
+"Modulus
+","%
+","Calculates the remainder of an integer division
+","$x=y%z$
+"
+
+The + Operator with Numeric Data Types
+Table 1. Arithmetic operators.
+Adding operands of the primitive numeric data type results in a primitive numeric data type.
+Byte var1 = 50;
+Byte var2=120;
+Byte var3 = var1+var2;
+var3 results to 170. Since the byte data type can hold a range of -128
+ to +127, Java automatically converts any calculations of numeric data
+ results to the int data type.
+The + Operator with the String Data Type
+If both operands are strings, the + operator joins them to display as a single output.
+If one of the operands is
+ a string object, the second operand is converted into a string before joining them.
+For example, Result = operand1 + operand2
+
+The following table:
+"operand1
+","operand2
+","Result
+"
+"7
+","3
+","10
+"
+"2
+","""abc""
+","2abc
+"
+"""abc""
+","""xyz""
+","""abcxyz""
+"
+
+Table 2. Operands for string data type.
+Assignment Operators
+An assignment operator assigns the specific value, variable, and/or functions to another variable.
+
+The following table:
+"Name
+","Operator
+","Description
+","Example
+"
+"Assignment
+","=
+","Assigns the value of the right operand to the left
+ operand
+","$x=y$
+"
+"Add and Assignment
+","+=
+","Adds the operands and assigns the result to the left
+ operand
+","$x+=y$
+"
+"Subtract and Assignment
+","-=
+","Subtracts the right operand from the left operand
+ and store the result in the left operand
+","$x-=y$
+"
+"Multiple and Assignment
+","*
+-
+","Multiplies the operand by the right operand and
+ stores the result in the left operand
+","$x*=z$
+"
+"Divide and Assignment
+","/=
+","Divides the left operand by the right operand and
+ stores the result in the left operand
+","$x/=z$
+"
+
+04 Handout 1
+student.feedback@sti.edu
+*Property of STI
+Page 1 of 5
+
+--- PAGE 2 ---
+
+STI
+Modulus and
+Assignment
+IT2402
+%=
+Divides the left operand by the right operand and
+ stores the remainder in the left operand
+ Table 3. Assignment operators.
+x%=z
+The operator used in x operator y can be represented as x=x operator y.
+Thus, x+=y is equivalent to x=x
+ +=y. It applies to every operator above.
+Assigning values to more than one (1) variable at the same time is also allowed, such as x=y=0;
+Unary Operators
+Compared to previous operators, this operator requires only one operand.
+
+The following table:
+"Name
+","Operator
+","Description
+","Example
+"
+"Unary Plus
+","+
+","Represents the positive value
+","+a
+"
+"Unary Minus
+",,"Represents the negative value
+","-a
+"
+"Increment
+","++
+","Increases the value of the operand by 1
+","$x++$
+"
+"Decrement
+",,"Decreases the value of the operand by 1
+","$x--$
+"
+"Logical Complement
+",,"Inverts the value of a Boolean variable
+","! true
+"
+
+Table 4. Unary operators.
+The increment/decrement operator can be used in two (2) ways:
+As a prefix or pre-increment/decrement wherein it precedes the variable: ++invar;
+As a suffix or post-increment/decrement wherein it follows the variable: invar--;
+For pre-increment: Suppose x=7 then the value of ++x will be 8.
+For post-decrement: Suppose x=12, then the value of x- - will be 11.
+Comparison Operators
+All mathematical operations involving comparison between values are performed using comparison
+ operators. It is also often called a relational operators.
+
+The following table:
+"Name
+","Operator
+
+
+Description
+","Example
+"
+"Equal to
+","Evaluates whether the operands are equal
+
+
+==
+","$x==y$
+"
+"Not Equal to
+","Evaluates whether the operands are not equal
+
+
+!=
+","$x!=y$
+"
+"Greater Than
+","Evaluates whether the left operand is greater than the
+ right operand
+
+
+>
+","$x>y$
+"
+"Less Than
+","Evaluates whether the left operand is less than
+ operand
+
+
+the right
+
+
+<
+","$x<y$
+"
+"Greater Than or
+ Equal to
+","Evaluates whether the left operand is greater than or
+ equal to the right operand
+
+
+>=
+","$x>=y$
+"
+"Less Than or Equal
+","Evaluates whether the left operand is less than or equal
+ <=
+
+
+"
+"to
+","to the right operand
+","$x<=y$
+"
+
+Table 5. Comparison operators
+Shift Operators
+These operators work on bits of data. It involves moving the bit pattern to the left or right. These operators
+can only be used with integer data types.
+
+The following table:
+"Name
+","Operator
+","Description
+","Example
+"
+"Right Shift
+",">>
+","The bits of the left operand are shifted right by the
+ number specified as the value for the second operand.
+","$x=9>>2$
+"
+
+04 Handout 1
+student.feedback@sti.edu
+*Property of STI
+ Page 2 of 5
+
+--- PAGE 3 ---
+
+STI
+IT2402
+
+The following table:
+"Left Shift
+","<<
+","Shifts bits to the left, filling zeros at the right.
+","$x=9<<2$
+"
+"Right Unsigned
+ Shift
+",">>>
+","Works the same as the right shift, but 0 is used and
+ replaces the bits that are shifted.
+","$x=-10>>>3$
+"
+
+Table 6. Shift operators.
+Zeros (0) are used as fillings when shifting in whichever direction.
+Shifting Positive Numbers
+CTI
+The int data type occupies four (4) bytes in the memory. The rightmost eight bits of the number 9 are
+represented in binary as:
+0
+0
+0
+0
+1
+0
+0
+For the right shift, the bits of the left operand are shifted right. Using x=9>>2, the result becomes 2:
+0
+0
+0
+0
+0
+0
+1
+For the left shift, the bits of the left operand are shifted left. Using x=9<<2 the result becomes 40:
+1
+0
+0
+0
+Bitwise Operators
+1
+0
+1
+0
+0
+0
+Compared to previous operators, bitwise operators perform operations bit-by-bit. These operators can be
+ applied to byte, int, short, long, and char data types.
+
+The following table:
+"Name
+","Operator
+","Description
+","Example
+"
+"AND
+","&
+","AND results in a 1 if both the bits are 1. Any other
+ combination results in 0.
+","$x&y$
+"
+"OR
+",,"OR results in a 0 when both the bits are 0. Any other
+ combination results in 1.
+","$x|y$
+"
+"XOR
+","^
+","XOR results in a 0, if both the bits are of the same value
+ and 1 if the bits have different values.
+","$x^y$
+"
+"Inversion
+","~
+","Converts all 1 bits to 0's and all 0 bits to 1's
+","~x
+"
+
+Table 7. Bitwise operators.
+When used with Boolean, x and y y are integers and can be replaced with expressions that give a true or false
+ result such as when both the expressions evaluate to true, the result of using & is true.
+Otherwise, false.
+Logical Operators
+These are used to combine the results of Boolean expressions.
+These operators share a likeness with bitwise
+ operators, but logical operators are limited to Boolean expressions only.
+
+The following table:
+"Name
+","Operator
+
+
+Description
+","Example
+"
+"Logical
+ AND
+","If both the operands are non-zero, the expression
+ returns true; otherwise, it returns false.
+
+
+&&
+","$x>488y<8$
+"
+"Logical OR
+","If one or both the operands are non-zero, the expression
+ returns true; otherwise, it returns FALSE.
+","$x>4||y<8$
+"
+
+Table 8. Logical operators.
+For the example of Logical AND, the result is true if the first condition (x>4) and the second condition (y>8)
+ are both true.
+If any of the conditions are false, the result is false.
+04 Handout 1
+student.feedback@sti.edu
+*Property of STI
+ Page 3 of 5
+
+--- PAGE 4 ---
+
+STI
+Conditional Operator
+IT2402
+This operator is used to control the flow of the program. The ternary operator is used mainly in loop
+statements.
+
+The following table:
+"Name
+","Operator
+","Description
+","Example
+"
+"Ternary
+","(condition)?
+ val1:val2
+","Evaluates val1 if the condition returns true and val2
+
+
+if the condition returns false.
+","$x=(y>z)$? y: z
+"
+
+Table 9. Conditional operators.
+To explain the example, x is assigned the value of y if it is greater than z;
+otherwise, x is assigned the value of
+ Z.
+Order of Precedence of Operators
+Order of Precedence shows the hierarchy wherein an operation with high precedence is performed before
+ the others.
+The table shows those with the same level of precedence are listed in the same row.
+
+The following table:
+"Category
+","Operators
+"
+"High Precedence
+","[], ()
+"
+"Unary
+","+,-,,!, ++, --
+"
+"Multiplicative
+","  ,%
+
+
+*
+"
+"Additive
+","+,-
+"
+"Shift
+","<<, >>, >>>
+"
+"Relational
+","<,<=,>=,>
+"
+"Equality
+","=,==,!=
+"
+"Bitwise
+","&, ^,
+"
+"Logical
+","&&, ||
+"
+"Conditional
+","?:
+"
+"Assignment
+","=,+=,-=,*=, !=, %=
+"
+
+Table 10. Order of precedence.
+Expressions (Agarwal & Bansal, 2023)
+An expression is a combination of variables, constants, literals, and operators to produce a single value.
+A
+ simple 23+16 and x=-82 are considered expressions.
+In Java, an expression statement consists of an expression followed by a semicolon (;) to evaluate an
+ expression and disregard the result.
+int a=10;
+System.out.println("The value of a is " + a);
+Each line in this code snippet is considered an expression statement.
+Here are several types of expressions in Java.
+Arithmetic Expression
+It is an expression that returns a numeric value based on the operators and operands used. For example:
+
+The following table:
+"int x=10;
+","The last line is an arithmetic expression. It adds the value of x and y and
+"
+"int y=15;
+"
+"int z=x+y;
+","assigns the result to the z.
+"
+
+04 Handout 1
+student.feedback@sti.edu
+*Property of STI
+ Page 4 of 5
+
+--- PAGE 5 ---
+
+STI
+Assignment Expression
+It is an expression that involves assigning a value to a variable. For example:
+int a=8
+a=a+4;
+IT2402
+The last line is an assignment expression that adds 4 to the value of a and
+assigns the result back to a.
+Relational Expression
+It is an expression that compares values using relational operators. For example:
+int x=6;
+int
+y=8
+boolean result =x<y;
+The last line is a relation expression comparing the values of x and y and
+ assigning the result to the variable result.
+Logical Expression
+It is an expression involving logical operators. For example:
+int j=5;
+int k=4
+boolean result =(j<k) && (k<4);
+Conditional Expression
+The last line is a logical expression that checks whether j j is less
+ than k and whether k is less than 4. The result is assigned to the
+ result.
+It is an expression involving the use of the ternary operator (?:) to assign a value based on a condition.
+For
+ example:
+int 1=7
+int
+m=3;
+int n=(1<m)? 2:3;
+The last line is a conditional expression that checks whether 1 is less than
+ m.
+If true, 2 is assigned to the variable of n; otherwise, 3 is assigned.
+PROPERT
+PROPERTY OF
+STI
+References:
+Agarwal, S. & Bansal, H. (2023). Java in depth. BPB Publications.
+Burk, S. (2023). Java programming: The complete beginner's guide. Orchid Publishing.
+ Nawghare, A. (2023). Java expressions: An introduction with examples.
+[Web Article]. Retrieved on March 14, 2024, from
+https://codegym.cc/groups/posts/java-expressions-an-introduction-with-examples
+04 Handout 1
+student.feedback@sti.edu
+*Property of STI
+ Page 5 of 5`
+    ];
+    
+    // Simple hash function to create a stable quizId
+    const getQuizId = (text) => {
+        let hash = 0;
+        if (text.length === 0) return hash;
+        for (let i = 0; i < text.length; i++) {
+            const char = text.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return `quiz_${Math.abs(hash)}`;
+    };
+
+    // Cookie and localStorage handling
+    const quizId = getQuizId(sources.join(''));
+    const localStorageKey = `quiz_scores_${quizId}`;
+    const cookieName = 'quiz_scores';
+
+    const getStorage = () => {
+        if (document.cookie.includes('quiz_scores_storage=localStorage')) {
+            return localStorage;
+        }
+        try {
+            const testKey = '__test__';
+            localStorage.setItem(testKey, testKey);
+            localStorage.removeItem(testKey);
+            return localStorage;
+        } catch(e) {
+            return {
+                getItem: (key) => {
+                    const name = key + "=";
+                    const decodedCookie = decodeURIComponent(document.cookie);
+                    const ca = decodedCookie.split(';');
+                    for(let i = 0; i < ca.length; i++) {
+                        let c = ca[i];
+                        while (c.charAt(0) === ' ') {
+                            c = c.substring(1);
+                        }
+                        if (c.indexOf(name) === 0) {
+                            return c.substring(name.length, c.length);
+                        }
+                    }
+                    return null;
+                },
+                setItem: (key, value) => {
+                    const d = new Date();
+                    d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+                    const expires = "expires=" + d.toUTCString();
+                    document.cookie = key + "=" + value + ";" + expires + ";path=/";
+                },
+                removeItem: (key) => {
+                    document.cookie = key + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                }
+            };
+        }
+    };
+    
+    const storage = getStorage();
+
+    const loadScores = () => {
+        const scores = storage.getItem(localStorageKey) || storage.getItem(cookieName);
+        if (scores) {
+            try {
+                return JSON.parse(scores)[quizId] || [];
+            } catch (e) {
+                console.error("Failed to parse scores from storage:", e);
+                return [];
+            }
+        }
+        return [];
+    };
+
+    const saveScore = (score, total) => {
+        const attempts = loadScores();
+        const newAttempt = { timestamp: new Date().toISOString(), score, total };
+        attempts.push(newAttempt);
+        const dataToSave = JSON.stringify({ [quizId]: attempts });
+        
+        try {
+            storage.setItem(localStorageKey, dataToSave);
+            document.cookie = 'quiz_scores_storage=localStorage; expires=' + new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString() + '; path=/';
+        } catch (e) {
+            console.warn("localStorage full, falling back to cookie.");
+            storage.removeItem(localStorageKey);
+            storage.setItem(cookieName, dataToSave);
+            document.cookie = 'quiz_scores_storage=cookie; expires=' + new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString() + '; path=/';
+        }
+    };
+
+    const clearScores = () => {
+        storage.removeItem(localStorageKey);
+        storage.removeItem(cookieName);
+        document.cookie = 'quiz_scores_storage=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        displayScores();
+    };
+
+    const displayScores = () => {
+        const scores = loadScores();
+        const historyList = document.getElementById('score-history');
+        const clearBtn = document.getElementById('clear-history-btn');
+        historyList.innerHTML = '';
+        if (scores.length > 0) {
+            scores.forEach(attempt => {
+                const li = document.createElement('li');
+                const date = new Date(attempt.timestamp).toLocaleString();
+                li.textContent = `Attempt on ${date}: Score ${attempt.score}/${attempt.total}`;
+                historyList.appendChild(li);
+            });
+            clearBtn.style.display = 'block';
+        } else {
+            historyList.innerHTML = '<p>No previous scores found.</p>';
+            clearBtn.style.display = 'none';
+        }
+    };
+
+    document.getElementById('clear-history-btn').addEventListener('click', clearScores);
+
+    let mcqQuestions = [];
+    let identificationQuestions = [];
+    let answeredQuestions = {};
+    let currentIdIndex = 0;
+    let totalScore = 0;
+
+    const parseSource = (source) => {
+        const lines = source.split('\n');
+        const paragraphs = [];
+        let currentParagraph = '';
+        lines.forEach(line => {
+            if (line.trim() === '') {
+                if (currentParagraph !== '') {
+                    paragraphs.push(currentParagraph.trim());
+                    currentParagraph = '';
+                }
+            } else {
+                currentParagraph += line + ' ';
+            }
+        });
+        if (currentParagraph !== '') {
+            paragraphs.push(currentParagraph.trim());
+        }
+        return paragraphs;
+    };
+
+    const findQuote = (answer, allSources) => {
+        for (let i = 0; i < allSources.length; i++) {
+            const source = allSources[i];
+            const paragraphs = parseSource(source);
+            for (let j = 0; j < paragraphs.length; j++) {
+                const p = paragraphs[j];
+                let quote = p.trim();
+                if (quote.includes(answer.trim())) {
+                    const regex = new RegExp(`[^.?!]*${answer.trim()}[^.?!]*[.?!]`, 'i');
+                    const match = quote.match(regex);
+                    if (match) {
+                        quote = match[0].trim();
+                    }
+                    if (quote.length > 400) {
+                         quote = quote.substring(0, 400) + '...';
+                    }
+                    return { quote: quote, source: `(Source ${i + 1}, paragraph ${j + 1})` };
+                }
+            }
+        }
+        return null;
+    };
+
+    const generateQuestions = () => {
+        const combinedSources = sources.join('\n');
+        
+        mcqQuestions = [
+            {
+                question: "Which of the following is NOT an integer data type in Java?",
+                options: ["Byte", "Short", "Int", "Float"],
+                correctAnswer: "Float",
+                quote: findQuote("Float is described as a single precision floating point.", combinedSources)
+            },
+            {
+                question: "What is the default initial value for a `Char` data type variable?",
+                options: ["0", "false", "'\\u0000'", "''"],
+                correctAnswer: "'\\u0000'",
+                quote: findQuote("Char',\"'u0000'\"", combinedSources)
+            },
+            {
+                question: "According to the sources, which of the following is a key rule for naming a variable in Java?",
+                options: ["Variable names can start with a number.", "Keywords can be used for variable names.", "Variable names should be nouns and begin with a lowercase letter.", "Variable names must contain an underscore."],
+                correctAnswer: "Variable names should be nouns and begin with a lowercase letter.",
+                quote: findQuote("Variable names are nouns and must begin with a lowercase letter.", combinedSources)
+            },
+            {
+                question: "When is the `Int` data type considered the best choice for an integer?",
+                options: ["When storing a hexadecimal number.", "When a variable needs a very small number.", "When Byte and Short values are used in an expression, as they are automatically promoted to Int.", "When a variable needs a very large number."],
+                correctAnswer: "When Byte and Short values are used in an expression, as they are automatically promoted to Int.",
+                quote: findQuote("This data type can handle larger numbers and is considered the best choice when an integer is needed because when Byte and Short values are used in an expression, they are promoted to Int automatically.", combinedSources)
+            },
+            {
+                question: "Which operator is used to calculate the remainder of an integer division?",
+                options: ["/", "%", "*", "+"],
+                correctAnswer: "%",
+                quote: findQuote("Modulus\",",`"`,"%",`"`,"Calculates the remainder of an integer division", combinedSources)
+            },
+            {
+                question: "What is the purpose of the 'L' suffix when initializing a `Long` data type variable?",
+                options: ["It signifies that the number is a floating-point.", "It is required for hexadecimal numbers.", "It indicates the variable is a constant.", "It is placed right after the value to declare a Long integer."],
+                correctAnswer: "It is placed right after the value to declare a Long integer.",
+                quote: findQuote("A capital letter 'L' is placed right after the value.", combinedSources)
+            },
+            {
+                question: "Which of the following describes the behavior of a logical `&&` operator?",
+                options: ["Returns true if one or both operands are non-zero.", "Inverts the value of a Boolean variable.", "Returns true only if both operands are non-zero.", "Evaluates whether the operands are not equal."],
+                correctAnswer: "Returns true only if both operands are non-zero.",
+                quote: findQuote("If both the operands are non-zero, the expression returns true; otherwise, it returns false.", combinedSources)
+            },
+            {
+                question: "What are 'real numbers' in Java used for?",
+                options: ["Storing logical values (true/false).", "Holding a number higher than a regular integer.", "Storing letters, digits, and other characters.", "Evaluating an expression that needs fractional accuracy."],
+                correctAnswer: "Evaluating an expression that needs fractional accuracy.",
+                quote: findQuote("Floating points are also called \"real numbers\", and are used when evaluating an expression that needs fractional accuracy such as the computation of square root or a transcendental (sine and cosine).", combinedSources)
+            },
+            {
+                question: "Which operator is used to convert all 1 bits to 0s and all 0 bits to 1s?",
+                options: ["&", "|", "^", "~"],
+                correctAnswer: "~",
+                quote: findQuote("Inversion\",",`"`,"~",`"`,"Converts all 1 bits to 0's and all 0 bits to 1's", combinedSources)
+            },
+            {
+                question: "What happens when you use a `Byte` or `Short` value in an expression in Java?",
+                options: ["The program returns an error.", "They are automatically promoted to `Int`.", "They are demoted to a smaller data type.", "The value remains a `Byte` or `Short`."],
+                correctAnswer: "They are automatically promoted to `Int`.",
+                quote: findQuote("when Byte and Short values are used in an expression, they are promoted to Int automatically.", combinedSources)
+            },
+             {
+                question: "What is a 'literal' in Java?",
+                options: ["A symbol used to compare values.", "The name of a variable or constant.", "The default value assigned to a variable.", "A constant value that can be assigned to primitive or string variables."],
+                correctAnswer: "A constant value that can be assigned to primitive or string variables.",
+                quote: findQuote("Literals are the values that may be assigned to primitive- or string-type variables and constants", combinedSources)
+            },
+             {
+                question: "What is a relational expression?",
+                options: ["An expression that returns a numeric value.", "An expression that combines the results of boolean expressions.", "An expression that assigns a value to a variable.", "An expression that compares values using relational operators."],
+                correctAnswer: "An expression that compares values using relational operators.",
+                quote: findQuote("It is an expression that compares values using relational operators.", combinedSources)
+            },
+            {
+                question: "What is the result of the expression `x = 9 << 2`?",
+                options: ["2", "11", "40", "18"],
+                correctAnswer: "40",
+                quote: findQuote("For the left shift, the bits of the left operand are shifted left. Using x=9<<2 the result becomes 40:", combinedSources)
+            },
+            {
+                question: "What is the purpose of the `+=` assignment operator?",
+                options: ["It assigns the value of the right operand to the left.", "It multiplies the operands and assigns the result to the left operand.", "It adds the operands and assigns the result to the left operand.", "It represents a positive value."],
+                correctAnswer: "It adds the operands and assigns the result to the left operand.",
+                quote: findQuote("Adds the operands and assigns the result to the left operand", combinedSources)
+            },
+            {
+                question: "In Java, what must be done to all variables before they can be used?",
+                options: ["They must be assigned a final value.", "They must be declared.", "They must be prefixed with `int`.", "They must be assigned a default value."],
+                correctAnswer: "They must be declared.",
+                quote: findQuote("each variable used in a program must be declared.", combinedSources)
+            }
+        ];
+
+        identificationQuestions = [
+            {
+                prompt: "What is the term for symbols used to compute and compare values, and test multiple conditions?",
+                answer: "Operators",
+                quote: findQuote("Operators are symbols used to compute and compare values and test multiple conditions.", combinedSources)
+            },
+            {
+                prompt: "What is the name for data types built into the Java language that are not objects and have no methods?",
+                answer: "Primitive Data Types",
+                quote: findQuote("Primitive Data Types are built into the Java language. These are data that are not objects and have no methods.", combinedSources)
+            },
+            {
+                prompt: "What is the term for a combination of variables, constants, literals, and operators that produces a single value?",
+                answer: "Expression",
+                quote: findQuote("An expression is a combination of variables, constants, literals, and operators to produce a single value.", combinedSources)
+            },
+            {
+                prompt: "What is the operator used in a conditional expression to assign a value based on a condition?",
+                answer: "Ternary operator",
+                quote: findQuote("It is an expression involving the use of the ternary operator (?:) to assign a value based on a condition.", combinedSources)
+            },
+            {
+                prompt: "What is the term for a value that cannot be changed in a program?",
+                answer: "Constant",
+                quote: findQuote("The values of variables can be changed in a program, but the value of constants, cannot.", combinedSources)
+            },
+            {
+                prompt: "What character in Java is used to represent hexadecimal numbers?",
+                answer: "0x",
+                quote: findQuote("Ox is used in Java to represent hexadecimal.", combinedSources)
+            },
+            {
+                prompt: "What character data type was created to support non-traditional characters from Latin-based and non-Latin-based languages?",
+                answer: "Unicode",
+                quote: findQuote("the Unicode character format was created which includes Latin-based and non-Latin-based languages.", combinedSources)
+            }
+        ];
+    };
+
+    const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    };
+
+    const renderQuiz = () => {
+        const mcqContainer = document.getElementById('mcq-section');
+        mcqContainer.innerHTML = '<h2>Multiple-Choice Questions</h2>';
+        shuffleArray(mcqQuestions).forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `<h3>${index + 1}. ${q.question}</h3><ul class="options-list"></ul>`;
+            const optionsList = card.querySelector('.options-list');
+            
+            const options = shuffleArray([...q.options]);
+            options.forEach(option => {
+                const li = document.createElement('li');
+                li.innerHTML = `<button type="button" class="option-button" data-question-index="${index}" data-answer="${option}">${option}</button>`;
+                optionsList.appendChild(li);
+            });
+            
+            card.innerHTML += `<div class="feedback" id="feedback-mcq-${index}"></div>`;
+            mcqContainer.appendChild(card);
+        });
+
+        const idContainer = document.getElementById('id-questions-container');
+        idContainer.innerHTML = '';
+        currentIdIndex = 0;
+        addIdentificationQuestion();
+    };
+
+    const addIdentificationQuestion = () => {
+        const idContainer = document.getElementById('id-questions-container');
+        if (currentIdIndex >= identificationQuestions.length) {
+            document.getElementById('add-id-btn').style.display = 'none';
+            return;
+        }
+
+        const id = identificationQuestions[currentIdIndex];
+        const item = document.createElement('div');
+        item.className = 'id-item';
+        const itemId = `id-${currentIdIndex}`;
+        item.innerHTML = `
+            <label for="${itemId}">${id.prompt}</label>
+            <input type="text" id="${itemId}" class="identification-input" data-question-index="${currentIdIndex}">
+            <button type="button" class="action-btn submit-id-btn" data-question-index="${currentIdIndex}">Submit</button>
+            <div class="feedback" id="feedback-id-${currentIdIndex}"></div>
+        `;
+        idContainer.appendChild(item);
+        currentIdIndex++;
+        document.getElementById('add-id-btn').style.display = 'block';
+    };
+
+    const checkAnswer = (type, index, userAnswer) => {
+        let question;
+        if (type === 'mcq') {
+            question = mcqQuestions[index];
+        } else {
+            question = identificationQuestions[index];
+        }
+
+        const feedbackDiv = document.getElementById(`feedback-${type}-${index}`);
+        const isCorrect = (type === 'mcq') 
+            ? userAnswer === question.correctAnswer
+            : userAnswer.trim().toLowerCase() === question.answer.trim().toLowerCase();
+
+        if (isCorrect) {
+            feedbackDiv.className = 'feedback correct';
+            feedbackDiv.innerHTML = `
+                Great job! That's correct.
+                <div class="quote-block">
+                    <strong>Source:</strong> ${question.quote.source}<br>
+                    <p>${sanitizeHtml(question.quote.quote)}</p>
+                </div>
+            `;
+            totalScore++;
+            return true;
+        } else {
+            feedbackDiv.className = 'feedback incorrect';
+            feedbackDiv.innerHTML = `
+                Try again — you’re improving! Incorrect.
+                <br>The correct answer is: <strong>${question.correctAnswer || question.answer}</strong>
+                <div class="quote-block">
+                    <strong>Source:</strong> ${question.quote.source}<br>
+                    <p>${sanitizeHtml(question.quote.quote)}</p>
+                </div>
+            `;
+            return false;
+        }
+    };
+    
+    const sanitizeHtml = (str) => {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    };
+
+    const handleSubmitAll = () => {
+        totalScore = 0;
+        const wrongAnswers = [];
+        
+        // Check MCQs
+        const mcqButtons = document.querySelectorAll('#mcq-section .option-button');
+        mcqButtons.forEach(button => {
+            const index = button.dataset.questionIndex;
+            const question = mcqQuestions[index];
+            if (answeredQuestions[`mcq-${index}`] === undefined) {
+                answeredQuestions[`mcq-${index}`] = button.dataset.answer;
+            }
+        });
+        
+        // Check IDs
+        const idInputs = document.querySelectorAll('#id-questions-container .identification-input');
+        idInputs.forEach(input => {
+            const index = input.dataset.questionIndex;
+            const question = identificationQuestions[index];
+            answeredQuestions[`id-${index}`] = input.value;
+        });
+        
+        // Process all answers
+        let totalQuestions = 0;
+        mcqQuestions.forEach((q, index) => {
+            totalQuestions++;
+            const userAnswer = answeredQuestions[`mcq-${index}`];
+            const isCorrect = userAnswer === q.correctAnswer;
+            
+            const feedbackDiv = document.getElementById(`feedback-mcq-${index}`);
+            const buttons = document.querySelectorAll(`#mcq-section .option-button[data-question-index="${index}"]`);
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.dataset.answer === q.correctAnswer) {
+                    btn.classList.add('correct');
+                } else if (btn.dataset.answer === userAnswer && !isCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            if (isCorrect) {
+                totalScore++;
+            } else {
+                feedbackDiv.className = 'feedback incorrect';
+                feedbackDiv.innerHTML = `
+                    Try again — you’re improving! Incorrect.
+                    <br>The correct answer is: <strong>${q.correctAnswer}</strong>
+                    <div class="quote-block">
+                        <strong>Source:</strong> ${q.quote.source}<br>
+                        <p>${sanitizeHtml(q.quote.quote)}</p>
+                    </div>
+                `;
+                wrongAnswers.push({
+                    question: q.question,
+                    userAnswer: userAnswer || 'No answer',
+                    correctAnswer: q.correctAnswer,
+                    quote: q.quote
+                });
+            }
+        });
+        
+        identificationQuestions.slice(0, currentIdIndex).forEach((q, index) => {
+            totalQuestions++;
+            const userAnswer = answeredQuestions[`id-${index}`];
+            const isCorrect = userAnswer.trim().toLowerCase() === q.answer.trim().toLowerCase();
+            
+            const input = document.getElementById(`id-${index}`);
+            const submitBtn = document.querySelector(`.submit-id-btn[data-question-index="${index}"]`);
+            const feedbackDiv = document.getElementById(`feedback-id-${index}`);
+            input.disabled = true;
+            submitBtn.style.display = 'none';
+
+            if (isCorrect) {
+                totalScore++;
+                feedbackDiv.className = 'feedback correct';
+                feedbackDiv.innerHTML = `
+                    Great job! That's correct.
+                    <div class="quote-block">
+                        <strong>Source:</strong> ${q.quote.source}<br>
+                        <p>${sanitizeHtml(q.quote.quote)}</p>
+                    </div>
+                `;
+            } else {
+                feedbackDiv.className = 'feedback incorrect';
+                feedbackDiv.innerHTML = `
+                    Try again — you’re improving! Incorrect.
+                    <br>The correct answer is: <strong>${q.answer}</strong>
+                    <div class="quote-block">
+                        <strong>Source:</strong> ${q.quote.source}<br>
+                        <p>${sanitizeHtml(q.quote.quote)}</p>
+                    </div>
+                `;
+                wrongAnswers.push({
+                    question: q.prompt,
+                    userAnswer: userAnswer || 'No answer',
+                    correctAnswer: q.answer,
+                    quote: q.quote
+                });
+            }
+        });
+
+        saveScore(totalScore, totalQuestions);
+        showResults(totalScore, totalQuestions, wrongAnswers);
+    };
+    
+    const showResults = (score, total, wrongAnswers) => {
+        document.getElementById('quiz-content').style.display = 'none';
+        const endScreen = document.getElementById('end-screen');
+        endScreen.style.display = 'block';
+        
+        document.getElementById('final-score').textContent = `Score: ${score}/${total}`;
+        
+        const wrongList = document.getElementById('wrong-answers-list');
+        wrongList.innerHTML = '';
+        if (wrongAnswers.length > 0) {
+            wrongAnswers.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <strong>Question:</strong> ${item.question}<br>
+                    <strong>Your Answer:</strong> <span>${sanitizeHtml(item.userAnswer)}</span><br>
+                    <strong>Correct Answer:</strong> <span>${sanitizeHtml(item.correctAnswer)}</span>
+                    <div class="quote-block">
+                        <strong>Source:</strong> ${item.quote.source}<br>
+                        <p>${sanitizeHtml(item.quote.quote)}</p>
+                    </div>
+                `;
+                wrongList.appendChild(li);
+            });
+        } else {
+            wrongList.innerHTML = '<li>You got everything right! Fantastic job.</li>';
+        }
+    };
+    
+    // Event listeners
+    document.getElementById('start-quiz-btn').addEventListener('click', () => {
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('end-screen').style.display = 'none';
+        document.getElementById('quiz-content').style.display = 'block';
+        answeredQuestions = {};
+        totalScore = 0;
+        generateQuestions();
+        renderQuiz();
+    });
+
+    document.getElementById('add-id-btn').addEventListener('click', addIdentificationQuestion);
+
+    document.getElementById('submit-all-btn').addEventListener('click', handleSubmitAll);
+    
+    document.getElementById('quiz-content').addEventListener('click', (event) => {
+        if (event.target.classList.contains('option-button')) {
+            const button = event.target;
+            const index = button.dataset.questionIndex;
+            const userAnswer = button.dataset.answer;
+
+            // Disable all buttons for this question
+            const buttons = document.querySelectorAll(`.option-button[data-question-index="${index}"]`);
+            buttons.forEach(btn => btn.disabled = true);
+
+            const isCorrect = checkAnswer('mcq', index, userAnswer);
+            button.classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (!isCorrect) {
+                document.querySelector(`.option-button[data-question-index="${index}"][data-answer="${mcqQuestions[index].correctAnswer}"]`).classList.add('correct');
+            }
+            answeredQuestions[`mcq-${index}`] = userAnswer;
+        } else if (event.target.classList.contains('submit-id-btn')) {
+            const button = event.target;
+            const index = button.dataset.questionIndex;
+            const input = document.getElementById(`id-${index}`);
+            const userAnswer = input.value;
+
+            checkAnswer('id', index, userAnswer);
+            input.disabled = true;
+            button.style.display = 'none';
+            answeredQuestions[`id-${index}`] = userAnswer;
+        }
+    });
+
+    document.getElementById('restart-quiz-btn').addEventListener('click', () => {
+        document.getElementById('end-screen').style.display = 'none';
+        document.getElementById('quiz-content').style.display = 'block';
+        answeredQuestions = {};
+        totalScore = 0;
+        generateQuestions();
+        renderQuiz();
+    });
+
+    document.getElementById('back-to-start-btn').addEventListener('click', () => {
+        document.getElementById('end-screen').style.display = 'none';
+        document.getElementById('start-screen').style.display = 'block';
+        displayScores();
+    });
+
+    // Initial load
+    displayScores();
+});
+</script>
+
+</body>
+</html>
