@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color-light: #f4f7f6;
+            --text-color-light: #2c3e50;
+            --container-bg-light: #ffffff;
+            --primary-color-light: #3498db;
+            --secondary-color-light: #2980b9;
+            --correct-color: #27ae60;
+            --incorrect-color: #e74c3c;
+            --border-color-light: #bdc3c7;
+            --shadow-color-light: rgba(0, 0, 0, 0.1);
+            --placeholder-color-light: #7f8c8d;
+        }
+
+        .dark-mode {
+            --bg-color-light: #2c3e50;
+            --text-color-light: #ecf0f1;
+            --container-bg-light: #34495e;
+            --primary-color-light: #3498db;
+            --secondary-color-light: #2980b9;
+            --border-color-light: #526f8d;
+            --shadow-color-light: rgba(255, 255, 255, 0.1);
+            --placeholder-color-light: #bdc3c7;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--container-bg-light);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px var(--shadow-color-light);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2em;
+            color: var(--primary-color-light);
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-top: 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: var(--border-color-light);
+            border-radius: 8px;
+            height: 12px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-color-light);
+            transition: width 0.4s ease-in-out;
+        }
+
+        .progress-text {
+            font-size: 0.9em;
+            color: var(--placeholder-color-light);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #question-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        #options-container, #identification-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background-color: transparent;
+            border: 2px solid var(--border-color-light);
+            color: var(--text-color-light);
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow-color-light);
+        }
+
+        .option.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+
+        .option.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+            border-color: var(--incorrect-color);
+        }
+
+        #submit-button, .quiz-button, #restart-button {
+            display: none; /* Hide by default */
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            font-weight: bold;
+            color: white;
+            background-color: var(--primary-color-light);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        #submit-button:hover, .quiz-button:hover, #restart-button:hover {
+            background-color: var(--secondary-color-light);
+            transform: translateY(-2px);
+        }
+        
+        #submit-button:disabled {
+            background-color: #7f8c8d;
+            cursor: not-allowed;
+        }
+
+        #feedback-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 5px solid;
+            border-radius: 8px;
+            display: none;
+        }
+
+        #feedback-section.correct {
+            border-color: var(--correct-color);
+        }
+
+        #feedback-section.incorrect {
+            border-color: var(--incorrect-color);
+        }
+
+        #explanation-text {
+            font-style: italic;
+            font-size: 0.95em;
+            margin-top: 10px;
+        }
+
+        .end-screen {
+            text-align: center;
+        }
+
+        .end-screen h2 {
+            font-size: 2em;
+            color: var(--primary-color-light);
+            margin-bottom: 10px;
+        }
+
+        .end-screen p {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        
+        #incorrect-questions-list {
+            text-align: left;
+            margin-top: 20px;
+        }
+        
+        #incorrect-questions-list li {
+            margin-bottom: 10px;
+            border-left: 3px solid var(--incorrect-color);
+            padding-left: 10px;
+        }
+
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--container-bg-light);
+            border: 2px solid var(--border-color-light);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px var(--shadow-color-light);
+            font-size: 1.2em;
+            color: var(--text-color-light);
+        }
+
+        #identification-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            border: 2px solid var(--border-color-light);
+            border-radius: 8px;
+            background-color: var(--container-bg-light);
+            color: var(--text-color-light);
+            transition: border-color 0.2s;
+        }
+        
+        #identification-input:focus {
+            outline: none;
+            border-color: var(--primary-color-light);
+        }
+    </style>
+</head>
+<body>
+
+<div class="mode-toggle" id="mode-toggle">
+    ☀️
+</div>
+
+<div class="quiz-container" id="quiz-container">
+    <h1 id="quiz-title">My New Quiz</h1>
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <p class="progress-text" id="progress-text"></p>
+
+    <div id="quiz-area">
+        <div id="question-area">
+            <h2 id="question-text"></h2>
+            <div id="options-container"></div>
+            <div id="identification-container" style="display: none;">
+                <input type="text" id="identification-input" placeholder="Type your answer here...">
+            </div>
+            <button id="submit-button">Submit Answer</button>
+        </div>
+        
+        <div id="feedback-section">
+            <p id="feedback-text"></p>
+            <p id="explanation-text"></p>
+        </div>
+    </div>
+
+    <div id="end-screen" class="end-screen" style="display: none;">
+        <h2>Quiz Complete!</h2>
+        <p>Your Score: <span id="final-score"></span> / <span id="total-questions"></span></p>
+        <p>Previous Best Score: <span id="best-score"></span></p>
+        <div id="incorrect-questions-list">
+            <h3>Questions you got wrong:</h3>
+            <ul id="wrong-answers-list"></ul>
+        </div>
+        <button id="restart-button">Restart Quiz</button>
+    </div>
+</div>
+
+<script>
+    // Utility functions for cookies
+    function setCookie(name, value, days) {
+        const d = new Date();
+        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+        const expires = "expires=" + d.toUTCString();
+        document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    }
+
+    function getCookie(name) {
+        const cname = name + "=";
+        const decodedCookie = decodeURIComponent(document.cookie);
+        const ca = decodedCookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(cname) === 0) {
+                return c.substring(cname.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    //
+    // --- START OF QUIZ DATA ---
+    //
+    const quizData = {
+  "multipleChoice": [
+    {
+      "question": "According to the module, what is the transformative turn that the concept of citizenship has taken in the 21st century?",
+      "options": [
+        "The shift from city-states to democratic nations.",
+        "The advent of digital technologies.",
+        "The emphasis on taxpaying and allegiance.",
+        "The rise of civic-centered public debate."
+      ],
+      "answer": "The advent of digital technologies.",
+      "explanation": "The module states that in the 21st century, the evolution of citizenship has taken a transformative turn with the advent of digital technologies, giving birth to digital citizenship."
+    },
+    {
+      "question": "What is the new paradigm that emerged from the rise of the internet and social media, expanding the civic sphere beyond physical spaces?",
+      "options": [
+        "Traditional civic responsibility.",
+        "Allegiance to the state.",
+        "Digital citizenship.",
+        "Democratic governance."
+      ],
+      "answer": "Digital citizenship.",
+      "explanation": "The module defines digital citizenship as the new paradigm that emerged with the rise of the internet and social media, expanding the civic sphere into online environments."
+    },
+    {
+      "question": "In the Philippine context, why are Filipino youth considered both powerful agents of civic change and vulnerable targets of digital risks?",
+      "options": [
+        "They are the largest demographic group in the nation.",
+        "They are skilled in traditional civic duties.",
+        "The country has a young, tech-savvy population with high social media usage rates.",
+        "They are excluded from formal decision-making processes."
+      ],
+      "answer": "The country has a young, tech-savvy population with high social media usage rates.",
+      "explanation": "The module explains that the Philippines has a young, tech-savvy population with one of the highest social media usage rates in the world, making the youth powerful but also vulnerable to risks like misinformation."
+    },
+    {
+      "question": "What does civic responsibility refer to, according to the module?",
+      "options": [
+        "Legal obligations like paying taxes.",
+        "Participation in the political, economic, and social life of communities.",
+        "Obeying laws and contributing to the common good.",
+        "Moral and ethical duties in a democratic society."
+      ],
+      "answer": "Participation in the political, economic, and social life of communities.",
+      "explanation": "The module defines civic responsibility as the active participation of individuals in the political, economic, and social life of their communities."
+    },
+    {
+      "question": "Which of the following is NOT listed as a core civic responsibility in the module?",
+      "options": [
+        "Community engagement and volunteerism.",
+        "Voting as a fundamental duty.",
+        "Advocacy and social awareness.",
+        "Financial contributions to political parties."
+      ],
+      "answer": "Financial contributions to political parties.",
+      "explanation": "The module lists voting, community engagement, and advocacy as core civic responsibilities. Financial contributions to political parties are not mentioned in this section."
+    },
+    {
+      "question": "How did young Filipino reformists like José Rizal and members of the Propaganda Movement contribute to nation-building?",
+      "options": [
+        "By organizing armed rebellions.",
+        "By using writing and education to ignite a national consciousness.",
+        "By leading the EDSA People Power Revolution.",
+        "By creating online campaigns and petitions."
+      ],
+      "answer": "By using writing and education to ignite a national consciousness.",
+      "explanation": "The module states that during the Spanish colonial period, young Filipino reformists used writing and education to spark a national consciousness."
+    },
+    {
+      "question": "The #MarchForOurLives movement in the USA, mentioned in the module, was organized by students using digital media to promote what?",
+      "options": [
+        "Climate action.",
+        "Gun reform.",
+        "Press freedom.",
+        "Ending police brutality."
+      ],
+      "answer": "Gun reform.",
+      "explanation": "The module cites #MarchForOurLives as a movement sparked by school shootings, where students used digital media to promote gun reform."
+    },
+    {
+      "question": "What is the primary risk associated with the use of social media algorithms that show users content aligning with their existing beliefs?",
+      "options": [
+        "Political apathy.",
+        "Economic constraints.",
+        "Underrepresentation.",
+        "Echo chambers and polarization."
+      ],
+      "answer": "Echo chambers and polarization.",
+      "explanation": "The module explains that algorithms that show users content aligned with their beliefs create 'echo chambers' that reinforce biases and deepen divisions, leading to polarization."
+    },
+    {
+      "question": "What does the module identify as a key component of ethical digital citizenship regarding online content?",
+      "options": [
+        "Ignoring posts that are controversial or emotional.",
+        "Only consuming content from major news outlets.",
+        "Seeking diverse sources of information beyond what is auto-recommended.",
+        "Advocating for the removal of all algorithms."
+      ],
+      "answer": "Seeking diverse sources of information beyond what is auto-recommended.",
+      "explanation": "The module advises ethical digital citizens to seek diverse sources of information beyond what is auto-recommended to avoid the effects of filter bubbles and echo chambers."
+    },
+    {
+      "question": "What is one of the core responsibilities of a digital citizen in a time of widespread misinformation?",
+      "options": [
+        "Sharing content as quickly as possible to get ahead of others.",
+        "Verifying facts before sharing them.",
+        "Creating new content to counteract fake news.",
+        "Following viral trends without question."
+      ],
+      "answer": "Verifying facts before sharing them.",
+      "explanation": "The module states that in a time of widespread misinformation, it is every digital citizen's responsibility to verify facts before sharing."
+    },
+    {
+      "question": "How does the module describe the role of social media platforms in a democracy?",
+      "options": [
+        "Solely a democratic tool.",
+        "A potential threat to democracy.",
+        "Both a democratic tool and a potential threat.",
+        "Primarily a tool for entertainment."
+      ],
+      "answer": "Both a democratic tool and a potential threat.",
+      "explanation": "The module explicitly states, 'Social media is both a democratic tool and a potential threat to democracy.'"
+    },
+    {
+      "question": "What is the purpose of Media and Information Literacy (MIL) as described in the module?",
+      "options": [
+        "To teach users how to create viral content.",
+        "To equip users with the skills to critically evaluate content and resist manipulation.",
+        "To promote the use of social media for personal gain.",
+        "To regulate digital platforms and tech companies."
+      ],
+      "answer": "To equip users with the skills to critically evaluate content and resist manipulation.",
+      "explanation": "The module explains that MIL is key to resisting manipulation by teaching students how to identify credible sources and understand bias."
+    },
+    {
+      "question": "What is one of the key ethical concerns raised by algorithms, according to the module?",
+      "options": [
+        "They always promote accurate information.",
+        "They have a lack of transparency and can reflect designer biases.",
+        "They reduce political and ideological divisions.",
+        "They are designed to show a wide variety of opinions."
+      ],
+      "answer": "They have a lack of transparency and can reflect designer biases.",
+      "explanation": "The module points out that algorithms can reflect the biases of their designers and that platforms rarely disclose their full algorithmic processes, which is a lack of transparency."
+    },
+    {
+      "question": "What is the concept of 'digital footprint' as mentioned in the module?",
+      "options": [
+        "The physical size of a digital device.",
+        "The permanent trail left by online actions.",
+        "The amount of data a user consumes.",
+        "The number of social media followers a person has."
+      ],
+      "answer": "The permanent trail left by online actions.",
+      "explanation": "The module describes a 'digital footprint' as 'the permanent trail left by online actions.'"
+    },
+    {
+      "question": "What historical event in the Philippines is mentioned as a culmination of student activism during Martial Law?",
+      "options": [
+        "The Spanish colonial period.",
+        "The EDSA People Power Revolution.",
+        "The Propaganda Movement.",
+        "The #BabaeAko movement."
+      ],
+      "answer": "The EDSA People Power Revolution.",
+      "explanation": "The module states that student activists were at the forefront of resistance during Martial Law, which culminated in the 1986 EDSA People Power Revolution."
+    },
+    {
+      "question": "What is 'digital empathy' as described in the module?",
+      "options": [
+        "Using emoticons and memes to express feelings.",
+        "Thinking before posting to avoid hurting, helping, or healing others.",
+        "Showing care and concern for others online.",
+        "Avoiding face-to-face interactions."
+      ],
+      "answer": "Showing care and concern for others online.",
+      "explanation": "The module defines digital empathy as showing care and concern for others online, and also suggests thinking before posting, asking 'Will this hurt, help, or heal?'"
+    },
+    {
+      "question": "Which of the following is NOT a challenge to youth civic engagement listed in the module?",
+      "options": [
+        "Political apathy.",
+        "Economic constraints.",
+        "Institutional support.",
+        "Disinformation."
+      ],
+      "answer": "Institutional support.",
+      "explanation": "The module lists institutional support as an opportunity, not a challenge, for youth civic engagement."
+    },
+    {
+      "question": "According to the module, what does advocacy involve?",
+      "options": [
+        "Engaging in online debates.",
+        "Speaking up for causes and communities in need.",
+        "Volunteering for clean-up drives.",
+        "Voting in local and national elections."
+      ],
+      "answer": "Speaking up for causes and communities in need.",
+      "explanation": "The module defines advocacy as 'speaking up for causes and communities in need.'"
+    },
+    {
+      "question": "Why is it important for college students to master digital citizenship?",
+      "options": [
+        "To become popular influencers on social media.",
+        "To avoid all online interactions.",
+        "To become informed, ethical, and empathetic individuals in both real and virtual communities.",
+        "To get a job in the tech industry."
+      ],
+      "answer": "To become informed, ethical, and empathetic individuals in both real and virtual communities.",
+      "explanation": "The module states that for Filipino college students, mastering digital citizenship is crucial for becoming informed, ethical, and empathetic individuals in both real and virtual communities."
+    },
+    {
+      "question": "What is a major risk posed by social media to the democratic process, as noted in the module?",
+      "options": [
+        "Amplification of marginalized voices.",
+        "Dissemination of educational content.",
+        "Disinformation campaigns and troll farms.",
+        "Rapid mobilization for collective action."
+      ],
+      "answer": "Disinformation campaigns and troll farms.",
+      "explanation": "The module identifies disinformation campaigns, troll farms, and coordinated propaganda as serious risks to the democratic process, which manipulate information and push political agendas."
+    },
+    {
+      "question": "What does the module identify as a key characteristic of the Filipino youth population?",
+      "options": [
+        "They are largely disengaged from civic life.",
+        "They are the smallest demographic group.",
+        "They are tech-savvy and have one of the highest social media usage rates in the world.",
+        "They prefer traditional media over digital platforms."
+      ],
+      "answer": "They are tech-savvy and have one of the highest social media usage rates in the world.",
+      "explanation": "The module describes the Filipino population as having a 'young, tech-savvy population and one of the highest social media usage rates in the world.'"
+    },
+    {
+      "question": "Which of the following is an example of community engagement and volunteerism mentioned in the module?",
+      "options": [
+        "Attending a political rally.",
+        "Joining a street protest.",
+        "Participating in barangay assemblies and clean-up drives.",
+        "Signing an online petition."
+      ],
+      "answer": "Participating in barangay assemblies and clean-up drives.",
+      "explanation": "The module lists 'barangay assemblies, clean-up drives, feeding programs, disaster response, and civic organizations' as examples of community engagement and volunteerism."
+    },
+    {
+      "question": "The module mentions that algorithms are used by platforms like Facebook, TikTok, and YouTube to do what?",
+      "options": [
+        "To censor all dissenting opinions.",
+        "To decide which content to show each user.",
+        "To prevent all forms of misinformation.",
+        "To promote unbiased and neutral information."
+      ],
+      "answer": "To decide which content to show each user.",
+      "explanation": "The module states that algorithms are 'sets of automated instructions used by platforms... to decide which content to show each user.'"
+    },
+    {
+      "question": "What is the key difference between traditional civic responsibility and digital citizenship as outlined in the module?",
+      "options": [
+        "Traditional civic responsibility only involves legal obligations.",
+        "Digital citizenship is more important than traditional civic responsibility.",
+        "Traditional civic responsibility emphasizes offline duties, while digital citizenship incorporates these values into the virtual realm.",
+        "There is no significant difference between the two."
+      ],
+      "answer": "Traditional civic responsibility emphasizes offline duties, while digital citizenship incorporates these values into the virtual realm.",
+      "explanation": "The module clarifies that traditional civic responsibility emphasizes offline duties, while digital citizenship 'incorporates these values into the virtual realm.'"
+    },
+    {
+      "question": "What is one of the main goals of the #FridaysForFuture movement mentioned in the module?",
+      "options": [
+        "Gun reform.",
+        "Police brutality.",
+        "Climate action.",
+        "Press freedom."
+      ],
+      "answer": "Climate action.",
+      "explanation": "The module explicitly states that the #FridaysForFuture movement 'galvanized millions of students worldwide-including Filipinos-to demand climate action.'"
+    },
+    {
+      "question": "What challenge to youth civic engagement is described as a result of disillusionment with corruption and the slow pace of reform?",
+      "options": [
+        "Disinformation.",
+        "Economic constraints.",
+        "Political apathy.",
+        "Underrepresentation."
+      ],
+      "answer": "Political apathy.",
+      "explanation": "The module lists 'Political Apathy' as a challenge, stating that 'Some youth are disillusioned by corruption and the slow pace of reform, leading to disengagement.'"
+    },
+    {
+      "question": "What is a responsibility of a digital citizen concerning data privacy and security?",
+      "options": [
+        "Sharing personal data freely to connect with others.",
+        "Using the same password for all accounts for convenience.",
+        "Protecting personal data and respecting the privacy of others.",
+        "Collecting and disseminating others' private data without permission."
+      ],
+      "answer": "Protecting personal data and respecting the privacy of others.",
+      "explanation": "The module states that 'Ethical technology use includes protecting personal data and respecting the privacy of others.'"
+    },
+    {
+      "question": "What does the module suggest young Filipinos must do to see social media not just as entertainment?",
+      "options": [
+        "Use their platforms to spread any information they find online.",
+        "Engage in civic tech projects and promote voter education online.",
+        "Unfollow anyone with differing views.",
+        "Post viral, emotional content to get attention."
+      ],
+      "answer": "Engage in civic tech projects and promote voter education online.",
+      "explanation": "The module encourages young Filipinos to see social media as a space for civic engagement by 'Engaging in civic tech projects, joining online town halls, or promoting voter education online.'"
+    },
+    {
+      "question": "The module highlights that Filipino youth have historically been more than passive beneficiaries of democracy; they are its:",
+      "options": [
+        "Consumers and critics.",
+        "Leaders and followers.",
+        "Defenders and builders.",
+        "Reformers and traditionalists."
+      ],
+      "answer": "Defenders and builders.",
+      "explanation": "The module explicitly states, 'These examples show that Filipino youth have always been more than passive beneficiaries of democracy-they are its defenders and builders.'"
+    },
+    {
+      "question": "What is the purpose of the Sangguniang Kabataan (SK) and National Youth Commission (NYC) mentioned in the module?",
+      "options": [
+        "To provide entertainment for the youth.",
+        "To serve as challenges to youth civic engagement.",
+        "To offer channels for formal youth participation.",
+        "To regulate social media platforms."
+      ],
+      "answer": "To offer channels for formal youth participation.",
+      "explanation": "The module lists the SK and NYC as 'Institutional Support' which offers 'channels for formal participation.'"
+    },
+    {
+      "question": "According to the module, what is a key element of 'constructive engagement' online?",
+      "options": [
+        "Sharing opinions without listening to others.",
+        "Using social media to only criticize and find fault.",
+        "Engaging in respectful discussions and listening to differing views.",
+        "Deleting all posts that receive negative feedback."
+      ],
+      "answer": "Engaging in respectful discussions and listening to differing views.",
+      "explanation": "The module states that constructive engagement involves 'engaging in discussions respectfully, offering well-reasoned opinions, and listening to differing views.'"
+    },
+    {
+      "question": "What ethical concern is associated with the 'attention economy' on digital platforms?",
+      "options": [
+        "Platforms prioritizing accuracy and truth.",
+        "Controversial and misleading content spreading faster to maximize engagement.",
+        "Users being exposed to a wide variety of perspectives.",
+        "The promotion of constructive dialogue."
+      ],
+      "answer": "Controversial and misleading content spreading faster to maximize engagement.",
+      "explanation": "The module states that platforms are built to maximize engagement and that 'Controversial, emotional, or misleading content spreads faster because it captures attention.'"
+    },
+    {
+      "question": "Why is empathy considered 'even more essential' in digital communication?",
+      "options": [
+        "Because it is easier to understand tone online.",
+        "Because digital communication lacks the non-verbal cues of face-to-face interaction.",
+        "Because most people are inherently empathetic online.",
+        "Because digital communication is faster and more convenient."
+      ],
+      "answer": "Because digital communication lacks the non-verbal cues of face-to-face interaction.",
+      "explanation": "The module states that 'While digital communication offers speed and convenience, it lacks the non-verbal cues of face-to-face interaction. This makes empathy even more essential.'"
+    },
+    {
+      "question": "Which of the following is an example of an online social movement mentioned in the module that was organized by digital-native youth in the 21st century?",
+      "options": [
+        "The Propaganda Movement.",
+        "The EDSA People Power Revolution.",
+        "The #BabaeAko movement.",
+        "The Katipunan."
+      ],
+      "answer": "The #BabaeAko movement.",
+      "explanation": "The module cites #BabaeAko, #YouthVotePH, and #DefendPressFreedom as examples of social movements organized by 21st-century digital-native youth."
+    },
+    {
+      "question": "What is a major risk to democracy caused by social media that is described as 'rewriting history' and 'smearing opponents'?",
+      "options": [
+        "Amplification of marginalized voices.",
+        "Digital surveillance and censorship.",
+        "Echo chambers and polarization.",
+        "Disinformation campaigns."
+      ],
+      "answer": "Disinformation campaigns.",
+      "explanation": "The module states that disinformation campaigns 'manipulate information to confuse citizens and push political agendas,' and are used to 'rewrite history, glorify authoritarian rule, and smear opponents.'"
+    },
+    {
+      "question": "What is the primary way that social media bypasses traditional gatekeepers?",
+      "options": [
+        "By allowing content to be shared only by journalists.",
+        "By requiring all content to be approved by editors.",
+        "By allowing individuals from underrepresented groups to share their stories directly.",
+        "By enforcing strict rules on what can be posted."
+      ],
+      "answer": "By allowing individuals from underrepresented groups to share their stories directly.",
+      "explanation": "The module states that social media 'bypasses traditional gatekeepers such as editors and producers, allowing individuals from underrepresented groups...to share their stories and advocate for their rights.'"
+    },
+    {
+      "question": "What does the module identify as a civic responsibility that is 'not limited to legal obligations' but also involves 'moral and ethical duties'?",
+      "options": [
+        "Voting as a fundamental duty.",
+        "Civic responsibility in a democratic society.",
+        "Paying taxes.",
+        "Obeying the law."
+      ],
+      "answer": "Civic responsibility in a democratic society.",
+      "explanation": "The module states that in a democratic society like the Philippines, 'civic responsibility is is not limited to legal obligations-it also involves moral and ethical duties.'"
+    },
+    {
+      "question": "What is the purpose of policy and regulation in promoting a healthy digital space?",
+      "options": [
+        "To completely ban all social media platforms.",
+        "To allow tech companies to operate without any oversight.",
+        "To protect digital rights, regulate data privacy, and hold platforms accountable for spreading harmful content.",
+        "To promote censorship and limit free expression."
+      ],
+      "answer": "To protect digital rights, regulate data privacy, and hold platforms accountable for spreading harmful content.",
+      "explanation": "The module states that policy and regulation 'must collaborate to enact policies that protect digital rights without stifling dissent' and that this includes 'regulating data privacy, enforcing transparency in political ads, and holding platforms accountable for spreading harmful content.'"
+    },
+    {
+      "question": "How can youth participation in elections empower them to shape the future of their nation?",
+      "options": [
+        "By allowing them to create filter bubbles.",
+        "By enabling them to influence policies and support leaders who uphold transparency and accountability.",
+        "By increasing political apathy among their peers.",
+        "By focusing only on local issues and ignoring national ones."
+      ],
+      "answer": "By enabling them to influence policies and support leaders who uphold transparency and accountability.",
+      "explanation": "The module notes that young voters' votes can 'sway national and local elections, influence policies, and support leaders who uphold transparency, accountability, and progressive reforms.'"
+    },
+    {
+      "question": "According to the module, what is a primary goal of 'support for digital inclusivity'?",
+      "options": [
+        "To promote digital surveillance.",
+        "To bridge the digital divide by helping marginalized communities access technology and education.",
+        "To limit the number of people with internet access.",
+        "To create more filter bubbles and echo chambers."
+      ],
+      "answer": "To bridge the digital divide by helping marginalized communities access technology and education.",
+      "explanation": "The module states that promoting digital inclusivity means 'supporting efforts that bridge the digital divide-helping marginalized communities access devices, the internet, and digital education.'"
+    },
+    {
+      "question": "What does the module refer to as a set of automated instructions used by platforms to curate content for users?",
+      "options": [
+        "Algorithms.",
+        "Databases.",
+        "Firewalls.",
+        "Applications."
+      ],
+      "answer": "Algorithms.",
+      "explanation": "The module defines algorithms as 'sets of automated instructions used by platforms like Facebook, TikTok, YouTube, and Google to decide which content to show each user.'"
+    },
+    {
+      "question": "What does the term 'filter bubbles' refer to in the context of digital citizenship?",
+      "options": [
+        "A feature that filters out inappropriate content.",
+        "The phenomenon where individuals are only exposed to ideas they already agree with.",
+        "A protective layer on a screen.",
+        "A group of online users who share the same interests."
+      ],
+      "answer": "The phenomenon where individuals are only exposed to ideas they already agree with.",
+      "explanation": "The module explains that 'filter bubbles' are created when 'individuals are only exposed to ideas they already agree with.'"
+    },
+    {
+      "question": "What is one of the ways young Filipinos can challenge the status quo through advocacy?",
+      "options": [
+        "By avoiding online platforms.",
+        "By focusing only on entertainment content.",
+        "Through environmental campaigns, LGBTQIA+ rights, and mental health awareness.",
+        "By remaining silent on social issues."
+      ],
+      "answer": "Through environmental campaigns, LGBTQIA+ rights, and mental health awareness.",
+      "explanation": "The module mentions 'environmental campaigns, LGBTQIA+ rights, mental health awareness, or educational reform' as examples of causes young Filipinos can advocate for."
+    },
+    {
+      "question": "What is the key idea behind 'The Ethics of Algorithmic Citizenship'?",
+      "options": [
+        "Algorithms are always neutral and unbiased.",
+        "Citizens should understand and challenge the invisible systems that influence their online experience.",
+        "Citizens should only consume content from one source.",
+        "It is impossible to change how algorithms work."
+      ],
+      "answer": "Citizens should understand and challenge the invisible systems that influence their online experience.",
+      "explanation": "The module concludes this section by stating that practicing digital citizenship 'means not just acting responsibly, but also understanding and challenging the invisible systems that influence how we think, connect, and engage with the world.'"
+    },
+    {
+      "question": "What specific example from the Philippines is given to show how social media can hold leaders accountable?",
+      "options": [
+        "The EDSA People Power Revolution.",
+        "#BabaeAko.",
+        "#FridaysForFuture.",
+        "#Nasaan Ang Pangulo."
+      ],
+      "answer": "#Nasaan Ang Pangulo.",
+      "explanation": "The module states that 'Hashtags like #Nasaan Ang Pangulo or #LabanKapamilya show how social media can hold leaders accountable and spotlight urgent issues.'"
+    },
+    {
+      "question": "The module mentions that student governments and councils are an opportunity for youth because they foster:",
+      "options": [
+        "Political apathy.",
+        "Early civic engagement and decision-making.",
+        "Underrepresentation.",
+        "Economic constraints."
+      ],
+      "answer": "Early civic engagement and decision-making.",
+      "explanation": "The module lists 'Student Governments and Councils' as an opportunity, stating they 'foster early civic engagement and decision-making.'"
+    },
+    {
+      "question": "According to the module, what is a key ethical and legal issue related to the use of digital content?",
+      "options": [
+        "Overusing emoticons.",
+        "Cyberbullying prevention.",
+        "Respecting copyright and intellectual property.",
+        "Engaging in constructive dialogue."
+      ],
+      "answer": "Respecting copyright and intellectual property.",
+      "explanation": "The module lists 'Respecting Copyright and Intellectual Property' as an ethical use of technology, noting that 'Plagiarism, piracy, and unauthorized duplication of content are unethical and illegal.'"
+    },
+    {
+      "question": "What is one of the main functions of social media in a democracy, as described in the module?",
+      "options": [
+        "Limiting access to information.",
+        "Silencing dissent.",
+        "Creating new channels for information, dialogue, and collective action.",
+        "Excluding marginalized communities from public discourse."
+      ],
+      "answer": "Creating new channels for information, dialogue, and collective action.",
+      "explanation": "The module states that social media can 'enhance democratic participation by creating new channels for information, dialogue, and collective action.'"
+    },
+    {
+      "question": "What is the main idea behind the concept of 'digital inclusivity'?",
+      "options": [
+        "Limiting access to the internet to only those who are digitally literate.",
+        "Making sure everyone has the same opinions online.",
+        "Ensuring that everyone, regardless of background, has equal access to technology and digital education.",
+        "Banning certain groups from online platforms."
+      ],
+      "answer": "Ensuring that everyone, regardless of background, has equal access to technology and digital education.",
+      "explanation": "The module defines digital inclusivity as supporting efforts 'that bridge the digital divide-helping marginalized communities access devices, the internet, and digital education.'"
+    },
+    {
+      "question": "The module notes that the anonymity of the internet should not be a license for:",
+      "options": [
+        "Cruelty.",
+        "Free expression.",
+        "Political debate.",
+        "Sharing information."
+      ],
+      "answer": "Cruelty.",
+      "explanation": "The module explicitly states, 'The anonymity of the internet should not be a license for cruelty.'"
+    },
+    {
+      "question": "According to the module, who are the 'digital natives' that are uniquely positioned to champion ethical and engaged citizenship?",
+      "options": [
+        "Government officials.",
+        "Tech company executives.",
+        "Filipino college students.",
+        "Journalists and editors."
+      ],
+      "answer": "Filipino college students.",
+      "explanation": "The module states that 'As future leaders and digital natives, Filipino college students are uniquely positioned to champion ethical, empathetic, and engaged citizenship.'"
+    }
+  ],
+  "identification": [
+    {
+      "question": "This concept has evolved from ancient Greek city-states to modern democratic nations and has recently taken a transformative turn with digital technologies.",
+      "answer": "Citizenship",
+      "explanation": "The module states that the concept of citizenship has continuously evolved, with a transformative turn in the 21st century due to digital technologies."
+    },
+    {
+      "question": "The new paradigm that has emerged with the rise of the internet and social media, incorporating civic values into the virtual realm.",
+      "answer": "Digital citizenship",
+      "explanation": "The module defines digital citizenship as the new paradigm born from the expansion of the civic sphere into online environments."
+    },
+    {
+      "question": "The active participation of individuals in the political, economic, and social life of their communities.",
+      "answer": "Civic responsibility",
+      "explanation": "The module defines civic responsibility as the active participation of individuals in their communities' political, economic, and social life."
+    },
+    {
+      "question": "One of the most vital instruments of civic participation and a fundamental duty for young Filipinos.",
+      "answer": "Voting",
+      "explanation": "The module lists 'Voting as a Fundamental Duty' as one of the core civic responsibilities and calls it 'one of the most vital instruments of civic participation.'"
+    },
+    {
+      "question": "This involves speaking up for causes and communities in need through various platforms, both offline and online.",
+      "answer": "Advocacy",
+      "explanation": "The module defines advocacy as 'speaking up for causes and communities in need.'"
+    },
+    {
+      "question": "The set of automated instructions used by digital platforms to decide which content to show each user.",
+      "answer": "Algorithms",
+      "explanation": "The module defines algorithms as 'sets of automated instructions used by platforms like Facebook, TikTok, YouTube, and Google to decide which content to show each user.'"
+    },
+    {
+      "question": "The phenomenon where individuals are only exposed to ideas they already agree with because of algorithmic curation.",
+      "answer": "Filter bubbles",
+      "explanation": "The module states that algorithms can create 'filter bubbles' where 'individuals are only exposed to ideas they already agree with.'"
+    },
+    {
+      "question": "The permanent trail left by an individual's online actions.",
+      "answer": "Digital footprint",
+      "explanation": "The module defines a digital footprint as 'the permanent trail left by online actions.'"
+    },
+    {
+      "question": "A type of protest in Nigeria against police brutality that was powered by Twitter/X and WhatsApp.",
+      "answer": "#EndSARS",
+      "explanation": "The module lists #EndSARS as a powerful example of youth-led activism powered by digital platforms, specifically Twitter/X and WhatsApp, to protest police brutality."
+    },
+    {
+      "question": "A challenge to youth civic engagement caused by disillusionment with corruption and the slow pace of reform.",
+      "answer": "Political apathy",
+      "explanation": "The module lists 'Political Apathy' as a challenge that results from youth being 'disillusioned by corruption and the slow pace of reform.'"
+    },
+    {
+      "question": "The ability to show care and concern for others online, which is essential in digital interactions that lack non-verbal cues.",
+      "answer": "Digital empathy",
+      "explanation": "The module defines digital empathy as 'Showing care and concern for others online.'"
+    },
+    {
+      "question": "The process of verifying facts and assessing the credibility of sources before sharing information.",
+      "answer": "Fact-checking",
+      "explanation": "The module states that it is a digital citizen's responsibility to 'verify facts before sharing' and describes this process in the section on 'Fact-Checking and Critical Thinking.'"
+    },
+    {
+      "question": "A core civic responsibility that involves active involvement in local life, such as clean-up drives and barangay assemblies.",
+      "answer": "Community engagement",
+      "explanation": "The module lists 'Community Engagement and Volunteerism' as a core civic responsibility that involves active involvement in community life."
+    },
+    {
+      "question": "The framework of knowledge and skills needed to critically evaluate content and resist manipulation, which the module says must be institutionalized at all levels of education.",
+      "answer": "Media and Information Literacy (MIL)",
+      "explanation": "The module identifies 'Media and Information Literacy (MIL)' as the key to resisting manipulation by teaching students to critically evaluate content."
+    },
+    {
+      "question": "An opportunity for youth participation that provides channels for formal involvement, such as the Sangguniang Kabataan.",
+      "answer": "Institutional support",
+      "explanation": "The module lists 'Institutional Support' as an opportunity, citing organizations like the Sangguniang Kabataan (SK) and the National Youth Commission (NYC)."
+    },
+    {
+      "question": "A risk to democracy where platforms manipulate information through 'fake news' and 'troll farms' to confuse citizens and push political agendas.",
+      "answer": "Disinformation campaigns",
+      "explanation": "The module defines disinformation campaigns as the use of 'fake news, troll farms, and coordinated propaganda campaigns [to] manipulate information to confuse citizens and push political agendas.'"
+    },
+    {
+      "question": "The use of writing and education by young Filipino reformists like José Rizal to ignite national consciousness during the Spanish colonial period.",
+      "answer": "Propaganda Movement",
+      "explanation": "The module refers to young Filipino reformists of the 'Propaganda Movement' who used 'writing and education to ignite a national consciousness.'"
+    },
+    {
+      "question": "A key practice for promoting a healthy digital space that involves engaging in discussions respectfully and listening to differing views.",
+      "answer": "Constructive engagement",
+      "explanation": "The module defines constructive engagement as 'engaging in discussions respectfully, offering well-reasoned opinions, and listening to differing views.'"
+    },
+    {
+      "question": "A challenge to youth engagement where young people are often excluded from formal decision-making processes.",
+      "answer": "Underrepresentation",
+      "explanation": "The module lists 'Underrepresentation' as a challenge, stating that 'Youth are often excluded from formal decision-making processes.'"
+    },
+    {
+      "question": "The global youth-led movement for climate action that was initiated by Greta Thunberg and used digital platforms to organize climate strikes.",
+      "answer": "#FridaysForFuture",
+      "explanation": "The module cites #FridaysForFuture as a global movement initiated by Greta Thunberg that 'galvanized millions of students worldwide...to demand climate action.'"
+    }
+  ]
+};
+    //
+    // --- END OF QUIZ DATA ---
+    //
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let wrongAnswers = [];
+    let isIdentificationSection = false;
+    let answered = false;
+    const totalQuestions = quizData.multipleChoice.length + quizData.identification.length;
+
+    const quizArea = document.getElementById('quiz-area');
+    const endScreen = document.getElementById('end-screen');
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const identificationContainer = document.getElementById('identification-container');
+    const identificationInput = document.getElementById('identification-input');
+    const submitButton = document.getElementById('submit-button');
+    const feedbackSection = document.getElementById('feedback-section');
+    const feedbackText = document.getElementById('feedback-text');
+    const explanationText = document.getElementById('explanation-text');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const finalScoreSpan = document.getElementById('final-score');
+    const totalQuestionsSpan = document.getElementById('total-questions');
+    const bestScoreSpan = document.getElementById('best-score');
+    const wrongAnswersList = document.getElementById('wrong-answers-list');
+    const restartButton = document.getElementById('restart-button');
+    const modeToggle = document.getElementById('mode-toggle');
+
+    // Load initial state from cookies
+    const savedTheme = getCookie("theme");
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+        modeToggle.innerHTML = '🌙';
+    }
+
+    const savedBestScore = getCookie("bestScore");
+    bestScoreSpan.textContent = savedBestScore || '0';
+
+    modeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        modeToggle.innerHTML = isDarkMode ? '🌙' : '☀️';
+        setCookie("theme", isDarkMode ? "dark" : "light", 365);
+    });
+
+    function showQuestion() {
+        if (totalQuestions === 0) {
+            quizArea.innerHTML = "<h2>No questions found! Please add questions to the quizData object.</h2>";
+            return;
+        }
+        
+        answered = false;
+        optionsContainer.style.display = 'flex';
+        identificationContainer.style.display = 'none';
+        identificationInput.value = '';
+        feedbackSection.style.display = 'none';
+        feedbackSection.classList.remove('correct', 'incorrect');
+        
+        let currentQuizData;
+        if (currentQuestionIndex < quizData.multipleChoice.length) {
+            isIdentificationSection = false;
+            submitButton.style.display = 'none'; // Hide submit button for MCQs
+            currentQuizData = quizData.multipleChoice[currentQuestionIndex];
+            optionsContainer.innerHTML = '';
+            currentQuizData.options.forEach(option => {
+                const button = document.createElement('button');
+                button.classList.add('option');
+                button.textContent = option;
+                button.onclick = () => selectOption(button, option);
+                optionsContainer.appendChild(button);
+            });
+            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. The identification questions will begin after question ${quizData.multipleChoice.length}.`;
+        } else {
+            isIdentificationSection = true;
+            submitButton.style.display = 'block'; // Show submit button for identification questions
+            currentQuizData = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
+            optionsContainer.style.display = 'none';
+            identificationContainer.style.display = 'block';
+            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. You are now in the identification questions section.`;
+        }
+        
+        questionText.textContent = currentQuizData.question;
+        updateProgressBar();
+    }
+
+    function selectOption(selectedButton, selectedAnswer) {
+        if (answered) return;
+        answered = true;
+
+        const currentQuestion = quizData.multipleChoice[currentQuestionIndex];
+        const isCorrect = selectedAnswer === currentQuestion.answer;
+        
+        selectedButton.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+        if (isCorrect) {
+            score++;
+            feedbackText.textContent = "Correct!";
+            feedbackSection.classList.add('correct');
+        } else {
+            feedbackText.textContent = `Incorrect. The correct answer was: ${currentQuestion.answer}`;
+            feedbackSection.classList.add('incorrect');
+            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: selectedAnswer, type: 'multipleChoice' });
+        }
+        explanationText.textContent = currentQuestion.explanation;
+        feedbackSection.style.display = 'block';
+
+        const allOptions = optionsContainer.querySelectorAll('.option');
+        allOptions.forEach(option => {
+            if (option.textContent === currentQuestion.answer) {
+                option.classList.add('correct');
+            }
+            option.disabled = true;
+        });
+
+        setTimeout(() => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < totalQuestions) {
+                showQuestion();
+            } else {
+                showEndScreen();
+            }
+        }, 3000);
+    }
+
+    submitButton.onclick = () => {
+        if (!isIdentificationSection) {
+            return;
+        }
+
+        if (answered) return;
+        answered = true;
+        submitButton.disabled = true;
+
+        const currentQuestion = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
+        const userAnswer = identificationInput.value.trim();
+        const correctAnswer = currentQuestion.answer.trim();
+
+        const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+        
+        if (isCorrect) {
+            score++;
+            feedbackText.textContent = "Correct!";
+            feedbackSection.classList.add('correct');
+        } else {
+            feedbackText.textContent = `Incorrect. The correct answer was: ${currentQuestion.answer}`;
+            feedbackSection.classList.add('incorrect');
+            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: userAnswer, type: 'identification' });
+        }
+        explanationText.textContent = currentQuestion.explanation;
+        feedbackSection.style.display = 'block';
+
+        setTimeout(() => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < totalQuestions) {
+                showQuestion();
+            } else {
+                showEndScreen();
+            }
+        }, 3000);
+    };
+
+    function updateProgressBar() {
+        const progress = (currentQuestionIndex / totalQuestions) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function showEndScreen() {
+        quizArea.style.display = 'none';
+        endScreen.style.display = 'block';
+        finalScoreSpan.textContent = score;
+        totalQuestionsSpan.textContent = totalQuestions;
+
+        const currentBestScore = parseInt(getCookie("bestScore") || '0', 10);
+        if (score > currentBestScore) {
+            setCookie("bestScore", score, 365);
+            bestScoreSpan.textContent = score;
+        } else {
+            bestScoreSpan.textContent = currentBestScore;
+        }
+
+        wrongAnswersList.innerHTML = '';
+        if (wrongAnswers.length > 0) {
+            wrongAnswers.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>Q:</strong> ${item.question}<br><strong>Your Answer:</strong> ${item.yourAnswer}<br><strong>Correct Answer:</strong> ${item.correctAnswer}`;
+                wrongAnswersList.appendChild(li);
+            });
+        } else {
+            wrongAnswersList.innerHTML = "<li>You got all questions right! 🎉</li>";
+        }
+    }
+
+    restartButton.addEventListener('click', () => {
+        currentQuestionIndex = 0;
+        score = 0;
+        wrongAnswers = [];
+        endScreen.style.display = 'none';
+        quizArea.style.display = 'block';
+        showQuestion();
+    });
+
+    // Start the quiz
+    showQuestion();
+
+</script>
+
+</body>
+</html>
