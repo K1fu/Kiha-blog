@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding The Self</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color-light: #f4f7f6;
+            --text-color-light: #2c3e50;
+            --container-bg-light: #ffffff;
+            --primary-color-light: #3498db;
+            --secondary-color-light: #2980b9;
+            --correct-color: #27ae60;
+            --incorrect-color: #e74c3c;
+            --border-color-light: #bdc3c7;
+            --shadow-color-light: rgba(0, 0, 0, 0.1);
+            --placeholder-color-light: #7f8c8d;
+        }
+
+        .dark-mode {
+            --bg-color-light: #2c3e50;
+            --text-color-light: #ecf0f1;
+            --container-bg-light: #34495e;
+            --primary-color-light: #3498db;
+            --secondary-color-light: #2980b9;
+            --border-color-light: #526f8d;
+            --shadow-color-light: rgba(255, 255, 255, 0.1);
+            --placeholder-color-light: #bdc3c7;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--container-bg-light);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px var(--shadow-color-light);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2em;
+            color: var(--primary-color-light);
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-top: 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: var(--border-color-light);
+            border-radius: 8px;
+            height: 12px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-color-light);
+            transition: width 0.4s ease-in-out;
+        }
+
+        .progress-text {
+            font-size: 0.9em;
+            color: var(--placeholder-color-light);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #question-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        #options-container, #identification-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background-color: transparent;
+            border: 2px solid var(--border-color-light);
+            color: var(--text-color-light);
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow-color-light);
+        }
+
+        .option.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+
+        .option.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+            border-color: var(--incorrect-color);
+        }
+
+        #submit-button, .quiz-button, #restart-button {
+            display: none; /* Hide by default */
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            font-weight: bold;
+            color: white;
+            background-color: var(--primary-color-light);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        #submit-button:hover, .quiz-button:hover, #restart-button:hover {
+            background-color: var(--secondary-color-light);
+            transform: translateY(-2px);
+        }
+        
+        #submit-button:disabled {
+            background-color: #7f8c8d;
+            cursor: not-allowed;
+        }
+
+        #feedback-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 5px solid;
+            border-radius: 8px;
+            display: none;
+        }
+
+        #feedback-section.correct {
+            border-color: var(--correct-color);
+        }
+
+        #feedback-section.incorrect {
+            border-color: var(--incorrect-color);
+        }
+
+        #explanation-text {
+            font-style: italic;
+            font-size: 0.95em;
+            margin-top: 10px;
+        }
+
+        .end-screen {
+            text-align: center;
+        }
+
+        .end-screen h2 {
+            font-size: 2em;
+            color: var(--primary-color-light);
+            margin-bottom: 10px;
+        }
+
+        .end-screen p {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        
+        #incorrect-questions-list {
+            text-align: left;
+            margin-top: 20px;
+        }
+        
+        #incorrect-questions-list li {
+            margin-bottom: 10px;
+            border-left: 3px solid var(--incorrect-color);
+            padding-left: 10px;
+        }
+
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--container-bg-light);
+            border: 2px solid var(--border-color-light);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px var(--shadow-color-light);
+            font-size: 1.2em;
+            color: var(--text-color-light);
+        }
+
+        #identification-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            border: 2px solid var(--border-color-light);
+            border-radius: 8px;
+            background-color: var(--container-bg-light);
+            color: var(--text-color-light);
+            transition: border-color 0.2s;
+        }
+        
+        #identification-input:focus {
+            outline: none;
+            border-color: var(--primary-color-light);
+        }
+    </style>
+</head>
+<body>
+
+<div class="mode-toggle" id="mode-toggle">
+    ☀️
+</div>
+
+<div class="quiz-container" id="quiz-container">
+    <h1 id="quiz-title">Understanding The Self</h1>
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <p class="progress-text" id="progress-text"></p>
+
+    <div id="quiz-area">
+        <div id="question-area">
+            <h2 id="question-text"></h2>
+            <div id="options-container"></div>
+            <div id="identification-container" style="display: none;">
+                <input type="text" id="identification-input" placeholder="Type your answer here...">
+            </div>
+            <button id="submit-button">Submit Answer</button>
+        </div>
+        
+        <div id="feedback-section">
+            <p id="feedback-text"></p>
+            <p id="explanation-text"></p>
+        </div>
+    </div>
+
+    <div id="end-screen" class="end-screen" style="display: none;">
+        <h2>Quiz Complete!</h2>
+        <p>Your Score: <span id="final-score"></span> / <span id="total-questions"></span></p>
+        <p>Previous Best Score: <span id="best-score"></span></p>
+        <div id="incorrect-questions-list">
+            <h3>Questions you got wrong:</h3>
+            <ul id="wrong-answers-list"></ul>
+        </div>
+        <button id="restart-button">Restart Quiz</button>
+    </div>
+</div>
+
+<script>
+    // Utility functions for cookies
+    function setCookie(name, value, days) {
+        const d = new Date();
+        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+        const expires = "expires=" + d.toUTCString();
+        document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    }
+
+    function getCookie(name) {
+        const cname = name + "=";
+        const decodedCookie = decodeURIComponent(document.cookie);
+        const ca = decodedCookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(cname) === 0) {
+                return c.substring(cname.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    //
+    // --- START OF QUIZ DATA ---
+    //
+    const quizData = {
+    multipleChoice: [
+        {
+            question: "Which subdiscipline of anthropology studies the learned behavior of groups of people in specific environments?",
+            options: ["Linguistic Anthropology", "Cultural Anthropology", "Biological Anthropology", "Archaeology"],
+            answer: "Cultural Anthropology",
+            explanation: "Cultural Anthropology, also known as social anthropology, focuses on the learned behaviors, beliefs, and practices of groups in specific environments."
+        },
+        {
+            question: "The word 'anthropology' is derived from which two Greek words?",
+            options: ["Anthropos and Logos", "Anthropos and Logia", "Anthropos and Pseudos", "Anthropos and Physis"],
+            answer: "Anthropos and Logia",
+            explanation: "The word 'anthropology' comes from the Greek words 'anthropos' (human) and 'logia' (study)."
+        },
+        {
+            question: "Which American anthropologist explored the diversity of identities shaped by cultural norms and socialization processes across different societies?",
+            options: ["Clifford Geertz", "Margaret Mead", "William James", "Carl Rogers"],
+            answer: "Margaret Mead",
+            explanation: "Margaret Mead is known for her work exploring how cultural norms and socialization processes shape identities, particularly in her studies of tribes like the Arapesh and Tchambuli."
+        },
+        {
+            question: "Clifford Geertz's approach to studying the self focuses on:",
+            options: ["Human evolution", "Linguistic patterns", "Symbolic interpretation and performance", "Material remains of ancient civilizations"],
+            answer: "Symbolic interpretation and performance",
+            explanation: "Geertz's approach emphasizes the use of cultural symbols and performance within specific cultural settings to understand individual identity."
+        },
+        {
+            question: "Which of the following is NOT one of the tribes studied by Margaret Mead mentioned in the handout?",
+            options: ["Arapesh", "Manus", "Tchambuli (Chambri)", "Masai"],
+            answer: "Masai",
+            explanation: "The handouts specifically mention Mead's studies of the Arapesh, Manus, and Tchambuli (Chambri) tribes."
+        },
+        {
+            question: "According to the handout, a key aspect of Clifford Geertz's contribution is that individuals' sense of self is deeply rooted in cultural contexts, as seen in the study of which traditional art form?",
+            options: ["Bharatanatyam", "Kabuki", "Wayang Kulit", "Kathak"],
+            answer: "Wayang Kulit",
+            explanation: "The handout lists Wayang Kulit as an example of a cultural context where an individual's sense of self is deeply rooted according to Geertz."
+        },
+        {
+            question: "What does Linguistic Anthropology study?",
+            options: ["How people eat and celebrate", "How language influences social life", "The genetic diversity of ethnic groups", "Ancient human civilizations"],
+            answer: "How language influences social life",
+            explanation: "Linguistic Anthropology is defined as the study of how language influences social life, including how it reflects cultural values and social organization."
+        },
+        {
+            question: "Which subdiscipline of anthropology focuses on human evolution within the context of human culture and behavior?",
+            options: ["Archaeology", "Cultural Anthropology", "Linguistic Anthropology", "Biological/Physical Anthropology"],
+            answer: "Biological/Physical Anthropology",
+            explanation: "Biological or Physical Anthropology studies human evolution and physical characteristics in relation to culture and behavior."
+        },
+        {
+            question: "Archaeology is the subdiscipline of anthropology that interprets human history by analyzing:",
+            options: ["Spoken languages", "Learned behaviors", "Material remains", "Social interactions"],
+            answer: "Material remains",
+            explanation: "Archaeology uses the analysis of material remains to interpret the experiences and activities of ancient civilizations."
+        },
+        {
+            question: "Which of the following is an example of a specific cultural setting where Geertz observed cultural symbols influencing individual identities?",
+            options: ["The Amazon rainforest", "Moroccan souks", "The Himalayas", "The Sahara desert"],
+            answer: "Moroccan souks",
+            explanation: "The handout mentions Moroccan souks as a specific example where Geertz noted the influence of cultural symbols on individual identities."
+        },
+        {
+            question: "What did Margaret Mead's study of the Tchambuli (Chambri) tribe challenge?",
+            options: ["The idea that culture is static", "Fixed gender roles", "The theory of evolution", "Linguistic universals"],
+            answer: "Fixed gender roles",
+            explanation: "Mead's study of the Tchambuli tribe, where women held dominant social and economic roles, challenged fixed gender roles and showed how cultural norms reshape identities."
+        },
+        {
+            question: "The handout states that anthropologists explore which of the following questions?",
+            options: ["How the universe was formed", "How societies have changed over time", "The properties of subatomic particles", "The internal structure of the Earth"],
+            answer: "How societies have changed over time",
+            explanation: "The introductory text mentions that anthropologists explore how societies have changed over time and how cultures shape who we are."
+        },
+        {
+            question: "How do Geertz and Mead's approaches to the cultural construction of self differ?",
+            options: ["Geertz focuses on evolution, while Mead focuses on linguistics.", "Geertz focuses on symbolic interpretation, while Mead explores the diversity of identities across cultures.", "Geertz focuses on material remains, while Mead focuses on learned behavior.", "Geertz focuses on gender roles, while Mead focuses on economic systems."],
+            answer: "Geertz focuses on symbolic interpretation, while Mead explores the diversity of identities across cultures.",
+            explanation: "The handout's summary states that Geertz focuses on symbolic interpretation and performance, while Mead's perspective explores the diversity of identities shaped by cultural norms across different societies."
+        },
+        {
+            question: "What is psychology defined as in the handout?",
+            options: ["The study of people throughout the world", "The study of mind and behavior", "The study of learned behavior in groups", "The study of human evolution"],
+            answer: "The study of mind and behavior",
+            explanation: "The handout defines psychology as 'the study of mind and behavior in relation to a particular field of knowledge or activity'."
+        },
+        {
+            question: "According to William James, which aspect of the self is the 'objective part' made up of our traits and roles?",
+            options: ["The 'I' self", "The 'Me' self", "The Ideal Self", "The Real Self"],
+            answer: "The 'Me' self",
+            explanation: "The 'Me' self is described as the objective part of ourselves, encompassing our traits, roles, and how we see ourselves based on past experiences and social feedback."
+        },
+        {
+            question: "Which of William James's self categories is about being aware of ourselves in the present moment?",
+            options: ["The 'I' self", "The 'Me' self", "The Real Self", "The False Self"],
+            answer: "The 'I' self",
+            explanation: "The 'I' self is defined as how we experience ourselves in the present moment, including thoughts, feelings, and actions."
+        },
+        {
+            question: "What does Carl Rogers refer to as one's current identity?",
+            options: ["The Ideal Self", "The True Self", "The Real Self", "The Differentiated Self"],
+            answer: "The Real Self",
+            explanation: "In Carl Rogers's self theory, the Real Self refers to one's current identity."
+        },
+        {
+            question: "Which of Carl Rogers' concepts refers to the person you want to become?",
+            options: ["The Real Self", "The True Self", "The Ideal Self", "The False Self"],
+            answer: "The Ideal Self",
+            explanation: "The Ideal Self, in Rogers's theory, is the person you want to become or the best version of yourself."
+        },
+        {
+            question: "Donald W. Winnicott's theory of the self includes the concepts of True Self and:",
+            options: ["Ideal Self", "Real Self", "False Self", "Global Self"],
+            answer: "False Self",
+            explanation: "Winnicott's theory contrasts the True Self (authentic self) with the False Self, a protective persona formed in response to external pressures."
+        },
+        {
+            question: "According to Winnicott, the False Self is a protective persona formed in response to:",
+            options: ["Internal thoughts and feelings", "Dreams and fantasies", "External pressures, expectations, or traumas", "Positive reinforcement"],
+            answer: "External pressures, expectations, or traumas",
+            explanation: "The handout describes the False Self as a protective persona that individuals develop to respond to external pressures and expectations."
+        },
+        {
+            question: "What is the focus of Murray Bowen's 'Intrapsychic Differentiation'?",
+            options: ["Distinguishing self from others", "Distinguishing thoughts from emotions", "Maintaining consistency across situations", "Setting goals for the future"],
+            answer: "Distinguishing thoughts from emotions",
+            explanation: "Intrapsychic differentiation (from the prefix 'intra-' meaning 'within') is the ability to tell apart one's thoughts from one's emotions."
+        },
+        {
+            question: "Which of Bowen's concepts deals with distinguishing one's own experience from the experience of people one is connected to?",
+            options: ["Intrapsychic Differentiation", "Interpersonal Differentiation", "Self-reactiveness", "Self-reflection"],
+            answer: "Interpersonal Differentiation",
+            explanation: "Interpersonal Differentiation (from the prefix 'inter-' meaning 'between' or 'among') is the ability to distinguish your own experience from that of others."
+        },
+        {
+            question: "Albert Bandura's concept of 'Human Agency' underscores that individuals are:",
+            options: ["Passive recipients of circumstances", "Active agents who shape their lives", "Primarily influenced by genetics", "Unable to control their environment"],
+            answer: "Active agents who shape their lives",
+            explanation: "Human Agency emphasizes that individuals actively shape their actions, thoughts, and environments, and are not passive recipients of circumstances."
+        },
+        {
+            question: "Which core property of human agency refers to setting goals and making plans to achieve them?",
+            options: ["Forethought", "Intentionality", "Self-reactiveness", "Self-reflection"],
+            answer: "Intentionality",
+            explanation: "Intentionality is defined as setting goals and making plans to achieve them, a core property of human agency."
+        },
+        {
+            question: "The core property of human agency that refers to thinking ahead and planning actions based on expected outcomes is:",
+            options: ["Intentionality", "Self-reactiveness", "Self-reflection", "Forethought"],
+            answer: "Forethought",
+            explanation: "Forethought is the core property of human agency that involves thinking ahead and planning actions based on future outcomes."
+        },
+        {
+            question: "What is a 'Global model' of the self, according to David Lester?",
+            options: ["The self is constantly changing", "The self is made up of multiple, distinct roles", "The self remains consistent across different situations", "The self is entirely a social construct"],
+            answer: "The self remains consistent across different situations",
+            explanation: "In Lester's theory, the Global model refers to a consistent self-concept, where traits and values remain the same across different situations."
+        },
+        {
+            question: "The concept of 'The Self as a Cognitive Construction' emphasizes the dynamic nature of the individual based on:",
+            options: ["Fixed personality traits", "Biological inheritance", "Perception, interpretation, and memory", "External social pressures only"],
+            answer: "Perception, interpretation, and memory",
+            explanation: "This perspective highlights that our self-awareness is constantly influenced by cognitive processes such as perception, interpretation, and memory."
+        },
+        {
+            question: "Which of Bandura's core properties of human agency involves monitoring and evaluating one's own behavior and emotions?",
+            options: ["Intentionality", "Forethought", "Self-reactiveness", "Self-reflection"],
+            answer: "Self-reactiveness",
+            explanation: "Self-reactiveness is the ability to monitor and evaluate one's own behavior and emotions, and is a key property of human agency."
+        },
+        {
+            question: "The concept of 'Proactive behavior' is described as:",
+            options: ["A response to a problem that has already occurred", "Self-initiated behavior aimed at addressing problems before they arise", "The ability to influence one's own destiny", "Thinking ahead about future outcomes"],
+            answer: "Self-initiated behavior aimed at addressing problems before they arise",
+            explanation: "Proactive behavior is defined as a self-initiated action to address problems before they happen."
+        },
+        {
+            question: "Who proposed that an individual's perception of self consists of two categories: 'I' and 'Me'?",
+            options: ["Murray Bowen", "Carl Rogers", "William James", "David Lester"],
+            answer: "William James",
+            explanation: "William James was the American psychologist and philosopher who introduced the 'I' self and 'Me' self theory."
+        },
+        {
+            question: "A person's self-concept is described as flexible and changing as they:",
+            options: ["Maintain a fixed global model", "Avoid new experiences", "Incorporate new information and reinterpret experiences", "Focus solely on their True Self"],
+            answer: "Incorporate new information and reinterpret experiences",
+            explanation: "The handout states that our self-concept is flexible and changes as we incorporate new information and reinterpret our experiences."
+        },
+        {
+            question: "The example of studying the practices of the Ifugao in the Cordillera Region falls under which subdiscipline of anthropology?",
+            options: ["Linguistic Anthropology", "Cultural Anthropology", "Biological Anthropology", "Archaeology"],
+            answer: "Cultural Anthropology",
+            explanation: "Studying the practices, beliefs, and traditions of a group is an example of Cultural Anthropology."
+        },
+        {
+            question: "According to Margaret Mead's work on the Arapesh tribe, cultures have unique norms and values that:",
+            options: ["Are universally the same", "Shape individual identities", "Are a result of biological evolution", "Are entirely disconnected from identity"],
+            answer: "Shape individual identities",
+            explanation: "One of the key aspects of Mead's contribution is that cultures have unique norms and values that shape individual identities, as seen in the Arapesh tribe."
+        },
+        {
+            question: "Which theorist's work on the self is based on the concept of 'human agency'?",
+            options: ["Donald Winnicott", "Albert Bandura", "William James", "Murray Bowen"],
+            answer: "Albert Bandura",
+            explanation: "Albert Bandura's theory focuses on the concept of Human Agency, which is the ability to actively shape one's life."
+        },
+        {
+            question: "Which of the following is a component of the 'Me' self?",
+            options: ["Thoughts about a recent experience", "Feelings in the present moment", "Your role as a student", "The act of deciding what to do next"],
+            answer: "Your role as a student",
+            explanation: "The 'Me' self is the objective part of the self, which includes roles, traits, and past experiences. Being a student is an example of a role."
+        },
+        {
+            question: "The study of how language reflects a community's social organization is an example of:",
+            options: ["Cultural Anthropology", "Linguistic Anthropology", "Archaeology", "Physical Anthropology"],
+            answer: "Linguistic Anthropology",
+            explanation: "Linguistic Anthropology studies how language influences and reflects social life and cultural values."
+        },
+        {
+            question: "Which of the following is an example of the 'I' self?",
+            options: ["Your academic achievements", "How others perceive you", "Contemplating how you felt during a challenging conversation", "Your physical appearance"],
+            answer: "Contemplating how you felt during a challenging conversation",
+            explanation: "The 'I' self is the subjective, active part of the self, and contemplating your feelings is an example of this real-time awareness."
+        },
+        {
+            question: "The concept that individuals are 'NOT passive recipients of circumstances but active agents' is a core idea of:",
+            options: ["Winnicott's False Self", "Rogers' Real Self", "Bandura's Human Agency", "James' 'Me' self"],
+            answer: "Bandura's Human Agency",
+            explanation: "This statement directly reflects Bandura's emphasis on individuals as proactive and agentic beings."
+        },
+        {
+            question: "What is the primary focus of 'The Self as a Cognitive Construction' perspective?",
+            options: ["The fixed nature of the self", "The subconscious mind's influence", "The dynamic evolution of the self through cognitive processes", "The role of genetics in self-perception"],
+            answer: "The dynamic evolution of the self through cognitive processes",
+            explanation: "This perspective emphasizes the dynamic nature of the individual and its evolution through personal experiences, beliefs, and social interactions."
+        },
+        {
+            question: "In the study of the Manus people, Margaret Mead observed that individuals learn cultural norms through:",
+            options: ["Genetic inheritance", "Solitary introspection", "Upbringing and social interactions", "Economic transactions"],
+            answer: "Upbringing and social interactions",
+            explanation: "The handout notes that among the Manus people, individuals learn cultural norms through upbringing and social interactions."
+        },
+        {
+            question: "Which of the following describes 'Agentic behavior'?",
+            options: ["The ability to plan for the future", "The ability to monitor one's emotions", "The ability to influence and direct one's life", "Self-initiated problem-solving"],
+            answer: "The ability to influence and direct one's life",
+            explanation: "Agentic behavior is defined as the ability to control one's goals, actions, and destinies."
+        },
+        {
+            question: "The core property of human agency that involves rewarding or adjusting behaviors based on self-evaluation and feedback is:",
+            options: ["Intentionality", "Forethought", "Self-reactiveness", "Self-reflection"],
+            answer: "Self-reflection",
+            explanation: "Self-reflection involves evaluating one's actions and making adjustments, which is a key part of human agency."
+        },
+        {
+            question: "Which anthropological subdiscipline is focused on the study of people from every part of the world, today, yesterday, and long ago?",
+            options: ["Linguistic Anthropology", "Archaeology", "Anthropology", "Cultural Anthropology"],
+            answer: "Anthropology",
+            explanation: "This is the general definition of anthropology as a whole, encompassing all its subdisciplines."
+        },
+        {
+            question: "A person with a 'differentiated' self, according to David Lester, would likely be:",
+            options: ["Consistent across all situations", "Flexible and adapting to different situations", "Focused on their 'Me' self", "Focused on their 'I' self"],
+            answer: "Flexible and adapting to different situations",
+            explanation: "The Differentiated model is the opposite of the Global model, suggesting traits and self-concept can vary across situations."
+        },
+        {
+            question: "Which of the following is NOT a core property of human agency?",
+            options: ["Intentionality", "Forethought", "Extrospection", "Self-reflection"],
+            answer: "Extrospection",
+            explanation: "The four core properties of human agency listed in the handout are Intentionality, Forethought, Self-reactiveness, and Self-reflection. Extrospection is not included."
+        },
+        {
+            question: "What is the focus of Biological Anthropology?",
+            options: ["Material remains", "Human evolution and culture", "Spoken languages", "Social behaviors"],
+            answer: "Human evolution and culture",
+            explanation: "Biological/Physical Anthropology focuses on human evolution within the context of human culture and behavior."
+        },
+        {
+            question: "An example of 'Intrapsychic Differentiation' would be:",
+            options: ["Debating a friend's opinion while respecting it", "Recognizing that your feelings of anger are separate from your rational thoughts", "Adjusting your behavior to fit in with a new group", "Planning a career path"],
+            answer: "Recognizing that your feelings of anger are separate from your rational thoughts",
+            explanation: "This is a perfect example of distinguishing thoughts from emotions, which is the definition of Intrapsychic Differentiation."
+        },
+        {
+            question: "What did Margaret Mead's study of the Arapesh tribe demonstrate?",
+            options: ["The immutability of gender roles", "The influence of culture on individual identity", "The superiority of one culture over another", "The universal nature of language"],
+            answer: "The influence of culture on individual identity",
+            explanation: "Mead's study of the Arapesh tribe showed how unique cultural norms and values shape individual identities."
+        },
+        {
+            question: "The idea that our self-concept is flexible and changes with new information and reinterpreted experiences is a key tenet of:",
+            options: ["Psychodynamic theory", "The self as a cognitive construction", "Humanistic psychology", "Trait theory"],
+            answer: "The self as a cognitive construction",
+            explanation: "This statement is the core of the handout's section on 'The Self as a Cognitive Construction'."
+        },
+        {
+            question: "Which type of self, according to Winnicott, represents the authentic and innate qualities of an individual?",
+            options: ["True Self", "False Self", "Real Self", "Ideal Self"],
+            answer: "True Self",
+            explanation: "Winnicott's True Self represents an individual's authentic and innate qualities."
+        },
+        {
+            question: "An example of the 'Me' self would be:",
+            options: ["Thinking about your feelings while writing a poem", "Choosing a college major based on your passions", "Your reputation among your friends and family", "Reacting impulsively to a stressful situation"],
+            answer: "Your reputation among your friends and family",
+            explanation: "The 'Me' self is the objective part of the self, which includes how others perceive you and your roles, such as your reputation."
+        },
+        {
+            question: "Which theory suggests that the self can be composed of multiple selves, which may or may not be consistent across situations?",
+            options: ["William James' Self Theory", "Carl Rogers' Self Theory", "Donald Winnicott's Theory", "David Lester's Theory"],
+            answer: "David Lester's Theory",
+            explanation: "David Lester's theory, with its Global vs. Differentiated model, addresses the idea of multiple selves and their consistency."
+        },
+        {
+            question: "The example of studying genetic diversity among different ethnic groups in the Philippines falls under which subdiscipline of anthropology?",
+            options: ["Cultural Anthropology", "Linguistic Anthropology", "Biological/Physical Anthropology", "Archaeology"],
+            answer: "Biological/Physical Anthropology",
+            explanation: "This is an example of biological or physical anthropology, which focuses on human evolution and genetic diversity."
+        },
+        {
+            question: "According to the handout, what concept is linked to an individual's ability to influence and direct their lives according to their beliefs and intentions?",
+            options: ["Self-reactiveness", "Forethought", "Proactive behavior", "Human Agency"],
+            answer: "Human Agency",
+            explanation: "This definition is given directly in the handout as part of Albert Bandura's concept of Human Agency."
+        },
+        {
+            question: "When a person can distinguish their experience from the experience of a friend, they are demonstrating:",
+            options: ["Intrapsychic Differentiation", "Interpersonal Differentiation", "Self-reflection", "Self-efficacy"],
+            answer: "Interpersonal Differentiation",
+            explanation: "This is a direct example of Interpersonal Differentiation, which is the ability to separate one's own experience from others."
+        },
+        {
+            question: "Which of the following is NOT an aspect of Margaret Mead's contribution mentioned in the handout?",
+            options: ["Cultures have unique norms and values.", "Individuals learn cultural norms through upbringing.", "Identities are adaptable across cultures.", "Identity is primarily a result of fixed personality traits."],
+            answer: "Identity is primarily a result of fixed personality traits.",
+            explanation: "Mead's work focuses on the cultural shaping of identity, not on fixed personality traits."
+        },
+        {
+            question: "The theory that an individual's perception of self is influenced by cognitive processes like perception, interpretation, and memory is known as:",
+            options: ["The Self as a Cognitive Construction", "The Self as a Social Construct", "The Self as a Proactive Agent", "The Self as a Differentiated System"],
+            answer: "The Self as a Cognitive Construction",
+            explanation: "This is the title and central idea of the first section on psychological perspectives."
+        },
+        {
+            question: "Who is the American psychologist and philosopher who proposed the 'I' self vs. 'Me' self theory?",
+            options: ["Albert Bandura", "William James", "Carl Rogers", "Donald Winnicott"],
+            answer: "William James",
+            explanation: "William James is credited with proposing the 'I' and 'Me' self theory."
+        },
+        {
+            question: "Which of the following is an example of 'Interpersonal Differentiation'?",
+            options: ["Knowing your thoughts are different from your feelings", "Recognizing that your opinion on a movie is separate from your friend's opinion", "Thinking ahead about the consequences of your actions", "Rewarding yourself for completing a task"],
+            answer: "Recognizing that your opinion on a movie is separate from your friend's opinion",
+            explanation: "This is an example of distinguishing your experience (your opinion) from someone else's, which is Interpersonal Differentiation."
+        }
+    ],
+    identification: [
+        {
+            question: "This American psychologist and philosopher proposed that the self is composed of the 'I' self and the 'Me' self.",
+            answer: "William James",
+            explanation: "William James is the theorist who introduced the distinction between the 'I' and 'Me' aspects of the self."
+        },
+        {
+            question: "This is the objective part of the self, which includes our traits, roles, and how we see ourselves based on past experiences and social feedback.",
+            answer: "Me self",
+            explanation: "The 'Me' self is the objective, socially-constructed part of our self-perception."
+        },
+        {
+            question: "A subdiscipline of anthropology that interprets human history by analyzing material remains.",
+            answer: "Archaeology",
+            explanation: "Archaeology uses the analysis of material remains to understand ancient civilizations and human history."
+        },
+        {
+            question: "This is the term for the authentic and innate qualities of an individual, according to Donald W. Winnicott.",
+            answer: "True Self",
+            explanation: "Winnicott's 'True Self' represents the core, authentic self."
+        },
+        {
+            question: "The name of the American anthropologist who studied the Tchambuli (Chambri) tribe and challenged fixed gender roles.",
+            answer: "Margaret Mead",
+            explanation: "Margaret Mead's work in Papua New Guinea highlighted the cultural construction of identity and gender."
+        },
+        {
+            question: "According to Carl Rogers, this is the person you want to become or the best version of yourself.",
+            answer: "Ideal Self",
+            explanation: "The Ideal Self is the aspirational version of ourselves in Rogers's theory."
+        },
+        {
+            question: "This concept, proposed by Albert Bandura, emphasizes that individuals actively shape their actions, thoughts, and environments.",
+            answer: "Human Agency",
+            explanation: "Human Agency is the central concept in Bandura's theory about individuals as active agents."
+        },
+        {
+            question: "The term for a protective persona formed in response to external pressures, according to Donald W. Winnicott.",
+            answer: "False Self",
+            explanation: "The 'False Self' is the persona developed to cope with external expectations and pressures."
+        },
+        {
+            question: "This core property of human agency refers to setting goals and making plans to achieve them.",
+            answer: "Intentionality",
+            explanation: "Intentionality is the purposeful and proactive aspect of human agency."
+        },
+        {
+            question: "A subdiscipline of anthropology also known as 'social anthropology' that studies the learned behavior of groups of people.",
+            answer: "Cultural Anthropology",
+            explanation: "Cultural Anthropology and social anthropology are synonymous terms for the study of learned human behavior."
+        },
+        {
+            question: "This is one of the tribes studied by Margaret Mead where women held dominant roles, challenging fixed gender roles.",
+            answer: "Tchambuli (Chambri) tribe",
+            explanation: "Mead's study of the Tchambuli tribe is a key example of how identity and gender roles are culturally constructed."
+        },
+        {
+            question: "The concept of the self that emphasizes its dynamic nature and evolution through cognitive processes like perception and memory.",
+            answer: "The Self as a Cognitive Construction",
+            explanation: "This perspective highlights the influence of cognitive processes on our evolving self-concept."
+        },
+        {
+            question: "This core property of human agency refers to monitoring and evaluating one's own behavior and emotions.",
+            answer: "Self-reactiveness",
+            explanation: "Self-reactiveness is the process of actively monitoring and regulating one's own behavior."
+        },
+        {
+            question: "This American anthropologist's approach to the self focused on symbolic interpretation and performance within specific cultural settings.",
+            answer: "Clifford Geertz",
+            explanation: "Geertz's work is known for its focus on the role of cultural symbols and performance in shaping identity."
+        },
+        {
+            question: "In Carl Rogers's theory, this refers to one's current identity.",
+            answer: "Real Self",
+            explanation: "The Real Self is the 'here and now' version of a person in Rogers's theory."
+        },
+        {
+            question: "The core property of human agency that refers to thinking ahead and planning actions based on expected outcomes.",
+            answer: "Forethought",
+            explanation: "Forethought is the proactive planning and future-oriented thinking aspect of human agency."
+        },
+        {
+            question: "A term by Murray Bowen that describes the ability to distinguish our thoughts from our emotions.",
+            answer: "Intrapsychic Differentiation",
+            explanation: "This is the 'within the self' aspect of differentiation, separating thoughts from feelings."
+        },
+        {
+            question: "This is the term for a self-initiated behavior aimed at addressing problems before they arise.",
+            answer: "Proactive behavior",
+            explanation: "Proactive behavior is about taking initiative to prevent problems rather than reacting to them."
+        },
+        {
+            question: "The subdiscipline of anthropology that studies how language influences social life.",
+            answer: "Linguistic Anthropology",
+            explanation: "This field examines the relationship between language and human society and culture."
+        },
+        {
+            question: "The term used by Murray Bowen to describe the ability to distinguish our own experience from the experience of people we are connected to.",
+            answer: "Interpersonal Differentiation",
+            explanation: "This is the 'between people' aspect of differentiation, maintaining a distinct self in relationships with others."
+        }
+    ]
+};
+    //
+    // --- END OF QUIZ DATA ---
+    //
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let wrongAnswers = [];
+    let isIdentificationSection = false;
+    let answered = false;
+    const totalQuestions = quizData.multipleChoice.length + quizData.identification.length;
+
+    const quizArea = document.getElementById('quiz-area');
+    const endScreen = document.getElementById('end-screen');
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const identificationContainer = document.getElementById('identification-container');
+    const identificationInput = document.getElementById('identification-input');
+    const submitButton = document.getElementById('submit-button');
+    const feedbackSection = document.getElementById('feedback-section');
+    const feedbackText = document.getElementById('feedback-text');
+    const explanationText = document.getElementById('explanation-text');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const finalScoreSpan = document.getElementById('final-score');
+    const totalQuestionsSpan = document.getElementById('total-questions');
+    const bestScoreSpan = document.getElementById('best-score');
+    const wrongAnswersList = document.getElementById('wrong-answers-list');
+    const restartButton = document.getElementById('restart-button');
+    const modeToggle = document.getElementById('mode-toggle');
+
+    // Load initial state from cookies
+    const savedTheme = getCookie("theme");
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+        modeToggle.innerHTML = '🌙';
+    }
+
+    const savedBestScore = getCookie("bestScore");
+    bestScoreSpan.textContent = savedBestScore || '0';
+
+    modeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        modeToggle.innerHTML = isDarkMode ? '🌙' : '☀️';
+        setCookie("theme", isDarkMode ? "dark" : "light", 365);
+    });
+
+    function showQuestion() {
+        if (totalQuestions === 0) {
+            quizArea.innerHTML = "<h2>No questions found! Please add questions to the quizData object.</h2>";
+            return;
+        }
+        
+        answered = false;
+        optionsContainer.style.display = 'flex';
+        identificationContainer.style.display = 'none';
+        identificationInput.value = '';
+        feedbackSection.style.display = 'none';
+        feedbackSection.classList.remove('correct', 'incorrect');
+        
+        let currentQuizData;
+        if (currentQuestionIndex < quizData.multipleChoice.length) {
+            isIdentificationSection = false;
+            submitButton.style.display = 'none'; // Hide submit button for MCQs
+            currentQuizData = quizData.multipleChoice[currentQuestionIndex];
+            optionsContainer.innerHTML = '';
+            currentQuizData.options.forEach(option => {
+                const button = document.createElement('button');
+                button.classList.add('option');
+                button.textContent = option;
+                button.onclick = () => selectOption(button, option);
+                optionsContainer.appendChild(button);
+            });
+            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. The identification questions will begin after question ${quizData.multipleChoice.length}.`;
+        } else {
+            isIdentificationSection = true;
+            submitButton.style.display = 'block'; // Show submit button for identification questions
+            currentQuizData = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
+            optionsContainer.style.display = 'none';
+            identificationContainer.style.display = 'block';
+            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. You are now in the identification questions section.`;
+        }
+        
+        questionText.textContent = currentQuizData.question;
+        updateProgressBar();
+    }
+
+    function selectOption(selectedButton, selectedAnswer) {
+        if (answered) return;
+        answered = true;
+
+        const currentQuestion = quizData.multipleChoice[currentQuestionIndex];
+        const isCorrect = selectedAnswer === currentQuestion.answer;
+        
+        selectedButton.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+        if (isCorrect) {
+            score++;
+            feedbackText.textContent = "Correct!";
+            feedbackSection.classList.add('correct');
+        } else {
+            feedbackText.textContent = `Incorrect. The correct answer was: ${currentQuestion.answer}`;
+            feedbackSection.classList.add('incorrect');
+            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: selectedAnswer, type: 'multipleChoice' });
+        }
+        explanationText.textContent = currentQuestion.explanation;
+        feedbackSection.style.display = 'block';
+
+        const allOptions = optionsContainer.querySelectorAll('.option');
+        allOptions.forEach(option => {
+            if (option.textContent === currentQuestion.answer) {
+                option.classList.add('correct');
+            }
+            option.disabled = true;
+        });
+
+        setTimeout(() => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < totalQuestions) {
+                showQuestion();
+            } else {
+                showEndScreen();
+            }
+        }, 3000);
+    }
+
+    submitButton.onclick = () => {
+        if (!isIdentificationSection) {
+            return;
+        }
+
+        if (answered) return;
+        answered = true;
+        submitButton.disabled = true;
+
+        const currentQuestion = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
+        const userAnswer = identificationInput.value.trim();
+        const correctAnswer = currentQuestion.answer.trim();
+
+        const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+        
+        if (isCorrect) {
+            score++;
+            feedbackText.textContent = "Correct!";
+            feedbackSection.classList.add('correct');
+        } else {
+            feedbackText.textContent = `Incorrect. The correct answer was: ${currentQuestion.answer}`;
+            feedbackSection.classList.add('incorrect');
+            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: userAnswer, type: 'identification' });
+        }
+        explanationText.textContent = currentQuestion.explanation;
+        feedbackSection.style.display = 'block';
+
+        setTimeout(() => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < totalQuestions) {
+                showQuestion();
+            } else {
+                showEndScreen();
+            }
+        }, 3000);
+    };
+
+    function updateProgressBar() {
+        const progress = (currentQuestionIndex / totalQuestions) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function showEndScreen() {
+        quizArea.style.display = 'none';
+        endScreen.style.display = 'block';
+        finalScoreSpan.textContent = score;
+        totalQuestionsSpan.textContent = totalQuestions;
+
+        const currentBestScore = parseInt(getCookie("bestScore") || '0', 10);
+        if (score > currentBestScore) {
+            setCookie("bestScore", score, 365);
+            bestScoreSpan.textContent = score;
+        } else {
+            bestScoreSpan.textContent = currentBestScore;
+        }
+
+        wrongAnswersList.innerHTML = '';
+        if (wrongAnswers.length > 0) {
+            wrongAnswers.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>Q:</strong> ${item.question}<br><strong>Your Answer:</strong> ${item.yourAnswer}<br><strong>Correct Answer:</strong> ${item.correctAnswer}`;
+                wrongAnswersList.appendChild(li);
+            });
+        } else {
+            wrongAnswersList.innerHTML = "<li>You got all questions right! 🎉</li>";
+        }
+    }
+
+    restartButton.addEventListener('click', () => {
+        currentQuestionIndex = 0;
+        score = 0;
+        wrongAnswers = [];
+        endScreen.style.display = 'none';
+        quizArea.style.display = 'block';
+        showQuestion();
+    });
+
+    // Start the quiz
+    showQuestion();
+
+</script>
+
+</body>
+</html>
