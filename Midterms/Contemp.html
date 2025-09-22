@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Contemporary World</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color-light: #f4f7f6;
+            --text-color-light: #2c3e50;
+            --container-bg-light: #ffffff;
+            --primary-color-light: #3498db;
+            --secondary-color-light: #2980b9;
+            --correct-color: #27ae60;
+            --incorrect-color: #e74c3c;
+            --border-color-light: #bdc3c7;
+            --shadow-color-light: rgba(0, 0, 0, 0.1);
+            --placeholder-color-light: #7f8c8d;
+        }
+
+        .dark-mode {
+            --bg-color-light: #2c3e50;
+            --text-color-light: #ecf0f1;
+            --container-bg-light: #34495e;
+            --primary-color-light: #3498db;
+            --secondary-color-light: #2980b9;
+            --border-color-light: #526f8d;
+            --shadow-color-light: rgba(255, 255, 255, 0.1);
+            --placeholder-color-light: #bdc3c7;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--container-bg-light);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px var(--shadow-color-light);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2em;
+            color: var(--primary-color-light);
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-top: 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: var(--border-color-light);
+            border-radius: 8px;
+            height: 12px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-color-light);
+            transition: width 0.4s ease-in-out;
+        }
+
+        .progress-text {
+            font-size: 0.9em;
+            color: var(--placeholder-color-light);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #question-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        #options-container, #identification-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background-color: transparent;
+            border: 2px solid var(--border-color-light);
+            color: var(--text-color-light);
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow-color-light);
+        }
+
+        .option.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+
+        .option.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+            border-color: var(--incorrect-color);
+        }
+
+        #submit-button, .quiz-button, #restart-button {
+            display: none; /* Hide by default */
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            font-weight: bold;
+            color: white;
+            background-color: var(--primary-color-light);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        #submit-button:hover, .quiz-button:hover, #restart-button:hover {
+            background-color: var(--secondary-color-light);
+            transform: translateY(-2px);
+        }
+        
+        #submit-button:disabled {
+            background-color: #7f8c8d;
+            cursor: not-allowed;
+        }
+
+        #feedback-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 5px solid;
+            border-radius: 8px;
+            display: none;
+        }
+
+        #feedback-section.correct {
+            border-color: var(--correct-color);
+        }
+
+        #feedback-section.incorrect {
+            border-color: var(--incorrect-color);
+        }
+
+        #explanation-text {
+            font-style: italic;
+            font-size: 0.95em;
+            margin-top: 10px;
+        }
+
+        .end-screen {
+            text-align: center;
+        }
+
+        .end-screen h2 {
+            font-size: 2em;
+            color: var(--primary-color-light);
+            margin-bottom: 10px;
+        }
+
+        .end-screen p {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        
+        #incorrect-questions-list {
+            text-align: left;
+            margin-top: 20px;
+        }
+        
+        #incorrect-questions-list li {
+            margin-bottom: 10px;
+            border-left: 3px solid var(--incorrect-color);
+            padding-left: 10px;
+        }
+
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--container-bg-light);
+            border: 2px solid var(--border-color-light);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px var(--shadow-color-light);
+            font-size: 1.2em;
+            color: var(--text-color-light);
+        }
+
+        #identification-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            border: 2px solid var(--border-color-light);
+            border-radius: 8px;
+            background-color: var(--container-bg-light);
+            color: var(--text-color-light);
+            transition: border-color 0.2s;
+        }
+        
+        #identification-input:focus {
+            outline: none;
+            border-color: var(--primary-color-light);
+        }
+    </style>
+</head>
+<body>
+
+<div class="mode-toggle" id="mode-toggle">
+    ☀️
+</div>
+
+<div class="quiz-container" id="quiz-container">
+    <h1 id="quiz-title">My New Quiz</h1>
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <p class="progress-text" id="progress-text"></p>
+
+    <div id="quiz-area">
+        <div id="question-area">
+            <h2 id="question-text"></h2>
+            <div id="options-container"></div>
+            <div id="identification-container" style="display: none;">
+                <input type="text" id="identification-input" placeholder="Type your answer here...">
+            </div>
+            <button id="submit-button">Submit Answer</button>
+        </div>
+        
+        <div id="feedback-section">
+            <p id="feedback-text"></p>
+            <p id="explanation-text"></p>
+        </div>
+    </div>
+
+    <div id="end-screen" class="end-screen" style="display: none;">
+        <h2>Quiz Complete!</h2>
+        <p>Your Score: <span id="final-score"></span> / <span id="total-questions"></span></p>
+        <p>Previous Best Score: <span id="best-score"></span></p>
+        <div id="incorrect-questions-list">
+            <h3>Questions you got wrong:</h3>
+            <ul id="wrong-answers-list"></ul>
+        </div>
+        <button id="restart-button">Restart Quiz</button>
+    </div>
+</div>
+
+<script>
+    // Utility functions for cookies
+    function setCookie(name, value, days) {
+        const d = new Date();
+        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+        const expires = "expires=" + d.toUTCString();
+        document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    }
+
+    function getCookie(name) {
+        const cname = name + "=";
+        const decodedCookie = decodeURIComponent(document.cookie);
+        const ca = decodedCookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(cname) === 0) {
+                return c.substring(cname.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    //
+    // --- START OF QUIZ DATA ---
+    //
+    const quizData = {
+        multipleChoice: [
+            {
+                question: "What is the primary purpose of Asian regionalism?",
+                options: ["To establish a unified Asian military force", "To foster cooperation, integration, and collective decision-making among Asian countries", "To create a single currency for all of Asia", "To isolate Asia from the rest of the world"],
+                answer: "To foster cooperation, integration, and collective decision-making among Asian countries",
+                explanation: "Asian regionalism refers to the process of Asian countries coming together to foster cooperation, integration, and collective decision-making within the region to enhance economic growth, political stability, and cultural exchange."
+            },
+            {
+                question: "Which regional organization was founded in 1967?",
+                options: ["APEC", "SAARC", "ASEAN", "BIMSTEC"],
+                answer: "ASEAN",
+                explanation: "The Association of Southeast Asian Nations (ASEAN) was founded in 1967."
+            },
+            {
+                question: "What is the economic, social, and political gap between developed and less developed countries called?",
+                options: ["The East-West Divide", "The North-South Divide", "The Urban-Rural Divide", "The Digital Divide"],
+                answer: "The North-South Divide",
+                explanation: "The North-South Divide is the economic, social, and political gap between the developed, industrialized countries of the Northern Hemisphere (Global North) and the less developed countries of the Southern Hemisphere (Global South)."
+            },
+            {
+                question: "Which historical factor is a root cause of the North-South divide?",
+                options: ["The Industrial Revolution", "The Age of Enlightenment", "The Colonial Era", "The Cold War"],
+                answer: "The Colonial Era",
+                explanation: "The origins of the North-South divide can be traced back to the colonial era, when European powers exploited resources and imposed economic structures that favored their economies."
+            },
+            {
+                question: "Which country is a founding member of APEC?",
+                options: ["Thailand", "Laos", "Cambodia", "Myanmar"],
+                answer: "Thailand",
+                explanation: "Thailand is one of the founding members of the Asia-Pacific Economic Cooperation (APEC)."
+            },
+            {
+                question: "Globalization has influenced Asian regionalism by promoting which of the following?",
+                options: ["Isolationism", "Increased trade flows and investment", "Cultural homogeneity", "Decreased digital connectivity"],
+                answer: "Increased trade flows and investment",
+                explanation: "Globalization facilitates increased trade flows and investment within Asia and between Asian countries and the rest of the world."
+            },
+            {
+                question: "What is a negative impact of globalization on poverty?",
+                options: ["It creates new economic opportunities", "It generates jobs and increases incomes", "It can widen income inequalities", "It promotes technological advancements"],
+                answer: "It can widen income inequalities",
+                explanation: "Globalization can exacerbate poverty by widening income inequalities and may lead to job losses in traditional sectors."
+            },
+            {
+                question: "The perception that one's own culture is inferior compared to a foreign culture is known as what?",
+                options: ["Racism", "Discrimination", "Colonial Mentality", "Cultural Assimilation"],
+                answer: "Colonial Mentality",
+                explanation: "Colonial mentality is the perception that one's identity is inferior compared to foreign culture and ethnicity."
+            },
+            {
+                question: "What does the UN's Sustainable Development Goal (SDG) 10 primarily aim to address?",
+                options: ["No Poverty", "Reduced Inequalities", "Climate Action", "Good Health and Well-being"],
+                answer: "Reduced Inequalities",
+                explanation: "SDG 10 focuses on addressing inequalities within and among countries to promote inclusive and sustainable development."
+            },
+            {
+                question: "What is a key impact of globalization on Indigenous Peoples in the Philippines?",
+                options: ["It prevents the exploitation of their natural resources", "It threatens their traditional knowledge and land rights", "It completely isolates them from modern technology", "It eliminates the need for cultural preservation efforts"],
+                answer: "It threatens their traditional knowledge and land rights",
+                explanation: "Globalization, through increased global trade and investment, may lead to the exploitation of natural resources in IP lands, which affects their traditional livelihoods and land rights."
+            },
+            {
+                question: "Which organization was founded in 1985?",
+                options: ["BIMSTEC", "SAARC", "APEC", "SASEC"],
+                answer: "SAARC",
+                explanation: "The South Asian Association for Regional Cooperation (SAARC) was founded in 1985."
+            },
+            {
+                question: "The development of complex supply chains across Asia is a result of what?",
+                options: ["Regional conflicts", "Globalization", "Nationalist policies", "Reduced trade"],
+                answer: "Globalization",
+                explanation: "Globalization has led to the development of complex supply chains across Asia, which enhances economic efficiency and competitiveness."
+            },
+            {
+                question: "What is the economic characteristic of the Global North according to the handout?",
+                options: ["Low per capita income", "Agriculture-focused employment", "Easy access to technological advancement", "Labor-intensive industries"],
+                answer: "Easy access to technological advancement",
+                explanation: "The Global North is characterized by high per capita income, easy access to technological advancement, and employment in technology-based and finance-focused sectors."
+            },
+            {
+                question: "Globalization's impact on Sexual Orientation and Gender Identity (SOGI) includes:",
+                options: ["Decreasing awareness and visibility of SOGI issues", "Promoting a uniform legal framework across all of Asia", "Facilitating cultural exchange that challenges traditional norms", "Increasing legal and social stigma"],
+                answer: "Facilitating cultural exchange that challenges traditional norms",
+                explanation: "Globalization exposes Asia to diverse perspectives, which can challenge traditional norms and promote acceptance of SOGI diversity."
+            },
+            {
+                question: "Which regional organization has members from both South Asia and Southeast Asia?",
+                options: ["ASEAN", "BIMSTEC", "SAARC", "SASEC"],
+                answer: "BIMSTEC",
+                explanation: "BIMSTEC aims to promote cooperation between South Asian and Southeast Asian countries, as seen in its member list which includes Bangladesh (South Asia) and Thailand (Southeast Asia)."
+            },
+            {
+                question: "What is a major challenge Latin American economies face due to the global divide?",
+                options: ["An inability to access global markets on equal terms", "An over-reliance on technology-based industries", "A lack of natural resources for export", "An absence of trade barriers"],
+                answer: "An inability to access global markets on equal terms",
+                explanation: "Latin American countries often face challenges in accessing global markets on equal terms due to trade barriers, tariffs, and unequal trade agreements."
+            },
+            {
+                question: "Globalization's effect on the Philippines' economic growth is most evident in which sector?",
+                options: ["Agriculture", "Heavy manufacturing", "Business Process Outsourcing (BPO)", "Local crafts and textiles"],
+                answer: "Business Process Outsourcing (BPO)",
+                explanation: "The integration of Philippine industries into global markets has stimulated economic growth, particularly in sectors such as business process outsourcing (BPO), manufacturing, and tourism."
+            },
+            {
+                question: "Which of the following is NOT an impact of globalization on Asian regionalism?",
+                options: ["Political dialogue and conflict resolution", "Cultural exchanges", "Increased nationalism and isolation", "Advancement of technological innovation"],
+                answer: "Increased nationalism and isolation",
+                explanation: "The source states that globalization encourages regional organizations and cultural exchange, not increased nationalism and isolation."
+            },
+            {
+                question: "The North-South divide is rooted in historical factors such as:",
+                options: ["Unequal trade relationships", "The discovery of new continents", "Religious conflicts", "The establishment of democratic governments"],
+                answer: "Unequal trade relationships",
+                explanation: "The divide is rooted in historical factors such as colonialism, imperialism, and unequal trade relationships."
+            },
+            {
+                question: "Which country is a member of SAARC?",
+                options: ["Myanmar", "Thailand", "Afghanistan", "Malaysia"],
+                answer: "Afghanistan",
+                explanation: "Afghanistan is a member of the South Asian Association for Regional Cooperation (SAARC)."
+            },
+            {
+                question: "The UN's 2030 Agenda for Sustainable Development includes which of the following goals?",
+                options: ["No Poverty", "Increased Military Spending", "Colonization", "Regional Monopolies"],
+                answer: "No Poverty",
+                explanation: "The UN has identified poverty eradication and reducing inequalities as central goals in the 2030 Agenda for Sustainable Development, including SDG 1: No Poverty."
+            },
+            {
+                question: "What is a major challenge for Indigenous Peoples (IPs) in the Philippines in the context of globalization?",
+                options: ["The complete removal of cultural biases", "Improved access to all social services", "Environmental degradation of their traditional lands", "Full legal protection of their rights"],
+                answer: "Environmental degradation of their traditional lands",
+                explanation: "The demand for natural resources by global markets can lead to environmental degradation and the loss of traditional lands for Indigenous Peoples."
+            },
+            {
+                question: "What is a common economic characteristic of the Global South?",
+                options: ["High per capita income", "Reliance on primary commodities", "Technology-based employment", "Ease of access to capital"],
+                answer: "Reliance on primary commodities",
+                explanation: "Many economies in the Global South, such as those in Latin America, are heavily reliant on exports of primary commodities."
+            },
+            {
+                question: "What does globalization promote in terms of digital connectivity?",
+                options: ["A widening of the urban-rural digital divide", "Less access to information and communication technologies", "Bridging urban-rural divides", "Decreased support for innovation"],
+                answer: "Bridging urban-rural divides",
+                explanation: "Globalization promotes digital connectivity across Asia, bridging urban-rural divides and improving access to information and communication technologies (ICTs)."
+            },
+            {
+                question: "Which of the following is a challenge to SOGI rights in Asia due to globalization?",
+                options: ["Conservative backlash to perceived foreign influences", "Increased support networks for SOGI individuals", "The promotion of international human rights norms", "Greater awareness and visibility"],
+                answer: "Conservative backlash to perceived foreign influences",
+                explanation: "Challenges to SOGI rights include resistance to perceived foreign influences and a conservative backlash that may restrict advocacy efforts."
+            },
+            {
+                question: "How does globalization affect Latin America's political influence?",
+                options: ["It grants them equal influence in global forums", "It reduces their ability to advocate for their interests", "It ensures political stability", "It eliminates geopolitical interests"],
+                answer: "It reduces their ability to advocate for their interests",
+                explanation: "Latin American countries may have less influence in global decision-making forums compared to more economically powerful regions, which can impact their ability to advocate for their interests."
+            },
+            {
+                question: "The economic disparities between the Global North and Global South are illustrated by which of the following?",
+                options: ["Equal per capita income", "Similar levels of technological access", "Higher per capita income in the Global North", "Employment in the same sectors"],
+                answer: "Higher per capita income in the Global North",
+                explanation: "Economic indicators show that the Global North has a high per capita income, while the Global South has a low per capita income."
+            },
+            {
+                question: "Which organization was founded in 1989 to promote sustainable economic growth and prosperity in the Asia-Pacific region?",
+                options: ["ASEAN", "BIMSTEC", "SAARC", "APEC"],
+                answer: "APEC",
+                explanation: "The Asia-Pacific Economic Cooperation (APEC) was founded in 1989 with the purpose of promoting sustainable economic growth and prosperity in the Asia-Pacific region."
+            },
+            {
+                question: "What is a positive impact of globalization on Latin American social development?",
+                options: ["It decreases migration to developed regions", "It ensures equal access to healthcare for all", "It has no effect on social services", "It drives migration to more developed regions seeking better opportunities"],
+                answer: "It drives migration to more developed regions seeking better opportunities",
+                explanation: "Economic disparities driven by the global divide and globalization drive migration from Latin America to more developed regions in search of better economic opportunities and living conditions."
+            },
+            {
+                question: "Which of the following is a characteristic of employment sectors in the Global South?",
+                options: ["Technology-based", "Agriculture-focused", "Finance-focused", "All of the above"],
+                answer: "Agriculture-focused",
+                explanation: "The handout indicates that employment sectors in the Global South are often agriculture-focused, export-heavy, and labor-intensive."
+            },
+            {
+                question: "What is a negative impact of globalization on the Philippines according to the sources?",
+                options: ["It promotes economic growth", "It has no impact on income distribution", "It concentrates wealth in urban centers", "It creates jobs for everyone"],
+                answer: "It concentrates wealth in urban centers",
+                explanation: "Despite economic growth, globalization has concentrated wealth in urban centers and certain sectors, leaving rural areas and marginalized communities behind."
+            },
+            {
+                question: "Which regional organization was founded in 2001?",
+                options: ["APEC", "SAARC", "SASEC", "BIMSTEC"],
+                answer: "SASEC",
+                explanation: "The South Asia Subregional Economic Cooperation (SASEC) was founded in 2001."
+            },
+            {
+                question: "Globalization can lead to what in developing countries due to unequal access to capital and technology?",
+                options: ["Increased competitiveness", "Reinforced existing inequalities", "Reduced poverty", "Complete economic independence"],
+                answer: "Reinforced existing inequalities",
+                explanation: "While globalization can create opportunities, it has also reinforced existing inequalities in developing countries that face challenges in competing due to unequal access to capital, technology, and skills."
+            },
+            {
+                question: "What is the primary purpose of the Bay of Bengal Initiative for Multi-Sectoral Technical and Economic Cooperation (BIMSTEC)?",
+                options: ["To establish a military alliance", "To promote mutual cooperation and economic growth", "To focus solely on cultural exchange", "To create a common currency"],
+                answer: "To promote mutual cooperation and economic growth",
+                explanation: "BIMSTEC's purpose is to ensure dynamic and mutual cooperation, especially in areas of common interest, and to create an environment for expeditious economic growth."
+            },
+            {
+                question: "Which of the following is a social and political gap in the Global South?",
+                options: ["High access to education", "High access to healthcare", "Low political influence in global governance", "High access to basic services"],
+                answer: "Low political influence in global governance",
+                explanation: "The Global South is characterized by low access to education, healthcare, and other basic services, as well as an inability to significantly influence global governance."
+            },
+            {
+                question: "Which of the following is an aspect of globalization's impact on Indigenous Peoples in the Philippines?",
+                options: ["Decreased access to education", "The threat to land rights due to economic integration", "The elimination of environmental challenges", "A decrease in cultural diversity"],
+                answer: "The threat to land rights due to economic integration",
+                explanation: "Increased global trade and investment, as part of economic integration, may lead to the exploitation of natural resources in IP lands, which affects their traditional livelihoods and land rights."
+            },
+            {
+                question: "Which UN Sustainable Development Goal is paired with 'No Poverty'?",
+                options: ["SDG 1", "SDG 10", "SDG 17", "SDG 5"],
+                answer: "SDG 1",
+                explanation: "The UN aims to eradicate extreme poverty globally under SDG 1: No Poverty."
+            },
+            {
+                question: "What is a negative impact of globalization on Latin American social development?",
+                options: ["Decreased income inequality", "Improved access to basic services", "Perpetuation of poverty and social exclusion", "Reduced migration rates"],
+                answer: "Perpetuation of poverty and social exclusion",
+                explanation: "The global divide perpetuates poverty and social exclusion in Latin America, where a significant portion of the population lacks access to basic services."
+            },
+            {
+                question: "Which of the following is a key purpose of the South Asian Association for Regional Cooperation (SAARC)?",
+                options: ["To address climate change only", "To promote cooperation in economic, social, cultural, technical, and scientific fields", "To focus exclusively on military alliances", "To regulate global trade"],
+                answer: "To promote cooperation in economic, social, cultural, technical, and scientific fields",
+                explanation: "SAARC's purpose is to promote regional cooperation in economic, social, cultural, technical, and scientific fields and to address common challenges in the region."
+            },
+            {
+                question: "What does the term 'soft power' refer to in the context of Asian regionalism?",
+                options: ["Military strength and alliances", "Economic sanctions", "Cultural diplomacy and educational exchanges", "Political dominance"],
+                answer: "Cultural diplomacy and educational exchanges",
+                explanation: "Asian countries use cultural diplomacy, tourism, and educational exchanges to strengthen regional ties and influence international relations, which is a form of soft power."
+            },
+            {
+                question: "The North-South divide is intensified during which historical period?",
+                options: ["The Age of Exploration", "The Industrial Revolution", "The Renaissance", "The Middle Ages"],
+                answer: "The Industrial Revolution",
+                explanation: "The unequal trade patterns from the Age of Exploration were intensified during the Industrial Revolution, when slavery and exploitation of natural resources became rampant."
+            },
+            {
+                question: "According to the provided materials, what is the impact of globalization on the expression of SOGI?",
+                options: ["It has a singular positive impact", "It has no impact at all", "It has complex and multifaceted impacts, including both advancements and challenges", "It only results in negative impacts"],
+                answer: "It has complex and multifaceted impacts, including both advancements and challenges",
+                explanation: "The sources state that globalization and Asian regionalism have complex and multifaceted impacts on SOGI expression, promoting awareness and legal reforms while also encountering challenges like conservative backlash."
+            },
+            {
+                question: "Which is a challenge for Latin America in terms of technological access?",
+                options: ["A clear digital divide between urban and rural areas", "An abundance of investment in R&D", "Equal internet access for all socioeconomic groups", "Advanced technological innovation"],
+                answer: "A clear digital divide between urban and rural areas",
+                explanation: "Latin America has a digital divide with disparities in internet access and connectivity between urban and rural areas, as well as across socioeconomic groups."
+            },
+            {
+                question: "What is the primary aim of the South Asia Subregional Economic Cooperation (SASEC)?",
+                options: ["To establish a common military", "To enhance cross-border connectivity and trade", "To resolve political disputes", "To regulate cultural exchanges"],
+                answer: "To enhance cross-border connectivity and trade",
+                explanation: "SASEC's purpose is to enhance cross-border connectivity between member nations and promote trade and economic growth."
+            },
+            {
+                question: "Globalization's impact on poverty is described as having both positive and negative effects. Which of the following is a positive effect?",
+                options: ["Widening income inequalities", "Increased vulnerability for marginalized populations", "Generating jobs and increasing incomes", "Leading to job losses in traditional sectors"],
+                answer: "Generating jobs and increasing incomes",
+                explanation: "Globalization can create new economic opportunities, generate jobs, and increase incomes, which are considered positive impacts on poverty."
+            },
+            {
+                question: "What is a major environmental challenge faced by Asia that requires regional cooperation?",
+                options: ["Air pollution", "Desertification", "Nuclear waste", "Volcanic eruptions"],
+                answer: "Air pollution",
+                explanation: "The region faces challenges such as pollution, resource depletion, and climate change, which require regional cooperation and sustainable development strategies."
+            },
+            {
+                question: "Which of the following is a social implication of the North-South divide?",
+                options: ["High per capita income in both regions", "Equal access to education and healthcare", "Lower access to basic services in the Global South", "Homogeneous social classes"],
+                answer: "Lower access to basic services in the Global South",
+                explanation: "The Global South is characterized by low access to basic services like education and healthcare, which is a key social implication of the divide."
+            },
+            {
+                question: "What is a purpose of the Association of Southeast Asian Nations (ASEAN)?",
+                options: ["Exclusively military cooperation", "Economic integration, political cooperation, and social progress", "Maintaining isolation from other regions", "Establishing a single government for the region"],
+                answer: "Economic integration, political cooperation, and social progress",
+                explanation: "ASEAN's purpose includes economic integration, political cooperation, social progress, and cultural development."
+            },
+            {
+                question: "Which of the following is a positive impact of globalization on Indigenous Peoples (IPs) in the Philippines?",
+                options: ["Increased access to education for some", "The loss of traditional livelihoods", "Environmental degradation", "Marginalization from markets"],
+                answer: "Increased access to education for some",
+                explanation: "Globalization may improve access to education and social services for IPs, though challenges like cultural biases can hinder effective learning."
+            },
+            {
+                question: "What does the UN's SDG 10 advocate for?",
+                options: ["The empowerment of only the wealthy", "Policies that increase social protection for some", "Policies that empower marginalized groups and ensure equal access to resources", "Economic policies that favor developed nations"],
+                answer: "Policies that empower marginalized groups and ensure equal access to resources",
+                explanation: "The UN advocates for policies that empower marginalized groups, promote social protection systems, and ensure equal access to resources and opportunities to reduce inequalities."
+            },
+            {
+                question: "Which of the following is a long-standing consequence of colonialism?",
+                options: ["Equal trade relationships", "Colonial mentality", "High per capita income in former colonies", "Advanced technological infrastructure"],
+                answer: "Colonial mentality",
+                explanation: "The long-standing consequences of colonialism include colonial mentality, racism, and discrimination."
+            },
+            {
+                question: "Globalization influences which aspect of Asian regionalism?",
+                options: ["The formation of new colonial powers", "The strengthening of regional organizations", "The decrease in economic integration", "The promotion of conflict over cooperation"],
+                answer: "The strengthening of regional organizations",
+                explanation: "Globalization encourages Asian countries to form and strengthen regional organizations such as ASEAN, SAARC, and BIMSTEC to promote dialogue and cooperation."
+            },
+            {
+                question: "In the context of the North-South Divide, what is a social class?",
+                options: ["A group of people with different socioeconomic statuses", "A group of people within a society who possess the same socioeconomic status", "A group of people defined by their ethnicity", "A group of people who live in the same geographic area"],
+                answer: "A group of people within a society who possess the same socioeconomic status",
+                explanation: "A social class is defined as a group of people within a society who possess the same socioeconomic status."
+            },
+            {
+                question: "How does globalization affect Latin American economies that are reliant on primary commodities?",
+                options: ["It stabilizes commodity prices", "It increases their economic stability", "It makes them vulnerable to price fluctuations", "It diversifies their economies"],
+                answer: "It makes them vulnerable to price fluctuations",
+                explanation: "Many Latin American economies are heavily reliant on primary commodity exports, and fluctuations in global prices can lead to economic instability and vulnerability."
+            },
+            {
+                question: "The Asia-Pacific Economic Cooperation (APEC) was founded in what year?",
+                options: ["1967", "1985", "1989", "1997"],
+                answer: "1989",
+                explanation: "The Asia-Pacific Economic Cooperation (APEC) was founded in 1989."
+            },
+            {
+                question: "Which of the following is a founding member of ASEAN?",
+                options: ["Malaysia", "Laos", "Myanmar", "Vietnam"],
+                answer: "Malaysia",
+                explanation: "Malaysia is listed as a founding member of ASEAN in the handout."
+            },
+            {
+                question: "What is a major challenge for the Philippines due to globalization, despite economic growth?",
+                options: ["A decrease in foreign investment", "Income inequality", "A decline in the BPO sector", "An increase in rural wealth"],
+                answer: "Income inequality",
+                explanation: "Despite economic growth, income inequality remains a significant challenge, as globalization has concentrated wealth in urban centers and certain sectors."
+            },
+            {
+                question: "Which of the following describes a key characteristic of the Global North's economy?",
+                options: ["Heavily reliant on agricultural exports", "Labor-intensive", "Technology-based and finance-focused", "Low per capita income"],
+                answer: "Technology-based and finance-focused",
+                explanation: "The Global North's employment sectors are described as technology-based and finance-focused."
+            },
+            {
+                question: "What is a negative impact of globalization on Indigenous Peoples' lands in the Philippines?",
+                options: ["Increased cultural preservation efforts", "The exploitation of natural resources for commercial gain", "Greater participation in markets", "Enhanced legal protections"],
+                answer: "The exploitation of natural resources for commercial gain",
+                explanation: "Increased global trade and investment can lead to the exploitation of natural resources in IP lands for commercial gain."
+            },
+            {
+                question: "The North-South divide is intensified by the exploitation of what, which became rampant during the Industrial Revolution?",
+                options: ["Renewable energy", "Natural resources", "Urbanization", "Trade agreements"],
+                answer: "Natural resources",
+                explanation: "The North-South divide was intensified during the Industrial Revolution when slavery and the exploitation of natural resources became rampant."
+            },
+            {
+                question: "Which country is a member of BIMSTEC?",
+                options: ["Pakistan", "Laos", "Bangladesh", "Maldives"],
+                answer: "Bangladesh",
+                explanation: "Bangladesh is listed as a member of BIMSTEC."
+            },
+            {
+                question: "How does globalization affect the digital divide in Latin America?",
+                options: ["It provides equal internet access for all", "It creates a digital divide", "It decreases access to information", "It has no effect on digital access"],
+                answer: "It creates a digital divide",
+                explanation: "There is a digital divide in Latin America, with disparities in internet access and connectivity between urban and rural areas, as a result of global economic trends."
+            },
+            {
+                question: "The UN's SDG 1 and SDG 10 are part of which larger agenda?",
+                options: ["The Millennium Development Goals", "The 2030 Agenda for Sustainable Development", "The Kyoto Protocol", "The Paris Agreement"],
+                answer: "The 2030 Agenda for Sustainable Development",
+                explanation: "The United Nations has identified poverty eradication and reducing inequalities as central goals in the 2030 Agenda for Sustainable Development."
+            },
+            {
+                question: "What is the economic disparity of per capita income between the Global North and Global South?",
+                options: ["High in both", "Low in both", "High in the North, Low in the South", "Low in the North, High in the South"],
+                answer: "High in the North, Low in the South",
+                explanation: "Economic indicators show that the Global North has high per capita income, while the Global South has low per capita income."
+            },
+            {
+                question: "Which of the following is a negative impact of globalization on poverty, according to the sources?",
+                options: ["Expanded markets", "Technological advancements", "Job losses in traditional sectors", "Foreign investments"],
+                answer: "Job losses in traditional sectors",
+                explanation: "Globalization may lead to job losses in traditional sectors and increases vulnerability for marginalized populations."
+            },
+            {
+                question: "What does the term 'digital divide' refer to in Latin America?",
+                options: ["The lack of social media usage", "Disparities in internet access and connectivity", "The dominance of one technology company", "A lack of physical infrastructure"],
+                answer: "Disparities in internet access and connectivity",
+                explanation: "The digital divide in Latin America refers to disparities in internet access and connectivity between urban and rural areas, as well as across socioeconomic groups."
+            },
+            {
+                question: "How does globalization impact cultural exchange among Asian countries?",
+                options: ["It promotes mutual understanding and tolerance", "It isolates countries from one another", "It eliminates cultural diversity", "It increases political conflicts"],
+                answer: "It promotes mutual understanding and tolerance",
+                explanation: "Globalization facilitates cultural exchanges among Asian countries, promoting mutual understanding, tolerance, and appreciation of diversity."
+            },
+            {
+                question: "What is the impact of globalization on healthcare for IPs in the Philippines?",
+                options: ["It reduces their access to healthcare", "It enhances their access to healthcare and social services", "It has no impact on healthcare access", "It makes healthcare prohibitively expensive"],
+                answer: "It enhances their access to healthcare and social services",
+                explanation: "Participation in regional initiatives could enhance access to healthcare, infrastructure, and other services for Indigenous Peoples, improving their quality of life."
+            },
+            {
+                question: "The unequal global exchange can be traced back to the Age of Exploration, when which two countries divided the world?",
+                options: ["France and England", "Germany and Russia", "Portugal and Spain", "China and Japan"],
+                answer: "Portugal and Spain",
+                explanation: "The handout mentions that unequal trade relationships can be traced as far back as the Age of Exploration, where Portugal and Spain practically divided the world."
+            },
+            {
+                question: "What is a key impact of globalization on technological innovation in Asia?",
+                options: ["It discourages collaboration", "It encourages technology transfers and joint research initiatives", "It leads to a decrease in innovation hubs", "It slows down technological advancement"],
+                answer: "It encourages technology transfers and joint research initiatives",
+                explanation: "Globalization encourages collaboration and innovation, and joint research initiatives, technology transfers, and investments in innovation hubs contribute to regional technological advancement."
+            },
+            {
+                question: "Which term refers to the unjust or prejudicial treatment of different categories of people?",
+                options: ["Racism", "Colonial Mentality", "Discrimination", "Prejudice"],
+                answer: "Discrimination",
+                explanation: "Discrimination is defined as the unjust or prejudicial treatment of different categories of people, particularly with their ethnicity, age, sex, or disability."
+            },
+            {
+                question: "What is a major challenge for Latin America in terms of environmental issues?",
+                options: ["An increase in biodiversity", "The lack of any environmental policies", "Deforestation and biodiversity loss", "The absence of natural resources"],
+                answer: "Deforestation and biodiversity loss",
+                explanation: "Latin America faces environmental challenges such as deforestation, biodiversity loss, and vulnerability to natural disasters, which are disproportionately affected by global policies and climate change."
+            },
+            {
+                question: "Which of the following is a way globalization has improved the North-South divide?",
+                options: ["It has reinforced existing inequalities", "It has opened up new economic opportunities for some developing countries", "It has led to the marginalization of certain industries", "It has worsened poverty by widening income inequalities"],
+                answer: "It has opened up new economic opportunities for some developing countries",
+                explanation: "Globalization has both worsened and improved aspects of the North-South divide. While it can reinforce inequalities, it has also opened up new economic opportunities for some developing countries."
+            },
+            {
+                question: "What is the main goal of the Association of Southeast Asian Nations (ASEAN)?",
+                options: ["To establish a common language", "To promote economic integration and political cooperation", "To create a unified military force", "To limit social progress"],
+                answer: "To promote economic integration and political cooperation",
+                explanation: "ASEAN's purpose includes economic integration, political cooperation, social progress, and cultural development."
+            },
+            {
+                question: "Which of the following is an economic characteristic of the Global South?",
+                options: ["High per capita income", "Export-heavy", "High access to technological advancement", "Finance-focused industries"],
+                answer: "Export-heavy",
+                explanation: "The Global South is characterized by low per capita income and employment in export-heavy and labor-intensive industries."
+            },
+            {
+                question: "What does globalization promote in Asian societies regarding social development?",
+                options: ["The spread of technology and knowledge in healthcare and education", "Increased social disparities", "A decline in social resilience", "Decreased access to urban planning practices"],
+                answer: "The spread of technology and knowledge in healthcare and education",
+                explanation: "Globalization contributes to the spread of technology, knowledge, and best practices in areas such as healthcare, education, and urban planning, enhancing social development."
+            },
+            {
+                question: "Which regional organization's purpose is to enhance cross-border connectivity and promote trade?",
+                options: ["SAARC", "APEC", "SASEC", "BIMSTEC"],
+                answer: "SASEC",
+                explanation: "The South Asia Subregional Economic Cooperation (SASEC) focuses on enhancing cross-border connectivity between member nations, promoting trade and economic growth."
+            },
+            {
+                question: "Which of the following is a challenge faced by Indigenous Peoples (IPs) in the Philippines due to globalization?",
+                options: ["Enhanced legal and land rights protections", "Greater opportunities for market participation", "Cultural biases and language barriers in education", "Increased pride in their cultural heritage"],
+                answer: "Cultural biases and language barriers in education",
+                explanation: "Globalization may improve access to education for IPs, but cultural biases and language barriers can hinder effective learning."
+            },
+            {
+                question: "What is a negative impact of globalization on Latin America?",
+                options: ["Increased political stability", "Enhanced influence in global forums", "Political polarization and social unrest", "Reduced income disparities"],
+                answer: "Political polarization and social unrest",
+                explanation: "Economic disparities can contribute to political instability and governance challenges, including corruption, social unrest, and political polarization."
+            },
+            {
+                question: "The UN's SDG 1 and SDG 10 are aimed at mitigating which global issues?",
+                options: ["Poverty and inequality", "Climate change and biodiversity loss", "Technological and digital divides", "Cultural homogeneity"],
+                answer: "Poverty and inequality",
+                explanation: "The UN has identified poverty eradication (SDG 1) and reducing inequalities (SDG 10) as central goals in the 2030 Agenda for Sustainable Development."
+            },
+            {
+                question: "Which of the following describes the relationship between the Global North and Global South?",
+                options: ["They are completely independent of each other", "Their relationship is not influenced by historical ties", "Their relationship can be influenced by economic dependencies and geopolitical interests", "They have equal political influence"],
+                answer: "Their relationship can be influenced by economic dependencies and geopolitical interests",
+                explanation: "The relationships between countries of the Global North and South can be influenced by historical ties, economic dependencies, and geopolitical interests."
+            },
+            {
+                question: "Which regional organization's founding purpose is 'to ensure dynamic and mutual cooperation'?",
+                options: ["APEC", "ASEAN", "BIMSTEC", "SAARC"],
+                answer: "BIMSTEC",
+                explanation: "The Bay of Bengal Initiative for Multi-Sectoral Technical and Economic Cooperation (BIMSTEC) was founded to ensure dynamic and mutual cooperation."
+            },
+            {
+                question: "Which of the following is a key impact of globalization on Asian regionalism?",
+                options: ["A decrease in regional cooperation", "The decline of digital connectivity", "The acceleration of regional economic integration efforts", "A decrease in cultural exchange"],
+                answer: "The acceleration of regional economic integration efforts",
+                explanation: "Regional economic integration efforts such as the ASEAN Free Trade Area (AFTA) and bilateral trade agreements are accelerated by globalization, promoting cross-border economic activities."
+            },
+            {
+                question: "How does globalization affect Latin America's reliance on primary commodities?",
+                options: ["It diversifies their economies", "It leads to economic instability due to price fluctuations", "It decreases their dependence on commodity exports", "It guarantees stable export prices"],
+                answer: "It leads to economic instability due to price fluctuations",
+                explanation: "Fluctuations in global commodity prices can lead to economic instability and vulnerability in many Latin American economies that are heavily reliant on exports of primary commodities."
+            },
+            {
+                question: "Which of the following is a key component of the 'Global North'?",
+                options: ["Less developed countries", "Industrialized countries", "Countries with a high reliance on agriculture", "Countries with low per capita income"],
+                answer: "Industrialized countries",
+                explanation: "The Global North refers to the developed, industrialized countries of the Northern Hemisphere."
+            },
+            {
+                question: "Globalization's impact on SOGI rights in Asia is described as:",
+                options: ["Exclusively positive with no challenges", "Creating awareness and legal reforms while also facing resistance", "Having no impact on legal frameworks", "Resulting in uniform SOGI policies across all of Asia"],
+                answer: "Creating awareness and legal reforms while also facing resistance",
+                explanation: "Globalization promotes awareness and legal reforms for SOGI rights, but it also encounters challenges from conservative backlash and varying local contexts."
+            }
+        ],
+        identification: [
+            {
+                question: "This is the process of Asian countries coming together to foster cooperation, integration, and collective decision-making.",
+                answer: "Asian Regionalism",
+                explanation: "Asian regionalism is the process of Asian countries coming together to foster cooperation, integration, and collective decision-making within the region."
+            },
+            {
+                question: "The economic, social, and political gap between the developed countries of the Northern Hemisphere and the less developed countries of the Southern Hemisphere.",
+                answer: "The North-South Divide",
+                explanation: "The North-South Divide is the economic, social, and political gap between the developed, industrialized countries of the Northern Hemisphere (Global North) and the less developed countries of the Southern Hemisphere (Global South)."
+            },
+            {
+                question: "This regional organization, founded in 1967, aims for economic integration, political cooperation, and social progress.",
+                answer: "ASEAN",
+                explanation: "The Association of Southeast Asian Nations (ASEAN) was founded in 1967 with the purpose of economic integration, political cooperation, social progress, and cultural development."
+            },
+            {
+                question: "The process characterized by increased trade, investment flows, and technological exchange that has influenced the North-South divide.",
+                answer: "Globalization",
+                explanation: "Globalization, characterized by increased trade, investment flows, and technological exchange, has both worsened and improved aspects of the North-South divide."
+            },
+            {
+                question: "A perception that one's own identity is inferior compared to a foreign culture and ethnicity, a consequence of colonialism.",
+                answer: "Colonial Mentality",
+                explanation: "Colonial mentality is the perception that one's identity is inferior compared to foreign culture and ethnicity, which is a long-standing consequence of colonialism."
+            },
+            {
+                question: "The UN Sustainable Development Goal that aims to eradicate extreme poverty globally.",
+                answer: "SDG 1",
+                explanation: "SDG 1: No Poverty, is the UN's goal to eradicate extreme poverty globally and ensure access to basic resources, services, and economic opportunities."
+            },
+            {
+                question: "A group of people within a society who possess the same socioeconomic status.",
+                answer: "Social Class",
+                explanation: "A social class is defined as a group of people within a society who possess the same socioeconomic status."
+            },
+            {
+                question: "This term refers to the disparity in internet access and connectivity between urban and rural areas.",
+                answer: "Digital Divide",
+                explanation: "The digital divide refers to disparities in internet access and connectivity, particularly between urban and rural areas, as seen in Latin America and Asia."
+            },
+            {
+                question: "The term used for developed, industrialized countries, typically in the Northern Hemisphere.",
+                answer: "Global North",
+                explanation: "The Global North refers to the developed, industrialized countries of the Northern Hemisphere."
+            },
+            {
+                question: "A regional organization founded in 1989 to promote sustainable economic growth in the Asia-Pacific region.",
+                answer: "APEC",
+                explanation: "The Asia-Pacific Economic Cooperation (APEC) was founded in 1989 to promote sustainable economic growth and prosperity in the Asia-Pacific region."
+            },
+            {
+                question: "The term for the less developed countries, typically in the Southern Hemisphere.",
+                answer: "Global South",
+                explanation: "The Global South refers to the less developed countries of the Southern Hemisphere."
+            },
+            {
+                question: "This regional organization, founded in 1985, focuses on cooperation in economic, social, and cultural fields among its members.",
+                answer: "SAARC",
+                explanation: "The South Asian Association for Regional Cooperation (SAARC) was founded in 1985 to promote regional cooperation in various fields."
+            },
+            {
+                question: "A regional organization founded in 1997 to ensure dynamic and mutual cooperation between South Asian and Southeast Asian countries.",
+                answer: "BIMSTEC",
+                explanation: "The Bay of Bengal Initiative for Multi-Sectoral Technical and Economic Cooperation (BIMSTEC) was founded in 1997 to ensure dynamic and mutual cooperation, especially in areas of common interest."
+            },
+            {
+                question: "The unjust or prejudicial treatment of different categories of people, a consequence of colonial legacy.",
+                answer: "Discrimination",
+                explanation: "Discrimination is defined as the unjust or prejudicial treatment of different categories of people, which is a long-standing consequence of colonialism."
+            },
+            {
+                question: "This is a key sector in the Philippines that has experienced economic growth due to globalization.",
+                answer: "BPO",
+                explanation: "The business process outsourcing (BPO), manufacturing, and tourism sectors in the Philippines have been stimulated by the integration into global markets."
+            },
+            {
+                question: "The UN Sustainable Development Goal that addresses inequalities within and among countries.",
+                answer: "SDG 10",
+                explanation: "SDG 10: Reduced Inequalities, is crucial for promoting inclusive and sustainable development."
+            },
+            {
+                question: "This is the term for behaviors or attitudes that reflect and foster the belief that race is a fundamental determinant of human traits, with one group being superior.",
+                answer: "Racism",
+                explanation: "Racism is defined as the behaviors or attitudes that reflect and foster the belief that race is a fundamental determinant of human traits, where differences make one superior."
+            },
+            {
+                question: "A regional organization founded in 2001 to enhance cross-border connectivity and promote trade.",
+                answer: "SASEC",
+                explanation: "The South Asia Subregional Economic Cooperation (SASEC) was founded in 2001 with the purpose of enhancing cross-border connectivity and promoting trade."
+            },
+            {
+                question: "This is a major challenge for Latin America where a small elite holds a disproportionate share of wealth.",
+                answer: "Income Inequality",
+                explanation: "Latin America is known for its significant income disparities, where a small elite holds a disproportionate share of wealth."
+            },
+            {
+                question: "The term that describes less developed countries' reliance on the export of primary commodities, making them vulnerable to market fluctuations.",
+                answer: "Commodity Dependence",
+                explanation: "Many Latin American economies are heavily reliant on exports of primary commodities, making them vulnerable to fluctuations in global commodity prices."
+            }
+        ]
+    };
+    //
+    // --- END OF QUIZ DATA ---
+    //
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let wrongAnswers = [];
+    let isIdentificationSection = false;
+    let answered = false;
+    const totalQuestions = quizData.multipleChoice.length + quizData.identification.length;
+
+    const quizArea = document.getElementById('quiz-area');
+    const endScreen = document.getElementById('end-screen');
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const identificationContainer = document.getElementById('identification-container');
+    const identificationInput = document.getElementById('identification-input');
+    const submitButton = document.getElementById('submit-button');
+    const feedbackSection = document.getElementById('feedback-section');
+    const feedbackText = document.getElementById('feedback-text');
+    const explanationText = document.getElementById('explanation-text');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const finalScoreSpan = document.getElementById('final-score');
+    const totalQuestionsSpan = document.getElementById('total-questions');
+    const bestScoreSpan = document.getElementById('best-score');
+    const wrongAnswersList = document.getElementById('wrong-answers-list');
+    const restartButton = document.getElementById('restart-button');
+    const modeToggle = document.getElementById('mode-toggle');
+
+    // Load initial state from cookies
+    const savedTheme = getCookie("theme");
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+        modeToggle.innerHTML = '🌙';
+    }
+
+    const savedBestScore = getCookie("bestScore");
+    bestScoreSpan.textContent = savedBestScore || '0';
+
+    modeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        modeToggle.innerHTML = isDarkMode ? '🌙' : '☀️';
+        setCookie("theme", isDarkMode ? "dark" : "light", 365);
+    });
+
+    function showQuestion() {
+        if (totalQuestions === 0) {
+            quizArea.innerHTML = "<h2>No questions found! Please add questions to the quizData object.</h2>";
+            return;
+        }
+        
+        answered = false;
+        optionsContainer.style.display = 'flex';
+        identificationContainer.style.display = 'none';
+        identificationInput.value = '';
+        feedbackSection.style.display = 'none';
+        feedbackSection.classList.remove('correct', 'incorrect');
+        
+        let currentQuizData;
+        if (currentQuestionIndex < quizData.multipleChoice.length) {
+            isIdentificationSection = false;
+            submitButton.style.display = 'none'; // Hide submit button for MCQs
+            currentQuizData = quizData.multipleChoice[currentQuestionIndex];
+            optionsContainer.innerHTML = '';
+            currentQuizData.options.forEach(option => {
+                const button = document.createElement('button');
+                button.classList.add('option');
+                button.textContent = option;
+                button.onclick = () => selectOption(button, option);
+                optionsContainer.appendChild(button);
+            });
+            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. The identification questions will begin after question ${quizData.multipleChoice.length}.`;
+        } else {
+            isIdentificationSection = true;
+            submitButton.style.display = 'block'; // Show submit button for identification questions
+            currentQuizData = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
+            optionsContainer.style.display = 'none';
+            identificationContainer.style.display = 'block';
+            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. You are now in the identification questions section.`;
+        }
+        
+        questionText.textContent = currentQuizData.question;
+        updateProgressBar();
+    }
+
+    function selectOption(selectedButton, selectedAnswer) {
+        if (answered) return;
+        answered = true;
+
+        const currentQuestion = quizData.multipleChoice[currentQuestionIndex];
+        const isCorrect = selectedAnswer === currentQuestion.answer;
+        
+        selectedButton.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+        if (isCorrect) {
+            score++;
+            feedbackText.textContent = "Correct!";
+            feedbackSection.classList.add('correct');
+        } else {
+            feedbackText.textContent = `Incorrect. The correct answer was: ${currentQuestion.answer}`;
+            feedbackSection.classList.add('incorrect');
+            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: selectedAnswer, type: 'multipleChoice' });
+        }
+        explanationText.textContent = currentQuestion.explanation;
+        feedbackSection.style.display = 'block';
+
+        const allOptions = optionsContainer.querySelectorAll('.option');
+        allOptions.forEach(option => {
+            if (option.textContent === currentQuestion.answer) {
+                option.classList.add('correct');
+            }
+            option.disabled = true;
+        });
+
+        setTimeout(() => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < totalQuestions) {
+                showQuestion();
+            } else {
+                showEndScreen();
+            }
+        }, 3000);
+    }
+
+    submitButton.onclick = () => {
+        if (!isIdentificationSection) {
+            return;
+        }
+
+        if (answered) return;
+        answered = true;
+        submitButton.disabled = true;
+
+        const currentQuestion = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
+        const userAnswer = identificationInput.value.trim();
+        const correctAnswer = currentQuestion.answer.trim();
+
+        const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+        
+        if (isCorrect) {
+            score++;
+            feedbackText.textContent = "Correct!";
+            feedbackSection.classList.add('correct');
+        } else {
+            feedbackText.textContent = `Incorrect. The correct answer was: ${currentQuestion.answer}`;
+            feedbackSection.classList.add('incorrect');
+            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: userAnswer, type: 'identification' });
+        }
+        explanationText.textContent = currentQuestion.explanation;
+        feedbackSection.style.display = 'block';
+
+        setTimeout(() => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < totalQuestions) {
+                showQuestion();
+            } else {
+                showEndScreen();
+            }
+        }, 3000);
+    };
+
+    function updateProgressBar() {
+        const progress = (currentQuestionIndex / totalQuestions) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function showEndScreen() {
+        quizArea.style.display = 'none';
+        endScreen.style.display = 'block';
+        finalScoreSpan.textContent = score;
+        totalQuestionsSpan.textContent = totalQuestions;
+
+        const currentBestScore = parseInt(getCookie("bestScore") || '0', 10);
+        if (score > currentBestScore) {
+            setCookie("bestScore", score, 365);
+            bestScoreSpan.textContent = score;
+        } else {
+            bestScoreSpan.textContent = currentBestScore;
+        }
+
+        wrongAnswersList.innerHTML = '';
+        if (wrongAnswers.length > 0) {
+            wrongAnswers.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>Q:</strong> ${item.question}<br><strong>Your Answer:</strong> ${item.yourAnswer}<br><strong>Correct Answer:</strong> ${item.correctAnswer}`;
+                wrongAnswersList.appendChild(li);
+            });
+        } else {
+            wrongAnswersList.innerHTML = "<li>You got all questions right! 🎉</li>";
+        }
+    }
+
+    restartButton.addEventListener('click', () => {
+        currentQuestionIndex = 0;
+        score = 0;
+        wrongAnswers = [];
+        endScreen.style.display = 'none';
+        quizArea.style.display = 'block';
+        showQuestion();
+    });
+
+    // Start the quiz
+    showQuestion();
+
+</script>
+
+</body>
+</html>
