@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Introduction to Computing</title>
+    <title>Introduction to Computing Quiz</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Base Styling */
         :root {
             --bg-color-light: #f4f7f6;
             --text-color-light: #2c3e50;
@@ -25,1112 +26,1258 @@
             --container-bg-light: #34495e;
             --primary-color-light: #3498db;
             --secondary-color-light: #2980b9;
-            --border-color-light: #526f8d;
-            --shadow-color-light: rgba(255, 255, 255, 0.1);
+            --correct-color: #2ecc71;
+            --incorrect-color: #e74c3c;
+            --border-color-light: #7f8c8d;
+            --shadow-color-light: rgba(0, 0, 0, 0.3);
             --placeholder-color-light: #bdc3c7;
         }
 
-        * {
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
         body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
             background-color: var(--bg-color-light);
             color: var(--text-color-light);
-            margin: 0;
-            padding: 20px;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .quiz-container {
             width: 100%;
-            max-width: 800px;
-            background-color: var(--container-bg-light);
+            max-width: 700px;
+            margin: 20px;
             padding: 30px;
+            background-color: var(--container-bg-light);
             border-radius: 12px;
             box-shadow: 0 10px 25px var(--shadow-color-light);
-            animation: fadeIn 0.8s ease-out;
+            transition: background-color 0.3s, box-shadow 0.3s;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        /* Header and Mode Toggle */
         h1 {
             text-align: center;
-            font-size: 2.2em;
             color: var(--primary-color-light);
-            margin-bottom: 10px;
+            font-weight: 700;
+            margin-bottom: 25px;
         }
 
-        h2 {
-            font-size: 1.5em;
-            margin-top: 0;
-            text-align: center;
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color-light);
         }
 
-        .progress-container {
+        .theme-toggle {
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 2px solid var(--primary-color-light);
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--primary-color-light);
+            color: white;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
             width: 100%;
             background-color: var(--border-color-light);
-            border-radius: 8px;
-            height: 12px;
-            margin-top: 10px;
-            margin-bottom: 5px;
+            border-radius: 10px;
             overflow: hidden;
+            margin-bottom: 25px;
+            height: 15px;
         }
 
         .progress-bar {
             height: 100%;
             width: 0%;
-            background-color: var(--primary-color-light);
-            transition: width 0.4s ease-in-out;
+            background-color: var(--correct-color);
+            transition: width 0.4s ease;
         }
 
-        .progress-text {
+        #progress-text {
             font-size: 0.9em;
-            color: var(--placeholder-color-light);
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color-light);
             text-align: center;
-            margin-bottom: 20px;
+        }
+
+        /* Question Area */
+        #quiz-area {
+            min-height: 300px; /* Ensures consistent layout height */
+            display: block;
         }
 
         #question-text {
             font-size: 1.2em;
             margin-bottom: 20px;
             font-weight: 600;
+            line-height: 1.5;
+            text-align: center;
         }
 
-        #optionss-container, #identification-container {
+        #options-container {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-        .options {
+        /* Options/Buttons/Inputs */
+        .options, #submit-button, #next-button, #restart-button {
+            padding: 15px 20px;
+            border: 2px solid var(--primary-color-light);
             background-color: transparent;
-            border: 2px solid var(--border-color-light);
-            color: var(--text-color-light);
-            padding: 15px;
+            color: var(--primary-color-light);
             border-radius: 8px;
             cursor: pointer;
-            text-align: left;
-            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
+            text-align: center;
+            width: 100%;
         }
 
-        .options:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px var(--shadow-color-light);
+        .options:hover:not(.selected):not(.correct):not(.incorrect),
+        #submit-button:hover, #restart-button:hover {
+            background-color: var(--primary-color-light);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .options.selected {
+            background-color: var(--secondary-color-light);
+            color: white;
+            border-color: var(--secondary-color-light);
+            transform: scale(1.02);
         }
 
         .options.correct {
             background-color: var(--correct-color);
             color: white;
             border-color: var(--correct-color);
+            pointer-events: none; /* Disable clicking after selecting */
         }
 
         .options.incorrect {
             background-color: var(--incorrect-color);
             color: white;
             border-color: var(--incorrect-color);
+            pointer-events: none; /* Disable clicking after selecting */
         }
 
-        #submit-button, .quiz-button, #restart-button {
-            display: none; /* Hide by default */
-            width: 100%;
-            padding: 15px;
-            font-size: 1em;
-            font-weight: bold;
-            color: white;
-            background-color: var(--primary-color-light);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.2s, transform 0.2s;
-        }
-
-        #submit-button:hover, .quiz-button:hover, #restart-button:hover {
-            background-color: var(--secondary-color-light);
-            transform: translateY(-2px);
-        }
-        
-        #submit-button:disabled {
-            background-color: #7f8c8d;
+        .options:disabled {
+            opacity: 0.7;
             cursor: not-allowed;
-        }
-
-        #feedback-section {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-left: 5px solid;
-            border-radius: 8px;
-            display: none;
-        }
-
-        #feedback-section.correct {
-            border-color: var(--correct-color);
-        }
-
-        #feedback-section.incorrect {
-            border-color: var(--incorrect-color);
-        }
-
-        #explanation-text {
-            font-style: italic;
-            font-size: 0.95em;
-            margin-top: 10px;
-        }
-
-        .end-screen {
-            text-align: center;
-        }
-
-        .end-screen h2 {
-            font-size: 2em;
-            color: var(--primary-color-light);
-            margin-bottom: 10px;
-        }
-
-        .end-screen p {
-            font-size: 1.2em;
-            margin-bottom: 5px;
-        }
-        
-        #incorrect-questions-list {
-            text-align: left;
-            margin-top: 20px;
-        }
-        
-        #incorrect-questions-list li {
-            margin-bottom: 10px;
-            border-left: 3px solid var(--incorrect-color);
-            padding-left: 10px;
-        }
-
-        .mode-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: var(--container-bg-light);
-            border: 2px solid var(--border-color-light);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 4px 8px var(--shadow-color-light);
-            font-size: 1.2em;
-            color: var(--text-color-light);
         }
 
         #identification-input {
             width: 100%;
             padding: 15px;
-            font-size: 1em;
+            margin-bottom: 20px;
             border: 2px solid var(--border-color-light);
             border-radius: 8px;
-            background-color: var(--container-bg-light);
+            font-size: 1em;
+            box-sizing: border-box;
             color: var(--text-color-light);
+            background-color: var(--container-bg-light);
             transition: border-color 0.2s;
         }
-        
+
+        #identification-input::placeholder {
+            color: var(--placeholder-color-light);
+        }
+
         #identification-input:focus {
+            border-color: var(--primary-color-light);
             outline: none;
+        }
+
+        #submit-button, #next-button {
+            display: none; /* Controlled by JS */
+        }
+        
+        #submit-button {
+            margin-top: 10px;
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+        
+        #submit-button:hover {
+            background-color: #2ecc71;
+            box-shadow: 0 4px 8px rgba(39, 174, 96, 0.4);
+        }
+
+        #next-button {
+            margin-top: 10px;
+        }
+
+        /* Feedback Message */
+        #feedback-message {
+            text-align: center;
+            padding: 10px 0;
+            margin-bottom: 15px;
+            font-weight: 700;
+            min-height: 20px;
+            border-radius: 8px;
+        }
+
+        .correct-feedback {
+            color: var(--correct-color);
+            background-color: rgba(39, 174, 96, 0.1);
+        }
+
+        .incorrect-feedback {
+            color: var(--incorrect-color);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        /* End Screen */
+        #end-screen {
+            display: none;
+            text-align: center;
+        }
+
+        #end-screen h2 {
+            color: var(--correct-color);
+            margin-bottom: 20px;
+        }
+
+        #score-summary {
+            background-color: var(--bg-color-light);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color-light);
+            text-align: left;
+        }
+
+        #score-summary p {
+            margin: 8px 0;
+            font-size: 1.1em;
+        }
+
+        #score-summary strong {
+            font-weight: 700;
+            color: var(--primary-color-light);
+        }
+
+        #wrong-answers-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #wrong-answers-list li {
+            background-color: var(--container-bg-light);
+            border: 1px solid var(--incorrect-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.1);
+        }
+        
+        #restart-button {
+            background-color: var(--primary-color-light);
+            color: white;
             border-color: var(--primary-color-light);
         }
     </style>
 </head>
 <body>
 
-<div class="mode-toggle" id="mode-toggle">
-    ☀️
-</div>
+    <div class="quiz-container">
+        <div class="header-controls">
+            <span id="current-score">Score: 0</span>
+            <span class="theme-toggle" id="theme-toggle">☀️ Light Mode</span>
+        </div>
 
-<div class="quiz-container" id="quiz-container">
-    <h1 id="quiz-title">Introduction to Computing</h1>
-    <div class="progress-container">
-        <div class="progress-bar" id="progress-bar"></div>
-    </div>
-    <p class="progress-text" id="progress-text"></p>
-
-    <div id="quiz-area">
-        <div id="question-area">
-            <h2 id="question-text"></h2>
-            <div id="optionss-container"></div>
-            <div id="identification-container" style="display: none;">
-                <input type="text" id="identification-input" placeholder="Type your answer here...">
+        <h1>Introduction to Computing Quiz</h1>
+        
+        <div id="quiz-area">
+            <div id="progress-text"></div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
             </div>
+
+            <div id="feedback-message"></div>
+
+            <p id="question-text"></p>
+            
+            <div id="options-container">
+                <!-- Multiple Choice Options are inserted here -->
+            </div>
+
+            <input type="text" id="identification-input" placeholder="Type your answer here..." style="display: none;">
+
             <button id="submit-button">Submit Answer</button>
+            <button id="next-button">Next Question</button>
         </div>
-        
-        <div id="feedback-section">
-            <p id="feedback-text"></p>
-            <p id="explanation-text"></p>
+
+        <div id="end-screen">
+            <h2>Quiz Complete!</h2>
+            
+            <div id="score-summary">
+                <p>Final Score: <span id="final-score-span">0</span> / <span id="total-questions-span">0</span></p>
+                <p>Best Score: <strong id="best-score-span">0</strong></p>
+                
+                <h3>Incorrect Answers Review:</h3>
+                <ul id="wrong-answers-list">
+                    <!-- Wrong answers are inserted here -->
+                </ul>
+            </div>
+
+            <button id="restart-button">Restart Quiz</button>
         </div>
+
     </div>
 
-    <div id="end-screen" class="end-screen" style="display: none;">
-        <h2>Quiz Complete!</h2>
-        <p>Your Score: <span id="final-score"></span> / <span id="total-questions"></span></p>
-        <p>Previous Best Score: <span id="best-score"></span></p>
-        <div id="incorrect-questions-list">
-            <h3>Questions you got wrong:</h3>
-            <ul id="wrong-answers-list"></ul>
-        </div>
-        <button id="restart-button">Restart Quiz</button>
-    </div>
-</div>
-
-<script>
-    // Utility functions for cookies
-    function setCookie(name, value, days) {
-        const d = new Date();
-        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-        const expires = "expires=" + d.toUTCString();
-        document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    <script>
+        // --- Data and State ---
+        const quizData = {
+  "multipleChoice": [
+    {
+      "question": "What is the World Wide Web (W3)?",
+      "options": [
+        "A collection of physical cables connecting millions of computers globally.",
+        "A massive interconnection of networks.",
+        "A wide-area hypermedia information retrieval initiative aiming to give universal access to a large universe of documents.",
+        "The fundamental building block in modern electronic systems."
+      ],
+      "answer": "A wide-area hypermedia information retrieval initiative aiming to give universal access to a large universe of documents.",
+      "explanation": "The WorldWideWeb (W3) is a wide-area hypermedia information retrieval initiative aiming to give universal access to a large universe of documents[cite: 24]."
+    },
+    {
+      "question": "Who invented the World Wide Web (WWW)?",
+      "options": [
+        "Joseph Carl Robnett Licklider",
+        "Vannevar Bush",
+        "Tim Burners-Lee",
+        "Jack Kilby"
+      ],
+      "answer": "Tim Burners-Lee",
+      "explanation": "He is a British scientist who invented the Web, also called World Wide Web (WWW), in 1989 while working at CERN[cite: 13]."
+    },
+    {
+      "question": "The first web page went live on which date?",
+      "options": [
+        "March 1989",
+        "November 1990",
+        "August 6, 1991",
+        "In 1995"
+      ],
+      "answer": "August 6, 1991",
+      "explanation": "The first web page went live on August 6, 1991, addressed as http://info.cern.ch/hypertext/WWW/TheProject.html[cite: 21]."
+    },
+    {
+      "question": "What is the Internet defined as in the provided text?",
+      "options": [
+        "A system of information accessible through the Internet.",
+        "A network of web pages that are found using a link address.",
+        "A massive interconnection of networks connecting millions of computers globally, thus forming a network wherein any computer can communicate with other computers connected to it.",
+        "An application built on the internet."
+      ],
+      "answer": "A massive interconnection of networks connecting millions of computers globally, thus forming a network wherein any computer can communicate with other computers connected to it.",
+      "explanation": "It is a massive interconnection of networks connecting millions of computers globally, thus forming a network wherein any computer can communicate with other computers connected to it[cite: 48]."
+    },
+    {
+      "question": "In the 1960s, what was the early computer network established for military computer networking?",
+      "options": [
+        "PhoneNet system",
+        "ARPANET",
+        "Telenet",
+        "CERN"
+      ],
+      "answer": "ARPANET",
+      "explanation": "Roberts then published a plan for Advanced Research Projects Agency Network (ARPANET), making it a standard for all military computer networking[cite: 57]."
+    },
+    {
+      "question": "Which of the following does NOT require the web, but is available on the internet, according to the sources?",
+      "options": [
+        "Accessing a search engine like Google",
+        "Streaming services like Netflix",
+        "Sending an email",
+        "Accessing an online business like Amazon"
+      ],
+      "answer": "Sending an email",
+      "explanation": "Not everything available on the internet requires the web as there are platforms that do not rely on it, such as email. [cite_start]Sending an email is possible, regardless of the web or a web browser, as it uses SMTP (Simple Mail Transfer Protocol) which is a secure email relay service[cite: 76, 77]."
+    },
+    {
+      "question": "What is a computer defined as in the provided text?",
+      "options": [
+        "A three-terminal, solid-state electronic device.",
+        "A programmable computing device that can process, store, and retrieve data.",
+        "A device that only handles mathematical calculations.",
+        "A system of information accessible through the Internet."
+      ],
+      "answer": "A programmable computing device that can process, store, and retrieve data.",
+      "explanation": "A computer is a programmable computing device that can process, store, and retrieve data[cite: 132]."
+    },
+    {
+      "question": "Which two distinct families of computing devices were mentioned in the history of computers?",
+      "options": [
+        "Mainframes and Microcomputers",
+        "Supercomputers and Laptops",
+        "Digital computers and historical analog computers",
+        "First Generation and Fourth Generation computers"
+      ],
+      "answer": "Digital computers and historical analog computers",
+      "explanation": "The two distinct families of computing devices are digital computers and historical analog computers[cite: 140]."
+    },
+    {
+      "question": "What kind of device is a digital computer, according to the text?",
+      "options": [
+        "A machine that took up a large table and weighed 100 tons.",
+        "A sequential device that operates data one at a time.",
+        "A device where data reflects the properties of the data being modeled.",
+        "A device that primarily uses electric voltage to represent data."
+      ],
+      "answer": "A sequential device that operates data one at a time.",
+      "explanation": "Digital Computers a sequential device that operates data one at a time[cite: 141]."
+    },
+    {
+      "question": "What did the first generation of digital computers primarily use as their main electronic component?",
+      "options": [
+        "Transistors",
+        "Microprocessors",
+        "Integrated Circuits",
+        "Vacuum Tubes"
+      ],
+      "answer": "Vacuum Tubes",
+      "explanation": "The first generation of computers used thousands of bulky vacuum tubes, with several racks taking up an entire room[cite: 170]. [cite_start]The first generation of digital computers used vacuum tubes[cite: 172]."
+    },
+    {
+      "question": "Which component is considered the 'fundamental building block in modern electronic systems' for revolutionizing the field of electronics, leading to the second generation of computers?",
+      "options": [
+        "Vacuum Tube",
+        "Transistor",
+        "Integrated Circuit",
+        "Arithmetic-Logical Unit (ALU)"
+      ],
+      "answer": "Transistor",
+      "explanation": "The transistor is the fundamental building block in modern electronic systems for revolutionizing the field of electronics[cite: 175]."
+    },
+    {
+      "question": "Who invented the integrated circuit (IC), leading to the third generation of computers?",
+      "options": [
+        "Tim Burners-Lee",
+        "James Thomson",
+        "Jack Kilby",
+        "Paul Mockapetris"
+      ],
+      "answer": "Jack Kilby",
+      "explanation": "Jack Kilby of Texas Instruments invented the integrated circuit in 1958[cite: 184]."
+    },
+    {
+      "question": "Which component marked the rise of the fourth generation of computers?",
+      "options": [
+        "Vacuum Tubes",
+        "Transistors",
+        "Integrated Circuits",
+        "Microprocessors"
+      ],
+      "answer": "Microprocessors",
+      "explanation": "The rise of microprocessors led to the fourth generation of computers with thousands of integrated circuits placed onto a single silicon chip[cite: 195]."
+    },
+    {
+      "question": "What are the two basic parts that all computers consist of?",
+      "options": [
+        "Input Unit and Output Unit",
+        "Control Unit and Arithmetic-Logical Unit",
+        "Hardware and Software",
+        "Analog and Digital"
+      ],
+      "answer": "Hardware and Software",
+      "explanation": "All computers consist of two basic parts: hardware and software[cite: 198]."
+    },
+    {
+      "question": "Which key component of a computer system is responsible for acquiring user instructions and converting them into a digital language format?",
+      "options": [
+        "Central Processing Unit (CPU)",
+        "Memory Unit",
+        "Output Unit",
+        "Input Unit"
+      ],
+      "answer": "Input Unit",
+      "explanation": "A computer system responds to the instructions it receives from the users and uses an input unit to acquire those instructions. [cite_start]Input units take user commands in the form of data and convert them into a digital language format sent to the processing unit for the next step[cite: 209, 210]."
+    },
+    {
+      "question": "What is the primary function of the Central Processing Unit (CPU)?",
+      "options": [
+        "Displaying the results to the user.",
+        "Converting data accepted in human language into machine language for computers to interpret.",
+        "Storing data from input devices only.",
+        "Managing data flow inside the system only."
+      ],
+      "answer": "Converting data accepted in human language into machine language for computers to interpret.",
+      "explanation": "CPU understands the command and how it can be achieved. [cite_start]It converts the data accepted in human language into machine language for computers to interpret[cite: 214, 215]."
+    },
+    {
+      "question": "Which subunit of the CPU saves the data immediately when it reaches the processor from input devices and stores the result data from output devices?",
+      "options": [
+        "Control Unit",
+        "Arithmetic-Logical Unit (ALU)",
+        "Memory Unit",
+        "Input Unit"
+      ],
+      "answer": "Memory Unit",
+      "explanation": "When data reaches the processor from input devices, the memory unit saves it immediately[cite: 217]. [cite_start]This unit is also responsible for storing data from input devices and storing the result data from output devices[cite: 220]."
+    },
+    {
+      "question": "What does the Arithmetic-Logical Unit (ALU) primarily handle?",
+      "options": [
+        "Managing computer device functions and maintaining data flow.",
+        "Displaying the results to the user on a monitor.",
+        "Converting human language to machine language.",
+        "Mathematical calculations, data comparison, and decision-making."
+      ],
+      "answer": "Mathematical calculations, data comparison, and decision-making.",
+      "explanation": "This processor is responsible for mathematical calculations and issues the computer system deals with while functioning[cite: 226]. [cite_start]It is also used for data comparison and decision-making[cite: 227]."
+    },
+    {
+      "question": "Which of the following is an example of an Output Unit?",
+      "options": [
+        "Keyboard",
+        "Scanner",
+        "Mouse",
+        "Printer"
+      ],
+      "answer": "Printer",
+      "explanation": "Other examples [of Output Units] include printers, projectors, speakers, headphones, and plotters[cite: 233]."
+    },
+    {
+      "question": "What is the Operating System (OS)?",
+      "options": [
+        "The physical part of the computer machine.",
+        "A set of instructions that commands the computer what to do.",
+        "A collection of software programs and commands that control computer hardware to make it usable.",
+        "A secure email relay service."
+      ],
+      "answer": "A collection of software programs and commands that control computer hardware to make it usable.",
+      "explanation": "Operating System (OS) a collection of software programs and commands that control computer hardware to make it usable[cite: 239]."
+    },
+    {
+      "question": "Which advantage of an Operating System is described as allowing users to hide details of hardware by creating an abstraction?",
+      "options": [
+        "User-friendly",
+        "Abstraction",
+        "Executable Programs",
+        "Hardware Sharing"
+      ],
+      "answer": "Abstraction",
+      "explanation": "Abstraction allow users to hide details of hardware by creating an abstraction[cite: 243, 244, 245]."
+    },
+    {
+      "question": "Which operating system is described as a family of graphical operating systems created by Microsoft, winning the personal computer and laptop market with over 90% market share?",
+      "options": [
+        "Mac OS",
+        "iOS",
+        "Android",
+        "Microsoft Windows"
+      ],
+      "answer": "Microsoft Windows",
+      "explanation": "It is a family of graphical operating systems created by Microsoft[cite: 254]. [cite_start]Currently, Microsoft Windows wins the personal computer and laptop market with over 90% market share[cite: 256]."
+    },
+    {
+      "question": "Which mobile operating system was developed by Google and the Open Handset Alliance?",
+      "options": [
+        "Mac OS/X",
+        "iOS",
+        "Android",
+        "Windows 95"
+      ],
+      "answer": "Android",
+      "explanation": "It is a mobile operating system developed by Google and the Open Handset Alliance designed for touchscreen smartphones and tablets[cite: 263]."
+    },
+    {
+      "question": "What period saw the rise and burst of the dot-com bubble or the Internet bubble?",
+      "options": [
+        "The 1960s",
+        "The 1980s",
+        "The 1990s",
+        "The 2000s"
+      ],
+      "answer": "The 2000s",
+      "explanation": "The 2000s sees the rise and the burst of the dot-com bubble or the Internet bubble[cite: 68]."
+    },
+    {
+      "question": "What material was Jack Kilby's idea based on for properly engineering a piece to act as several components simultaneously, leading to the first integrated circuit?",
+      "options": [
+        "Copper",
+        "Silicon",
+        "Germanium",
+        "Fiber optic cables"
+      ],
+      "answer": "Germanium",
+      "explanation": "His idea to properly engineer a piece of germanium to act as several components simultaneously led to the birth of the first integrated circuit[cite: 185]."
+    },
+    {
+      "question": "What is the key difference between analog computers and digital computers regarding data representation?",
+      "options": [
+        "Analog uses binary format, while digital uses physical quantities.",
+        "Analog is sequential, while digital is parallel.",
+        "Analog reflects the properties of the data being modeled, while digital uses a stream of binary digits.",
+        "Analog uses transistors, while digital uses vacuum tubes."
+      ],
+      "answer": "Analog reflects the properties of the data being modeled, while digital uses a stream of binary digits.",
+      "explanation": "The representation of data reflects the properties of the data being modeled in an analog computer [cite: 144][cite_start]... whereas digital computers use a stream of binary digits to represent them[cite: 145]."
+    },
+    {
+      "question": "What was the name of the first large-scale, general-purpose analog computer developed by Vannevar Bush?",
+      "options": [
+        "Differential Analyzer",
+        "Tide-predicting machine",
+        "ENIAC",
+        "Whirlwind"
+      ],
+      "answer": "Differential Analyzer",
+      "explanation": "He developed the first large-scale, general-purpose analog computer called the 'Differential Analyzer'[cite: 155]."
+    },
+    {
+      "question": "What is the definition of 'Software' in the context of computer parts?",
+      "options": [
+        "The physical part of the machine.",
+        "A set of instructions that commands the computer what to do.",
+        "The central program that monitored the memory.",
+        "The process of converting data from human language to machine language."
+      ],
+      "answer": "A set of instructions that commands the computer what to do.",
+      "explanation": "The hardware is the physical part of the machine, while the software is a set of instructions that commands the computer what to do[cite: 199]."
+    },
+    {
+      "question": "What component of the Internet includes copper telephone wires, TV cables, and fiber optic cables?",
+      "options": [
+        "The Web",
+        "Wireless connections (Wi-Fi/3G/4G)",
+        "Physical cables",
+        "SMTP (Simple Mail Transfer Protocol)"
+      ],
+      "answer": "Physical cables",
+      "explanation": "It is also a network of physical cables including copper telephone wires, TV cables, and fiber optic cables[cite: 49]."
+    },
+    {
+      "question": "What did Tim Berners-Lee and his colleagues at CERN develop that gave birth to the first version of the World Wide Web in the 1990s?",
+      "options": [
+        "Domain Name System (DNS)",
+        "The PhoneNet system",
+        "Hypertext Markup Language (HTML) and the Uniform Resource Locator (URL)",
+        "The Differential Analyzer"
+      ],
+      "answer": "Hypertext Markup Language (HTML) and the Uniform Resource Locator (URL)",
+      "explanation": "Tim Berners-Lee and his colleagues at CERN develop hypertext markup language (HTML) and the uniform resource locator (URL), giving birth to the first version of the World Wide Web[cite: 65]."
+    },
+    {
+      "question": "What is the disadvantage of an Operating System described as 'Volatility'?",
+      "options": [
+        "It is costly for small organizations.",
+        "Threats can happen anytime.",
+        "Users may lose all the contents stored in the computer system whenever an issue occurs.",
+        "It provides an environment where users may execute programs."
+      ],
+      "answer": "Users may lose all the contents stored in the computer system whenever an issue occurs.",
+      "explanation": "Volatility: Users may lose all the contents stored in the computer system whenever an issue occurs[cite: 248]."
+    },
+    {
+      "question": "The rise of online entertainment consumption on the web has an adverse effect, leading to what?",
+      "options": [
+        "Increased accessibility to information.",
+        "The emergence of video conferencing tools.",
+        "The absence and lack of real human connection and interaction, creating an unhealthy habit that leads to fatigue.",
+        "Easier and instant communication."
+      ],
+      "answer": "The absence and lack of real human connection and interaction, creating an unhealthy habit that leads to fatigue.",
+      "explanation": "The adverse effect is the absence and lack of real human connection and interaction[cite: 105]. [cite_start]Online entertainment consumption continues to increase, creating an unhealthy habit that leads to fatigue[cite: 106]."
+    },
+    {
+      "question": "In the 2000s, which company saw a 'meteoric rise to domination in the search engine market'?",
+      "options": [
+        "Amazon",
+        "Yahoo!",
+        "Google",
+        "eBay"
+      ],
+      "answer": "Google",
+      "explanation": "The 2000s also saw Google's meteoric rise to domination in the search engine market, besting Yahoo!, and MSN Search[cite: 71]."
+    },
+    {
+      "question": "How is data represented in digital computers?",
+      "options": [
+        "By physical quantities such as electric voltage.",
+        "In the binary format of '0' and '1'.",
+        "By wheels, discs, shafts, and gears.",
+        "By a single capacitor."
+      ],
+      "answer": "In the binary format of '0' and '1'.",
+      "explanation": "The data are represented in the binary format of \"0\" and \"1\"[cite: 142]."
+    },
+    {
+      "question": "What is the measurement unit used for data size in the Memory Unit?",
+      "options": [
+        "Amperes",
+        "Hertz",
+        "Bits and bytes (8 bits)",
+        "Volts"
+      ],
+      "answer": "Bits and bytes (8 bits)",
+      "explanation": "It is where all the information becomes available, and bits and bytes (8 bits) are used to measure data size[cite: 219]."
+    },
+    {
+      "question": "What was the fundamental idea behind Tim Berners-Lee's invention of the Web?",
+      "options": [
+        "To create a computer that filled an entire room.",
+        "To combine the growing technologies of computers, data networks, and hypertext into a powerful and simple global information system use.",
+        "To develop a machine for integrating linear differential equations.",
+        "To create a mobile operating system for Apple's tablets."
+      ],
+      "answer": "To combine the growing technologies of computers, data networks, and hypertext into a powerful and simple global information system use.",
+      "explanation": "The fundamental idea was to combine the growing technologies of computers, data networks, and hypertext into a powerful and simple global information system use[cite: 14]."
+    },
+    {
+      "question": "What is the role of the Control Unit in the CPU?",
+      "options": [
+        "Performing mathematical calculations only.",
+        "Receiving and saving data from input devices immediately.",
+        "Managing the computer device functions, processing data for execution, and maintaining a data flow inside the system.",
+        "Displaying the final processed result to the user."
+      ],
+      "answer": "Managing the computer device functions, processing data for execution, and maintaining a data flow inside the system.",
+      "explanation": "This manages the computer device functions and is the central component of the CPU[cite: 222]. [cite_start]Once the data is in the memory, it processes it for execution[cite: 223]. [cite_start]This unit maintains a data flow inside the system and transfers the commands to the arithmetic-logic unit[cite: 225]."
+    },
+    {
+      "question": "What was the significance of the NCSA (National Center for Supercomputing Applications) releasing versions of the WWW for PC and Macintosh environments by 1993?",
+      "options": [
+        "It led to the development of the Domain Name System.",
+        "It led to the creation of the first commercial network, Telenet.",
+        "The existence of reliable and user-friendly browsers on these emerging computers had an immediate impact on the phenomena of the world wide web.",
+        "It marked the decommissioning of ARPANET."
+      ],
+      "answer": "The existence of reliable and user-friendly browsers on these emerging computers had an immediate impact on the phenomena of the world wide web.",
+      "explanation": "By 1993, the National Center for Supercomputing Applications (NCSA) released versions for PC and Macintosh environments. [cite_start]The existence of reliable and user-friendly browsers on these emerging computers had an immediate impact on the phenomena of the world wide web[cite: 44, 45]."
+    },
+    {
+      "question": "Which decade saw the emergence of Wi-Fi and mobile internet devices like smartphones?",
+      "options": [
+        "The 1960s",
+        "The 1980s",
+        "The 1990s",
+        "The 2000s"
+      ],
+      "answer": "The 2000s",
+      "explanation": "This decade saw the emergence of Wi-Fi, a wireless Internet communication, as well as mobile internet devices like smartphones[cite: 72]."
+    },
+    {
+      "question": "Which of these is a disadvantage of the operating system mentioned in the text?",
+      "options": [
+        "Executable Programs",
+        "User-friendly",
+        "Abstraction",
+        "Unpredictable"
+      ],
+      "answer": "Unpredictable",
+      "explanation": "Unpredictable: It is never secure, as threats can happen anytime[cite: 250]."
+    },
+    {
+      "question": "What is 'Hardware' in the context of computer parts?",
+      "options": [
+        "A set of instructions that commands the computer what to do.",
+        "The central program that monitored the memory.",
+        "The physical part of the machine.",
+        "A collection of software programs that control computer components."
+      ],
+      "answer": "The physical part of the machine.",
+      "explanation": "The hardware is the physical part of the machine, while the software is a set of instructions that commands the computer what to do[cite: 199]."
+    },
+    {
+      "question": "What is the term for false information being spread with barely any fact-checking, which is a downside of the web's information access?",
+      "options": [
+        "Hypertext",
+        "Misinformation or 'fake news'",
+        "Abstraction",
+        "Digitalization"
+      ],
+      "answer": "Misinformation or 'fake news'",
+      "explanation": "However, the downside of this is the false information, or 'fake news' being spread with barely any fact-checking[cite: 96]. [cite_start]Misinformation aims to deceive and create an alternative truth by twisting facts for someone else's favor[cite: 97]."
+    },
+    {
+      "question": "What was the purpose of the tide-predicting analog computer built by Lord Kelvin?",
+      "options": [
+        "To quickly resolve integration and differential equation problems.",
+        "To forecast tide patterns and their unsteady height variations.",
+        "To integrate a product of two functions.",
+        "To perform mathematical calculations and data comparison."
+      ],
+      "answer": "To forecast tide patterns and their unsteady height variations.",
+      "explanation": "Tide-predicting machines are used to forecast tide patterns and their unsteady height variations[cite: 153]."
+    },
+    {
+      "question": "What kind of communication uses SMTP (Simple Mail Transfer Protocol)?",
+      "options": [
+        "Web browsing",
+        "Social media sites",
+        "Email",
+        "Streaming services"
+      ],
+      "answer": "Email",
+      "explanation": "Sending an email is possible, regardless of the web or a web browser, as it uses SMTP (Simple Mail Transfer Protocol) which is a secure email relay service[cite: 77]."
+    },
+    {
+      "question": "What was the Intel P4004 1969 microprocessor the world's first of?",
+      "options": [
+        "Web server",
+        "Semiconductor device that provided the functions of a computer at a chip level.",
+        "Integrated Circuit",
+        "Tide-predicting machine"
+      ],
+      "answer": "Semiconductor device that provided the functions of a computer at a chip level.",
+      "explanation": "It was the first semiconductor device that provided the functions of a computer at a chip level[cite: 193]."
+    },
+    {
+      "question": "What two things does the web allow access to, which are interconnected through hypertext or hypermedia links?",
+      "options": [
+        "Physical cables and wireless connections",
+        "Input Unit and Output Unit",
+        "An array of documents and the W3 project summary",
+        "An array of documents that are interconnected through hypertext or hypermedia links"
+      ],
+      "answer": "An array of documents that are interconnected through hypertext or hypermedia links",
+      "explanation": "The web allows access to an array of documents that are interconnected through hypertext or hypermedia links, i.e., hyperlinks and electronic connections that link similar pieces of information, allowing the user to smoothly transition from one page to another[cite: 10]."
+    },
+    {
+      "question": "What kind of communication was broadened by the founding of the PhoneNet system in 1982, which was connected to ARPANET and Telenet?",
+      "options": [
+        "Wireless (Wi-Fi)",
+        "Email communication between various nations in the world",
+        "Hypertext linking",
+        "Video conferencing"
+      ],
+      "answer": "Email communication between various nations in the world",
+      "explanation": "It broadened internet access allowing email communication between various nations in the world[cite: 60]."
+    },
+    {
+      "question": "What was developed to control the increasing number of users on the internet using domain names?",
+      "options": [
+        "Hypertext Markup Language (HTML)",
+        "Uniform Resource Locator (URL)",
+        "Domain Name System (DNS)",
+        "Simple Mail Transfer Protocol (SMTP)"
+      ],
+      "answer": "Domain Name System (DNS)",
+      "explanation": "Paul Mockapetris, Jon Postel, and Craig Partridge developed the Domain Name System to control the increasing number of users on the internet using domain names[cite: 61]."
+    },
+    {
+      "question": "What does a single transistor symbolize in a digital computer?",
+      "options": [
+        "A continuous variable",
+        "A binary digit",
+        "A physical quantity",
+        "An entire Control Processing Unit (CPU)"
+      ],
+      "answer": "A binary digit",
+      "explanation": "a single transistor is used to symbolize a binary digit[cite: 143]."
+    },
+    {
+      "question": "What was introduced for iOS in 2010 with the release of iOS version 4.0?",
+      "options": [
+        "The first smartphone",
+        "The graphical user interface",
+        "Multitasking",
+        "Memory security"
+      ],
+      "answer": "Multitasking",
+      "explanation": "Multitasking for iOS was introduced in 2010 with the release of iOS version 4.0[cite: 267]."
+    },
+    {
+      "question": "The use of what type of material led to third-generation computers, with significant advances in speed and efficiency?",
+      "options": [
+        "Vacuum tubes",
+        "Transistors",
+        "Semiconductors",
+        "Copper wires"
+      ],
+      "answer": "Semiconductors",
+      "explanation": "The use of semiconductors led to third-generation computers, with significant advances in speed and efficiency[cite: 187]."
     }
-
-    function getCookie(name) {
-        const cname = name + "=";
-        const decodedCookie = decodeURIComponent(document.cookie);
-        const ca = decodedCookie.split(';');
-        for(let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(cname) === 0) {
-                return c.substring(cname.length, c.length);
-            }
-        }
-        return "";
+  ],
+  "identification": [
+    {
+      "question": "This term refers to a network of web pages that are found using a link address, called a 'web' based on its interconnected nature.",
+      "answer": "Web (World Wide Web)",
+      "explanation": "Web (World Wide Web)[cite: 7]. [cite_start]It is a network of web pages that are found using a link address[cite: 8]. [cite_start]It is called the 'web' based on its interconnected nature, designed to easily get various resources[cite: 9]."
+    },
+    {
+      "question": "The massive interconnection of networks, connecting millions of computers globally, forming the infrastructure for the Web.",
+      "answer": "The Internet",
+      "explanation": "The Internet[cite: 47]. [cite_start]It is a massive interconnection of networks connecting millions of computers globally, thus forming a network wherein any computer can communicate with other computers connected to it[cite: 48]."
+    },
+    {
+      "question": "The British scientist who invented the World Wide Web in 1989 while working at CERN.",
+      "answer": "Tim Burners-Lee",
+      "explanation": "Tim Burners-Lee[cite: 12]. [cite_start]He is a British scientist who invented the Web, also called World Wide Web (WWW), in 1989 while working at CERN[cite: 13]."
+    },
+    {
+      "question": "The world's first wide-area computer network, which was a standard for military computer networking, developed from a plan by Lawrence G. Roberts.",
+      "answer": "ARPANET",
+      "explanation": "Roberts then published a plan for Advanced Research Projects Agency Network (ARPANET), making it a standard for all military computer networking[cite: 57]."
+    },
+    {
+      "question": "The electronic components used in the first generation of computers, which were bulky and filled entire rooms.",
+      "answer": "Vacuum Tubes",
+      "explanation": "The first generation of computers used thousands of bulky vacuum tubes, with several racks taking up an entire room[cite: 170]. [cite_start]The first generation of digital computers used vacuum tubes[cite: 172]."
+    },
+    {
+      "question": "The three-terminal, solid-state electronic device that replaced vacuum tubes and is the fundamental building block in modern electronic systems (Second Generation).",
+      "answer": "Transistor",
+      "explanation": "A transistor is a three-terminal, solid-state electronic device that can control electric current or voltage between two terminals[cite: 177]. [cite_start]The transistor is the fundamental building block in modern electronic systems for revolutionizing the field of electronics[cite: 175]."
+    },
+    {
+      "question": "A set of electronic circuits on a small chip of semiconductor material, smaller than a circuit made of independent components (Third Generation).",
+      "answer": "Integrated Circuits",
+      "explanation": "These [Integrated Circuits] consists of a set of electronic circuits on a small chip of semiconductor material smaller than a circuit made of independent components[cite: 184]."
+    },
+    {
+      "question": "The part of the computer that is the physical machine itself.",
+      "answer": "Hardware",
+      "explanation": "The hardware is the physical part of the machine[cite: 199]."
+    },
+    {
+      "question": "The set of instructions that commands the computer what to do.",
+      "answer": "Software",
+      "explanation": "The software is a set of instructions that commands the computer what to do[cite: 199]."
+    },
+    {
+      "question": "The key component of a computer system that takes user commands and converts them into a digital language format.",
+      "answer": "Input Unit",
+      "explanation": "Input units take user commands in the form of data and convert them into a digital language format sent to the processing unit for the next step[cite: 210]."
+    },
+    {
+      "question": "The main component of the CPU that manages the computer device functions and maintains a data flow inside the system.",
+      "answer": "Control Unit",
+      "explanation": "This [Control Unit] manages the computer device functions and is the central component of the CPU[cite: 222]. [cite_start]This unit maintains a data flow inside the system and transfers the commands to the arithmetic-logic unit[cite: 225]."
+    },
+    {
+      "question": "The processor responsible for mathematical calculations, data comparison, and decision-making.",
+      "answer": "Arithmetic-Logical Unit (ALU)",
+      "explanation": "This processor is responsible for mathematical calculations and issues the computer system deals with while functioning[cite: 226]. [cite_start]It is also used for data comparison and decision-making[cite: 227]."
+    },
+    {
+      "question": "The unit of the computer system where the result of the input and central processing unit processes is shown.",
+      "answer": "Output Unit",
+      "explanation": "When the input and central processing unit processes are accomplished, the data is fed to the output unit, where the result is shown[cite: 230]."
+    },
+    {
+      "question": "A collection of software programs and commands that control computer hardware to make it usable.",
+      "answer": "Operating System (OS)",
+      "explanation": "Operating System (OS) a collection of software programs and commands that control computer hardware to make it usable[cite: 239]."
+    },
+    {
+      "question": "The concept in an Operating System that allows users to hide details of hardware.",
+      "answer": "Abstraction",
+      "explanation": "Abstraction allow users to hide details of hardware by creating an abstraction[cite: 243, 244, 245]."
+    },
+    {
+      "question": "The British scientist who did early foundational work on analog computation in the 19th century and invented a wheel and a disc integrator.",
+      "answer": "James Thomson",
+      "explanation": "James Thomson[cite: 147]. [cite_start]He did the early foundational work on analog computation in the 19th century[cite: 148]. [cite_start]He invented a wheel and a disc integrator used in mechanical analog devices[cite: 149]."
+    },
+    {
+      "question": "The first domain to be registered in 1984 by a computer manufacturer.",
+      "answer": "symbolics.com",
+      "explanation": "By 1984, a computer manufacturer registered symbolics.com, becoming the first domain[cite: 62]."
+    },
+    {
+      "question": "The type of links used to interconnect an array of documents on the World Wide Web, allowing a smooth transition from one page to another.",
+      "answer": "Hypertext or hypermedia links (or hyperlinks)",
+      "explanation": "The web allows access to an array of documents that are interconnected through hypertext or hypermedia links, i.e., hyperlinks and electronic connections that link similar pieces of information, allowing the user to smoothly transition from one page to another[cite: 10]."
+    },
+    {
+      "question": "The decade when ARPANET was decommissioned.",
+      "answer": "The 1990s",
+      "explanation": "ARPANET was decommissioned in the 1990s[cite: 65]."
+    },
+    {
+      "question": "The subunit of the CPU that saves data from input devices immediately and is where all the information becomes available.",
+      "answer": "Memory Unit",
+      "explanation": "When data reaches the processor from input devices, the memory unit saves it immediately[cite: 217]. [cite_start]It is where all the information becomes available[cite: 219]."
     }
-
-    //
-    // --- START OF QUIZ DATA ---
-    //
-    const quizData = {
-    multipleChoice: [
-        {
-            question: "What is the primary function of the World Wide Web (Web)?",
-            options: [
-                "To provide a network of physical cables for communication.",
-                "To manage computer hardware and system performance.",
-                "To provide universal access to a large universe of interconnected documents via hyperlinks.",
-                "To send emails using the Simple Mail Transfer Protocol (SMTP)."
-            ],
-            answer: "To provide universal access to a large universe of interconnected documents via hyperlinks."
-        },
-        {
-            question: "Who is credited with inventing the World Wide Web (WWW)?",
-            options: [
-                "Joseph Carl Robnett Licklider",
-                "Leonard Kleinrock",
-                "Tim Berners-Lee",
-                "Vannevar Bush"
-            ],
-            answer: "Tim Berners-Lee"
-        },
-        {
-            question: "When did the first-ever website go live?",
-            options: [
-                "March 1989",
-                "November 1990",
-                "August 6, 1991",
-                "1993"
-            ],
-            answer: "August 6, 1991"
-        },
-        {
-            question: "What was the name of the first large-scale, general-purpose analog computer developed by Vannevar Bush?",
-            options: [
-                "Atanasoff-Berry Computer (ABC)",
-                "Differential Analyzer",
-                "Tide-Predicting Analog Computer",
-                "Universal Automatic Computer I (UNIVAC I)"
-            ],
-            answer: "Differential Analyzer"
-        },
-        {
-            question: "What is the fundamental difference between the Web and the Internet, as described in the provided document?",
-            options: [
-                "The Internet is an application built on the Web.",
-                "The Web is an application built on the Internet.",
-                "The Web uses physical cables, while the Internet uses wireless connections.",
-                "The Internet is for entertainment, while the Web is for communication."
-            ],
-            answer: "The Web is an application built on the Internet."
-        },
-        {
-            question: "Which of the following is an example of an input unit?",
-            options: [
-                "Monitor",
-                "Printer",
-                "Keyboard",
-                "Speakers"
-            ],
-            answer: "Keyboard"
-        },
-        {
-            question: "What is the primary purpose of the Control Unit (CU) within the CPU?",
-            options: [
-                "To perform mathematical calculations and data comparisons.",
-                "To save data immediately after it reaches the processor.",
-                "To manage and maintain the data flow inside the system.",
-                "To display the results of processed data to the user."
-            ],
-            answer: "To manage and maintain the data flow inside the system."
-        },
-        {
-            question: "What was a significant disadvantage of the first-generation computers that used vacuum tubes?",
-            options: [
-                "They were too fast for their time.",
-                "They were small and portable.",
-                "They were bulky, filled entire rooms, and were expensive.",
-                "They were not able to perform calculations."
-            ],
-            answer: "They were bulky, filled entire rooms, and were expensive."
-        },
-        {
-            question: "Which of these is a mobile operating system developed by Google?",
-            options: [
-                "Mac OS",
-                "Windows",
-                "iOS",
-                "Android"
-            ],
-            answer: "Android"
-        },
-        {
-            question: "According to the document, what is the 'dot-com bubble'?",
-            options: [
-                "A period of time when investors lost interest in Internet-based companies.",
-                "A time when the Internet was not yet accessible to the public.",
-                "The period between 1995-2000 when investors financially supported Internet-based startups hoping for massive profits.",
-                "A type of wireless communication device."
-            ],
-            answer: "The period between 1995-2000 when investors financially supported Internet-based startups hoping for massive profits."
-        },
-        {
-            question: "What is the main function of the Arithmetic-Logical Unit (ALU)?",
-            options: [
-                "Storing data and program instructions.",
-                "Controlling the flow of data within the system.",
-                "Performing mathematical calculations and data comparisons.",
-                "Displaying the final output to the user."
-            ],
-            answer: "Performing mathematical calculations and data comparisons."
-        },
-        {
-            question: "Who developed the first integrated circuit in 1958?",
-            options: [
-                "Tim Berners-Lee",
-                "Robert Cailliau",
-                "Jack Kilby",
-                "Leonard Kleinrock"
-            ],
-            answer: "Jack Kilby"
-        },
-        {
-            question: "The first microprocessor, the Intel P4004, was invented in what year?",
-            options: [
-                "1958",
-                "1969",
-                "1982",
-                "1990"
-            ],
-            answer: "1969"
-        },
-        {
-            question: "What is the main characteristic of an 'analog computer'?",
-            options: [
-                "It operates data using the binary format of '0' and '1'.",
-                "It represents data using physical quantities like electric voltage.",
-                "It is a small, portable device.",
-                "It uses microprocessors for its functions."
-            ],
-            answer: "It represents data using physical quantities like electric voltage."
-        },
-        {
-            question: "Which component of a computer system is responsible for converting user commands into a digital language format?",
-            options: [
-                "Output Unit",
-                "Memory Unit",
-                "Central Processing Unit (CPU)",
-                "Input Unit"
-            ],
-            answer: "Input Unit"
-        },
-        {
-            question: "What is the definition of an 'Operating System' (OS)?",
-            options: [
-                "A physical part of a computer, such as a monitor or keyboard.",
-                "A set of instructions that commands the computer what to do.",
-                "A collection of software programs that control computer hardware to make it usable.",
-                "A single silicon chip containing a CPU and memory."
-            ],
-            answer: "A collection of software programs that control computer hardware to make it usable."
-        },
-        {
-            question: "Which of the following is a disadvantage of an Operating System as mentioned in the document?",
-            options: [
-                "It provides a user-friendly format.",
-                "It allows users to hide details of hardware by creating an abstraction.",
-                "It can be expensive for small organizations.",
-                "It offers an environment where users may execute programs."
-            ],
-            answer: "It can be expensive for small organizations."
-        },
-        {
-            question: "The rise of which technology led to the fourth generation of computers?",
-            options: [
-                "Vacuum Tubes",
-                "Transistors",
-                "Integrated Circuits",
-                "Microprocessors"
-            ],
-            answer: "Microprocessors"
-        },
-        {
-            question: "What is the purpose of the Memory Unit within the CPU?",
-            options: [
-                "To perform mathematical calculations.",
-                "To store data from input devices and result data from output devices.",
-                "To manage the flow of data within the system.",
-                "To convert human language to machine language."
-            ],
-            answer: "To store data from input devices and result data from output devices."
-        },
-        {
-            question: "In what decade was ARPANET, the precursor to the Internet, decommissioned?",
-            options: [
-                "1960s",
-                "1980s",
-                "1990s",
-                "2000s"
-            ],
-            answer: "1990s"
-        },
-        {
-            question: "What did Tim Berners-Lee and his colleagues develop at CERN that gave birth to the first version of the World Wide Web?",
-            options: [
-                "ARPANET and PhoneNet",
-                "The Domain Name System (DNS)",
-                "Hypertext Markup Language (HTML) and Uniform Resource Locator (URL)",
-                "The Differential Analyzer"
-            ],
-            answer: "Hypertext Markup Language (HTML) and Uniform Resource Locator (URL)"
-        },
-        {
-            question: "Which company launched Windows 95, contributing to a new wave of internet activity in 1995?",
-            options: [
-                "Apple",
-                "Google",
-                "Microsoft",
-                "Amazon"
-            ],
-            answer: "Microsoft"
-        },
-        {
-            question: "What kind of computers were phased out shortly after World War II?",
-            options: [
-                "Digital Computers",
-                "Analog Computers",
-                "Second-generation computers",
-                "Microcomputers"
-            ],
-            answer: "Analog Computers"
-        },
-        {
-            question: "Which of the following is NOT an example of an output unit?",
-            options: [
-                "Printer",
-                "Headphones",
-                "Scanner",
-                "Projector"
-            ],
-            answer: "Scanner"
-        },
-        {
-            question: "What does a single transistor symbolize in a digital computer?",
-            options: [
-                "A continuous variable",
-                "A binary digit",
-                "An entire CPU",
-                "An electrical voltage"
-            ],
-            answer: "A binary digit"
-        },
-        {
-            question: "What was the purpose of the 'Tide-predicting analog computer' built by Lord Kelvin?",
-            options: [
-                "To calculate differential equations.",
-                "To forecast tide patterns and their height variations.",
-                "To integrate the product of two functions.",
-                "To create a global computer network."
-            ],
-            answer: "To forecast tide patterns and their height variations."
-        },
-        {
-            question: "The first generation of computers used which technology?",
-            options: [
-                "Microprocessors",
-                "Transistors",
-                "Integrated Circuits",
-                "Vacuum Tubes"
-            ],
-            answer: "Vacuum Tubes"
-        },
-        {
-            question: "What is the 'hardware' of a computer?",
-            options: [
-                "The physical part of the machine.",
-                "A set of instructions that commands the computer what to do.",
-                "The operating system.",
-                "The programs and applications."
-            ],
-            answer: "The physical part of the machine."
-        },
-        {
-            question: "Which two scientists pioneered the world's first wide-area computer network based on packet-switching theory?",
-            options: [
-                "Tim Berners-Lee and Robert Cailliau",
-                "Jack Kilby and Vannevar Bush",
-                "Leonard Kleinrock and Lawrence G. Roberts",
-                "Paul Mockapetris and Jon Postel"
-            ],
-            answer: "Leonard Kleinrock and Lawrence G. Roberts"
-        },
-        {
-            question: "The first domain name ever registered was symbolics.com. In what year did this happen?",
-            options: [
-                "1962",
-                "1982",
-                "1984",
-                "1995"
-            ],
-            answer: "1984"
-        },
-        {
-            question: "What is the correct term for the electronic connections that link similar pieces of information, allowing a user to smoothly transition from one web page to another?",
-            options: [
-                "Domain Names",
-                "URLs",
-                "Hyperlinks",
-                "Packets"
-            ],
-            answer: "Hyperlinks"
-        },
-        {
-            question: "What was the main reason for the creation of the Domain Name System (DNS) by Paul Mockapetris, Jon Postel, and Craig Partridge?",
-            options: [
-                "To allow for faster internet speeds.",
-                "To control the increasing number of users on the internet.",
-                "To develop a new type of web browser.",
-                "To create a system for sending emails."
-            ],
-            answer: "To control the increasing number of users on the internet."
-        },
-        {
-            question: "What does 'Wi-Fi' stand for?",
-            options: [
-                "Wireless Internet",
-                "Wireless Fidelity",
-                "World Internet Feature",
-                "The document does not specify."
-            ],
-            answer: "The document does not specify."
-        },
-        {
-            question: "Which company rose to domination in the search engine market in the 2000s, besting Yahoo! and MSN Search?",
-            options: [
-                "Amazon",
-                "eBay",
-                "Google",
-                "Microsoft"
-            ],
-            answer: "Google"
-        },
-        {
-            question: "What is one of the negative effects of the internet on communication, as mentioned in the document?",
-            options: [
-                "It makes communication too slow.",
-                "It removes the need for email.",
-                "It has created an environment where careless communication is present.",
-                "It has led to the disappearance of mail messages."
-            ],
-            answer: "It has created an environment where careless communication is present."
-        },
-        {
-            question: "According to the document, what is the downside of having widespread access to information on the internet?",
-            options: [
-                "It is too expensive to access.",
-                "It causes traditional books to disappear.",
-                "The spread of false information or 'fake news' with little fact-checking.",
-                "It limits the ability to learn new skills."
-            ],
-            answer: "The spread of false information or 'fake news' with little fact-checking."
-        },
-        {
-            question: "Which streaming service is mentioned as a main source of entertainment in the document?",
-            options: [
-                "Hulu",
-                "HBO Max",
-                "Netflix",
-                "Peacock"
-            ],
-            answer: "Netflix"
-        },
-        {
-            question: "What is the primary negative effect of online entertainment consumption mentioned in the document?",
-            options: [
-                "It is too expensive.",
-                "It leads to a lack of real human connection and interaction.",
-                "It makes it harder to find new movies.",
-                "It causes a loss of interest in traditional media."
-            ],
-            answer: "It leads to a lack of real human connection and interaction."
-        },
-        {
-            question: "What significant role did the Web and the Internet play during the COVID-19 pandemic?",
-            options: [
-                "They caused the pandemic to spread faster.",
-                "They were responsible for the creation of new social media apps.",
-                "They forced education systems to adapt to an online learning model.",
-                "They led to the development of new gaming websites."
-            ],
-            answer: "They forced education systems to adapt to an online learning model."
-        },
-        {
-            question: "What is a 'computer' defined as in the document?",
-            options: [
-                "A physical cable used for networking.",
-                "A programmable computing device that can process, store, and retrieve data.",
-                "A type of software program that manages hardware.",
-                "A device that only performs mathematical calculations."
-            ],
-            answer: "A programmable computing device that can process, store, and retrieve data."
-        },
-        {
-            question: "In what decade were the first digital computers, consisting of thousands of vacuum tubes, built?",
-            options: [
-                "1960s and 1970s",
-                "1940s and 1950s",
-                "1980s and 1990s",
-                "2000s"
-            ],
-            answer: "1940s and 1950s"
-        },
-        {
-            question: "How is data represented in a digital computer?",
-            options: [
-                "By physical quantities like electric voltage.",
-                "In the binary format of '0' and '1'.",
-                "Using analog signals.",
-                "Through a continuous flow of current."
-            ],
-            answer: "In the binary format of '0' and '1'."
-        },
-        {
-            question: "What is the name of the British scientist who invented the Web?",
-            options: [
-                "James Thomson",
-                "Jack Kilby",
-                "Joseph Carl Robnett Licklider",
-                "Tim Berners-Lee"
-            ],
-            answer: "Tim Berners-Lee"
-        },
-        {
-            question: "The first commercial network, Telenet, was founded alongside which system in 1982?",
-            options: [
-                "ARPANET",
-                "PhoneNet",
-                "The Web",
-                "The Internet"
-            ],
-            answer: "PhoneNet"
-        },
-        {
-            question: "Which of the following describes the 'software' of a computer?",
-            options: [
-                "The physical components of the machine.",
-                "A set of instructions that commands the computer what to do.",
-                "The central processing unit.",
-                "The input and output devices."
-            ],
-            answer: "A set of instructions that commands the computer what to do."
-        },
-        {
-            question: "What does the acronym 'HTML' stand for?",
-            options: [
-                "Hyper Text Mail Language",
-                "High Tech Markup Language",
-                "Hypertext Markup Language",
-                "Home Transfer Markup Language"
-            ],
-            answer: "Hypertext Markup Language"
-        },
-        {
-            question: "Which computer generation saw the introduction of keyboards and monitors as primary user interfaces?",
-            options: [
-                "First Generation",
-                "Second Generation",
-                "Third Generation",
-                "Fourth Generation"
-            ],
-            answer: "Third Generation"
-        },
-        {
-            question: "What is a key difference between transistors and vacuum tubes, as mentioned in the document?",
-            options: [
-                "Transistors were larger and more expensive.",
-                "Transistors were much smaller, cheaper, and more reliable.",
-                "Vacuum tubes were invented after transistors.",
-                "Vacuum tubes are still widely used in modern computers."
-            ],
-            answer: "Transistors were much smaller, cheaper, and more reliable."
-        },
-        {
-            question: "What is the function of the Output Unit in a computer system?",
-            options: [
-                "To process data from the input unit.",
-                "To save data and programs.",
-                "To display the result of the processed data.",
-                "To perform mathematical calculations."
-            ],
-            answer: "To display the result of the processed data."
-        },
-        {
-            question: "What is the full name of the organization where Tim Berners-Lee invented the Web?",
-            options: [
-                "National Center for Supercomputing Applications (NCSA)",
-                "Advanced Research Projects Agency (ARPANET)",
-                "European Organization for Nuclear Research (CERN)",
-                "IBM"
-            ],
-            answer: "European Organization for Nuclear Research (CERN)"
-        }
-    ],
-    "identification": [
-        {
-            question: "This massive interconnection of networks connects millions of computers globally, forming a network wherein any computer can communicate with others.",
-            answer: "Internet",
-            explanation: "null"
-        },
-        {
-            question: "This term refers to a network of web pages that are found using a link address, called a 'web' due to its interconnected nature.",
-            answer: "World Wide Web",
-            explanation: "null"
-        },
-        {
-            question: "He is the British scientist credited with inventing the World Wide Web in 1989.",
-            answer: "Tim Berners-Lee",
-            explanation: "null"
-        },
-        {
-            question: "This part of a computer is the physical part of the machine.",
-            answer: "Hardware",
-            explanation: "null"
-        },
-        {
-            question: "This part of a computer is a set of instructions that commands the computer what to do.",
-            answer: "Software",
-            explanation: "null"
-        },
-        {
-            question: "This is a collection of software programs and commands that control computer hardware to make it usable.",
-            answer: "Operating System",
-            explanation: "null"
-        },
-        {
-            question: "This unit is responsible for taking user commands and converting them into a digital language format.",
-            answer: "Input Unit",
-            explanation: "null"
-        },
-        {
-            question: "This is the central component of the CPU that manages the computer device's functions and maintains the data flow.",
-            answer: "Control Unit",
-            explanation: "null"
-        },
-        {
-            question: "This is the processor responsible for mathematical calculations and data comparison within the CPU.",
-            answer: "Arithmetic-Logical Unit",
-            explanation: "null"
-        },
-        {
-            question: "The first generation of digital computers used thousands of these bulky electronic devices.",
-            answer: "Vacuum Tubes",
-            explanation: "null"
-        },
-        {
-            question: "This device, invented by Jack Kilby, consists of a set of electronic circuits on a small chip of semiconductor material.",
-            answer: "Integrated Circuit",
-            explanation: "null"
-        },
-        {
-            question: "The rise of this technology, which contains thousands of integrated circuits on a single silicon chip, led to the fourth generation of computers.",
-            answer: "Microprocessors",
-            explanation: "null"
-        },
-        {
-            question: "This mobile operating system, developed by Apple, is used for its smartphones and tablets.",
-            answer: "iOS",
-            explanation: "null"
-        },
-        {
-            question: "This term refers to the period between 1995-2000 when investors financially supported Internet-based startups hoping for massive profits.",
-            answer: "Dot-com bubble",
-            explanation: "null"
-        },
-        {
-            question: "This is a type of computer that represents data using physical quantities such as electric voltage.",
-            answer: "Analog Computer",
-            explanation: "null"
-        },
-        {
-            question: "The first domain name registered in 1984.",
-            answer: "symbolics.com",
-            explanation: "null"
-        },
-        {
-            question: "This component of a computer system displays the results of processed data to the user.",
-            answer: "Output Unit",
-            explanation: "null"
-        },
-        {
-            question: "This type of computer is a sequential device that operates data one at a time and represents it in a binary format.",
-            answer: "Digital Computer",
-            explanation: "null"
-        },
-        {
-            question: "This computer scientist developed the first large-scale, general-purpose analog computer called the 'Differential Analyzer'.",
-            answer: "Vannevar Bush",
-            explanation: "null"
-        },
-        {
-            question: "This company holds over 90% of the market share for personal computer and laptop operating systems.",
-            answer: "Microsoft",
-            explanation: "null"
-        }
-    ]
+  ]
 };
-    //
-    // --- END OF QUIZ DATA ---
-    //
 
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let wrongAnswers = [];
-    let isIdentificationSection = false;
-    let answered = false;
-    const totalQuestions = quizData.multipleChoice.length + quizData.identification.length;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+        let wrongAnswers = [];
+        const totalQuestions = quizData.multipleChoice.length + quizData.identification.length;
 
-    const quizArea = document.getElementById('quiz-area');
-    const endScreen = document.getElementById('end-screen');
-    const questionText = document.getElementById('question-text');
-    const optionssContainer = document.getElementById('optionss-container');
-    const identificationContainer = document.getElementById('identification-container');
-    const identificationInput = document.getElementById('identification-input');
-    const submitButton = document.getElementById('submit-button');
-    const feedbackSection = document.getElementById('feedback-section');
-    const feedbackText = document.getElementById('feedback-text');
-    const explanationText = document.getElementById('explanation-text');
-    const progressBar = document.getElementById('progress-bar');
-    const progressText = document.getElementById('progress-text');
-    const finalScoreSpan = document.getElementById('final-score');
-    const totalQuestionsSpan = document.getElementById('total-questions');
-    const bestScoreSpan = document.getElementById('best-score');
-    const wrongAnswersList = document.getElementById('wrong-answers-list');
-    const restartButton = document.getElementById('restart-button');
-    const modeToggle = document.getElementById('mode-toggle');
+        // --- DOM Elements ---
+        const quizArea = document.getElementById('quiz-area');
+        const endScreen = document.getElementById('end-screen');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const identificationInput = document.getElementById('identification-input');
+        const nextButton = document.getElementById('next-button');
+        const submitButton = document.getElementById('submit-button');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const restartButton = document.getElementById('restart-button');
+        const finalScoreSpan = document.getElementById('final-score-span');
+        const totalQuestionsSpan = document.getElementById('total-questions-span');
+        const bestScoreSpan = document.getElementById('best-score-span');
+        const wrongAnswersList = document.getElementById('wrong-answers-list');
+        const currentScoreSpan = document.getElementById('current-score');
+        const themeToggle = document.getElementById('theme-toggle');
 
-    // Load initial state from cookies
-    const savedTheme = getCookie("theme");
-    if (savedTheme === "dark") {
-        document.body.classList.add("dark-mode");
-        modeToggle.innerHTML = '🌙';
-    }
-
-    const savedBestScore = getCookie("bestScore");
-    bestScoreSpan.textContent = savedBestScore || '0';
-
-    modeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        modeToggle.innerHTML = isDarkMode ? '🌙' : '☀️';
-        setCookie("theme", isDarkMode ? "dark" : "light", 365);
-    });
-
-    function showQuestion() {
-        if (totalQuestions === 0) {
-            quizArea.innerHTML = "<h2>No questions found! Please add questions to the quizData object.</h2>";
-            return;
-        }
-        
-        answered = false;
-        optionssContainer.style.display = 'flex';
-        identificationContainer.style.display = 'none';
-        identificationInput.value = '';
-        feedbackSection.style.display = 'none';
-        feedbackSection.classList.remove('correct', 'incorrect');
-        
-        let currentQuizData;
-        if (currentQuestionIndex < quizData.multipleChoice.length) {
-            isIdentificationSection = false;
-            submitButton.style.display = 'none'; // Hide submit button for MCQs
-            currentQuizData = quizData.multipleChoice[currentQuestionIndex];
-            optionssContainer.innerHTML = '';
-            currentQuizData.options.forEach(options => {
-                const button = document.createElement('button');
-                button.classList.add('options');
-                button.textContent = options;
-                button.onclick = () => selectoptions(button, options);
-                optionssContainer.appendChild(button);
-            });
-            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. The identification questions will begin after question ${quizData.multipleChoice.length}.`;
-        } else {
-            isIdentificationSection = true;
-            submitButton.style.display = 'block'; // Show submit button for identification questions
-            currentQuizData = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
-            optionssContainer.style.display = 'none';
-            identificationContainer.style.display = 'block';
-            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. You are now in the identification questions section.`;
-        }
-        
-        questionText.textContent = currentQuizData.question;
-        updateProgressBar();
-    }
-
-    function selectoptions(selectedButton, selectedAnswer) {
-        if (answered) return;
-        answered = true;
-
-        const currentQuestion = quizData.multipleChoice[currentQuestionIndex];
-        const isCorrect = selectedAnswer === currentQuestion.answer;
-        
-        selectedButton.classList.add(isCorrect ? 'correct' : 'incorrect');
-
-        if (isCorrect) {
-            score++;
-            feedbackText.textContent = "Correct!";
-            feedbackSection.classList.add('correct');
-        } else {
-            feedbackText.textContent = `Incorrect. The correct answer was: ${currentQuestion.answer}`;
-            feedbackSection.classList.add('incorrect');
-            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: selectedAnswer, type: 'multipleChoice' });
-        }
-        explanationText.textContent = currentQuestion.explanation;
-        feedbackSection.style.display = 'block';
-
-        const alloptionss = optionssContainer.querySelectorAll('.options');
-        alloptionss.forEach(options => {
-            if (options.textContent === currentQuestion.answer) {
-                options.classList.add('correct');
+        // --- Utility Functions (Cookies) ---
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
             }
-            options.disabled = true;
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // --- Core Quiz Logic ---
+
+        function updateScoreDisplay() {
+            currentScoreSpan.textContent = `Score: ${score}`;
+        }
+
+        function updateProgressBar() {
+            const progress = (currentQuestionIndex / totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function selectOption(selectedButton, selectedAnswer) {
+            if (answered) return;
+
+            const currentQuizData = quizData.multipleChoice[currentQuestionIndex];
+            const isCorrect = selectedAnswer === currentQuizData.answer;
+
+            answered = true;
+            nextButton.style.display = 'block';
+
+            // Disable all options
+            optionsContainer.querySelectorAll('.options').forEach(button => {
+                button.disabled = true;
+                if (button.textContent === currentQuizData.answer) {
+                    button.classList.add('correct');
+                }
+                if (button === selectedButton && !isCorrect) {
+                    button.classList.add('incorrect');
+                }
+            });
+
+            if (isCorrect) {
+                score++;
+                feedbackMessage.textContent = "Correct! Well done.";
+                feedbackMessage.classList.add('correct-feedback');
+            } else {
+                feedbackMessage.textContent = `Incorrect. The correct answer was: ${currentQuizData.answer}`;
+                feedbackMessage.classList.add('incorrect-feedback');
+                wrongAnswers.push({
+                    question: currentQuizData.question,
+                    yourAnswer: selectedAnswer,
+                    correctAnswer: currentQuizData.answer
+                });
+            }
+            updateScoreDisplay();
+        }
+        
+        function checkIdentificationAnswer() {
+            if (answered) return;
+            
+            const currentQuizData = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
+            const currentInput = identificationInput.value.trim(); 
+            const isCorrect = currentInput.toLowerCase() === currentQuizData.answer.toLowerCase();
+
+            answered = true;
+            submitButton.style.display = 'none';
+            nextButton.style.display = 'block';
+            identificationInput.disabled = true;
+
+            if (isCorrect) {
+                score++;
+                feedbackMessage.textContent = "Correct! Well done.";
+                feedbackMessage.classList.add('correct-feedback');
+                identificationInput.style.borderColor = 'var(--correct-color)';
+            } else {
+                feedbackMessage.textContent = `Incorrect. The correct answer was: ${currentQuizData.answer}`;
+                feedbackMessage.classList.add('incorrect-feedback');
+                identificationInput.style.borderColor = 'var(--incorrect-color)';
+                wrongAnswers.push({
+                    question: currentQuizData.question,
+                    yourAnswer: currentInput || "(No answer provided)",
+                    correctAnswer: currentQuizData.answer
+                });
+            }
+            updateScoreDisplay();
+        }
+
+        function showQuestion() {
+            if (totalQuestions === 0) {
+                quizArea.innerHTML = "<h2>No questions found! Please add questions to the quizData object.</h2>";
+                return;
+            }
+
+            answered = false;
+            feedbackMessage.textContent = '';
+            feedbackMessage.classList.remove('correct-feedback', 'incorrect-feedback');
+            identificationInput.style.borderColor = 'var(--border-color-light)';
+            identificationInput.disabled = false;
+            
+            let currentQuizData;
+
+            if (currentQuestionIndex < quizData.multipleChoice.length) {
+                // --- Multiple Choice Section ---
+                currentQuizData = quizData.multipleChoice[currentQuestionIndex];
+                
+                // Element visibility
+                optionsContainer.style.display = 'flex';
+                identificationInput.style.display = 'none';
+                submitButton.style.display = 'none';
+                nextButton.style.display = 'none';
+
+                // Question and Options
+                questionText.textContent = currentQuizData.question;
+                optionsContainer.innerHTML = '';
+                
+                // This is the CRITICAL FIX: Changed .optionss to .options
+                currentQuizData.options.forEach(option => { 
+                    const button = document.createElement('button');
+                    button.classList.add('options');
+                    button.textContent = option;
+                    button.onclick = () => selectOption(button, option);
+                    optionsContainer.appendChild(button);
+                });
+                
+                // Progress Text
+                progressText.textContent = `Multiple Choice Question ${currentQuestionIndex + 1} of ${totalQuestions} (Part 1/2)`;
+
+            } else if (currentQuestionIndex < totalQuestions) {
+                // --- Identification Section ---
+                const identificationIndex = currentQuestionIndex - quizData.multipleChoice.length;
+                currentQuizData = quizData.identification[identificationIndex];
+                
+                // Element visibility
+                optionsContainer.style.display = 'none';
+                identificationInput.style.display = 'block';
+                submitButton.style.display = 'block';
+                nextButton.style.display = 'none';
+
+                // Question and Input
+                questionText.textContent = currentQuizData.question;
+                identificationInput.value = ''; // Clear previous input
+                
+                // Progress Text
+                progressText.textContent = `Identification Question ${identificationIndex + 1} of ${quizData.identification.length} (Part 2/2)`;
+
+            } else {
+                // --- End of Quiz ---
+                showEndScreen();
+                return;
+            }
+            
+            updateProgressBar();
+            updateScoreDisplay();
+        }
+
+        function showEndScreen() {
+            quizArea.style.display = 'none';
+            endScreen.style.display = 'block';
+            finalScoreSpan.textContent = score;
+            totalQuestionsSpan.textContent = totalQuestions;
+
+            const currentBestScore = parseInt(getCookie("bestScore") || '0', 10);
+            if (score > currentBestScore) {
+                setCookie("bestScore", score, 365);
+                bestScoreSpan.textContent = score;
+            } else {
+                bestScoreSpan.textContent = currentBestScore;
+            }
+
+            // Display Wrong Answers
+            wrongAnswersList.innerHTML = '';
+            if (wrongAnswers.length > 0) {
+                wrongAnswers.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>Q:</strong> ${item.question}<br><strong>Your Answer:</strong> ${item.yourAnswer}<br><strong>Correct Answer:</strong> ${item.correctAnswer}`;
+                    wrongAnswersList.appendChild(li);
+                });
+            } else {
+                wrongAnswersList.innerHTML = "<li>You got all questions right! 🎉</li>";
+            }
+        }
+        
+        // --- Event Listeners and Initialization ---
+
+        nextButton.addEventListener('click', () => {
+            currentQuestionIndex++;
+            showQuestion();
         });
 
-        setTimeout(() => {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < totalQuestions) {
-                showQuestion();
+        submitButton.addEventListener('click', checkIdentificationAnswer);
+
+        restartButton.addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            wrongAnswers = [];
+            endScreen.style.display = 'none';
+            quizArea.style.display = 'block';
+            showQuestion();
+        });
+
+        // Theme Toggle Logic
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.textContent = '🌙 Dark Mode';
+                setCookie('theme', 'dark', 365);
             } else {
-                showEndScreen();
+                themeToggle.textContent = '☀️ Light Mode';
+                setCookie('theme', 'light', 365);
             }
-        }, 3000);
-    }
+        });
 
-    submitButton.onclick = () => {
-        if (!isIdentificationSection) {
-            return;
-        }
-
-        if (answered) return;
-        answered = true;
-        submitButton.disabled = true;
-
-        const currentQuestion = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
-        const userAnswer = identificationInput.value.trim();
-        const correctAnswer = currentQuestion.answer.trim();
-
-        const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
-        
-        if (isCorrect) {
-            score++;
-            feedbackText.textContent = "Correct!";
-            feedbackSection.classList.add('correct');
-        } else {
-            feedbackText.textContent = `Incorrect. The correct answer was: ${currentQuestion.answer}`;
-            feedbackSection.classList.add('incorrect');
-            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: userAnswer, type: 'identification' });
-        }
-        explanationText.textContent = currentQuestion.explanation;
-        feedbackSection.style.display = 'block';
-
-        setTimeout(() => {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < totalQuestions) {
-                showQuestion();
+        // Load theme from cookie
+        window.onload = () => {
+            const savedTheme = getCookie('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.textContent = '🌙 Dark Mode';
             } else {
-                showEndScreen();
+                document.body.classList.remove('dark-mode');
+                themeToggle.textContent = '☀️ Light Mode';
             }
-        }, 3000);
-    };
+            // Initialize the quiz
+            showQuestion(); 
+        };
 
-    function updateProgressBar() {
-        const progress = (currentQuestionIndex / totalQuestions) * 100;
-        progressBar.style.width = `${progress}%`;
-    }
-
-    function showEndScreen() {
-        quizArea.style.display = 'none';
-        endScreen.style.display = 'block';
-        finalScoreSpan.textContent = score;
-        totalQuestionsSpan.textContent = totalQuestions;
-
-        const currentBestScore = parseInt(getCookie("bestScore") || '0', 10);
-        if (score > currentBestScore) {
-            setCookie("bestScore", score, 365);
-            bestScoreSpan.textContent = score;
-        } else {
-            bestScoreSpan.textContent = currentBestScore;
-        }
-
-        wrongAnswersList.innerHTML = '';
-        if (wrongAnswers.length > 0) {
-            wrongAnswers.forEach(item => {
-                const li = document.createElement('li');
-                li.innerHTML = `<strong>Q:</strong> ${item.question}<br><strong>Your Answer:</strong> ${item.yourAnswer}<br><strong>Correct Answer:</strong> ${item.correctAnswer}`;
-                wrongAnswersList.appendChild(li);
-            });
-        } else {
-            wrongAnswersList.innerHTML = "<li>You got all questions right! 🎉</li>";
-        }
-    }
-
-    restartButton.addEventListener('click', () => {
-        currentQuestionIndex = 0;
-        score = 0;
-        wrongAnswers = [];
-        endScreen.style.display = 'none';
-        quizArea.style.display = 'block';
-        showQuestion();
-    });
-
-    // Start the quiz
-    showQuestion();
-
-</script>
-
+    </script>
 </body>
 </html>
