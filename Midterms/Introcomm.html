@@ -106,13 +106,13 @@
             font-weight: 600;
         }
 
-        #options-container, #identification-container {
+        #optionss-container, #identification-container {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .option {
+        .options {
             background-color: transparent;
             border: 2px solid var(--border-color-light);
             color: var(--text-color-light);
@@ -123,18 +123,18 @@
             transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
         }
 
-        .option:hover {
+        .options:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px var(--shadow-color-light);
         }
 
-        .option.correct {
+        .options.correct {
             background-color: var(--correct-color);
             color: white;
             border-color: var(--correct-color);
         }
 
-        .option.incorrect {
+        .options.incorrect {
             background-color: var(--incorrect-color);
             color: white;
             border-color: var(--incorrect-color);
@@ -265,7 +265,7 @@
     <div id="quiz-area">
         <div id="question-area">
             <h2 id="question-text"></h2>
-            <div id="options-container"></div>
+            <div id="optionss-container"></div>
             <div id="identification-container" style="display: none;">
                 <input type="text" id="identification-input" placeholder="Type your answer here...">
             </div>
@@ -319,588 +319,608 @@
     // --- START OF QUIZ DATA ---
     //
     const quizData = {
-    "multipleChoice": [
+    multipleChoice: [
         {
-            "question": "What is the primary function of the World Wide Web (Web)?",
-            "options": [
+            question: "What is the primary function of the World Wide Web (Web)?",
+            options: [
                 "To provide a network of physical cables for communication.",
                 "To manage computer hardware and system performance.",
                 "To provide universal access to a large universe of interconnected documents via hyperlinks.",
                 "To send emails using the Simple Mail Transfer Protocol (SMTP)."
             ],
-            "answer": "To provide universal access to a large universe of interconnected documents via hyperlinks."
+            answer: "To provide universal access to a large universe of interconnected documents via hyperlinks."
         },
         {
-            "question": "Who is credited with inventing the World Wide Web (WWW)?",
-            "options": [
+            question: "Who is credited with inventing the World Wide Web (WWW)?",
+            options: [
                 "Joseph Carl Robnett Licklider",
                 "Leonard Kleinrock",
                 "Tim Berners-Lee",
                 "Vannevar Bush"
             ],
-            "answer": "Tim Berners-Lee"
+            answer: "Tim Berners-Lee"
         },
         {
-            "question": "When did the first-ever website go live?",
-            "options": [
+            question: "When did the first-ever website go live?",
+            options: [
                 "March 1989",
                 "November 1990",
                 "August 6, 1991",
                 "1993"
             ],
-            "answer": "August 6, 1991"
+            answer: "August 6, 1991"
         },
         {
-            "question": "What was the name of the first large-scale, general-purpose analog computer developed by Vannevar Bush?",
-            "options": [
+            question: "What was the name of the first large-scale, general-purpose analog computer developed by Vannevar Bush?",
+            options: [
                 "Atanasoff-Berry Computer (ABC)",
                 "Differential Analyzer",
                 "Tide-Predicting Analog Computer",
                 "Universal Automatic Computer I (UNIVAC I)"
             ],
-            "answer": "Differential Analyzer"
+            answer: "Differential Analyzer"
         },
         {
-            "question": "What is the fundamental difference between the Web and the Internet, as described in the provided document?",
-            "options": [
+            question: "What is the fundamental difference between the Web and the Internet, as described in the provided document?",
+            options: [
                 "The Internet is an application built on the Web.",
                 "The Web is an application built on the Internet.",
                 "The Web uses physical cables, while the Internet uses wireless connections.",
                 "The Internet is for entertainment, while the Web is for communication."
             ],
-            "answer": "The Web is an application built on the Internet."
+            answer: "The Web is an application built on the Internet."
         },
         {
-            "question": "Which of the following is an example of an input unit?",
-            "options": [
+            question: "Which of the following is an example of an input unit?",
+            options: [
                 "Monitor",
                 "Printer",
                 "Keyboard",
                 "Speakers"
             ],
-            "answer": "Keyboard"
+            answer: "Keyboard"
         },
         {
-            "question": "What is the primary purpose of the Control Unit (CU) within the CPU?",
-            "options": [
+            question: "What is the primary purpose of the Control Unit (CU) within the CPU?",
+            options: [
                 "To perform mathematical calculations and data comparisons.",
                 "To save data immediately after it reaches the processor.",
                 "To manage and maintain the data flow inside the system.",
                 "To display the results of processed data to the user."
             ],
-            "answer": "To manage and maintain the data flow inside the system."
+            answer: "To manage and maintain the data flow inside the system."
         },
         {
-            "question": "What was a significant disadvantage of the first-generation computers that used vacuum tubes?",
-            "options": [
+            question: "What was a significant disadvantage of the first-generation computers that used vacuum tubes?",
+            options: [
                 "They were too fast for their time.",
                 "They were small and portable.",
                 "They were bulky, filled entire rooms, and were expensive.",
                 "They were not able to perform calculations."
             ],
-            "answer": "They were bulky, filled entire rooms, and were expensive."
+            answer: "They were bulky, filled entire rooms, and were expensive."
         },
         {
-            "question": "Which of these is a mobile operating system developed by Google?",
-            "options": [
+            question: "Which of these is a mobile operating system developed by Google?",
+            options: [
                 "Mac OS",
                 "Windows",
                 "iOS",
                 "Android"
             ],
-            "answer": "Android"
+            answer: "Android"
         },
         {
-            "question": "According to the document, what is the 'dot-com bubble'?",
-            "options": [
+            question: "According to the document, what is the 'dot-com bubble'?",
+            options: [
                 "A period of time when investors lost interest in Internet-based companies.",
                 "A time when the Internet was not yet accessible to the public.",
                 "The period between 1995-2000 when investors financially supported Internet-based startups hoping for massive profits.",
                 "A type of wireless communication device."
             ],
-            "answer": "The period between 1995-2000 when investors financially supported Internet-based startups hoping for massive profits."
+            answer: "The period between 1995-2000 when investors financially supported Internet-based startups hoping for massive profits."
         },
         {
-            "question": "What is the main function of the Arithmetic-Logical Unit (ALU)?",
-            "options": [
+            question: "What is the main function of the Arithmetic-Logical Unit (ALU)?",
+            options: [
                 "Storing data and program instructions.",
                 "Controlling the flow of data within the system.",
                 "Performing mathematical calculations and data comparisons.",
                 "Displaying the final output to the user."
             ],
-            "answer": "Performing mathematical calculations and data comparisons."
+            answer: "Performing mathematical calculations and data comparisons."
         },
         {
-            "question": "Who developed the first integrated circuit in 1958?",
-            "options": [
+            question: "Who developed the first integrated circuit in 1958?",
+            options: [
                 "Tim Berners-Lee",
                 "Robert Cailliau",
                 "Jack Kilby",
                 "Leonard Kleinrock"
             ],
-            "answer": "Jack Kilby"
+            answer: "Jack Kilby"
         },
         {
-            "question": "The first microprocessor, the Intel P4004, was invented in what year?",
-            "options": [
+            question: "The first microprocessor, the Intel P4004, was invented in what year?",
+            options: [
                 "1958",
                 "1969",
                 "1982",
                 "1990"
             ],
-            "answer": "1969"
+            answer: "1969"
         },
         {
-            "question": "What is the main characteristic of an 'analog computer'?",
-            "options": [
+            question: "What is the main characteristic of an 'analog computer'?",
+            options: [
                 "It operates data using the binary format of '0' and '1'.",
                 "It represents data using physical quantities like electric voltage.",
                 "It is a small, portable device.",
                 "It uses microprocessors for its functions."
             ],
-            "answer": "It represents data using physical quantities like electric voltage."
+            answer: "It represents data using physical quantities like electric voltage."
         },
         {
-            "question": "Which component of a computer system is responsible for converting user commands into a digital language format?",
-            "options": [
+            question: "Which component of a computer system is responsible for converting user commands into a digital language format?",
+            options: [
                 "Output Unit",
                 "Memory Unit",
                 "Central Processing Unit (CPU)",
                 "Input Unit"
             ],
-            "answer": "Input Unit"
+            answer: "Input Unit"
         },
         {
-            "question": "What is the definition of an 'Operating System' (OS)?",
-            "options": [
+            question: "What is the definition of an 'Operating System' (OS)?",
+            options: [
                 "A physical part of a computer, such as a monitor or keyboard.",
                 "A set of instructions that commands the computer what to do.",
                 "A collection of software programs that control computer hardware to make it usable.",
                 "A single silicon chip containing a CPU and memory."
             ],
-            "answer": "A collection of software programs that control computer hardware to make it usable."
+            answer: "A collection of software programs that control computer hardware to make it usable."
         },
         {
-            "question": "Which of the following is a disadvantage of an Operating System as mentioned in the document?",
-            "options": [
+            question: "Which of the following is a disadvantage of an Operating System as mentioned in the document?",
+            options: [
                 "It provides a user-friendly format.",
                 "It allows users to hide details of hardware by creating an abstraction.",
                 "It can be expensive for small organizations.",
                 "It offers an environment where users may execute programs."
             ],
-            "answer": "It can be expensive for small organizations."
+            answer: "It can be expensive for small organizations."
         },
         {
-            "question": "The rise of which technology led to the fourth generation of computers?",
-            "options": [
+            question: "The rise of which technology led to the fourth generation of computers?",
+            options: [
                 "Vacuum Tubes",
                 "Transistors",
                 "Integrated Circuits",
                 "Microprocessors"
             ],
-            "answer": "Microprocessors"
+            answer: "Microprocessors"
         },
         {
-            "question": "What is the purpose of the Memory Unit within the CPU?",
-            "options": [
+            question: "What is the purpose of the Memory Unit within the CPU?",
+            options: [
                 "To perform mathematical calculations.",
                 "To store data from input devices and result data from output devices.",
                 "To manage the flow of data within the system.",
                 "To convert human language to machine language."
             ],
-            "answer": "To store data from input devices and result data from output devices."
+            answer: "To store data from input devices and result data from output devices."
         },
         {
-            "question": "In what decade was ARPANET, the precursor to the Internet, decommissioned?",
-            "options": [
+            question: "In what decade was ARPANET, the precursor to the Internet, decommissioned?",
+            options: [
                 "1960s",
                 "1980s",
                 "1990s",
                 "2000s"
             ],
-            "answer": "1990s"
+            answer: "1990s"
         },
         {
-            "question": "What did Tim Berners-Lee and his colleagues develop at CERN that gave birth to the first version of the World Wide Web?",
-            "options": [
+            question: "What did Tim Berners-Lee and his colleagues develop at CERN that gave birth to the first version of the World Wide Web?",
+            options: [
                 "ARPANET and PhoneNet",
                 "The Domain Name System (DNS)",
                 "Hypertext Markup Language (HTML) and Uniform Resource Locator (URL)",
                 "The Differential Analyzer"
             ],
-            "answer": "Hypertext Markup Language (HTML) and Uniform Resource Locator (URL)"
+            answer: "Hypertext Markup Language (HTML) and Uniform Resource Locator (URL)"
         },
         {
-            "question": "Which company launched Windows 95, contributing to a new wave of internet activity in 1995?",
-            "options": [
+            question: "Which company launched Windows 95, contributing to a new wave of internet activity in 1995?",
+            options: [
                 "Apple",
                 "Google",
                 "Microsoft",
                 "Amazon"
             ],
-            "answer": "Microsoft"
+            answer: "Microsoft"
         },
         {
-            "question": "What kind of computers were phased out shortly after World War II?",
-            "options": [
+            question: "What kind of computers were phased out shortly after World War II?",
+            options: [
                 "Digital Computers",
                 "Analog Computers",
                 "Second-generation computers",
                 "Microcomputers"
             ],
-            "answer": "Analog Computers"
+            answer: "Analog Computers"
         },
         {
-            "question": "Which of the following is NOT an example of an output unit?",
-            "options": [
+            question: "Which of the following is NOT an example of an output unit?",
+            options: [
                 "Printer",
                 "Headphones",
                 "Scanner",
                 "Projector"
             ],
-            "answer": "Scanner"
+            answer: "Scanner"
         },
         {
-            "question": "What does a single transistor symbolize in a digital computer?",
-            "options": [
+            question: "What does a single transistor symbolize in a digital computer?",
+            options: [
                 "A continuous variable",
                 "A binary digit",
                 "An entire CPU",
                 "An electrical voltage"
             ],
-            "answer": "A binary digit"
+            answer: "A binary digit"
         },
         {
-            "question": "What was the purpose of the 'Tide-predicting analog computer' built by Lord Kelvin?",
-            "options": [
+            question: "What was the purpose of the 'Tide-predicting analog computer' built by Lord Kelvin?",
+            options: [
                 "To calculate differential equations.",
                 "To forecast tide patterns and their height variations.",
                 "To integrate the product of two functions.",
                 "To create a global computer network."
             ],
-            "answer": "To forecast tide patterns and their height variations."
+            answer: "To forecast tide patterns and their height variations."
         },
         {
-            "question": "The first generation of computers used which technology?",
-            "options": [
+            question: "The first generation of computers used which technology?",
+            options: [
                 "Microprocessors",
                 "Transistors",
                 "Integrated Circuits",
                 "Vacuum Tubes"
             ],
-            "answer": "Vacuum Tubes"
+            answer: "Vacuum Tubes"
         },
         {
-            "question": "What is the 'hardware' of a computer?",
-            "options": [
+            question: "What is the 'hardware' of a computer?",
+            options: [
                 "The physical part of the machine.",
                 "A set of instructions that commands the computer what to do.",
                 "The operating system.",
                 "The programs and applications."
             ],
-            "answer": "The physical part of the machine."
+            answer: "The physical part of the machine."
         },
         {
-            "question": "Which two scientists pioneered the world's first wide-area computer network based on packet-switching theory?",
-            "options": [
+            question: "Which two scientists pioneered the world's first wide-area computer network based on packet-switching theory?",
+            options: [
                 "Tim Berners-Lee and Robert Cailliau",
                 "Jack Kilby and Vannevar Bush",
                 "Leonard Kleinrock and Lawrence G. Roberts",
                 "Paul Mockapetris and Jon Postel"
             ],
-            "answer": "Leonard Kleinrock and Lawrence G. Roberts"
+            answer: "Leonard Kleinrock and Lawrence G. Roberts"
         },
         {
-            "question": "The first domain name ever registered was symbolics.com. In what year did this happen?",
-            "options": [
+            question: "The first domain name ever registered was symbolics.com. In what year did this happen?",
+            options: [
                 "1962",
                 "1982",
                 "1984",
                 "1995"
             ],
-            "answer": "1984"
+            answer: "1984"
         },
         {
-            "question": "What is the correct term for the electronic connections that link similar pieces of information, allowing a user to smoothly transition from one web page to another?",
-            "options": [
+            question: "What is the correct term for the electronic connections that link similar pieces of information, allowing a user to smoothly transition from one web page to another?",
+            options: [
                 "Domain Names",
                 "URLs",
                 "Hyperlinks",
                 "Packets"
             ],
-            "answer": "Hyperlinks"
+            answer: "Hyperlinks"
         },
         {
-            "question": "What was the main reason for the creation of the Domain Name System (DNS) by Paul Mockapetris, Jon Postel, and Craig Partridge?",
-            "options": [
+            question: "What was the main reason for the creation of the Domain Name System (DNS) by Paul Mockapetris, Jon Postel, and Craig Partridge?",
+            options: [
                 "To allow for faster internet speeds.",
                 "To control the increasing number of users on the internet.",
                 "To develop a new type of web browser.",
                 "To create a system for sending emails."
             ],
-            "answer": "To control the increasing number of users on the internet."
+            answer: "To control the increasing number of users on the internet."
         },
         {
-            "question": "What does 'Wi-Fi' stand for?",
-            "options": [
+            question: "What does 'Wi-Fi' stand for?",
+            options: [
                 "Wireless Internet",
                 "Wireless Fidelity",
                 "World Internet Feature",
                 "The document does not specify."
             ],
-            "answer": "The document does not specify."
+            answer: "The document does not specify."
         },
         {
-            "question": "Which company rose to domination in the search engine market in the 2000s, besting Yahoo! and MSN Search?",
-            "options": [
+            question: "Which company rose to domination in the search engine market in the 2000s, besting Yahoo! and MSN Search?",
+            options: [
                 "Amazon",
                 "eBay",
                 "Google",
                 "Microsoft"
             ],
-            "answer": "Google"
+            answer: "Google"
         },
         {
-            "question": "What is one of the negative effects of the internet on communication, as mentioned in the document?",
-            "options": [
+            question: "What is one of the negative effects of the internet on communication, as mentioned in the document?",
+            options: [
                 "It makes communication too slow.",
                 "It removes the need for email.",
                 "It has created an environment where careless communication is present.",
                 "It has led to the disappearance of mail messages."
             ],
-            "answer": "It has created an environment where careless communication is present."
+            answer: "It has created an environment where careless communication is present."
         },
         {
-            "question": "According to the document, what is the downside of having widespread access to information on the internet?",
-            "options": [
+            question: "According to the document, what is the downside of having widespread access to information on the internet?",
+            options: [
                 "It is too expensive to access.",
                 "It causes traditional books to disappear.",
                 "The spread of false information or 'fake news' with little fact-checking.",
                 "It limits the ability to learn new skills."
             ],
-            "answer": "The spread of false information or 'fake news' with little fact-checking."
+            answer: "The spread of false information or 'fake news' with little fact-checking."
         },
         {
-            "question": "Which streaming service is mentioned as a main source of entertainment in the document?",
-            "options": [
+            question: "Which streaming service is mentioned as a main source of entertainment in the document?",
+            options: [
                 "Hulu",
                 "HBO Max",
                 "Netflix",
                 "Peacock"
             ],
-            "answer": "Netflix"
+            answer: "Netflix"
         },
         {
-            "question": "What is the primary negative effect of online entertainment consumption mentioned in the document?",
-            "options": [
+            question: "What is the primary negative effect of online entertainment consumption mentioned in the document?",
+            options: [
                 "It is too expensive.",
                 "It leads to a lack of real human connection and interaction.",
                 "It makes it harder to find new movies.",
                 "It causes a loss of interest in traditional media."
             ],
-            "answer": "It leads to a lack of real human connection and interaction."
+            answer: "It leads to a lack of real human connection and interaction."
         },
         {
-            "question": "What significant role did the Web and the Internet play during the COVID-19 pandemic?",
-            "options": [
+            question: "What significant role did the Web and the Internet play during the COVID-19 pandemic?",
+            options: [
                 "They caused the pandemic to spread faster.",
                 "They were responsible for the creation of new social media apps.",
                 "They forced education systems to adapt to an online learning model.",
                 "They led to the development of new gaming websites."
             ],
-            "answer": "They forced education systems to adapt to an online learning model."
+            answer: "They forced education systems to adapt to an online learning model."
         },
         {
-            "question": "What is a 'computer' defined as in the document?",
-            "options": [
+            question: "What is a 'computer' defined as in the document?",
+            options: [
                 "A physical cable used for networking.",
                 "A programmable computing device that can process, store, and retrieve data.",
                 "A type of software program that manages hardware.",
                 "A device that only performs mathematical calculations."
             ],
-            "answer": "A programmable computing device that can process, store, and retrieve data."
+            answer: "A programmable computing device that can process, store, and retrieve data."
         },
         {
-            "question": "In what decade were the first digital computers, consisting of thousands of vacuum tubes, built?",
-            "options": [
+            question: "In what decade were the first digital computers, consisting of thousands of vacuum tubes, built?",
+            options: [
                 "1960s and 1970s",
                 "1940s and 1950s",
                 "1980s and 1990s",
                 "2000s"
             ],
-            "answer": "1940s and 1950s"
+            answer: "1940s and 1950s"
         },
         {
-            "question": "How is data represented in a digital computer?",
-            "options": [
+            question: "How is data represented in a digital computer?",
+            options: [
                 "By physical quantities like electric voltage.",
                 "In the binary format of '0' and '1'.",
                 "Using analog signals.",
                 "Through a continuous flow of current."
             ],
-            "answer": "In the binary format of '0' and '1'."
+            answer: "In the binary format of '0' and '1'."
         },
         {
-            "question": "What is the name of the British scientist who invented the Web?",
-            "options": [
+            question: "What is the name of the British scientist who invented the Web?",
+            options: [
                 "James Thomson",
                 "Jack Kilby",
                 "Joseph Carl Robnett Licklider",
                 "Tim Berners-Lee"
             ],
-            "answer": "Tim Berners-Lee"
+            answer: "Tim Berners-Lee"
         },
         {
-            "question": "The first commercial network, Telenet, was founded alongside which system in 1982?",
-            "options": [
+            question: "The first commercial network, Telenet, was founded alongside which system in 1982?",
+            options: [
                 "ARPANET",
                 "PhoneNet",
                 "The Web",
                 "The Internet"
             ],
-            "answer": "PhoneNet"
+            answer: "PhoneNet"
         },
         {
-            "question": "Which of the following describes the 'software' of a computer?",
-            "options": [
+            question: "Which of the following describes the 'software' of a computer?",
+            options: [
                 "The physical components of the machine.",
                 "A set of instructions that commands the computer what to do.",
                 "The central processing unit.",
                 "The input and output devices."
             ],
-            "answer": "A set of instructions that commands the computer what to do."
+            answer: "A set of instructions that commands the computer what to do."
         },
         {
-            "question": "What does the acronym 'HTML' stand for?",
-            "options": [
+            question: "What does the acronym 'HTML' stand for?",
+            options: [
                 "Hyper Text Mail Language",
                 "High Tech Markup Language",
                 "Hypertext Markup Language",
                 "Home Transfer Markup Language"
             ],
-            "answer": "Hypertext Markup Language"
+            answer: "Hypertext Markup Language"
         },
         {
-            "question": "Which computer generation saw the introduction of keyboards and monitors as primary user interfaces?",
-            "options": [
+            question: "Which computer generation saw the introduction of keyboards and monitors as primary user interfaces?",
+            options: [
                 "First Generation",
                 "Second Generation",
                 "Third Generation",
                 "Fourth Generation"
             ],
-            "answer": "Third Generation"
+            answer: "Third Generation"
         },
         {
-            "question": "What is a key difference between transistors and vacuum tubes, as mentioned in the document?",
-            "options": [
+            question: "What is a key difference between transistors and vacuum tubes, as mentioned in the document?",
+            options: [
                 "Transistors were larger and more expensive.",
                 "Transistors were much smaller, cheaper, and more reliable.",
                 "Vacuum tubes were invented after transistors.",
                 "Vacuum tubes are still widely used in modern computers."
             ],
-            "answer": "Transistors were much smaller, cheaper, and more reliable."
+            answer: "Transistors were much smaller, cheaper, and more reliable."
         },
         {
-            "question": "What is the function of the Output Unit in a computer system?",
-            "options": [
+            question: "What is the function of the Output Unit in a computer system?",
+            options: [
                 "To process data from the input unit.",
                 "To save data and programs.",
                 "To display the result of the processed data.",
                 "To perform mathematical calculations."
             ],
-            "answer": "To display the result of the processed data."
+            answer: "To display the result of the processed data."
         },
         {
-            "question": "What is the full name of the organization where Tim Berners-Lee invented the Web?",
-            "options": [
+            question: "What is the full name of the organization where Tim Berners-Lee invented the Web?",
+            options: [
                 "National Center for Supercomputing Applications (NCSA)",
                 "Advanced Research Projects Agency (ARPANET)",
                 "European Organization for Nuclear Research (CERN)",
                 "IBM"
             ],
-            "answer": "European Organization for Nuclear Research (CERN)"
+            answer: "European Organization for Nuclear Research (CERN)"
         }
     ],
     "identification": [
         {
-            "question": "This massive interconnection of networks connects millions of computers globally, forming a network wherein any computer can communicate with others.",
-            "answer": "Internet"
+            question: "This massive interconnection of networks connects millions of computers globally, forming a network wherein any computer can communicate with others.",
+            answer: "Internet",
+            explanation: "null"
         },
         {
-            "question": "This term refers to a network of web pages that are found using a link address, called a 'web' due to its interconnected nature.",
-            "answer": "World Wide Web"
+            question: "This term refers to a network of web pages that are found using a link address, called a 'web' due to its interconnected nature.",
+            answer: "World Wide Web",
+            explanation: "null"
         },
         {
-            "question": "He is the British scientist credited with inventing the World Wide Web in 1989.",
-            "answer": "Tim Berners-Lee"
+            question: "He is the British scientist credited with inventing the World Wide Web in 1989.",
+            answer: "Tim Berners-Lee",
+            explanation: "null"
         },
         {
-            "question": "This part of a computer is the physical part of the machine.",
-            "answer": "Hardware"
+            question: "This part of a computer is the physical part of the machine.",
+            answer: "Hardware",
+            explanation: "null"
         },
         {
-            "question": "This part of a computer is a set of instructions that commands the computer what to do.",
-            "answer": "Software"
+            question: "This part of a computer is a set of instructions that commands the computer what to do.",
+            answer: "Software",
+            explanation: "null"
         },
         {
-            "question": "This is a collection of software programs and commands that control computer hardware to make it usable.",
-            "answer": "Operating System"
+            question: "This is a collection of software programs and commands that control computer hardware to make it usable.",
+            answer: "Operating System",
+            explanation: "null"
         },
         {
-            "question": "This unit is responsible for taking user commands and converting them into a digital language format.",
-            "answer": "Input Unit"
+            question: "This unit is responsible for taking user commands and converting them into a digital language format.",
+            answer: "Input Unit",
+            explanation: "null"
         },
         {
-            "question": "This is the central component of the CPU that manages the computer device's functions and maintains the data flow.",
-            "answer": "Control Unit"
+            question: "This is the central component of the CPU that manages the computer device's functions and maintains the data flow.",
+            answer: "Control Unit",
+            explanation: "null"
         },
         {
-            "question": "This is the processor responsible for mathematical calculations and data comparison within the CPU.",
-            "answer": "Arithmetic-Logical Unit"
+            question: "This is the processor responsible for mathematical calculations and data comparison within the CPU.",
+            answer: "Arithmetic-Logical Unit",
+            explanation: "null"
         },
         {
-            "question": "The first generation of digital computers used thousands of these bulky electronic devices.",
-            "answer": "Vacuum Tubes"
+            question: "The first generation of digital computers used thousands of these bulky electronic devices.",
+            answer: "Vacuum Tubes",
+            explanation: "null"
         },
         {
-            "question": "This device, invented by Jack Kilby, consists of a set of electronic circuits on a small chip of semiconductor material.",
-            "answer": "Integrated Circuit"
+            question: "This device, invented by Jack Kilby, consists of a set of electronic circuits on a small chip of semiconductor material.",
+            answer: "Integrated Circuit",
+            explanation: "null"
         },
         {
-            "question": "The rise of this technology, which contains thousands of integrated circuits on a single silicon chip, led to the fourth generation of computers.",
-            "answer": "Microprocessors"
+            question: "The rise of this technology, which contains thousands of integrated circuits on a single silicon chip, led to the fourth generation of computers.",
+            answer: "Microprocessors",
+            explanation: "null"
         },
         {
-            "question": "This mobile operating system, developed by Apple, is used for its smartphones and tablets.",
-            "answer": "iOS"
+            question: "This mobile operating system, developed by Apple, is used for its smartphones and tablets.",
+            answer: "iOS",
+            explanation: "null"
         },
         {
-            "question": "This term refers to the period between 1995-2000 when investors financially supported Internet-based startups hoping for massive profits.",
-            "answer": "Dot-com bubble"
+            question: "This term refers to the period between 1995-2000 when investors financially supported Internet-based startups hoping for massive profits.",
+            answer: "Dot-com bubble",
+            explanation: "null"
         },
         {
-            "question": "This is a type of computer that represents data using physical quantities such as electric voltage.",
-            "answer": "Analog Computer"
+            question: "This is a type of computer that represents data using physical quantities such as electric voltage.",
+            answer: "Analog Computer",
+            explanation: "null"
         },
         {
-            "question": "The first domain name registered in 1984.",
-            "answer": "symbolics.com"
+            question: "The first domain name registered in 1984.",
+            answer: "symbolics.com",
+            explanation: "null"
         },
         {
-            "question": "This component of a computer system displays the results of processed data to the user.",
-            "answer": "Output Unit"
+            question: "This component of a computer system displays the results of processed data to the user.",
+            answer: "Output Unit",
+            explanation: "null"
         },
         {
-            "question": "This type of computer is a sequential device that operates data one at a time and represents it in a binary format.",
-            "answer": "Digital Computer"
+            question: "This type of computer is a sequential device that operates data one at a time and represents it in a binary format.",
+            answer: "Digital Computer",
+            explanation: "null"
         },
         {
-            "question": "This computer scientist developed the first large-scale, general-purpose analog computer called the 'Differential Analyzer'.",
-            "answer": "Vannevar Bush"
+            question: "This computer scientist developed the first large-scale, general-purpose analog computer called the 'Differential Analyzer'.",
+            answer: "Vannevar Bush",
+            explanation: "null"
         },
         {
-            "question": "This company holds over 90% of the market share for personal computer and laptop operating systems.",
-            "answer": "Microsoft"
+            question: "This company holds over 90% of the market share for personal computer and laptop operating systems.",
+            answer: "Microsoft",
+            explanation: "null"
         }
     ]
 };
@@ -918,7 +938,7 @@
     const quizArea = document.getElementById('quiz-area');
     const endScreen = document.getElementById('end-screen');
     const questionText = document.getElementById('question-text');
-    const optionsContainer = document.getElementById('options-container');
+    const optionssContainer = document.getElementById('optionss-container');
     const identificationContainer = document.getElementById('identification-container');
     const identificationInput = document.getElementById('identification-input');
     const submitButton = document.getElementById('submit-button');
@@ -958,7 +978,7 @@
         }
         
         answered = false;
-        optionsContainer.style.display = 'flex';
+        optionssContainer.style.display = 'flex';
         identificationContainer.style.display = 'none';
         identificationInput.value = '';
         feedbackSection.style.display = 'none';
@@ -969,20 +989,20 @@
             isIdentificationSection = false;
             submitButton.style.display = 'none'; // Hide submit button for MCQs
             currentQuizData = quizData.multipleChoice[currentQuestionIndex];
-            optionsContainer.innerHTML = '';
-            currentQuizData.options.forEach(option => {
+            optionssContainer.innerHTML = '';
+            currentQuizData.options.forEach(options => {
                 const button = document.createElement('button');
-                button.classList.add('option');
-                button.textContent = option;
-                button.onclick = () => selectOption(button, option);
-                optionsContainer.appendChild(button);
+                button.classList.add('options');
+                button.textContent = options;
+                button.onclick = () => selectoptions(button, options);
+                optionssContainer.appendChild(button);
             });
             progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. The identification questions will begin after question ${quizData.multipleChoice.length}.`;
         } else {
             isIdentificationSection = true;
             submitButton.style.display = 'block'; // Show submit button for identification questions
             currentQuizData = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
-            optionsContainer.style.display = 'none';
+            optionssContainer.style.display = 'none';
             identificationContainer.style.display = 'block';
             progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. You are now in the identification questions section.`;
         }
@@ -991,7 +1011,7 @@
         updateProgressBar();
     }
 
-    function selectOption(selectedButton, selectedAnswer) {
+    function selectoptions(selectedButton, selectedAnswer) {
         if (answered) return;
         answered = true;
 
@@ -1012,12 +1032,12 @@
         explanationText.textContent = currentQuestion.explanation;
         feedbackSection.style.display = 'block';
 
-        const allOptions = optionsContainer.querySelectorAll('.option');
-        allOptions.forEach(option => {
-            if (option.textContent === currentQuestion.answer) {
-                option.classList.add('correct');
+        const alloptionss = optionssContainer.querySelectorAll('.options');
+        alloptionss.forEach(options => {
+            if (options.textContent === currentQuestion.answer) {
+                options.classList.add('correct');
             }
-            option.disabled = true;
+            options.disabled = true;
         });
 
         setTimeout(() => {
