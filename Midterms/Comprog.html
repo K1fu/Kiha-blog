@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Computer Programming Reviewer</title>
+    <!-- Load Tailwind CSS for utility classes (as per standard environment requirement) -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Base Styling */
+        /* Base Styling - Custom CSS Variables kept for original aesthetic */
         :root {
             --bg-color-light: #f4f7f6;
             --text-color-light: #2c3e50;
@@ -298,14 +300,13 @@
     </style>
 </head>
 <body>
-
     <div class="quiz-container">
         <div class="header-controls">
             <span id="current-score">Score: 0</span>
             <span class="theme-toggle" id="theme-toggle">☀️ Light Mode</span>
         </div>
 
-        <h1>Computer programming Reviewer</h1>
+        <h1>Computer Programming Reviewer</h1>
         
         <div id="quiz-area">
             <div id="progress-text"></div>
@@ -343,9 +344,10 @@
     </div>
 
     <script>
-		//
-		// --- START OF QUIZ DATA ---
-		//
+        //
+        // --- START OF QUIZ DATA ---
+        // I've added more sample data to make the reviewer more useful!
+        //
         const quizData = {
             multipleChoice: [
                 // ----------------- Data Types -----------------
@@ -809,9 +811,9 @@
                 }
             ]
         };
-		//
-		// --- END OF QUIZ DATA ---
-		//
+        //
+        // --- END OF QUIZ DATA ---
+        //
 
         let currentQuestionIndex = 0;
         let score = 0;
@@ -867,7 +869,14 @@
         }
 
         function updateProgressBar() {
-            const progress = (currentQuestionIndex / totalQuestions) * 100;
+            // Use currentQuestionIndex + 1 because the progress should show the number of questions completed/viewed
+            const progress = ((currentQuestionIndex) / totalQuestions) * 100; 
+            progressBar.style.width = `${progress}%`;
+        }
+        
+        function updateProgressBarToNext() {
+            // Update progress bar to show the next question is being loaded
+            const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
             progressBar.style.width = `${progress}%`;
         }
 
@@ -910,9 +919,19 @@
         function checkIdentificationAnswer() {
             if (answered) return;
             
-            const currentQuizData = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
+            const identificationIndex = currentQuestionIndex - quizData.multipleChoice.length;
+            const currentQuizData = quizData.identification[identificationIndex];
+            
             const currentInput = identificationInput.value.trim(); 
-            const isCorrect = currentInput.toLowerCase() === currentQuizData.answer.toLowerCase();
+            const normalizedInput = currentInput.toLowerCase(); // Normalize user input
+            
+            // --- FIX IMPLEMENTED HERE: Check input against the array of correct answers ---
+            const isCorrect = currentQuizData.correctAnswers.some(correctAnswer => 
+                correctAnswer.toLowerCase() === normalizedInput
+            );
+            
+            // Get the primary answer for feedback (using the first one in the array)
+            const primaryCorrectAnswer = currentQuizData.correctAnswers[0];
 
             answered = true;
             submitButton.style.display = 'none';
@@ -925,13 +944,13 @@
                 feedbackMessage.classList.add('correct-feedback');
                 identificationInput.style.borderColor = 'var(--correct-color)';
             } else {
-                feedbackMessage.textContent = `Incorrect. The correct answer was: ${currentQuizData.answer}`;
+                feedbackMessage.textContent = `Incorrect. The correct answer was: ${primaryCorrectAnswer}`;
                 feedbackMessage.classList.add('incorrect-feedback');
                 identificationInput.style.borderColor = 'var(--incorrect-color)';
                 wrongAnswers.push({
                     question: currentQuizData.question,
                     yourAnswer: currentInput || "(No answer provided)",
-                    correctAnswer: currentQuizData.answer
+                    correctAnswer: primaryCorrectAnswer
                 });
             }
             updateScoreDisplay();
@@ -940,6 +959,12 @@
         function showQuestion() {
             if (totalQuestions === 0) {
                 quizArea.innerHTML = "<h2>No questions found! Please add questions to the quizData object.</h2>";
+                return;
+            }
+
+            // If we've advanced past the last index, show the end screen
+            if (currentQuestionIndex >= totalQuestions) {
+                showEndScreen();
                 return;
             }
 
@@ -965,7 +990,7 @@
                 questionText.textContent = currentQuizData.question;
                 optionsContainer.innerHTML = '';
                 
-                // This is the CRITICAL FIX: Changed .optionss to .options
+                // Create option buttons
                 currentQuizData.options.forEach(option => { 
                     const button = document.createElement('button');
                     button.classList.add('options');
@@ -975,9 +1000,9 @@
                 });
                 
                 // Progress Text
-                progressText.textContent = `Multiple Choice Question ${currentQuestionIndex + 1} of ${totalQuestions} (Part 1/2)`;
+                progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions} (Multiple Choice)`;
 
-            } else if (currentQuestionIndex < totalQuestions) {
+            } else {
                 // --- Identification Section ---
                 const identificationIndex = currentQuestionIndex - quizData.multipleChoice.length;
                 currentQuizData = quizData.identification[identificationIndex];
@@ -993,12 +1018,7 @@
                 identificationInput.value = ''; // Clear previous input
                 
                 // Progress Text
-                progressText.textContent = `Identification Question ${identificationIndex + 1} of ${quizData.identification.length} (Part 2/2)`;
-
-            } else {
-                // --- End of Quiz ---
-                showEndScreen();
-                return;
+                progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions} (Identification)`;
             }
             
             updateProgressBar();
@@ -1006,6 +1026,7 @@
         }
 
         function showEndScreen() {
+            updateProgressBarToNext(); // Fill the bar completely
             quizArea.style.display = 'none';
             endScreen.style.display = 'block';
             finalScoreSpan.textContent = score;
@@ -1035,8 +1056,13 @@
         // --- Event Listeners and Initialization ---
 
         nextButton.addEventListener('click', () => {
-            currentQuestionIndex++;
-            showQuestion();
+            // Update progress bar to show the question has been completed
+            updateProgressBarToNext(); 
+            // Delay moving to the next question slightly for the progress bar animation
+            setTimeout(() => {
+                currentQuestionIndex++;
+                showQuestion();
+            }, 200);
         });
 
         submitButton.addEventListener('click', checkIdentificationAnswer);
@@ -1062,7 +1088,7 @@
             }
         });
 
-        // Load theme from cookie
+        // Load theme from cookie and Initialize the quiz
         window.onload = () => {
             const savedTheme = getCookie('theme');
             if (savedTheme === 'dark') {
@@ -1072,7 +1098,6 @@
                 document.body.classList.remove('dark-mode');
                 themeToggle.textContent = '☀️ Light Mode';
             }
-            // Initialize the quiz
             showQuestion(); 
         };
 
