@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computer Programming</title>
+    <title>Subject name</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Base Styling */
         :root {
             --bg-color-light: #f4f7f6;
             --text-color-light: #2c3e50;
@@ -25,949 +26,1059 @@
             --container-bg-light: #34495e;
             --primary-color-light: #3498db;
             --secondary-color-light: #2980b9;
-            --border-color-light: #526f8d;
-            --shadow-color-light: rgba(255, 255, 255, 0.1);
+            --correct-color: #2ecc71;
+            --incorrect-color: #e74c3c;
+            --border-color-light: #7f8c8d;
+            --shadow-color-light: rgba(0, 0, 0, 0.3);
             --placeholder-color-light: #bdc3c7;
         }
 
-        * {
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
         body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
             background-color: var(--bg-color-light);
             color: var(--text-color-light);
-            margin: 0;
-            padding: 20px;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .quiz-container {
             width: 100%;
-            max-width: 800px;
-            background-color: var(--container-bg-light);
+            max-width: 700px;
+            margin: 20px;
             padding: 30px;
+            background-color: var(--container-bg-light);
             border-radius: 12px;
             box-shadow: 0 10px 25px var(--shadow-color-light);
-            animation: fadeIn 0.8s ease-out;
+            transition: background-color 0.3s, box-shadow 0.3s;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        /* Header and Mode Toggle */
         h1 {
             text-align: center;
-            font-size: 2.2em;
             color: var(--primary-color-light);
-            margin-bottom: 10px;
+            font-weight: 700;
+            margin-bottom: 25px;
         }
 
-        h2 {
-            font-size: 1.5em;
-            margin-top: 0;
-            text-align: center;
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color-light);
         }
 
-        .progress-container {
+        .theme-toggle {
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 2px solid var(--primary-color-light);
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--primary-color-light);
+            color: white;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
             width: 100%;
             background-color: var(--border-color-light);
-            border-radius: 8px;
-            height: 12px;
-            margin-top: 10px;
-            margin-bottom: 5px;
+            border-radius: 10px;
             overflow: hidden;
+            margin-bottom: 25px;
+            height: 15px;
         }
 
         .progress-bar {
             height: 100%;
             width: 0%;
-            background-color: var(--primary-color-light);
-            transition: width 0.4s ease-in-out;
+            background-color: var(--correct-color);
+            transition: width 0.4s ease;
         }
 
-        .progress-text {
+        #progress-text {
             font-size: 0.9em;
-            color: var(--placeholder-color-light);
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color-light);
             text-align: center;
-            margin-bottom: 20px;
+        }
+
+        /* Question Area */
+        #quiz-area {
+            min-height: 300px; /* Ensures consistent layout height */
+            display: block;
         }
 
         #question-text {
             font-size: 1.2em;
             margin-bottom: 20px;
             font-weight: 600;
-        }
-
-        #options-container, #identification-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .option {
-            background-color: transparent;
-            border: 2px solid var(--border-color-light);
-            color: var(--text-color-light);
-            padding: 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: left;
-            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
-        }
-
-        .option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px var(--shadow-color-light);
-        }
-
-        .option.correct {
-            background-color: var(--correct-color);
-            color: white;
-            border-color: var(--correct-color);
-        }
-
-        .option.incorrect {
-            background-color: var(--incorrect-color);
-            color: white;
-            border-color: var(--incorrect-color);
-        }
-
-        #submit-button, .quiz-button, #restart-button {
-            display: none; /* Hide by default */
-            width: 100%;
-            padding: 15px;
-            font-size: 1em;
-            font-weight: bold;
-            color: white;
-            background-color: var(--primary-color-light);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.2s, transform 0.2s;
-        }
-
-        #submit-button:hover, .quiz-button:hover, #restart-button:hover {
-            background-color: var(--secondary-color-light);
-            transform: translateY(-2px);
-        }
-        
-        #submit-button:disabled {
-            background-color: #7f8c8d;
-            cursor: not-allowed;
-        }
-
-        #feedback-section {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-left: 5px solid;
-            border-radius: 8px;
-            display: none;
-        }
-
-        #feedback-section.correct {
-            border-color: var(--correct-color);
-        }
-
-        #feedback-section.incorrect {
-            border-color: var(--incorrect-color);
-        }
-
-        #explanation-text {
-            font-style: italic;
-            font-size: 0.95em;
-            margin-top: 10px;
-        }
-
-        .end-screen {
+            line-height: 1.5;
             text-align: center;
         }
 
-        .end-screen h2 {
-            font-size: 2em;
-            color: var(--primary-color-light);
-            margin-bottom: 10px;
-        }
-
-        .end-screen p {
-            font-size: 1.2em;
-            margin-bottom: 5px;
-        }
-        
-        #incorrect-questions-list {
-            text-align: left;
-            margin-top: 20px;
-        }
-        
-        #incorrect-questions-list li {
-            margin-bottom: 10px;
-            border-left: 3px solid var(--incorrect-color);
-            padding-left: 10px;
-        }
-
-        .mode-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: var(--container-bg-light);
-            border: 2px solid var(--border-color-light);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
+        #options-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Options/Buttons/Inputs */
+        .options, #submit-button, #next-button, #restart-button {
+            padding: 15px 20px;
+            border: 2px solid var(--primary-color-light);
+            background-color: transparent;
+            color: var(--primary-color-light);
+            border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 8px var(--shadow-color-light);
-            font-size: 1.2em;
-            color: var(--text-color-light);
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
+            text-align: center;
+            width: 100%;
+        }
+
+        .options:hover:not(.selected):not(.correct):not(.incorrect),
+        #submit-button:hover, #restart-button:hover {
+            background-color: var(--primary-color-light);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .options.selected {
+            background-color: var(--secondary-color-light);
+            color: white;
+            border-color: var(--secondary-color-light);
+            transform: scale(1.02);
+        }
+
+        .options.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+            pointer-events: none; /* Disable clicking after selecting */
+        }
+
+        .options.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+            border-color: var(--incorrect-color);
+            pointer-events: none; /* Disable clicking after selecting */
+        }
+
+        .options:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
 
         #identification-input {
             width: 100%;
             padding: 15px;
-            font-size: 1em;
+            margin-bottom: 20px;
             border: 2px solid var(--border-color-light);
             border-radius: 8px;
-            background-color: var(--container-bg-light);
+            font-size: 1em;
+            box-sizing: border-box;
             color: var(--text-color-light);
+            background-color: var(--container-bg-light);
             transition: border-color 0.2s;
         }
-        
+
+        #identification-input::placeholder {
+            color: var(--placeholder-color-light);
+        }
+
         #identification-input:focus {
+            border-color: var(--primary-color-light);
             outline: none;
+        }
+
+        #submit-button, #next-button {
+            display: none; /* Controlled by JS */
+        }
+        
+        #submit-button {
+            margin-top: 10px;
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+        
+        #submit-button:hover {
+            background-color: #2ecc71;
+            box-shadow: 0 4px 8px rgba(39, 174, 96, 0.4);
+        }
+
+        #next-button {
+            margin-top: 10px;
+        }
+
+        /* Feedback Message */
+        #feedback-message {
+            text-align: center;
+            padding: 10px 0;
+            margin-bottom: 15px;
+            font-weight: 700;
+            min-height: 20px;
+            border-radius: 8px;
+        }
+
+        .correct-feedback {
+            color: var(--correct-color);
+            background-color: rgba(39, 174, 96, 0.1);
+        }
+
+        .incorrect-feedback {
+            color: var(--incorrect-color);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        /* End Screen */
+        #end-screen {
+            display: none;
+            text-align: center;
+        }
+
+        #end-screen h2 {
+            color: var(--correct-color);
+            margin-bottom: 20px;
+        }
+
+        #score-summary {
+            background-color: var(--bg-color-light);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color-light);
+            text-align: left;
+        }
+
+        #score-summary p {
+            margin: 8px 0;
+            font-size: 1.1em;
+        }
+
+        #score-summary strong {
+            font-weight: 700;
+            color: var(--primary-color-light);
+        }
+
+        #wrong-answers-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #wrong-answers-list li {
+            background-color: var(--container-bg-light);
+            border: 1px solid var(--incorrect-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.1);
+        }
+        
+        #restart-button {
+            background-color: var(--primary-color-light);
+            color: white;
             border-color: var(--primary-color-light);
         }
     </style>
 </head>
 <body>
 
-<div class="mode-toggle" id="mode-toggle">
-    ☀️
-</div>
+    <div class="quiz-container">
+        <div class="header-controls">
+            <span id="current-score">Score: 0</span>
+            <span class="theme-toggle" id="theme-toggle">☀️ Light Mode</span>
+        </div>
 
-<div class="quiz-container" id="quiz-container">
-    <h1 id="quiz-title">Computer programming</h1>
-    <div class="progress-container">
-        <div class="progress-bar" id="progress-bar"></div>
-    </div>
-    <p class="progress-text" id="progress-text"></p>
-
-    <div id="quiz-area">
-        <div id="question-area">
-            <h2 id="question-text"></h2>
-            <div id="options-container"></div>
-            <div id="identification-container" style="display: none;">
-                <input type="text" id="identification-input" placeholder="Type your answer here...">
+        <h1>Subject name quiz</h1>
+        
+        <div id="quiz-area">
+            <div id="progress-text"></div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
             </div>
+
+            <div id="feedback-message"></div>
+
+            <p id="question-text"></p>
+            
+            <div id="options-container">
+                <!-- Multiple Choice Options are inserted here -->
+            </div>
+
+            <input type="text" id="identification-input" placeholder="Type your answer here..." style="display: none;">
+
             <button id="submit-button">Submit Answer</button>
+            <button id="next-button">Next Question</button>
         </div>
-        
-        <div id="feedback-section">
-            <p id="feedback-text"></p>
-            <p id="explanation-text"></p>
+
+        <div id="end-screen">
+            <h2>Quiz Complete!</h2>
+            
+            <div id="score-summary">
+                <p>Final Score: <span id="final-score-span">0</span> / <span id="total-questions-span">0</span></p>
+                <p>Best Score: <strong id="best-score-span">0</strong></p>
+                
+                <h3>Incorrect Answers Review:</h3>
+                <ul id="wrong-answers-list">
+                    <!-- Wrong answers are inserted here -->
+                </ul>
+            </div>
+
+            <button id="restart-button">Restart Quiz</button>
         </div>
+
     </div>
 
-    <div id="end-screen" class="end-screen" style="display: none;">
-        <h2>Quiz Complete!</h2>
-        <p>Your Score: <span id="final-score"></span> / <span id="total-questions"></span></p>
-        <p>Previous Best Score: <span id="best-score"></span></p>
-        <div id="incorrect-questions-list">
-            <h3>Questions you got wrong:</h3>
-            <ul id="wrong-answers-list"></ul>
-        </div>
-        <button id="restart-button">Restart Quiz</button>
-    </div>
-</div>
+    <script>
+		//
+		// --- START OF QUIZ DATA ---
+		//
+        const quizData = {
+            multipleChoice: [
+                // ----------------- Data Types -----------------
+                {
+                    question: "According to the sources, how are the data types in Java classified?",
+                    options: ["Scalar and Vector", "Primitive and Derived", "Primitive and Abstract", "Standard and Custom"],
+                    answer: "Primitive and Abstract",
+                    explanation: "The data types in Java are classified into two (2): primitive or standard data types and abstract or derived data types."
+                },
+                {
+                    question: "What is the primary characteristic of Primitive Data Types in Java, as stated in the source?",
+                    options: ["They are objects with built-in methods.", "They are built into the Java language and are not objects.", "They are only used for text storage.", "They can only hold positive values."],
+                    answer: "They are built into the Java language and are not objects.",
+                    explanation: "Primitive Data Types are built into the Java language. These are data that are not objects and have no methods."
+                },
+                {
+                    question: "Which of the following is the smallest integer type in Java, representing a small number between -128 and +127 signed?",
+                    options: ["Short", "Int", "Byte", "Long"],
+                    answer: "Byte",
+                    explanation: "Byte: The smallest integer type that represents a small number. It is used to declare a variable holding a natural number between -128 and 127."
+                },
+                {
+                    question: "What is the default initial value for the `boolean` data type when declared as a data member of a class?",
+                    options: ["1", "true", "false", "0"],
+                    answer: "false",
+                    explanation: "Boolean: 'false'"
+                },
+                {
+                    question: "What data type is considered the best choice when an integer is needed because smaller integer values are automatically promoted to it in expressions?",
+                    options: ["Byte", "Short", "Int", "Long"],
+                    answer: "Int",
+                    explanation: "Int: This data type can handle larger numbers and is considered the best choice when an integer is needed because when Byte and Short values are used in an expression, they are promoted to Int automatically."
+                },
+                {
+                    question: "What size, in bits, does the `Double` data type occupy?",
+                    options: ["8 bit", "16 bit", "32 bit", "64 bit"],
+                    answer: "64 bit",
+                    explanation: "Double: '64 bit'"
+                },
+                {
+                    question: "When declaring a `Long` integer literal, what character is placed right after the value?",
+                    options: ["f", "D", "L", "d"],
+                    answer: "L",
+                    explanation: "A capital letter 'L' is placed right after the value."
+                },
+                {
+                    question: "Floating-point types are also called what, and are used when evaluating an expression that needs fractional accuracy?",
+                    options: ["Rational numbers", "Complex numbers", "Real numbers", "Imaginary numbers"],
+                    answer: "Real numbers",
+                    explanation: "Floating points are also called 'real numbers', and are used when evaluating an expression that needs fractional accuracy such as the computation of square root or a transcendental (sine and cosine)."
+                },
+                {
+                    question: "To avoid a compiler error regarding 'possible loss of precision' when assigning a decimal fraction to a `float` variable, what must be appended as a suffix to the number?",
+                    options: ["L or l", "F or f", "D or d", "S or s"],
+                    answer: "F or f",
+                    explanation: "Floating-point literals are numbers that have a decimal fraction. A suffix letter F (lower or uppercase) to the number; otherwise, the compiler will flag about loss of precision."
+                },
+                {
+                    question: "Which data type was created to support Unicode characters in Java, accommodating characters not traditionally used in US English?",
+                    options: ["Byte", "String", "Char", "Int"],
+                    answer: "Char",
+                    explanation: "The Char data type was created to support Unicode characters in Java."
+                },
+                {
+                    question: "What is the size in bits for the `Char` data type in the provided table?",
+                    options: ["8 bit", "16 bit", "32 bit", "1 bit"],
+                    answer: "8 bit",
+                    explanation: "Char: '8 bit'"
+                },
+                {
+                    question: "What is an example of an abstract data type provided in the source material that stores letters, digits, and other characters but does not allow calculations on its variables?",
+                    options: ["Int", "Float", "Boolean", "String"],
+                    answer: "String",
+                    explanation: "For example, String is an abstract data type that can store letters, digits, and other characters such as a slash (/), comma (,), parentheses (()), semi-colon (;), dollar sign ($), and a hashtag (#). Performing calculations on a variable of the string data type is not allowed, even if the data stored in it has digits."
+                },
+                {
+                    question: "In Java, what is the required prefix for a hexadecimal integer literal?",
+                    options: ["0b", "0L", "0x", "0"],
+                    answer: "0x",
+                    explanation: "Hexadecimal is the number prefixed with 0x."
+                },
+                {
+                    question: "What is the range for a `Short` integer?",
+                    options: ["-128 to +127", "$-2^{63}$ to $2^{63-1}$", "-32768 to +32767", "+/- about $10^{39}$"],
+                    answer: "-32768 to +32767",
+                    explanation: "Short: '-32768 to +32767'"
+                },
+                {
+                    question: "Which of the following is NOT a characteristic of a Primitive Data Type in Java?",
+                    options: ["They are built into the Java language.", "They have no methods.", "They are objects.", "They are not objects."],
+                    answer: "They are objects.",
+                    explanation: "Primitive Data Types are built into the Java language. These are data that are not objects and have no methods."
+                },
+                // ----------------- Variables & Constants -----------------
+                {
+                    question: "What is the key difference between variables and constants in Java?",
+                    options: ["Variables must be declared, but constants do not.", "The value of variables cannot be changed, but constants can.", "The values of variables can be changed, but the value of constants cannot.", "Constants must begin with an underscore, but variables cannot."],
+                    answer: "The values of variables can be changed, but the value of constants cannot.",
+                    explanation: "The values of variables can be changed in a program, but the value of constants, cannot."
+                },
+                {
+                    question: "Which of the following characters IS allowed in a variable name as a replacement for space?",
+                    options: ["@", "#", "_", "!"],
+                    answer: "_",
+                    explanation: "However, underscores (_) can be used wherever a space is required. For example, monthly_Salary."
+                },
+                {
+                    question: "Which of the following is NOT a valid starting character for a Java variable name?",
+                    options: ["A letter", "A digit (0-9)", "A dollar sign ($)", "An underscore (_)"],
+                    answer: "A digit (0-9)",
+                    explanation: "A variable name must begin with a letter, a dollar sign, or an underscore, which may be followed by a sequence of letters (any case) or digits (0-9), '$', or an underscore."
+                },
+                {
+                    question: "According to Java naming conventions for variables, how should a name containing two or more words be formatted (e.g., camelCase)?",
+                    options: ["All words in uppercase.", "Begin all words with a lowercase letter.", "Begin each word with an uppercase letter, except the first word.", "Separate all words with a dollar sign ($)."],
+                    answer: "Begin each word with an uppercase letter, except the first word.",
+                    explanation: "If a variable name contains two or more words, begin each word with an uppercase letter. However, the first word will start with a lowercase letter."
+                },
+                {
+                    question: "What happens if a variable declared in a method is not initialized?",
+                    options: ["Java assigns a default value automatically.", "The variable is assigned the value 'null'.", "Java returns an error.", "The program proceeds with an undefined value."],
+                    answer: "Java returns an error.",
+                    explanation: "Java returns an error if the variable declared in a method is not initialized."
+                },
+                {
+                    question: "What are 'Literals' in Java programming?",
+                    options: ["The default values assigned to primitive types.", "Keywords that cannot be used as variable names.", "The values that may be assigned to primitive- or string-type variables and constants.", "The names assigned to variables and constants."],
+                    answer: "The values that may be assigned to primitive- or string-type variables and constants.",
+                    explanation: "Literals are the values that may be assigned to primitive- or string-type variables and constants, such as in the following:"
+                },
+                {
+                    question: "In Java, what kind of quotes must string literals be enclosed in?",
+                    options: ["Single quotes (')", "Double quotes (\")", "Backticks (`)", "Parentheses ()"],
+                    answer: "Double quotes (\")",
+                    explanation: "On the other hand, string literals are enclosed in double quotes (\",\")."
+                },
+                {
+                    question: "What value can be used to represent a newline character as a character literal using a backslash?",
+                    options: ["\\n", "\\t", "\\u004E", "\\\\"],
+                    answer: "\\n",
+                    explanation: "char $d='\\n'$; // A newline"
+                },
+                {
+                    question: "Which of the following variable names is considered **invalid** based on the provided rules?",
+                    options: ["student_age", "address", "#phone", "emp_name"],
+                    answer: "#phone",
+                    explanation: "Invalid: # phone, $1^{st}$ Name."
+                },
+                {
+                    question: "When declaring multiple variables of the same data type, what is used to separate the identifiers in a single declaration statement?",
+                    options: ["A semicolon (;)", "A colon (:)", "An ampersand (&)", "A comma (,)"],
+                    answer: "A comma (,)",
+                    explanation: "To declare more than one (1) variable of the same data type, a comma (,) separated list is used."
+                },
+                // ----------------- Arithmetic Operators -----------------
+                {
+                    question: "What is the purpose of the Modulus operator (%) in Java?",
+                    options: ["To perform exponentiation.", "To calculate the remainder of an integer division.", "To divide the left operand by the right operand.", "To multiply the operands."],
+                    answer: "To calculate the remainder of an integer division.",
+                    explanation: "Modulus (%): Calculates the remainder of an integer division"
+                },
+                {
+                    question: "When the '+' operator is used with one String object and one primitive numeric data type, what happens to the primitive numeric data type?",
+                    options: ["The operation results in an error.", "The numeric data is converted into an int.", "The numeric data is converted into a string before joining them.", "The string is converted into a number."],
+                    answer: "The numeric data is converted into a string before joining them.",
+                    explanation: "If one of the operands is a string object, the second operand is converted into a string before joining them."
+                },
+                {
+                    question: "In the expression `Byte var3 = var1 + var2;` where `var1=50` and `var2=120`, why does Java automatically convert the calculation result to the `int` data type?",
+                    options: ["Because `byte` variables are slow.", "Because the result (170) exceeds the maximum range of the `Byte` data type (-128 to +127).", "Because all arithmetic operations are always converted to `int`.", "Because `Byte` variables are always promoted to `Short` first."],
+                    answer: "Because the result (170) exceeds the maximum range of the `Byte` data type (-128 to +127).",
+                    explanation: "var3 results to 170. Since the byte data type can hold a range of -128 to +127, Java automatically converts any calculations of numeric data results to the int data type."
+                },
+                // ----------------- Assignment & Unary Operators -----------------
+                {
+                    question: "The assignment expression `x *= z` is equivalent to which long-form expression?",
+                    options: ["$x = x + z$", "$x = x / z$", "$x = x * z$", "$x = z * x$"],
+                    answer: "$x = x * z$",
+                    explanation: "The operator used in $x$ operator $y$ can be represented as $x = x$ operator $y$. Thus, $x*=y$ is equivalent to $x=x*y$."
+                },
+                {
+                    question: "What is the function of the Unary Minus operator (-)?",
+                    options: ["Increases the value by 1.", "Decreases the value by 1.", "Represents the positive value.", "Represents the negative value."],
+                    answer: "Represents the negative value.",
+                    explanation: "Unary Minus (-): Represents the negative value"
+                },
+                {
+                    question: "If `x = 7`, what will be the value of `++x` (pre-increment)?",
+                    options: ["6", "7", "8", "9"],
+                    answer: "8",
+                    explanation: "For pre-increment: Suppose $x=7$ then the value of $++x$ will be 8."
+                },
+                {
+                    question: "If a variable is followed by the increment/decrement operator (e.g., `invar--`), what is this usage called?",
+                    options: ["Prefix", "Pre-increment/decrement", "Suffix", "Ternary"],
+                    answer: "Suffix",
+                    explanation: "As a suffix or post-increment/decrement wherein it follows the variable: invar--;"
+                },
+                {
+                    question: "What does the Logical Complement operator (!) do?",
+                    options: ["Converts 1 bits to 0 and 0 bits to 1.", "Inverts the value of a Boolean variable.", "Compares two operands for equality.", "Shifts bits to the left."],
+                    answer: "Inverts the value of a Boolean variable.",
+                    explanation: "Logical Complement (!): Inverts the value of a Boolean variable"
+                },
+                // ----------------- Comparison & Shift Operators -----------------
+                {
+                    question: "Which category are comparison operators (such as $==, !=, >, <$) often referred to?",
+                    options: ["Arithmetic Operators", "Logical Operators", "Relational Operators", "Bitwise Operators"],
+                    answer: "Relational Operators",
+                    explanation: "It is also often called a relational operators."
+                },
+                {
+                    question: "What operator is used to evaluate whether the left operand is greater than or equal to the right operand?",
+                    options: ["==", ">", "<=", ">="],
+                    answer: ">=",
+                    explanation: "Greater Than or Equal to (>=): Evaluates whether the left operand is greater than or equal to the right operand"
+                },
+                {
+                    question: "Which of the following data types CANNOT be used with Shift Operators ($<<, >>, >>>$)?",
+                    options: ["int", "long", "char", "boolean"],
+                    answer: "boolean",
+                    explanation: "These operators can only be used with integer data types."
+                },
+                {
+                    question: "What is the operation of the Right Shift operator (>>) with respect to the bits of the left operand?",
+                    options: ["Shifts bits to the left, filling zeros at the right.", "Converts all 1 bits to 0's.", "The bits of the left operand are shifted right by the number specified as the value for the second operand.", "XORs the left and right operands."],
+                    answer: "The bits of the left operand are shifted right by the number specified as the value for the second operand.",
+                    explanation: "Right Shift (>>): The bits of the left operand are shifted right by the number specified as the value for the second operand."
+                },
+                {
+                    question: "In the Right Unsigned Shift operator ($>>>$), what value is used to replace the bits that are shifted?",
+                    options: ["The sign bit", "1", "0", "A random value"],
+                    answer: "0",
+                    explanation: "Right Unsigned Shift ($>>>$): Works the same as the right shift, but 0 is used and replaces the bits that are shifted."
+                },
+                // ----------------- Bitwise & Logical Operators -----------------
+                {
+                    question: "The Bitwise AND operator (&) results in a 1 under what condition?",
+                    options: ["If both bits are 0.", "If both the bits are 1.", "If the bits have different values.", "If at least one bit is 1."],
+                    answer: "If both the bits are 1.",
+                    explanation: "AND (&): AND results in a 1 if both the bits are 1. Any other combination results in 0."
+                },
+                {
+                    question: "Which of the following data types are Bitwise Operators NOT applied to?",
+                    options: ["byte", "float", "short", "char"],
+                    answer: "float",
+                    explanation: "These operators can be applied to byte, int, short, long, and char data types."
+                },
+                {
+                    question: "The Bitwise XOR operator (^) results in a 0 under what condition?",
+                    options: ["If both the bits are of the same value.", "If both the bits are 1.", "If the bits have different values.", "If only the right bit is 1."],
+                    answer: "If both the bits are of the same value.",
+                    explanation: "XOR (^): XOR results in a 0, if both the bits are of the same value and 1 if the bits have different values."
+                },
+                {
+                    question: "Logical Operators ($&&$ and $||$) are limited to what kind of expressions?",
+                    options: ["Arithmetic expressions only.", "Integer expressions only.", "Boolean expressions only.", "Any expression that returns a numeric value."],
+                    answer: "Boolean expressions only.",
+                    explanation: "These operators share a likeness with bitwise operators, but logical operators are limited to Boolean expressions only."
+                },
+                {
+                    question: "For the Logical AND ($&&$) operator, what condition must be met for the entire expression to return `true`?",
+                    options: ["If at least one operand is non-zero.", "If only the first operand is true.", "If the operands are both equal to zero.", "If both the operands are non-zero."],
+                    answer: "If both the operands are non-zero.",
+                    explanation: "Logical AND ($&&$): If both the operands are non-zero, the expression returns true; otherwise, it returns false."
+                },
+                // ----------------- Conditional Operator & Precedence -----------------
+                {
+                    question: "What is another common name for the Conditional Operator (?:)?",
+                    options: ["Binary operator", "Unary operator", "Ternary operator", "Logical operator"],
+                    answer: "Ternary operator",
+                    explanation: "The ternary operator is used mainly in loop statements."
+                },
+                {
+                    question: "In the Conditional Operator example `x = (y > z) ? y : z;`, what value is assigned to `x` if the condition `(y > z)` returns **false**?",
+                    options: ["y", "z", "The value of y divided by z", "A random value"],
+                    answer: "z",
+                    explanation: "Evaluates val1 if the condition returns true and val2 if the condition returns false."
+                },
+                {
+                    question: "According to the Order of Precedence table, which category of operators has the highest precedence?",
+                    options: ["Unary", "Multiplicative", "High Precedence ([], ())", "Assignment"],
+                    answer: "High Precedence ([], ())",
+                    explanation: "High Precedence: [], ()"
+                },
+                {
+                    question: "Which of the following operators has the **lowest** precedence according to the Order of Precedence table?",
+                    options: ["Multiplicative (*, /, %)", "Conditional (?:)", "Assignment (=, +=, etc.)", "Relational (>, <=)"],
+                    answer: "Assignment (=, +=, etc.)",
+                    explanation: "The table shows those with the same level of precedence are listed in the same row. Assignment is the last category listed."
+                },
+                {
+                    question: "Which operator category shares the same level of precedence as the Subtraction (-) operator?",
+                    options: ["Unary", "Multiplicative (*, /, %)", "Additive (+, -)", "Shift (<<, >>)"],
+                    answer: "Additive (+, -)",
+                    explanation: "Additive: +, -"
+                },
+                // ----------------- Expressions -----------------
+                {
+                    question: "What is an expression defined as in Java?",
+                    options: ["A single variable declaration.", "A combination of variables, constants, literals, and operators to produce a single value.", "A keyword used for control flow.", "A variable used for storing characters."],
+                    answer: "A combination of variables, constants, literals, and operators to produce a single value.",
+                    explanation: "An expression is a combination of variables, constants, literals, and operators to produce a single value."
+                },
+                {
+                    question: "What type of expression is `boolean result = x < y;`?",
+                    options: ["Assignment Expression", "Arithmetic Expression", "Logical Expression", "Relational Expression"],
+                    answer: "Relational Expression",
+                    explanation: "Relational Expression: It is an expression that compares values using relational operators."
+                },
+                {
+                    question: "What type of expression is the last line in the following code snippet: `int a = 8; a = a + 4;`?",
+                    options: ["Arithmetic Expression", "Assignment Expression", "Conditional Expression", "Relational Expression"],
+                    answer: "Assignment Expression",
+                    explanation: "Assignment Expression: The last line is an assignment expression that adds 4 to the value of a and assigns the result back to a."
+                },
+                {
+                    question: "What must an expression be followed by to be considered an 'expression statement' that is evaluated by the Java compiler?",
+                    options: ["A comma (,)", "A colon (:)", "A semicolon (;)", "A period (.)"],
+                    answer: "A semicolon (;)",
+                    explanation: "In Java, an expression statement consists of an expression followed by a semicolon (;) to evaluate an expression and disregard the result."
+                },
+                {
+                    question: "What type of expression involves the use of the ternary operator (?:) to assign a value based on a condition?",
+                    options: ["Logical Expression", "Relational Expression", "Conditional Expression", "Arithmetic Expression"],
+                    answer: "Conditional Expression",
+                    explanation: "Conditional Expression: It is an expression involving the use of the ternary operator (?:) to assign a value based on a condition."
+                },
+                // ----------------- Additional MCQs -----------------
+                {
+                    question: "What is the default initial value for the `Int` data type when declared as a data member of a class?",
+                    options: ["'\\u0000'", "0.0", "0L", "0"],
+                    answer: "0",
+                    explanation: "Int: '0'"
+                },
+                {
+                    question: "In the expression `int x = 0x4A8;`, what type of literal is `0x4A8`?",
+                    options: ["Octal Literal", "Binary Literal", "Hexadecimal Literal", "Decimal Literal"],
+                    answer: "Hexadecimal Literal",
+                    explanation: "Hexadecimal is the number prefixed with 0x."
+                },
+                {
+                    question: "Which of the following is an example of an illegal use of the underscore (_) in a numeric literal?",
+                    options: ["int $six = 6$", "int $i=\\_1\\_\\theta\\theta\\_000$", "int $x = 0xfffff$", "int $b2=0b01010101$"],
+                    answer: "int $i=\\_1\\_\\theta\\theta\\_000$",
+                    explanation: "A reminder that an underscore (_) at the start and end of a literal is not allowed, such as: int $i=\\_1\\_\\theta\\theta\\_000$; //illegal, begin with \"\""
+                },
+                {
+                    question: "What is the term for a value that is stored in memory that can be changed in a program?",
+                    options: ["Constant", "Literal", "Keyword", "Variable"],
+                    answer: "Variable",
+                    explanation: "The values of variables can be changed in a program, but the value of constants, cannot."
+                },
+                {
+                    question: "What is the effect of the Logical OR ($||$) operator?",
+                    options: ["Returns true if both operands are true.", "Returns false if both operands are non-zero.", "Returns true if both operands are zero.", "Returns true if one or both the operands are non-zero."],
+                    answer: "Returns true if one or both the operands are non-zero.",
+                    explanation: "Logical OR ($||$): If one or both the operands are non-zero, the expression returns true; otherwise, it returns FALSE."
+                }
+            ],
+            identification: [
+                {
+                    question: "What are symbols used to compute and compare values and test multiple conditions?",
+                    answer: "Operators",
+                    explanation: "Operators are symbols used to compute and compare values and test multiple conditions."
+                },
+                {
+                    question: "What data type is used for logical values and can only hold `true` or `false` values?",
+                    answer: "Boolean",
+                    explanation: "This data type is used for logical values and can only hold true or false values."
+                },
+                {
+                    question: "What is the term for the value to be computed when using arithmetic operators?",
+                    answer: "Operand",
+                    explanation: "An operand is the value to be computed."
+                },
+                {
+                    question: "What is the process called where the increment/decrement operator precedes the variable, such as `++invar`?",
+                    answer: "Pre-increment/decrement",
+                    explanation: "As a prefix or pre-increment/decrement wherein it precedes the variable: ++invar;"
+                },
+                {
+                    question: "Which bitwise operator converts all '1' bits to '0's and all '0' bits to '1's?",
+                    answer: "Inversion",
+                    explanation: "Inversion (~): Converts all 1 bits to 0's and all 0 bits to 1's"
+                },
+                {
+                    question: "What category of operators includes the $<<, >>$, and $>>>$ symbols?",
+                    answer: "Shift",
+                    explanation: "Shift: $<<, >>, >>>$"
+                },
+                {
+                    question: "What is the range of the `Byte` data type?",
+                    answer: "-128 to +127 signed",
+                    explanation: "Byte: '-128 to +127 signed'"
+                },
+                {
+                    question: "What kind of data type in Java is `String` considered, as it is based on primitive types but with more functionality?",
+                    answer: "Abstract Data Type",
+                    explanation: "These are based on primitive data types but with more functionality. For example, String is an abstract data type..."
+                },
+                {
+                    question: "What kind of literals are represented as a number with a zero (0) prefixed?",
+                    answer: "Octal literals",
+                    explanation: "Octal is the number with a zero prefixed."
+                },
+                {
+                    question: "What data type is described as a 'Single Precision Floating Point' and takes half the space of a double precision?",
+                    answer: "Float",
+                    explanation: "Float is described as a single precision floating point. A real number qualifies as a single precession when it only needs a limited number of bits. Single precision takes half the space of a double precision and is much faster on some processors."
+                },
+                {
+                    question: "In the context of variables, what is defined by the combination of an identifier, a type, and an optional initialization?",
+                    answer: "Variable",
+                    explanation: "A variable is defined by the combination of an identifier, a type, and an optional initialization depending on the task to be performed."
+                },
+                {
+                    question: "What is the default initial value for an Abstract Data Type (like String) when declared as a data member of a class?",
+                    answer: "Null",
+                    explanation: "Abstract Data Type: 'Null'"
+                },
+                {
+                    question: "Which arithmetic operator is represented by the symbol `*`?",
+                    answer: "Multiplication",
+                    explanation: "Multiplication (*): Multiples the operands"
+                },
+                {
+                    question: "What is the concept that shows the hierarchy wherein an operation with high precedence is performed before the others?",
+                    answer: "Order of Precedence",
+                    explanation: "Order of Precedence shows the hierarchy wherein an operation with high precedence is performed before the others."
+                },
+                {
+                    question: "What is the term for a constant value whose value cannot be changed in a program?",
+                    answer: "Constant",
+                    explanation: "The values of variables can be changed in a program, but the value of constants, cannot."
+                },
+                {
+                    question: "What operator is used for 'Not Equal to' comparison?",
+                    answer: "!=",
+                    explanation: "Not Equal to (!=): Evaluates whether the operands are not equal"
+                },
+                {
+                    question: "What is the prefix used in Java to represent a binary literal?",
+                    answer: "0B or 0b",
+                    explanation: "Binary Literal is the number that starts with 0B or 0b."
+                },
+                {
+                    question: "What is the term for an expression that returns a numeric value based on the operators and operands used?",
+                    answer: "Arithmetic Expression",
+                    explanation: "It is an expression that returns a numeric value based on the operators and operands used."
+                },
+                {
+                    question: "What assignment operator is equivalent to $x = x / z$?",
+                    answer: "/=",
+                    explanation: "Divide and Assignment (/=): Divides the left operand by the right operand and stores the result in the left operand"
+                },
+                {
+                    question: "The Conditional Operator uses which three symbols?",
+                    answer: "? :",
+                    explanation: "Ternary: (condition)? val1:val2"
+                }
+            ]
+        };
+		//
+		// --- END OF QUIZ DATA ---
+		//
 
-<script>
-    // Utility functions for cookies
-    function setCookie(name, value, days) {
-        const d = new Date();
-        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-        const expires = "expires=" + d.toUTCString();
-        document.cookie = name + "=" + value + ";" + expires + ";path=/";
-    }
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+        let wrongAnswers = [];
+        const totalQuestions = quizData.multipleChoice.length + quizData.identification.length;
 
-    function getCookie(name) {
-        const cname = name + "=";
-        const decodedCookie = decodeURIComponent(document.cookie);
-        const ca = decodedCookie.split(';');
-        for(let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') {
-                c = c.substring(1);
+        // --- DOM Elements ---
+        const quizArea = document.getElementById('quiz-area');
+        const endScreen = document.getElementById('end-screen');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const identificationInput = document.getElementById('identification-input');
+        const nextButton = document.getElementById('next-button');
+        const submitButton = document.getElementById('submit-button');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const restartButton = document.getElementById('restart-button');
+        const finalScoreSpan = document.getElementById('final-score-span');
+        const totalQuestionsSpan = document.getElementById('total-questions-span');
+        const bestScoreSpan = document.getElementById('best-score-span');
+        const wrongAnswersList = document.getElementById('wrong-answers-list');
+        const currentScoreSpan = document.getElementById('current-score');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        // --- Utility Functions (Cookies) ---
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
             }
-            if (c.indexOf(cname) === 0) {
-                return c.substring(cname.length, c.length);
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
             }
+            return null;
         }
-        return "";
-    }
 
-    //
-    // --- START OF QUIZ DATA ---
-    //
-    const quizData = {
-    multipleChoice: [
-        {
-            question: "Which subdiscipline of anthropology is also known as 'social anthropology'?",
-            options: ["Linguistic Anthropology", "Cultural Anthropology", "Biological Anthropology", "Archaeology"],
-            answer: "Cultural Anthropology",
-            explanation: "Cultural Anthropology, also known as social anthropology, studies the learned behavior of groups of people in specific environments."
-        },
-        {
-            question: "According to William James, which aspect of the self is the 'objective part' made up of our traits and roles?",
-            options: ["I self", "Me self", "Real self", "Ideal self"],
-            answer: "Me self",
-            explanation: "The 'Me' self is the objective part of ourselves, made up of our traits, roles, and how we see ourselves based on past experiences and social feedback."
-        },
-        {
-            question: "What is the primary focus of Biological/Physical Anthropology?",
-            options: ["The study of ancient civilizations", "The study of how language influences social life", "The study of human evolution within the context of human culture and behavior", "The study of learned behavior in specific environments"],
-            answer: "The study of human evolution within the context of human culture and behavior",
-            explanation: "Biological/Physical Anthropology focuses on human evolution within the context of human culture and behavior."
-        },
-        {
-            question: "Clifford Geertz's approach to understanding the self focused on what?",
-            options: ["Innate human qualities", "Cultural norms and socialization processes across different societies", "Symbolic interpretation and performance within specific cultural settings", "The influence of subconscious thoughts"],
-            answer: "Symbolic interpretation and performance within specific cultural settings",
-            explanation: "Clifford Geertz's approach focuses on symbolic interpretation and performance within specific cultural settings to understand the self."
-        },
-        {
-            question: "Which of the following is NOT a core property of Human Agency as proposed by Albert Bandura?",
-            options: ["Intentionality", "Forethought", "Self-reactiveness", "Self-evaluation"],
-            answer: "Self-evaluation",
-            explanation: "The four core properties of Human Agency are intentionality, forethought, self-reactiveness, and self-reflection. Self-evaluation is part of self-reflection but not a separate core property."
-        },
-        {
-            question: "What did Margaret Mead's study of the Tchambuli (Chambri) tribe reveal?",
-            options: ["Men held dominant roles in economic life", "Women focused on expressive and artistic activities", "Fixed gender roles were common", "Women held dominant roles while men focused on artistic activities"],
-            answer: "Women held dominant roles while men focused on artistic activities",
-            explanation: "Margaret Mead's study of the Tchambuli tribe found that women held dominant roles in economic and social life while men focused on expressive and artistic activities."
-        },
-        {
-            question: "In Carl Rogers's theory, the 'Real Self' refers to what?",
-            options: ["The person you want to become", "One's current identity", "A protective persona", "The innate qualities of an individual"],
-            answer: "One's current identity",
-            explanation: "The Real Self, according to Carl Rogers, refers to one's current identity."
-        },
-        {
-            question: "What is the study of how language influences social life?",
-            options: ["Archaeology", "Cultural Anthropology", "Linguistic Anthropology", "Biological Anthropology"],
-            answer: "Linguistic Anthropology",
-            explanation: "Linguistic Anthropology is the study of how language influences social life."
-        },
-        {
-            question: "According to Donald Winnicott, the 'False Self' is a persona formed in response to what?",
-            options: ["Innate qualities", "External pressures or expectations", "One's current identity", "A desire for self-improvement"],
-            answer: "External pressures or expectations",
-            explanation: "The False Self refers to a protective persona formed in response to external pressures, expectations, or traumas."
-        },
-        {
-            question: "What does the 'I' self represent in William James's theory?",
-            options: ["The objective part of ourselves", "Our traits and roles", "How we experience ourselves in the present moment", "The person we want to become"],
-            answer: "How we experience ourselves in the present moment",
-            explanation: "The 'I' self is how we experience ourselves in the present moment, including our thoughts, feelings, and actions."
-        },
-        {
-            question: "Which of the following is a key aspect of Clifford Geertz's contribution to understanding the self?",
-            options: ["Individuals' identities are adaptable across cultures.", "Cultures have unique norms that shape identities.", "The self is deeply rooted in cultural contexts like in Wayang Kulit.", "Individuals learn cultural norms through upbringing."],
-            answer: "The self is deeply rooted in cultural contexts like in Wayang Kulit.",
-            explanation: "Geertz's work highlighted that an individual's sense of self is deeply rooted in cultural contexts, such as the Wayang Kulit tradition."
-        },
-        {
-            question: "What is the concept of 'differentiation of self' in Murray Bowen's theory?",
-            options: ["The ability to distinguish between thoughts and feelings", "The ability to manage social relationships", "The ability to accept feedback from others", "The ability to have a cohesive self"],
-            answer: "The ability to distinguish between thoughts and feelings",
-            explanation: "Differentiation of self is the ability to distinguish between our thoughts and emotions, and to distinguish our own experiences from those of others we are connected to."
-        },
-        {
-            question: "The Greek words 'anthropos' and 'logia' mean what, respectively?",
-            options: ["Human and study", "Culture and behavior", "Body and mind", "Self and discovery"],
-            answer: "Human and study",
-            explanation: "The word 'anthropology' is derived from the Greek words 'anthropos' (human) and 'logia' (study)."
-        },
-        {
-            question: "What is the key difference between the 'I' self and the 'Me' self according to William James?",
-            options: ["'I' is objective, 'Me' is subjective", "'I' is the ideal self, 'Me' is the real self", "'I' is the observer, 'Me' is the observed", "'I' is the false self, 'Me' is the true self"],
-            answer: "'I' is the observer, 'Me' is the observed",
-            explanation: "The 'I' self is the subjective, present-moment observer, while the 'Me' self is the objective, historical self that is being observed."
-        },
-        {
-            question: "Which of the following describes the 'Global model' of the self?",
-            options: ["The self is flexible and changes with new information", "Self-concept remains consistent across different situations", "The self is a product of social feedback", "The self is made up of different personas"],
-            answer: "Self-concept remains consistent across different situations",
-            explanation: "The Global model refers to how traits, values, and self-concept remain consistent across different situations."
-        },
-        {
-            question: "What is the main idea behind the 'Self as a Cognitive Construction' perspective?",
-            options: ["The self is fixed from birth", "Our self-awareness is influenced by genetic factors", "Our self-awareness is constantly influenced by cognitive processes like perception and memory", "The self is primarily a social construct"],
-            answer: "Our self-awareness is constantly influenced by cognitive processes like perception and memory",
-            explanation: "The Self as a Cognitive Construction emphasizes that our self-awareness is constantly influenced by cognitive processes such as perception, interpretation, and memory."
-        },
-        {
-            question: "What does Murray Bowen's concept of 'Intrapsychic Differentiation' refer to?",
-            options: ["Distinguishing our experiences from others", "Being able to tell our thoughts apart from our emotions", "Forming a cohesive family unit", "Managing interpersonal conflicts"],
-            answer: "Being able to tell our thoughts apart from our emotions",
-            explanation: "Intrapsychic Differentiation refers to the ability to tell our thoughts apart from our emotions, a form of self-awareness."
-        },
-        {
-            question: "What is the focus of Albert Bandura's concept of Human Agency?",
-            options: ["Individuals are passive recipients of circumstances", "Individuals actively shape their actions, thoughts, and environments", "Human behavior is determined solely by external stimuli", "The self is primarily a product of subconscious drives"],
-            answer: "Individuals actively shape their actions, thoughts, and environments",
-            explanation: "Human Agency underscores that individuals actively shape their actions, thoughts, and environments rather than being passive recipients of circumstances."
-        },
-        {
-            question: "Which term describes the ability to control one's goals, actions, and destinies?",
-            options: ["Intentionality", "Forethought", "Self-reactiveness", "Agentic behavior"],
-            answer: "Agentic behavior",
-            explanation: "Agentic behavior refers to the ability to control one's goals, actions, and destinies."
-        },
-        {
-            question: "What is the difference between Carl Rogers's 'Real Self' and 'Ideal Self'?",
-            options: ["'Real Self' is who you were, 'Ideal Self' is who you are", "'Real Self' is who you are, 'Ideal Self' is who you want to be", "'Real Self' is the false self, 'Ideal Self' is the true self", "'Real Self' is the subconscious mind, 'Ideal Self' is the conscious mind"],
-            answer: "'Real Self' is who you are, 'Ideal Self' is who you want to be",
-            explanation: "The Real Self is one's current identity, while the Ideal Self is the person you want to become—the best version of yourself."
-        },
-        {
-            question: "What is the purpose of the 'False Self' according to Donald Winnicott?",
-            options: ["To showcase one's true personality", "To protect the 'True Self' from external harm", "To achieve one's ideal self", "To align with one's real self"],
-            answer: "To protect the 'True Self' from external harm",
-            explanation: "The False Self is a protective persona formed in response to external pressures to shield the 'True Self'."
-        },
-        {
-            question: "Margaret Mead's work in Arapesh and Manus tribes showed that identities are shaped by what?",
-            options: ["Genetic predispositions", "Individual choice and preference", "Cultural norms and social interactions", "Economic status"],
-            answer: "Cultural norms and social interactions",
-            explanation: "Mead's research demonstrated that identities are shaped by cultural norms and social interactions learned through upbringing."
-        },
-        {
-            question: "In the context of Human Agency, what is 'Forethought'?",
-            options: ["Setting goals", "Thinking ahead and planning actions based on expected outcomes", "Monitoring one's own behavior", "Adjusting behavior based on feedback"],
-            answer: "Thinking ahead and planning actions based on expected outcomes",
-            explanation: "Forethought refers to thinking ahead and planning actions based on expected outcomes."
-        },
-        {
-            question: "What did Margaret Mead's study of the Arapesh tribe reveal about their cultural norms?",
-            options: ["They had aggressive and assertive men and women", "They were peaceful and cooperative with both genders sharing responsibilities", "Men were dominant while women were submissive", "Women were dominant while men were submissive"],
-            answer: "They were peaceful and cooperative with both genders sharing responsibilities",
-            explanation: "Mead's study of the Arapesh tribe found them to be peaceful and cooperative, with both genders sharing responsibilities."
-        },
-        {
-            question: "What is the core focus of Psychology?",
-            options: ["The study of people throughout the world", "The study of mind and behavior", "The study of ancient civilizations", "The study of human evolution"],
-            answer: "The study of mind and behavior",
-            explanation: "Psychology is the study of mind and behavior in relation to a particular field of knowledge or activity."
-        },
-        {
-            question: "What is the definition of 'Archaeology'?",
-            options: ["The study of how language influences social life", "The study of human evolution", "The study of learned behavior in groups", "Interpreting human history by analyzing material remains"],
-            answer: "Interpreting human history by analyzing material remains",
-            explanation: "Archaeology interprets human history by analyzing material remains to understand ancient civilizations."
-        },
-        {
-            question: "Which of the following describes the concept of 'Self-reactiveness'?",
-            options: ["Rewarding or adjusting behaviors based on self-evaluation", "Thinking ahead and planning actions", "The ability to control one's goals and destinies", "Monitoring and evaluating one's own behavior and emotions"],
-            answer: "Monitoring and evaluating one's own behavior and emotions",
-            explanation: "Self-reactiveness refers to monitoring and evaluating one's own behavior and emotions."
-        },
-        {
-            question: "Which of the following is an example of the 'Me' self?",
-            options: ["Contemplating your feelings during a difficult conversation", "Deciding on a career path that aligns with your passions", "Reciting your personal qualities like being a student or a sibling", "Feeling happy while listening to music"],
-            answer: "Reciting your personal qualities like being a student or a sibling",
-            explanation: "The 'Me' self is the objective self, which includes our traits and roles, such as being a student or a sibling."
-        },
-        {
-            question: "What is the term for a protective persona formed in response to external pressures?",
-            options: ["True Self", "Real Self", "Ideal Self", "False Self"],
-            answer: "False Self",
-            explanation: "The False Self is a protective persona formed in response to external pressures, expectations, or traumas."
-        },
-        {
-            question: "What does the term 'Anthropology' literally mean?",
-            options: ["Study of the self", "Study of the human", "Study of culture", "Study of the mind"],
-            answer: "Study of the human",
-            explanation: "The word anthropology is derived from the Greek words anthropos ('human') and logia ('study')."
-        },
-        {
-            question: "According to Carl Rogers, what is the best version of yourself called?",
-            options: ["Real Self", "True Self", "Ideal Self", "False Self"],
-            answer: "Ideal Self",
-            explanation: "The Ideal Self is the person you want to become—the best version of yourself."
-        },
-        {
-            question: "How does the 'Self as a Cognitive Construction' perspective view the self-concept?",
-            options: ["Fixed and unchanging", "Flexible and evolving", "Based solely on genetic makeup", "Inherited from ancestors"],
-            answer: "Flexible and evolving",
-            explanation: "This perspective states that our self-concept is flexible and changes as we incorporate new information and reinterpret experiences."
-        },
-        {
-            question: "Which of the following is an example of 'Intentionality' as a core property of Human Agency?",
-            options: ["Feeling bad after making a mistake", "Monitoring your heart rate during a workout", "Setting a goal to learn a new programming language", "Reacting quickly to an unexpected event"],
-            answer: "Setting a goal to learn a new programming language",
-            explanation: "Intentionality refers to setting goals and making plans to achieve them."
-        },
-        {
-            question: "What did Margaret Mead's study of the Manus tribe conclude?",
-            options: ["They had an economic system dominated by women", "They had peaceful and cooperative social norms", "Children learned cultural norms through social interactions", "They had fixed gender roles"],
-            answer: "Children learned cultural norms through social interactions",
-            explanation: "Mead’s study of the Manus people showed that individuals learn cultural norms through upbringing and social interactions."
-        },
-        {
-            question: "The 'Me' self is influenced by what?",
-            options: ["Our thoughts and feelings in the present moment", "Our subconscious mind", "Our physical appearance only", "Our traits, roles, and past experiences"],
-            answer: "Our traits, roles, and past experiences",
-            explanation: "The 'Me' self is made up of our traits, roles, and how we see ourselves based on past experiences and social feedback."
-        },
-        {
-            question: "What does Murray Bowen's concept of 'Interpersonal Differentiation' involve?",
-            options: ["Distinguishing our own experience from that of others we are connected to", "Telling our thoughts apart from our emotions", "The ability to influence one's destiny", "Creating a unified self-concept"],
-            answer: "Distinguishing our own experience from that of others we are connected to",
-            explanation: "Interpersonal Differentiation is the ability to distinguish our own experience from the experiences of people we are connected to."
-        },
-        {
-            question: "Which term is defined as the 'authentic and innate qualities of an individual'?",
-            options: ["False Self", "Ideal Self", "True Self", "Real Self"],
-            answer: "True Self",
-            explanation: "According to Donald Winnicott, the True Self represents the authentic and innate qualities of an individual."
-        },
-        {
-            question: "How did Geertz use Wayang Kulit to explain his theory of the self?",
-            options: ["As an example of a fixed cultural identity", "To show how the self is deeply rooted in cultural contexts", "To illustrate how the self is independent of culture", "As a form of cultural assimilation"],
-            answer: "To show how the self is deeply rooted in cultural contexts",
-            explanation: "Geertz used Wayang Kulit as an example to show that an individual's sense of self is deeply rooted in cultural contexts."
-        },
-        {
-            question: "Who is the American psychologist who proposed the 'I' self vs. 'Me' self theory?",
-            options: ["Carl Rogers", "William James", "Margaret Mead", "Clifford Geertz"],
-            answer: "William James",
-            explanation: "William James was an American psychologist and philosopher who proposed that an individual's perception of self consists of the 'I' and 'Me' self."
-        },
-        {
-            question: "The study of practices, beliefs, and traditions of the Ifugao in the Cordillera Region is an example of which subdiscipline?",
-            options: ["Archaeology", "Linguistic Anthropology", "Biological Anthropology", "Cultural Anthropology"],
-            answer: "Cultural Anthropology",
-            explanation: "Studying the practices, beliefs, and traditions of a group is an example of Cultural Anthropology."
-        },
-        {
-            question: "What does 'Self-reflection' refer to in the context of Human Agency?",
-            options: ["Setting goals", "Rewarding or adjusting behaviors based on self-evaluation and feedback", "Planning actions based on expected outcomes", "Monitoring one's own behavior and emotions"],
-            answer: "Rewarding or adjusting behaviors based on self-evaluation and feedback",
-            explanation: "Self-reflection refers to rewarding or adjusting behaviors based on self-evaluation and feedback."
-        },
-        {
-            question: "How does the 'Differentiated model' differ from the 'Global model' of the self?",
-            options: ["Differentiated model emphasizes a fixed self, while Global model emphasizes a flexible self", "Global model emphasizes a cohesive self, while Differentiated model emphasizes a fractured self", "Differentiated model emphasizes internal traits, while Global model emphasizes external roles", "Global model emphasizes consistent self-concept, while Differentiated model emphasizes a self that varies with context"],
-            answer: "Global model emphasizes consistent self-concept, while Differentiated model emphasizes a self that varies with context",
-            explanation: "The Differentiated model suggests that our traits and self-concept are not consistent across situations, whereas the Global model suggests they are."
-        },
-        {
-            question: "In Geertz's analysis, what did the Moroccan souks symbolize regarding the self?",
-            options: ["A place of fixed identity", "A place where the self is lost", "A place where the self is constructed through performance and social cues", "A place of passive observation"],
-            answer: "A place where the self is constructed through performance and social cues",
-            explanation: "Geertz saw the Moroccan souks as a stage where individuals' identities are influenced by cultural symbols and constructed through performance and social cues."
-        },
-        {
-            question: "What is the goal of a person in a state of congruence, according to Carl Rogers?",
-            options: ["To separate thoughts from emotions", "To have a false self that protects the true self", "To have the Real Self and Ideal Self align", "To become a passive recipient of circumstances"],
-            answer: "To have the Real Self and Ideal Self align",
-            explanation: "Rogers believed that when the Real Self and Ideal Self align, a person experiences congruence and psychological well-being."
-        },
-        {
-            question: "Which concept refers to the ability to actively influence and direct one's life according to their beliefs?",
-            options: ["Self-reactiveness", "Human Agency", "Self-concept", "Differentiation of self"],
-            answer: "Human Agency",
-            explanation: "Human Agency is the concept that individuals actively shape their actions, thoughts, and environments, rather than being passive recipients of circumstances."
-        },
-        {
-            question: "Who is the American anthropologist who explored the diversity of identities shaped by cultural norms?",
-            options: ["Clifford Geertz", "Murray Bowen", "Margaret Mead", "Albert Bandura"],
-            answer: "Margaret Mead",
-            explanation: "Margaret Mead was an American anthropologist who explored how identities are shaped by cultural norms and socialization processes across different societies."
-        },
-        {
-            question: "Which of the following describes the 'Real Self' in Carl Rogers' theory?",
-            options: ["The person you strive to be", "One's current identity", "The persona you project to others", "The self that is free from social influence"],
-            answer: "One's current identity",
-            explanation: "The Real Self is one's current identity, reflecting who they are at the present moment."
-        },
-        {
-            question: "In the context of Human Agency, what is 'Proactive behavior'?",
-            options: ["Thinking ahead to prevent problems", "Reacting to problems as they arise", "Following the plans of others", "Ignoring potential problems"],
-            answer: "Thinking ahead to prevent problems",
-            explanation: "Proactive behavior refers to self-initiated behavior aimed at addressing problems before they arise."
-        },
-        {
-            question: "Which concept from the psychological perspective views the self as flexible and changing with new experiences?",
-            options: ["Differentiation of self", "The Self as a Cognitive Construction", "The Global model", "The Real Self"],
-            answer: "The Self as a Cognitive Construction",
-            explanation: "The Self as a Cognitive Construction perspective emphasizes that our self-concept is flexible and changes as we incorporate new information and reinterpret experiences."
-        },
-        {
-            question: "What is the primary difference between a 'Global' and a 'Differentiated' model of the self?",
-            options: ["Global is objective, Differentiated is subjective", "Global is fixed, Differentiated is fluid and context-dependent", "Global is internal, Differentiated is external", "Global is based on emotion, Differentiated is based on thought"],
-            answer: "Global is fixed, Differentiated is fluid and context-dependent",
-            explanation: "The Global model sees the self as consistent, while the Differentiated model sees the self as varying with context and situation."
-        },
-        {
-            question: "Who proposed the 'True Self' and 'False Self' theories?",
-            options: ["William James", "Carl Rogers", "Donald Winnicott", "Murray Bowen"],
-            answer: "Donald Winnicott",
-            explanation: "Donald Winnicott is the theorist who proposed the 'True Self' and 'False Self'."
-        },
-        {
-            question: "What is the name for the psychological process of being able to tell your thoughts from your emotions?",
-            options: ["Interpersonal Differentiation", "Intrapsychic Differentiation", "Self-reactiveness", "Self-reflection"],
-            answer: "Intrapsychic Differentiation",
-            explanation: "Intrapsychic Differentiation is the ability to distinguish our thoughts from our emotions."
-        },
-        {
-            question: "According to Carl Rogers, what is the 'Ideal Self'?",
-            options: ["The self you are currently", "The self you want to become", "The self you show to others", "The self you hide from others"],
-            answer: "The self you want to become",
-            explanation: "The Ideal Self is the person one aspires to be."
-        },
-        {
-            question: "Which anthropologist's work focused on symbolic interpretation and performance?",
-            options: ["Margaret Mead", "Clifford Geertz", "William James", "Murray Bowen"],
-            answer: "Clifford Geertz",
-            explanation: "Clifford Geertz's work focused on symbolic interpretation and performance within specific cultural settings."
-        },
-        {
-            question: "Which of the following is not a subdiscipline of Anthropology mentioned in the handouts?",
-            options: ["Cultural Anthropology", "Biological Anthropology", "Sociological Anthropology", "Linguistic Anthropology"],
-            answer: "Sociological Anthropology",
-            explanation: "The subdisciplines mentioned are Cultural, Linguistic, Biological/Physical, and Archaeology."
-        },
-        {
-            question: "What does the 'I' self do?",
-            options: ["It is the object of introspection", "It is the knower, or the pure ego", "It is made of our social roles", "It is the passive part of the self"],
-            answer: "It is the knower, or the pure ego",
-            explanation: "The 'I' self is the subjective knower that experiences the present moment."
+        // --- Core Quiz Logic ---
+
+        function updateScoreDisplay() {
+            currentScoreSpan.textContent = `Score: ${score}`;
         }
-    ],
-    identification: [
-        {
-            question: "The study of human beings and their ancestors through time and space.",
-            answer: "Anthropology",
-            explanation: "Anthropology is the study of people throughout the world, today, yesterday, and long ago."
-        },
-        {
-            question: "The objective part of ourselves, made up of our traits, roles, and how we see ourselves based on past experiences.",
-            answer: "Me self",
-            explanation: "The 'Me' self is the objective self, the self that is known."
-        },
-        {
-            question: "The subdiscipline of anthropology that studies learned behavior of groups of people in specific environments.",
-            answer: "Cultural Anthropology",
-            explanation: "Cultural Anthropology is also known as social anthropology and focuses on learned behavior."
-        },
-        {
-            question: "The theory that a person's traits, values, and self-concept remain consistent across different situations.",
-            answer: "Global model",
-            explanation: "The Global model of the self posits that a person's self-concept remains consistent."
-        },
-        {
-            question: "This American psychologist and philosopher proposed the theory of the 'I' self vs. 'Me' self.",
-            answer: "William James",
-            explanation: "William James proposed the distinction between the 'I' self (knower) and the 'Me' self (known)."
-        },
-        {
-            question: "The concept that refers to an individual's authentic and innate qualities.",
-            answer: "True Self",
-            explanation: "Donald Winnicott's theory defines the True Self as the authentic and innate qualities of an individual."
-        },
-        {
-            question: "The person you want to become, or the best version of yourself, according to Carl Rogers.",
-            answer: "Ideal Self",
-            explanation: "Carl Rogers's theory distinguishes between the Real Self and the Ideal Self."
-        },
-        {
-            question: "The ability to distinguish one's thoughts from one's emotions.",
-            answer: "Intrapsychic Differentiation",
-            explanation: "Intrapsychic differentiation is the process of separating thoughts from feelings."
-        },
-        {
-            question: "The core property of Human Agency that involves setting goals and making plans to achieve them.",
-            answer: "Intentionality",
-            explanation: "Intentionality is the goal-setting and planning aspect of Human Agency."
-        },
-        {
-            question: "The psychological perspective that emphasizes the self as flexible and evolving with new experiences.",
-            answer: "The Self as a Cognitive Construction",
-            explanation: "This perspective highlights the dynamic nature of the self as shaped by cognitive processes."
-        },
-        {
-            question: "The American anthropologist who studied tribes in Papua New Guinea to explore how cultural norms shape identities.",
-            answer: "Margaret Mead",
-            explanation: "Margaret Mead is known for her cross-cultural studies, including her work in the Arapesh, Manus, and Tchambuli tribes."
-        },
-        {
-            question: "The concept that individuals actively shape their actions, thoughts, and environments.",
-            answer: "Human Agency",
-            explanation: "Human Agency, as proposed by Albert Bandura, emphasizes that individuals are active agents in their lives."
-        },
-        {
-            question: "The American anthropologist who focused on symbolic interpretation within specific cultural settings, such as the Moroccan souks.",
-            answer: "Clifford Geertz",
-            explanation: "Clifford Geertz's approach focused on the performance and interpretation of cultural symbols."
-        },
-        {
-            question: "This concept refers to a protective persona formed in response to external pressures, expectations, or traumas.",
-            answer: "False Self",
-            explanation: "The False Self is a defensive facade used to protect the True Self."
-        },
-        {
-            question: "The subdiscipline of anthropology that interprets human history by analyzing material remains.",
-            answer: "Archaeology",
-            explanation: "Archaeology uses material remains to understand ancient civilizations and their activities."
-        },
-        {
-            question: "The core property of Human Agency that involves thinking ahead and planning actions based on expected outcomes.",
-            answer: "Forethought",
-            explanation: "Forethought is the proactive planning element of Human Agency."
-        },
-        {
-            question: "The psychological theory that proposes a person's current identity is the 'Real Self'.",
-            answer: "Carl Rogers's Theory",
-            explanation: "Carl Rogers's Self Theory distinguishes between the Real Self and the Ideal Self."
-        },
-        {
-            question: "The core property of Human Agency that refers to monitoring and evaluating one's own behavior and emotions.",
-            answer: "Self-reactiveness",
-            explanation: "Self-reactiveness is the process of actively monitoring one's own behavior."
-        },
-        {
-            question: "The ability to distinguish one's own experience from the experience of people one is connected to.",
-            answer: "Interpersonal Differentiation",
-            explanation: "Interpersonal Differentiation is the ability to maintain a sense of self while in relationships with others."
-        },
-        {
-            question: "The study of mind and behavior in relation to a particular field of knowledge or activity.",
-            answer: "Psychology",
-            explanation: "This is the core definition of Psychology provided in the handouts."
+
+        function updateProgressBar() {
+            const progress = (currentQuestionIndex / totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
         }
-    ]
-};
 
-    //
-    // --- END OF QUIZ DATA ---
-    //
+        function selectOption(selectedButton, selectedAnswer) {
+            if (answered) return;
 
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let wrongAnswers = [];
-    let isIdentificationSection = false;
-    let answered = false;
-    const totalQuestions = quizData.multipleChoice.length + quizData.identification.length;
+            const currentQuizData = quizData.multipleChoice[currentQuestionIndex];
+            const isCorrect = selectedAnswer === currentQuizData.answer;
 
-    const quizArea = document.getElementById('quiz-area');
-    const endScreen = document.getElementById('end-screen');
-    const questionText = document.getElementById('question-text');
-    const optionsContainer = document.getElementById('options-container');
-    const identificationContainer = document.getElementById('identification-container');
-    const identificationInput = document.getElementById('identification-input');
-    const submitButton = document.getElementById('submit-button');
-    const feedbackSection = document.getElementById('feedback-section');
-    const feedbackText = document.getElementById('feedback-text');
-    const explanationText = document.getElementById('explanation-text');
-    const progressBar = document.getElementById('progress-bar');
-    const progressText = document.getElementById('progress-text');
-    const finalScoreSpan = document.getElementById('final-score');
-    const totalQuestionsSpan = document.getElementById('total-questions');
-    const bestScoreSpan = document.getElementById('best-score');
-    const wrongAnswersList = document.getElementById('wrong-answers-list');
-    const restartButton = document.getElementById('restart-button');
-    const modeToggle = document.getElementById('mode-toggle');
+            answered = true;
+            nextButton.style.display = 'block';
 
-    // Load initial state from cookies
-    const savedTheme = getCookie("theme");
-    if (savedTheme === "dark") {
-        document.body.classList.add("dark-mode");
-        modeToggle.innerHTML = '🌙';
-    }
-
-    const savedBestScore = getCookie("bestScore");
-    bestScoreSpan.textContent = savedBestScore || '0';
-
-    modeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        modeToggle.innerHTML = isDarkMode ? '🌙' : '☀️';
-        setCookie("theme", isDarkMode ? "dark" : "light", 365);
-    });
-
-    function showQuestion() {
-        if (totalQuestions === 0) {
-            quizArea.innerHTML = "<h2>No questions found! Please add questions to the quizData object.</h2>";
-            return;
-        }
-        
-        answered = false;
-        optionsContainer.style.display = 'flex';
-        identificationContainer.style.display = 'none';
-        identificationInput.value = '';
-        feedbackSection.style.display = 'none';
-        feedbackSection.classList.remove('correct', 'incorrect');
-        
-        let currentQuizData;
-        if (currentQuestionIndex < quizData.multipleChoice.length) {
-            isIdentificationSection = false;
-            submitButton.style.display = 'none'; // Hide submit button for MCQs
-            currentQuizData = quizData.multipleChoice[currentQuestionIndex];
-            optionsContainer.innerHTML = '';
-            currentQuizData.options.forEach(option => {
-                const button = document.createElement('button');
-                button.classList.add('option');
-                button.textContent = option;
-                button.onclick = () => selectOption(button, option);
-                optionsContainer.appendChild(button);
+            // Disable all options
+            optionsContainer.querySelectorAll('.options').forEach(button => {
+                button.disabled = true;
+                if (button.textContent === currentQuizData.answer) {
+                    button.classList.add('correct');
+                }
+                if (button === selectedButton && !isCorrect) {
+                    button.classList.add('incorrect');
+                }
             });
-            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. The identification questions will begin after question ${quizData.multipleChoice.length}.`;
-        } else {
-            isIdentificationSection = true;
-            submitButton.style.display = 'block'; // Show submit button for identification questions
-            currentQuizData = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
-            optionsContainer.style.display = 'none';
-            identificationContainer.style.display = 'block';
-            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. You are now in the identification questions section.`;
-        }
-        
-        questionText.textContent = currentQuizData.question;
-        updateProgressBar();
-    }
 
-    function selectOption(selectedButton, selectedAnswer) {
-        if (answered) return;
-        answered = true;
-
-        const currentQuestion = quizData.multipleChoice[currentQuestionIndex];
-        const isCorrect = selectedAnswer === currentQuestion.answer;
-        
-        selectedButton.classList.add(isCorrect ? 'correct' : 'incorrect');
-
-        if (isCorrect) {
-            score++;
-            feedbackText.textContent = "Correct!";
-            feedbackSection.classList.add('correct');
-        } else {
-            feedbackText.textContent = `Incorrect. The correct answer was: ${currentQuestion.answer}`;
-            feedbackSection.classList.add('incorrect');
-            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: selectedAnswer, type: 'multipleChoice' });
-        }
-        explanationText.textContent = currentQuestion.explanation;
-        feedbackSection.style.display = 'block';
-
-        const allOptions = optionsContainer.querySelectorAll('.option');
-        allOptions.forEach(option => {
-            if (option.textContent === currentQuestion.answer) {
-                option.classList.add('correct');
+            if (isCorrect) {
+                score++;
+                feedbackMessage.textContent = "Correct! Well done.";
+                feedbackMessage.classList.add('correct-feedback');
+            } else {
+                feedbackMessage.textContent = `Incorrect. The correct answer was: ${currentQuizData.answer}`;
+                feedbackMessage.classList.add('incorrect-feedback');
+                wrongAnswers.push({
+                    question: currentQuizData.question,
+                    yourAnswer: selectedAnswer,
+                    correctAnswer: currentQuizData.answer
+                });
             }
-            option.disabled = true;
+            updateScoreDisplay();
+        }
+        
+        function checkIdentificationAnswer() {
+            if (answered) return;
+            
+            const currentQuizData = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
+            const currentInput = identificationInput.value.trim(); 
+            const isCorrect = currentInput.toLowerCase() === currentQuizData.answer.toLowerCase();
+
+            answered = true;
+            submitButton.style.display = 'none';
+            nextButton.style.display = 'block';
+            identificationInput.disabled = true;
+
+            if (isCorrect) {
+                score++;
+                feedbackMessage.textContent = "Correct! Well done.";
+                feedbackMessage.classList.add('correct-feedback');
+                identificationInput.style.borderColor = 'var(--correct-color)';
+            } else {
+                feedbackMessage.textContent = `Incorrect. The correct answer was: ${currentQuizData.answer}`;
+                feedbackMessage.classList.add('incorrect-feedback');
+                identificationInput.style.borderColor = 'var(--incorrect-color)';
+                wrongAnswers.push({
+                    question: currentQuizData.question,
+                    yourAnswer: currentInput || "(No answer provided)",
+                    correctAnswer: currentQuizData.answer
+                });
+            }
+            updateScoreDisplay();
+        }
+
+        function showQuestion() {
+            if (totalQuestions === 0) {
+                quizArea.innerHTML = "<h2>No questions found! Please add questions to the quizData object.</h2>";
+                return;
+            }
+
+            answered = false;
+            feedbackMessage.textContent = '';
+            feedbackMessage.classList.remove('correct-feedback', 'incorrect-feedback');
+            identificationInput.style.borderColor = 'var(--border-color-light)';
+            identificationInput.disabled = false;
+            
+            let currentQuizData;
+
+            if (currentQuestionIndex < quizData.multipleChoice.length) {
+                // --- Multiple Choice Section ---
+                currentQuizData = quizData.multipleChoice[currentQuestionIndex];
+                
+                // Element visibility
+                optionsContainer.style.display = 'flex';
+                identificationInput.style.display = 'none';
+                submitButton.style.display = 'none';
+                nextButton.style.display = 'none';
+
+                // Question and Options
+                questionText.textContent = currentQuizData.question;
+                optionsContainer.innerHTML = '';
+                
+                // This is the CRITICAL FIX: Changed .optionss to .options
+                currentQuizData.options.forEach(option => { 
+                    const button = document.createElement('button');
+                    button.classList.add('options');
+                    button.textContent = option;
+                    button.onclick = () => selectOption(button, option);
+                    optionsContainer.appendChild(button);
+                });
+                
+                // Progress Text
+                progressText.textContent = `Multiple Choice Question ${currentQuestionIndex + 1} of ${totalQuestions} (Part 1/2)`;
+
+            } else if (currentQuestionIndex < totalQuestions) {
+                // --- Identification Section ---
+                const identificationIndex = currentQuestionIndex - quizData.multipleChoice.length;
+                currentQuizData = quizData.identification[identificationIndex];
+                
+                // Element visibility
+                optionsContainer.style.display = 'none';
+                identificationInput.style.display = 'block';
+                submitButton.style.display = 'block';
+                nextButton.style.display = 'none';
+
+                // Question and Input
+                questionText.textContent = currentQuizData.question;
+                identificationInput.value = ''; // Clear previous input
+                
+                // Progress Text
+                progressText.textContent = `Identification Question ${identificationIndex + 1} of ${quizData.identification.length} (Part 2/2)`;
+
+            } else {
+                // --- End of Quiz ---
+                showEndScreen();
+                return;
+            }
+            
+            updateProgressBar();
+            updateScoreDisplay();
+        }
+
+        function showEndScreen() {
+            quizArea.style.display = 'none';
+            endScreen.style.display = 'block';
+            finalScoreSpan.textContent = score;
+            totalQuestionsSpan.textContent = totalQuestions;
+
+            const currentBestScore = parseInt(getCookie("bestScore") || '0', 10);
+            if (score > currentBestScore) {
+                setCookie("bestScore", score, 365);
+                bestScoreSpan.textContent = score;
+            } else {
+                bestScoreSpan.textContent = currentBestScore;
+            }
+
+            // Display Wrong Answers
+            wrongAnswersList.innerHTML = '';
+            if (wrongAnswers.length > 0) {
+                wrongAnswers.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>Q:</strong> ${item.question}<br><strong>Your Answer:</strong> ${item.yourAnswer}<br><strong>Correct Answer:</strong> ${item.correctAnswer}`;
+                    wrongAnswersList.appendChild(li);
+                });
+            } else {
+                wrongAnswersList.innerHTML = "<li>You got all questions right! 🎉</li>";
+            }
+        }
+        
+        // --- Event Listeners and Initialization ---
+
+        nextButton.addEventListener('click', () => {
+            currentQuestionIndex++;
+            showQuestion();
         });
 
-        setTimeout(() => {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < totalQuestions) {
-                showQuestion();
+        submitButton.addEventListener('click', checkIdentificationAnswer);
+
+        restartButton.addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            wrongAnswers = [];
+            endScreen.style.display = 'none';
+            quizArea.style.display = 'block';
+            showQuestion();
+        });
+
+        // Theme Toggle Logic
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.textContent = '🌙 Dark Mode';
+                setCookie('theme', 'dark', 365);
             } else {
-                showEndScreen();
+                themeToggle.textContent = '☀️ Light Mode';
+                setCookie('theme', 'light', 365);
             }
-        }, 3000);
-    }
+        });
 
-    submitButton.onclick = () => {
-        if (!isIdentificationSection) {
-            return;
-        }
-
-        if (answered) return;
-        answered = true;
-        submitButton.disabled = true;
-
-        const currentQuestion = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
-        const userAnswer = identificationInput.value.trim();
-        const correctAnswer = currentQuestion.answer.trim();
-
-        const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
-        
-        if (isCorrect) {
-            score++;
-            feedbackText.textContent = "Correct!";
-            feedbackSection.classList.add('correct');
-        } else {
-            feedbackText.textContent = `Incorrect. The correct answer was: ${currentQuestion.answer}`;
-            feedbackSection.classList.add('incorrect');
-            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: userAnswer, type: 'identification' });
-        }
-        explanationText.textContent = currentQuestion.explanation;
-        feedbackSection.style.display = 'block';
-
-        setTimeout(() => {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < totalQuestions) {
-                showQuestion();
+        // Load theme from cookie
+        window.onload = () => {
+            const savedTheme = getCookie('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.textContent = '🌙 Dark Mode';
             } else {
-                showEndScreen();
+                document.body.classList.remove('dark-mode');
+                themeToggle.textContent = '☀️ Light Mode';
             }
-        }, 3000);
-    };
+            // Initialize the quiz
+            showQuestion(); 
+        };
 
-    function updateProgressBar() {
-        const progress = (currentQuestionIndex / totalQuestions) * 100;
-        progressBar.style.width = `${progress}%`;
-    }
-
-    function showEndScreen() {
-        quizArea.style.display = 'none';
-        endScreen.style.display = 'block';
-        finalScoreSpan.textContent = score;
-        totalQuestionsSpan.textContent = totalQuestions;
-
-        const currentBestScore = parseInt(getCookie("bestScore") || '0', 10);
-        if (score > currentBestScore) {
-            setCookie("bestScore", score, 365);
-            bestScoreSpan.textContent = score;
-        } else {
-            bestScoreSpan.textContent = currentBestScore;
-        }
-
-        wrongAnswersList.innerHTML = '';
-        if (wrongAnswers.length > 0) {
-            wrongAnswers.forEach(item => {
-                const li = document.createElement('li');
-                li.innerHTML = `<strong>Q:</strong> ${item.question}<br><strong>Your Answer:</strong> ${item.yourAnswer}<br><strong>Correct Answer:</strong> ${item.correctAnswer}`;
-                wrongAnswersList.appendChild(li);
-            });
-        } else {
-            wrongAnswersList.innerHTML = "<li>You got all questions right! 🎉</li>";
-        }
-    }
-
-    restartButton.addEventListener('click', () => {
-        currentQuestionIndex = 0;
-        score = 0;
-        wrongAnswers = [];
-        endScreen.style.display = 'none';
-        quizArea.style.display = 'block';
-        showQuestion();
-    });
-
-    // Start the quiz
-    showQuestion();
-
-</script>
-
+    </script>
 </body>
 </html>
