@@ -3,988 +3,929 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Understanding The Self</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title class="subjectName"></title>
+    <!-- Using Poppins for headers and Inter for body text -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
     <style>
+        /* Base Styling */
         :root {
-            --bg-color-light: #f4f7f6;
-            --text-color-light: #2c3e50;
+            /* Calm, Study-Focused Palette */
+            --bg-color-light: #f9f9fb; /* Very light, slightly warm gray */
+            --text-color-light: #1f2a37; /* Dark charcoal for high contrast */
             --container-bg-light: #ffffff;
-            --primary-color-light: #3498db;
-            --secondary-color-light: #2980b9;
-            --correct-color: #27ae60;
-            --incorrect-color: #e74c3c;
-            --border-color-light: #bdc3c7;
-            --shadow-color-light: rgba(0, 0, 0, 0.1);
-            --placeholder-color-light: #7f8c8d;
+            --primary-color-light: #6366f1; /* Deep Indigo/Violet for academic focus */
+            --secondary-color-light: #4f46e5; /* Darker Indigo */
+            --correct-color: #059669; /* Deep, stable green */
+            --incorrect-color: #ef4444; /* Accessible red */
+            --border-color-light: #e5e7eb; /* Light separator */
+            --shadow-color-light: rgba(17, 24, 39, 0.08); /* Subtle dark shadow */
+            --placeholder-color-light: #9ca3af;
+            --stage1-color: #3b82f6; /* Blue for Recognize (MCQ) */
+            --stage2-color: #f59e0b; /* Amber for Recall (ID) */
+            --stage3-color: #10b981; /* Green for Mastery */
         }
 
         .dark-mode {
-            --bg-color-light: #2c3e50;
-            --text-color-light: #ecf0f1;
-            --container-bg-light: #34495e;
-            --primary-color-light: #3498db;
-            --secondary-color-light: #2980b9;
-            --border-color-light: #526f8d;
-            --shadow-color-light: rgba(255, 255, 255, 0.1);
-            --placeholder-color-light: #bdc3c7;
+            /* Dark Mode for reduced eye strain */
+            --bg-color-light: #1f2a37;
+            --text-color-light: #e5e7eb;
+            --container-bg-light: #374151;
+            --primary-color-light: #60a5fa; 
+            --secondary-color-light: #3b82f6;
+            --correct-color: #34d399;
+            --incorrect-color: #f87171;
+            --border-color-light: #4b5563;
+            --shadow-color-light: rgba(0, 0, 0, 0.4);
+            --placeholder-color-light: #9ca3af;
         }
 
-        * {
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
+        /* Screen Shake Animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
         }
 
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* Subtle Progress Animation (Pulse) */
+        @keyframes pulse-progress {
+            0% { box-shadow: 0 0 0 0 var(--correct-color); }
+            70% { box-shadow: 0 0 0 5px rgba(5, 150, 105, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+        }
+
+        /* Typography and Base Layout */
         body {
+            /* Using Inter for high readability in body text and general UI elements */
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
             background-color: var(--bg-color-light);
             color: var(--text-color-light);
-            margin: 0;
-            padding: 20px;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             min-height: 100vh;
+            transition: background-color 0.4s, color 0.4s;
         }
 
         .quiz-container {
             width: 100%;
-            max-width: 800px;
+            max-width: 760px; 
+            margin: 20px;
+            padding: 40px 30px;
             background-color: var(--container-bg-light);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px var(--shadow-color-light);
-            animation: fadeIn 0.8s ease-out;
+            border-radius: 16px; 
+            box-shadow: 0 15px 35px var(--shadow-color-light); 
+            transition: background-color 0.4s, box-shadow 0.4s;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        /* Header and Mode Toggle */
         h1 {
+            font-family: 'Poppins', sans-serif; /* Poppins for a distinct, modern header */
             text-align: center;
-            font-size: 2.2em;
             color: var(--primary-color-light);
-            margin-bottom: 10px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            font-size: 2em;
         }
-
-        h2 {
-            font-size: 1.5em;
-            margin-top: 0;
+        
+        /* Stage Indicator */
+        #stage-indicator {
             text-align: center;
             margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 1.1em;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        
+        .stage-mcq { background-color: var(--stage1-color); }
+        .stage-id { background-color: var(--stage2-color); }
+        .stage-exp { background-color: var(--incorrect-color); } /* Use incorrect color for required review */
+        .stage-mastered { background-color: var(--correct-color); } /* Added style for mastery status */
+
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color-light);
         }
 
-        .progress-container {
+        .theme-toggle, #current-score {
+            font-size: 0.9em;
+            font-weight: 700;
+            color: var(--primary-color-light);
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .theme-toggle {
+            cursor: pointer;
+            border: 2px solid var(--primary-color-light);
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--primary-color-light);
+            color: white;
+            box-shadow: 0 2px 5px rgba(99, 102, 241, 0.3); 
+        }
+        
+        /* Progress Bar */
+        .progress-bar-container {
             width: 100%;
             background-color: var(--border-color-light);
-            border-radius: 8px;
-            height: 12px;
-            margin-top: 10px;
-            margin-bottom: 5px;
+            border-radius: 10px;
             overflow: hidden;
+            margin-bottom: 25px;
+            height: 18px; 
         }
 
         .progress-bar {
             height: 100%;
             width: 0%;
-            background-color: var(--primary-color-light);
-            transition: width 0.4s ease-in-out;
+            background-color: var(--correct-color);
+            transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            animation: pulse-progress 2s infinite alternate; 
+        }
+        
+        #progress-text {
+            font-size: 1em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: var(--text-color-light);
+            text-align: center;
+        }
+        
+        /* Question Grouping for Focus */
+        .question-group {
+            background-color: var(--bg-color-light);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color-light);
+        }
+        
+        #explanation-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: var(--text-color-light);
+        }
+        
+        #explanation-text strong {
+            color: var(--primary-color-light);
+            font-weight: 700;
         }
 
-        .progress-text {
-            font-size: 0.9em;
-            color: var(--placeholder-color-light);
-            text-align: center;
-            margin-bottom: 20px;
+        /* Question Area */
+        #quiz-area {
+            min-height: 400px; 
+            display: block;
         }
 
         #question-text {
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            font-weight: 600;
+            font-size: 1.4em; 
+            margin-bottom: 25px;
+            font-weight: 700;
+            line-height: 1.6;
+            text-align: left;
+            color: var(--text-color-light);
         }
 
-        #options-container, #identification-container {
+        #options-container {
             display: flex;
             flex-direction: column;
             gap: 12px;
+            margin-top: 20px;
         }
 
-        .option {
-            background-color: transparent;
+        /* Options/Buttons/Inputs */
+        .options, #submit-button, #next-button, #restart-button, #start-review-button {
+            padding: 18px 25px; 
             border: 2px solid var(--border-color-light);
+            background-color: var(--container-bg-light);
             color: var(--text-color-light);
-            padding: 15px;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
+            font-size: 1.05em;
+            font-weight: 700;
+            transition: all 0.2s ease-in-out;
             text-align: left;
-            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
         }
 
-        .option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px var(--shadow-color-light);
+        /* Focus Ring for Accessibility */
+        .options:focus, #submit-button:focus, #next-button:focus, #restart-button:focus, #identification-input:focus {
+            outline: 3px solid var(--primary-color-light);
+            outline-offset: 2px;
         }
 
-        .option.correct {
+
+        .options:hover:not(.selected):not(.correct):not(.incorrect) {
+            background-color: var(--primary-color-light);
+            color: white;
+            border-color: var(--primary-color-light);
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.2); 
+        }
+
+        .options.selected {
+            background-color: var(--primary-color-light);
+            color: white;
+            border-color: var(--primary-color-light);
+            transform: scale(1.01);
+            box-shadow: 0 4px 8px rgba(99, 102, 241, 0.4); 
+        }
+        
+        /* Interactive Cues for Feedback */
+        .options.correct {
             background-color: var(--correct-color);
             color: white;
             border-color: var(--correct-color);
+            box-shadow: 0 4px 8px rgba(5, 150, 105, 0.4);
+            pointer-events: none;
+            position: relative;
         }
-
-        .option.incorrect {
+        
+        .options.incorrect {
             background-color: var(--incorrect-color);
             color: white;
             border-color: var(--incorrect-color);
-        }
-
-        #submit-button, .quiz-button, #restart-button {
-            display: none; /* Hide by default */
-            width: 100%;
-            padding: 15px;
-            font-size: 1em;
-            font-weight: bold;
-            color: white;
-            background-color: var(--primary-color-light);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.2s, transform 0.2s;
-        }
-
-        #submit-button:hover, .quiz-button:hover, #restart-button:hover {
-            background-color: var(--secondary-color-light);
-            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.4);
+            pointer-events: none;
+            position: relative;
         }
         
-        #submit-button:disabled {
-            background-color: #7f8c8d;
-            cursor: not-allowed;
+        #identification-input {
+            width: 100%;
+            padding: 18px;
+            margin-top: 10px;
+            border: 2px solid var(--border-color-light);
+            border-radius: 10px;
+            font-size: 1em;
+            box-sizing: border-box;
+            color: var(--text-color-light);
+            background-color: var(--container-bg-light);
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        #feedback-section {
+        #identification-input::placeholder {
+            color: var(--placeholder-color-light);
+            font-weight: 400;
+        }
+
+        #submit-button, #next-button {
+            display: none; 
             margin-top: 20px;
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-left: 5px solid;
-            border-radius: 8px;
-            display: none;
+            text-align: center;
         }
-
-        #feedback-section.correct {
+        
+        #submit-button {
+            background-color: var(--stage2-color);
+            color: white;
+            border-color: var(--stage2-color);
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3); 
+        }
+        
+        #submit-button:hover:not(:disabled) {
+            background-color: #d97706;
+            border-color: #d97706;
+            box-shadow: 0 6px 12px rgba(245, 158, 11, 0.4); 
+        }
+        
+        #next-button {
+            background-color: var(--primary-color-light);
+            color: white;
+            border-color: var(--primary-color-light);
+        }
+        #next-button.mastery {
+            background-color: var(--correct-color);
             border-color: var(--correct-color);
         }
-
-        #feedback-section.incorrect {
-            border-color: var(--incorrect-color);
+        #next-button:hover:not(:disabled) {
+            background-color: var(--secondary-color-light);
+            border-color: var(--secondary-color-light);
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.4); 
         }
 
-        #explanation-text {
-            font-style: italic;
-            font-size: 0.95em;
-            margin-top: 10px;
+        /* Feedback Message */
+        #feedback-message {
+            text-align: center;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            font-weight: 700;
+            min-height: 20px;
+            border-radius: 8px;
+            font-size: 1.1em;
         }
 
-        .end-screen {
+        .correct-feedback {
+            color: var(--correct-color);
+            background-color: rgba(5, 150, 105, 0.1);
+            border: 1px solid var(--correct-color);
+        }
+
+        .incorrect-feedback {
+            color: var(--incorrect-color);
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--incorrect-color);
+        }
+
+        /* End Screen */
+        #end-screen {
+            display: none;
             text-align: center;
         }
 
-        .end-screen h2 {
-            font-size: 2em;
-            color: var(--primary-color-light);
-            margin-bottom: 10px;
+        #end-screen h2 {
+            font-family: 'Poppins', sans-serif; 
+            color: var(--correct-color);
+            margin-bottom: 20px;
+            font-size: 2.5em;
         }
 
-        .end-screen p {
-            font-size: 1.2em;
-            margin-bottom: 5px;
-        }
-        
-        #incorrect-questions-list {
+        #score-summary {
+            background-color: var(--bg-color-light);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color-light);
             text-align: left;
-            margin-top: 20px;
-        }
-        
-        #incorrect-questions-list li {
-            margin-bottom: 10px;
-            border-left: 3px solid var(--incorrect-color);
-            padding-left: 10px;
         }
 
-        .mode-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: var(--container-bg-light);
-            border: 2px solid var(--border-color-light);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 4px 8px var(--shadow-color-light);
+        #score-summary p {
+            margin: 10px 0;
             font-size: 1.2em;
-            color: var(--text-color-light);
+            display: flex;
+            justify-content: space-between;
         }
 
-        #identification-input {
-            width: 100%;
-            padding: 15px;
-            font-size: 1em;
-            border: 2px solid var(--border-color-light);
-            border-radius: 8px;
-            background-color: var(--container-bg-light);
-            color: var(--text-color-light);
-            transition: border-color 0.2s;
+        #score-summary strong {
+            font-weight: 700;
+            color: var(--primary-color-light);
+            font-size: 1.1em;
         }
         
-        #identification-input:focus {
-            outline: none;
+        #score-summary h3 {
+             font-family: 'Poppins', sans-serif;
+             color: var(--primary-color-light);
+             margin-bottom: 15px;
+             border-bottom: 2px solid var(--border-color-light);
+             padding-bottom: 5px;
+        }
+        
+        .mastered-list-item {
+            color: var(--correct-color);
+            font-weight: 600;
+        }
+        .unmastered-list-item {
+            color: var(--incorrect-color);
+            font-weight: 600;
+        }
+        
+        #mastery-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: left;
+        }
+        
+        #mastery-list li {
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border-color-light);
+        }
+        
+        #mastery-list li:last-child {
+            border-bottom: none;
+        }
+
+        #restart-button {
+            margin-top: 25px;
+            background-color: var(--primary-color-light);
+            color: white;
             border-color: var(--primary-color-light);
         }
     </style>
 </head>
 <body>
 
-<div class="mode-toggle" id="mode-toggle">
-    ☀️
-</div>
+    <div class="quiz-container" id="quiz-container">
+        <div class="header-controls">
+            <span id="current-score">Score: 0</span>
+            <span class="theme-toggle" id="theme-toggle">☀️ Light Mode</span>
+        </div>
 
-<div class="quiz-container" id="quiz-container">
-    <h1 id="quiz-title">Understanding The Self</h1>
-    <div class="progress-container">
-        <div class="progress-bar" id="progress-bar"></div>
-    </div>
-    <p class="progress-text" id="progress-text"></p>
-
-    <div id="quiz-area">
-        <div id="question-area">
-            <h2 id="question-text"></h2>
-            <div id="options-container"></div>
-            <div id="identification-container" style="display: none;">
-                <input type="text" id="identification-input" placeholder="Type your answer here...">
+        <h1 class="subjectName">Init</h1>
+        
+        <div id="quiz-area">
+            <div id="stage-indicator"></div>
+            <div id="progress-text"></div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
             </div>
+
+            <div id="feedback-message"></div>
+            
+            <div class="question-group">
+                <p id="question-text"></p>
+                
+                <div id="options-container">
+                    <!-- Multiple Choice Options are inserted here -->
+                </div>
+                
+                <p id="explanation-text" style="display: none;"></p>
+
+                <input type="text" id="identification-input" placeholder="Type your answer here..." style="display: none;">
+            </div>
+
             <button id="submit-button">Submit Answer</button>
+            <button id="next-button">Continue</button>
         </div>
-        
-        <div id="feedback-section">
-            <p id="feedback-text"></p>
-            <p id="explanation-text"></p>
+
+        <div id="end-screen">
+            <h2>Mastery Check Complete!</h2>
+            
+            <div id="score-summary">
+                <p>Concepts Mastered: <strong id="mastered-count-span">0</strong></p>
+                <p>Concepts Remaining: <span id="unmastered-count-span">0</span></p>
+                
+                <h3>Mastery Status:</h3>
+                <ul id="mastery-list">
+                    <!-- Mastery status of concepts inserted here -->
+                </ul>
+            </div>
+
+            <button id="restart-button">Start New Session</button>
         </div>
+
     </div>
+    <script src="Understand.js"></script>
+    <script>
+        const subjectDisplays = document.querySelectorAll('.subjectName'); 
 
-    <div id="end-screen" class="end-screen" style="display: none;">
-        <h2>Quiz Complete!</h2>
-        <p>Your Score: <span id="final-score"></span> / <span id="total-questions"></span></p>
-        <p>Previous Best Score: <span id="best-score"></span></p>
-        <div id="incorrect-questions-list">
-            <h3>Questions you got wrong:</h3>
-            <ul id="wrong-answers-list"></ul>
-        </div>
-        <button id="restart-button">Restart Quiz</button>
-    </div>
-</div>
+        // Loop through the NodeList and update the text content of each element
+        subjectDisplays.forEach(element => {
+            element.textContent = subjectName;
+        });
+        
+        const initialConceptCount = conceptData.length;
+        
+        // This array holds the IDs of concepts in the order they will be presented.
+        let quizFlow = conceptData.map(c => c.id); 
+        
+        // Lookup map for fast access to concept objects by ID
+        const conceptMap = conceptData.reduce((map, concept) => {
+            map[concept.id] = concept;
+            return map;
+        }, {});
 
-<script>
-    // Utility functions for cookies
-    function setCookie(name, value, days) {
-        const d = new Date();
-        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-        const expires = "expires=" + d.toUTCString();
-        document.cookie = name + "=" + value + ";" + expires + ";path=/";
-    }
+        let currentConceptIndex = 0; // Index within the quizFlow array
+        let answered = false;
+        
+        // --- DOM Elements ---
+        const quizContainer = document.getElementById('quiz-container');
+        const quizArea = document.getElementById('quiz-area');
+        const endScreen = document.getElementById('end-screen');
+        const stageIndicator = document.getElementById('stage-indicator');
+        const questionText = document.getElementById('question-text');
+        const explanationText = document.getElementById('explanation-text');
+        const optionsContainer = document.getElementById('options-container');
+        const identificationInput = document.getElementById('identification-input');
+        const nextButton = document.getElementById('next-button');
+        const submitButton = document.getElementById('submit-button');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const restartButton = document.getElementById('restart-button');
+        const currentScoreSpan = document.getElementById('current-score');
+        const masteredCountSpan = document.getElementById('mastered-count-span');
+        const unmasteredCountSpan = document.getElementById('unmastered-count-span');
+        const masteryList = document.getElementById('mastery-list');
+        const themeToggle = document.getElementById('theme-toggle');
 
-    function getCookie(name) {
-        const cname = name + "=";
-        const decodedCookie = decodeURIComponent(document.cookie);
-        const ca = decodedCookie.split(';');
-        for(let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') {
-                c = c.substring(1);
+
+        // --- Audio and Visual Effects (Web Audio API) ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        /** Plays a quick, high-pitched ding sound for a correct answer. */
+        function playCorrectSound() {
+            const gainNode = audioCtx.createGain();
+            gainNode.connect(audioCtx.destination);
+            function playNote(freq, startTime, duration) {
+                const osc = audioCtx.createOscillator();
+                const noteGain = audioCtx.createGain();
+                osc.type = "sine"; 
+                osc.frequency.setValueAtTime(freq, startTime);
+                osc.connect(noteGain);
+                noteGain.connect(gainNode);
+                noteGain.gain.setValueAtTime(0.5, startTime);
+                noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+                osc.start(startTime);
+                osc.stop(startTime + duration);
             }
-            if (c.indexOf(cname) === 0) {
-                return c.substring(cname.length, c.length);
+            const now = audioCtx.currentTime;
+            playNote(660, now, 0.25); 
+            playNote(880, now + 0.1, 0.3);
+        }
+
+        /** Plays a short, low-frequency buzz/error sound for an incorrect answer. */
+        function playIncorrectSound() {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(150, audioCtx.currentTime); 
+            gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), 400);
+        }
+
+        /** Applies the CSS shake animation to the quiz container. */
+        function shakeScreen() {
+            quizContainer.classList.add('shake');
+            setTimeout(() => {
+                quizContainer.classList.remove('shake');
+            }, 500); 
+        }
+
+        // --- Utility Functions (Cookies) ---
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
             }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
         }
-        return "";
-    }
 
-    //
-    // --- START OF QUIZ DATA ---
-    //
-    const quizData = {
-    multipleChoice: [
-        {
-            question: "Which subdiscipline of anthropology studies the learned behavior of groups of people in specific environments?",
-            options: ["Linguistic Anthropology", "Cultural Anthropology", "Biological Anthropology", "Archaeology"],
-            answer: "Cultural Anthropology",
-            explanation: "Cultural Anthropology, also known as social anthropology, focuses on the learned behaviors, beliefs, and practices of groups in specific environments."
-        },
-        {
-            question: "The word 'anthropology' is derived from which two Greek words?",
-            options: ["Anthropos and Logos", "Anthropos and Logia", "Anthropos and Pseudos", "Anthropos and Physis"],
-            answer: "Anthropos and Logia",
-            explanation: "The word 'anthropology' comes from the Greek words 'anthropos' (human) and 'logia' (study)."
-        },
-        {
-            question: "Which American anthropologist explored the diversity of identities shaped by cultural norms and socialization processes across different societies?",
-            options: ["Clifford Geertz", "Margaret Mead", "William James", "Carl Rogers"],
-            answer: "Margaret Mead",
-            explanation: "Margaret Mead is known for her work exploring how cultural norms and socialization processes shape identities, particularly in her studies of tribes like the Arapesh and Tchambuli."
-        },
-        {
-            question: "Clifford Geertz's approach to studying the self focuses on:",
-            options: ["Human evolution", "Linguistic patterns", "Symbolic interpretation and performance", "Material remains of ancient civilizations"],
-            answer: "Symbolic interpretation and performance",
-            explanation: "Geertz's approach emphasizes the use of cultural symbols and performance within specific cultural settings to understand individual identity."
-        },
-        {
-            question: "Which of the following is NOT one of the tribes studied by Margaret Mead mentioned in the handout?",
-            options: ["Arapesh", "Manus", "Tchambuli (Chambri)", "Masai"],
-            answer: "Masai",
-            explanation: "The handouts specifically mention Mead's studies of the Arapesh, Manus, and Tchambuli (Chambri) tribes."
-        },
-        {
-            question: "According to the handout, a key aspect of Clifford Geertz's contribution is that individuals' sense of self is deeply rooted in cultural contexts, as seen in the study of which traditional art form?",
-            options: ["Bharatanatyam", "Kabuki", "Wayang Kulit", "Kathak"],
-            answer: "Wayang Kulit",
-            explanation: "The handout lists Wayang Kulit as an example of a cultural context where an individual's sense of self is deeply rooted according to Geertz."
-        },
-        {
-            question: "What does Linguistic Anthropology study?",
-            options: ["How people eat and celebrate", "How language influences social life", "The genetic diversity of ethnic groups", "Ancient human civilizations"],
-            answer: "How language influences social life",
-            explanation: "Linguistic Anthropology is defined as the study of how language influences social life, including how it reflects cultural values and social organization."
-        },
-        {
-            question: "Which subdiscipline of anthropology focuses on human evolution within the context of human culture and behavior?",
-            options: ["Archaeology", "Cultural Anthropology", "Linguistic Anthropology", "Biological/Physical Anthropology"],
-            answer: "Biological/Physical Anthropology",
-            explanation: "Biological or Physical Anthropology studies human evolution and physical characteristics in relation to culture and behavior."
-        },
-        {
-            question: "Archaeology is the subdiscipline of anthropology that interprets human history by analyzing:",
-            options: ["Spoken languages", "Learned behaviors", "Material remains", "Social interactions"],
-            answer: "Material remains",
-            explanation: "Archaeology uses the analysis of material remains to interpret the experiences and activities of ancient civilizations."
-        },
-        {
-            question: "Which of the following is an example of a specific cultural setting where Geertz observed cultural symbols influencing individual identities?",
-            options: ["The Amazon rainforest", "Moroccan souks", "The Himalayas", "The Sahara desert"],
-            answer: "Moroccan souks",
-            explanation: "The handout mentions Moroccan souks as a specific example where Geertz noted the influence of cultural symbols on individual identities."
-        },
-        {
-            question: "What did Margaret Mead's study of the Tchambuli (Chambri) tribe challenge?",
-            options: ["The idea that culture is static", "Fixed gender roles", "The theory of evolution", "Linguistic universals"],
-            answer: "Fixed gender roles",
-            explanation: "Mead's study of the Tchambuli tribe, where women held dominant social and economic roles, challenged fixed gender roles and showed how cultural norms reshape identities."
-        },
-        {
-            question: "The handout states that anthropologists explore which of the following questions?",
-            options: ["How the universe was formed", "How societies have changed over time", "The properties of subatomic particles", "The internal structure of the Earth"],
-            answer: "How societies have changed over time",
-            explanation: "The introductory text mentions that anthropologists explore how societies have changed over time and how cultures shape who we are."
-        },
-        {
-            question: "How do Geertz and Mead's approaches to the cultural construction of self differ?",
-            options: ["Geertz focuses on evolution, while Mead focuses on linguistics.", "Geertz focuses on symbolic interpretation, while Mead explores the diversity of identities across cultures.", "Geertz focuses on material remains, while Mead focuses on learned behavior.", "Geertz focuses on gender roles, while Mead focuses on economic systems."],
-            answer: "Geertz focuses on symbolic interpretation, while Mead explores the diversity of identities across cultures.",
-            explanation: "The handout's summary states that Geertz focuses on symbolic interpretation and performance, while Mead's perspective explores the diversity of identities shaped by cultural norms across different societies."
-        },
-        {
-            question: "What is psychology defined as in the handout?",
-            options: ["The study of people throughout the world", "The study of mind and behavior", "The study of learned behavior in groups", "The study of human evolution"],
-            answer: "The study of mind and behavior",
-            explanation: "The handout defines psychology as 'the study of mind and behavior in relation to a particular field of knowledge or activity'."
-        },
-        {
-            question: "According to William James, which aspect of the self is the 'objective part' made up of our traits and roles?",
-            options: ["The 'I' self", "The 'Me' self", "The Ideal Self", "The Real Self"],
-            answer: "The 'Me' self",
-            explanation: "The 'Me' self is described as the objective part of ourselves, encompassing our traits, roles, and how we see ourselves based on past experiences and social feedback."
-        },
-        {
-            question: "Which of William James's self categories is about being aware of ourselves in the present moment?",
-            options: ["The 'I' self", "The 'Me' self", "The Real Self", "The False Self"],
-            answer: "The 'I' self",
-            explanation: "The 'I' self is defined as how we experience ourselves in the present moment, including thoughts, feelings, and actions."
-        },
-        {
-            question: "What does Carl Rogers refer to as one's current identity?",
-            options: ["The Ideal Self", "The True Self", "The Real Self", "The Differentiated Self"],
-            answer: "The Real Self",
-            explanation: "In Carl Rogers's self theory, the Real Self refers to one's current identity."
-        },
-        {
-            question: "Which of Carl Rogers' concepts refers to the person you want to become?",
-            options: ["The Real Self", "The True Self", "The Ideal Self", "The False Self"],
-            answer: "The Ideal Self",
-            explanation: "The Ideal Self, in Rogers's theory, is the person you want to become or the best version of yourself."
-        },
-        {
-            question: "Donald W. Winnicott's theory of the self includes the concepts of True Self and:",
-            options: ["Ideal Self", "Real Self", "False Self", "Global Self"],
-            answer: "False Self",
-            explanation: "Winnicott's theory contrasts the True Self (authentic self) with the False Self, a protective persona formed in response to external pressures."
-        },
-        {
-            question: "According to Winnicott, the False Self is a protective persona formed in response to:",
-            options: ["Internal thoughts and feelings", "Dreams and fantasies", "External pressures, expectations, or traumas", "Positive reinforcement"],
-            answer: "External pressures, expectations, or traumas",
-            explanation: "The handout describes the False Self as a protective persona that individuals develop to respond to external pressures and expectations."
-        },
-        {
-            question: "What is the focus of Murray Bowen's 'Intrapsychic Differentiation'?",
-            options: ["Distinguishing self from others", "Distinguishing thoughts from emotions", "Maintaining consistency across situations", "Setting goals for the future"],
-            answer: "Distinguishing thoughts from emotions",
-            explanation: "Intrapsychic differentiation (from the prefix 'intra-' meaning 'within') is the ability to tell apart one's thoughts from one's emotions."
-        },
-        {
-            question: "Which of Bowen's concepts deals with distinguishing one's own experience from the experience of people one is connected to?",
-            options: ["Intrapsychic Differentiation", "Interpersonal Differentiation", "Self-reactiveness", "Self-reflection"],
-            answer: "Interpersonal Differentiation",
-            explanation: "Interpersonal Differentiation (from the prefix 'inter-' meaning 'between' or 'among') is the ability to distinguish your own experience from that of others."
-        },
-        {
-            question: "Albert Bandura's concept of 'Human Agency' underscores that individuals are:",
-            options: ["Passive recipients of circumstances", "Active agents who shape their lives", "Primarily influenced by genetics", "Unable to control their environment"],
-            answer: "Active agents who shape their lives",
-            explanation: "Human Agency emphasizes that individuals actively shape their actions, thoughts, and environments, and are not passive recipients of circumstances."
-        },
-        {
-            question: "Which core property of human agency refers to setting goals and making plans to achieve them?",
-            options: ["Forethought", "Intentionality", "Self-reactiveness", "Self-reflection"],
-            answer: "Intentionality",
-            explanation: "Intentionality is defined as setting goals and making plans to achieve them, a core property of human agency."
-        },
-        {
-            question: "The core property of human agency that refers to thinking ahead and planning actions based on expected outcomes is:",
-            options: ["Intentionality", "Self-reactiveness", "Self-reflection", "Forethought"],
-            answer: "Forethought",
-            explanation: "Forethought is the core property of human agency that involves thinking ahead and planning actions based on future outcomes."
-        },
-        {
-            question: "What is a 'Global model' of the self, according to David Lester?",
-            options: ["The self is constantly changing", "The self is made up of multiple, distinct roles", "The self remains consistent across different situations", "The self is entirely a social construct"],
-            answer: "The self remains consistent across different situations",
-            explanation: "In Lester's theory, the Global model refers to a consistent self-concept, where traits and values remain the same across different situations."
-        },
-        {
-            question: "The concept of 'The Self as a Cognitive Construction' emphasizes the dynamic nature of the individual based on:",
-            options: ["Fixed personality traits", "Biological inheritance", "Perception, interpretation, and memory", "External social pressures only"],
-            answer: "Perception, interpretation, and memory",
-            explanation: "This perspective highlights that our self-awareness is constantly influenced by cognitive processes such as perception, interpretation, and memory."
-        },
-        {
-            question: "Which of Bandura's core properties of human agency involves monitoring and evaluating one's own behavior and emotions?",
-            options: ["Intentionality", "Forethought", "Self-reactiveness", "Self-reflection"],
-            answer: "Self-reactiveness",
-            explanation: "Self-reactiveness is the ability to monitor and evaluate one's own behavior and emotions, and is a key property of human agency."
-        },
-        {
-            question: "The concept of 'Proactive behavior' is described as:",
-            options: ["A response to a problem that has already occurred", "Self-initiated behavior aimed at addressing problems before they arise", "The ability to influence one's own destiny", "Thinking ahead about future outcomes"],
-            answer: "Self-initiated behavior aimed at addressing problems before they arise",
-            explanation: "Proactive behavior is defined as a self-initiated action to address problems before they happen."
-        },
-        {
-            question: "Who proposed that an individual's perception of self consists of two categories: 'I' and 'Me'?",
-            options: ["Murray Bowen", "Carl Rogers", "William James", "David Lester"],
-            answer: "William James",
-            explanation: "William James was the American psychologist and philosopher who introduced the 'I' self and 'Me' self theory."
-        },
-        {
-            question: "A person's self-concept is described as flexible and changing as they:",
-            options: ["Maintain a fixed global model", "Avoid new experiences", "Incorporate new information and reinterpret experiences", "Focus solely on their True Self"],
-            answer: "Incorporate new information and reinterpret experiences",
-            explanation: "The handout states that our self-concept is flexible and changes as we incorporate new information and reinterpret our experiences."
-        },
-        {
-            question: "The example of studying the practices of the Ifugao in the Cordillera Region falls under which subdiscipline of anthropology?",
-            options: ["Linguistic Anthropology", "Cultural Anthropology", "Biological Anthropology", "Archaeology"],
-            answer: "Cultural Anthropology",
-            explanation: "Studying the practices, beliefs, and traditions of a group is an example of Cultural Anthropology."
-        },
-        {
-            question: "According to Margaret Mead's work on the Arapesh tribe, cultures have unique norms and values that:",
-            options: ["Are universally the same", "Shape individual identities", "Are a result of biological evolution", "Are entirely disconnected from identity"],
-            answer: "Shape individual identities",
-            explanation: "One of the key aspects of Mead's contribution is that cultures have unique norms and values that shape individual identities, as seen in the Arapesh tribe."
-        },
-        {
-            question: "Which theorist's work on the self is based on the concept of 'human agency'?",
-            options: ["Donald Winnicott", "Albert Bandura", "William James", "Murray Bowen"],
-            answer: "Albert Bandura",
-            explanation: "Albert Bandura's theory focuses on the concept of Human Agency, which is the ability to actively shape one's life."
-        },
-        {
-            question: "Which of the following is a component of the 'Me' self?",
-            options: ["Thoughts about a recent experience", "Feelings in the present moment", "Your role as a student", "The act of deciding what to do next"],
-            answer: "Your role as a student",
-            explanation: "The 'Me' self is the objective part of the self, which includes roles, traits, and past experiences. Being a student is an example of a role."
-        },
-        {
-            question: "The study of how language reflects a community's social organization is an example of:",
-            options: ["Cultural Anthropology", "Linguistic Anthropology", "Archaeology", "Physical Anthropology"],
-            answer: "Linguistic Anthropology",
-            explanation: "Linguistic Anthropology studies how language influences and reflects social life and cultural values."
-        },
-        {
-            question: "Which of the following is an example of the 'I' self?",
-            options: ["Your academic achievements", "How others perceive you", "Contemplating how you felt during a challenging conversation", "Your physical appearance"],
-            answer: "Contemplating how you felt during a challenging conversation",
-            explanation: "The 'I' self is the subjective, active part of the self, and contemplating your feelings is an example of this real-time awareness."
-        },
-        {
-            question: "The concept that individuals are 'NOT passive recipients of circumstances but active agents' is a core idea of:",
-            options: ["Winnicott's False Self", "Rogers' Real Self", "Bandura's Human Agency", "James' 'Me' self"],
-            answer: "Bandura's Human Agency",
-            explanation: "This statement directly reflects Bandura's emphasis on individuals as proactive and agentic beings."
-        },
-        {
-            question: "What is the primary focus of 'The Self as a Cognitive Construction' perspective?",
-            options: ["The fixed nature of the self", "The subconscious mind's influence", "The dynamic evolution of the self through cognitive processes", "The role of genetics in self-perception"],
-            answer: "The dynamic evolution of the self through cognitive processes",
-            explanation: "This perspective emphasizes the dynamic nature of the individual and its evolution through personal experiences, beliefs, and social interactions."
-        },
-        {
-            question: "In the study of the Manus people, Margaret Mead observed that individuals learn cultural norms through:",
-            options: ["Genetic inheritance", "Solitary introspection", "Upbringing and social interactions", "Economic transactions"],
-            answer: "Upbringing and social interactions",
-            explanation: "The handout notes that among the Manus people, individuals learn cultural norms through upbringing and social interactions."
-        },
-        {
-            question: "Which of the following describes 'Agentic behavior'?",
-            options: ["The ability to plan for the future", "The ability to monitor one's emotions", "The ability to influence and direct one's life", "Self-initiated problem-solving"],
-            answer: "The ability to influence and direct one's life",
-            explanation: "Agentic behavior is defined as the ability to control one's goals, actions, and destinies."
-        },
-        {
-            question: "The core property of human agency that involves rewarding or adjusting behaviors based on self-evaluation and feedback is:",
-            options: ["Intentionality", "Forethought", "Self-reactiveness", "Self-reflection"],
-            answer: "Self-reflection",
-            explanation: "Self-reflection involves evaluating one's actions and making adjustments, which is a key part of human agency."
-        },
-        {
-            question: "Which anthropological subdiscipline is focused on the study of people from every part of the world, today, yesterday, and long ago?",
-            options: ["Linguistic Anthropology", "Archaeology", "Anthropology", "Cultural Anthropology"],
-            answer: "Anthropology",
-            explanation: "This is the general definition of anthropology as a whole, encompassing all its subdisciplines."
-        },
-        {
-            question: "A person with a 'differentiated' self, according to David Lester, would likely be:",
-            options: ["Consistent across all situations", "Flexible and adapting to different situations", "Focused on their 'Me' self", "Focused on their 'I' self"],
-            answer: "Flexible and adapting to different situations",
-            explanation: "The Differentiated model is the opposite of the Global model, suggesting traits and self-concept can vary across situations."
-        },
-        {
-            question: "Which of the following is NOT a core property of human agency?",
-            options: ["Intentionality", "Forethought", "Extrospection", "Self-reflection"],
-            answer: "Extrospection",
-            explanation: "The four core properties of human agency listed in the handout are Intentionality, Forethought, Self-reactiveness, and Self-reflection. Extrospection is not included."
-        },
-        {
-            question: "What is the focus of Biological Anthropology?",
-            options: ["Material remains", "Human evolution and culture", "Spoken languages", "Social behaviors"],
-            answer: "Human evolution and culture",
-            explanation: "Biological/Physical Anthropology focuses on human evolution within the context of human culture and behavior."
-        },
-        {
-            question: "An example of 'Intrapsychic Differentiation' would be:",
-            options: ["Debating a friend's opinion while respecting it", "Recognizing that your feelings of anger are separate from your rational thoughts", "Adjusting your behavior to fit in with a new group", "Planning a career path"],
-            answer: "Recognizing that your feelings of anger are separate from your rational thoughts",
-            explanation: "This is a perfect example of distinguishing thoughts from emotions, which is the definition of Intrapsychic Differentiation."
-        },
-        {
-            question: "What did Margaret Mead's study of the Arapesh tribe demonstrate?",
-            options: ["The immutability of gender roles", "The influence of culture on individual identity", "The superiority of one culture over another", "The universal nature of language"],
-            answer: "The influence of culture on individual identity",
-            explanation: "Mead's study of the Arapesh tribe showed how unique cultural norms and values shape individual identities."
-        },
-        {
-            question: "The idea that our self-concept is flexible and changes with new information and reinterpreted experiences is a key tenet of:",
-            options: ["Psychodynamic theory", "The self as a cognitive construction", "Humanistic psychology", "Trait theory"],
-            answer: "The self as a cognitive construction",
-            explanation: "This statement is the core of the handout's section on 'The Self as a Cognitive Construction'."
-        },
-        {
-            question: "Which type of self, according to Winnicott, represents the authentic and innate qualities of an individual?",
-            options: ["True Self", "False Self", "Real Self", "Ideal Self"],
-            answer: "True Self",
-            explanation: "Winnicott's True Self represents an individual's authentic and innate qualities."
-        },
-        {
-            question: "An example of the 'Me' self would be:",
-            options: ["Thinking about your feelings while writing a poem", "Choosing a college major based on your passions", "Your reputation among your friends and family", "Reacting impulsively to a stressful situation"],
-            answer: "Your reputation among your friends and family",
-            explanation: "The 'Me' self is the objective part of the self, which includes how others perceive you and your roles, such as your reputation."
-        },
-        {
-            question: "Which theory suggests that the self can be composed of multiple selves, which may or may not be consistent across situations?",
-            options: ["William James' Self Theory", "Carl Rogers' Self Theory", "Donald Winnicott's Theory", "David Lester's Theory"],
-            answer: "David Lester's Theory",
-            explanation: "David Lester's theory, with its Global vs. Differentiated model, addresses the idea of multiple selves and their consistency."
-        },
-        {
-            question: "The example of studying genetic diversity among different ethnic groups in the Philippines falls under which subdiscipline of anthropology?",
-            options: ["Cultural Anthropology", "Linguistic Anthropology", "Biological/Physical Anthropology", "Archaeology"],
-            answer: "Biological/Physical Anthropology",
-            explanation: "This is an example of biological or physical anthropology, which focuses on human evolution and genetic diversity."
-        },
-        {
-            question: "According to the handout, what concept is linked to an individual's ability to influence and direct their lives according to their beliefs and intentions?",
-            options: ["Self-reactiveness", "Forethought", "Proactive behavior", "Human Agency"],
-            answer: "Human Agency",
-            explanation: "This definition is given directly in the handout as part of Albert Bandura's concept of Human Agency."
-        },
-        {
-            question: "When a person can distinguish their experience from the experience of a friend, they are demonstrating:",
-            options: ["Intrapsychic Differentiation", "Interpersonal Differentiation", "Self-reflection", "Self-efficacy"],
-            answer: "Interpersonal Differentiation",
-            explanation: "This is a direct example of Interpersonal Differentiation, which is the ability to separate one's own experience from others."
-        },
-        {
-            question: "Which of the following is NOT an aspect of Margaret Mead's contribution mentioned in the handout?",
-            options: ["Cultures have unique norms and values.", "Individuals learn cultural norms through upbringing.", "Identities are adaptable across cultures.", "Identity is primarily a result of fixed personality traits."],
-            answer: "Identity is primarily a result of fixed personality traits.",
-            explanation: "Mead's work focuses on the cultural shaping of identity, not on fixed personality traits."
-        },
-        {
-            question: "The theory that an individual's perception of self is influenced by cognitive processes like perception, interpretation, and memory is known as:",
-            options: ["The Self as a Cognitive Construction", "The Self as a Social Construct", "The Self as a Proactive Agent", "The Self as a Differentiated System"],
-            answer: "The Self as a Cognitive Construction",
-            explanation: "This is the title and central idea of the first section on psychological perspectives."
-        },
-        {
-            question: "Who is the American psychologist and philosopher who proposed the 'I' self vs. 'Me' self theory?",
-            options: ["Albert Bandura", "William James", "Carl Rogers", "Donald Winnicott"],
-            answer: "William James",
-            explanation: "William James is credited with proposing the 'I' and 'Me' self theory."
-        },
-        {
-            question: "Which of the following is an example of 'Interpersonal Differentiation'?",
-            options: ["Knowing your thoughts are different from your feelings", "Recognizing that your opinion on a movie is separate from your friend's opinion", "Thinking ahead about the consequences of your actions", "Rewarding yourself for completing a task"],
-            answer: "Recognizing that your opinion on a movie is separate from your friend's opinion",
-            explanation: "This is an example of distinguishing your experience (your opinion) from someone else's, which is Interpersonal Differentiation."
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
         }
-    ],
-    identification: [
-        {
-            question: "This American psychologist and philosopher proposed that the self is composed of the 'I' self and the 'Me' self.",
-            answer: "William James",
-            explanation: "William James is the theorist who introduced the distinction between the 'I' and 'Me' aspects of the self."
-        },
-        {
-            question: "This is the objective part of the self, which includes our traits, roles, and how we see ourselves based on past experiences and social feedback.",
-            answer: "Me self",
-            explanation: "The 'Me' self is the objective, socially-constructed part of our self-perception."
-        },
-        {
-            question: "A subdiscipline of anthropology that interprets human history by analyzing material remains.",
-            answer: "Archaeology",
-            explanation: "Archaeology uses the analysis of material remains to understand ancient civilizations and human history."
-        },
-        {
-            question: "This is the term for the authentic and innate qualities of an individual, according to Donald W. Winnicott.",
-            answer: "True Self",
-            explanation: "Winnicott's 'True Self' represents the core, authentic self."
-        },
-        {
-            question: "The name of the American anthropologist who studied the Tchambuli (Chambri) tribe and challenged fixed gender roles.",
-            answer: "Margaret Mead",
-            explanation: "Margaret Mead's work in Papua New Guinea highlighted the cultural construction of identity and gender."
-        },
-        {
-            question: "According to Carl Rogers, this is the person you want to become or the best version of yourself.",
-            answer: "Ideal Self",
-            explanation: "The Ideal Self is the aspirational version of ourselves in Rogers's theory."
-        },
-        {
-            question: "This concept, proposed by Albert Bandura, emphasizes that individuals actively shape their actions, thoughts, and environments.",
-            answer: "Human Agency",
-            explanation: "Human Agency is the central concept in Bandura's theory about individuals as active agents."
-        },
-        {
-            question: "The term for a protective persona formed in response to external pressures, according to Donald W. Winnicott.",
-            answer: "False Self",
-            explanation: "The 'False Self' is the persona developed to cope with external expectations and pressures."
-        },
-        {
-            question: "This core property of human agency refers to setting goals and making plans to achieve them.",
-            answer: "Intentionality",
-            explanation: "Intentionality is the purposeful and proactive aspect of human agency."
-        },
-        {
-            question: "A subdiscipline of anthropology also known as 'social anthropology' that studies the learned behavior of groups of people.",
-            answer: "Cultural Anthropology",
-            explanation: "Cultural Anthropology and social anthropology are synonymous terms for the study of learned human behavior."
-        },
-        {
-            question: "This is one of the tribes studied by Margaret Mead where women held dominant roles, challenging fixed gender roles.",
-            answer: "Tchambuli (Chambri) tribe",
-            explanation: "Mead's study of the Tchambuli tribe is a key example of how identity and gender roles are culturally constructed."
-        },
-        {
-            question: "The concept of the self that emphasizes its dynamic nature and evolution through cognitive processes like perception and memory.",
-            answer: "The Self as a Cognitive Construction",
-            explanation: "This perspective highlights the influence of cognitive processes on our evolving self-concept."
-        },
-        {
-            question: "This core property of human agency refers to monitoring and evaluating one's own behavior and emotions.",
-            answer: "Self-reactiveness",
-            explanation: "Self-reactiveness is the process of actively monitoring and regulating one's own behavior."
-        },
-        {
-            question: "This American anthropologist's approach to the self focused on symbolic interpretation and performance within specific cultural settings.",
-            answer: "Clifford Geertz",
-            explanation: "Geertz's work is known for its focus on the role of cultural symbols and performance in shaping identity."
-        },
-        {
-            question: "In Carl Rogers's theory, this refers to one's current identity.",
-            answer: "Real Self",
-            explanation: "The Real Self is the 'here and now' version of a person in Rogers's theory."
-        },
-        {
-            question: "The core property of human agency that refers to thinking ahead and planning actions based on expected outcomes.",
-            answer: "Forethought",
-            explanation: "Forethought is the proactive planning and future-oriented thinking aspect of human agency."
-        },
-        {
-            question: "A term by Murray Bowen that describes the ability to distinguish our thoughts from our emotions.",
-            answer: "Intrapsychic Differentiation",
-            explanation: "This is the 'within the self' aspect of differentiation, separating thoughts from feelings."
-        },
-        {
-            question: "This is the term for a self-initiated behavior aimed at addressing problems before they arise.",
-            answer: "Proactive behavior",
-            explanation: "Proactive behavior is about taking initiative to prevent problems rather than reacting to them."
-        },
-        {
-            question: "The subdiscipline of anthropology that studies how language influences social life.",
-            answer: "Linguistic Anthropology",
-            explanation: "This field examines the relationship between language and human society and culture."
-        },
-        {
-            question: "The term used by Murray Bowen to describe the ability to distinguish our own experience from the experience of people we are connected to.",
-            answer: "Interpersonal Differentiation",
-            explanation: "This is the 'between people' aspect of differentiation, maintaining a distinct self in relationships with others."
+
+        /** Cleans a string for flexible comparison (used for Identification questions). */
+        function normalizeAnswer(str) {
+            let normalized = str.toLowerCase();
+            normalized = normalized.replace(/[^\w\s]/g, ''); // Remove punctuation
+            normalized = normalized.replace(/\s/g, '');      // Remove all whitespace
+            return normalized;
         }
-    ]
-};
-    //
-    // --- END OF QUIZ DATA ---
-    //
 
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let wrongAnswers = [];
-    let isIdentificationSection = false;
-    let answered = false;
-    const totalQuestions = quizData.multipleChoice.length + quizData.identification.length;
+        // --- Core Quiz Logic ---
 
-    const quizArea = document.getElementById('quiz-area');
-    const endScreen = document.getElementById('end-screen');
-    const questionText = document.getElementById('question-text');
-    const optionsContainer = document.getElementById('options-container');
-    const identificationContainer = document.getElementById('identification-container');
-    const identificationInput = document.getElementById('identification-input');
-    const submitButton = document.getElementById('submit-button');
-    const feedbackSection = document.getElementById('feedback-section');
-    const feedbackText = document.getElementById('feedback-text');
-    const explanationText = document.getElementById('explanation-text');
-    const progressBar = document.getElementById('progress-bar');
-    const progressText = document.getElementById('progress-text');
-    const finalScoreSpan = document.getElementById('final-score');
-    const totalQuestionsSpan = document.getElementById('total-questions');
-    const bestScoreSpan = document.getElementById('best-score');
-    const wrongAnswersList = document.getElementById('wrong-answers-list');
-    const restartButton = document.getElementById('restart-button');
-    const modeToggle = document.getElementById('mode-toggle');
+        function updateScoreDisplay() {
+            const masteredCount = Object.values(conceptMap).filter(c => c.mastered).length;
+            currentScoreSpan.textContent = `Mastered: ${masteredCount} / ${initialConceptCount}`;
+        }
 
-    // Load initial state from cookies
-    const savedTheme = getCookie("theme");
-    if (savedTheme === "dark") {
-        document.body.classList.add("dark-mode");
-        modeToggle.innerHTML = '🌙';
-    }
-
-    const savedBestScore = getCookie("bestScore");
-    bestScoreSpan.textContent = savedBestScore || '0';
-
-    modeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        modeToggle.innerHTML = isDarkMode ? '🌙' : '☀️';
-        setCookie("theme", isDarkMode ? "dark" : "light", 365);
-    });
-
-    function showQuestion() {
-        if (totalQuestions === 0) {
-            quizArea.innerHTML = "<h2>No questions found! Please add questions to the quizData object.</h2>";
-            return;
+        function updateProgressBar() {
+            const totalMastered = Object.values(conceptMap).filter(c => c.mastered).length;
+            const progress = (totalMastered / initialConceptCount) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            const remaining = quizFlow.length;
+            
+            if (remaining === 0 && totalMastered === initialConceptCount) {
+                progressText.textContent = "All Concepts Mastered!";
+                progressBar.style.animation = 'none';
+            } else {
+                // Show how many concepts are left in the queue
+                progressText.textContent = `Concepts in Queue: ${remaining}`;
+                progressBar.style.animation = 'pulse-progress 2s infinite alternate';
+            }
         }
         
-        answered = false;
-        optionsContainer.style.display = 'flex';
-        identificationContainer.style.display = 'none';
-        identificationInput.value = '';
-        feedbackSection.style.display = 'none';
-        feedbackSection.classList.remove('correct', 'incorrect');
-        
-        let currentQuizData;
-        if (currentQuestionIndex < quizData.multipleChoice.length) {
-            isIdentificationSection = false;
-            submitButton.style.display = 'none'; // Hide submit button for MCQs
-            currentQuizData = quizData.multipleChoice[currentQuestionIndex];
-            optionsContainer.innerHTML = '';
-            currentQuizData.options.forEach(option => {
-                const button = document.createElement('button');
-                button.classList.add('option');
-                button.textContent = option;
-                button.onclick = () => selectOption(button, option);
-                optionsContainer.appendChild(button);
+        /** Gets the current concept object based on the flow and index. */
+        function getCurrentConcept() {
+            const currentId = quizFlow[currentConceptIndex];
+            return conceptMap[currentId];
+        }
+
+        /**
+         * Re-queues the current concept to the end of the flow for spaced repetition.
+         * The stage is reset later when rendering/advancing.
+         */
+        function requeueConcept(concept) {
+            // Remove from current position in quizFlow
+            quizFlow.splice(currentConceptIndex, 1); 
+            
+            // Add to the end of the queue
+            quizFlow.push(concept.id);
+            
+            // The index will advance in nextConcept, so we don't adjust it here.
+        }
+
+        /**
+         * Generic state handler after an answer attempt.
+         * @param {boolean} isCorrect - Result of the check.
+         * @param {object} concept - The current concept object.
+         */
+        function handleFeedback(isCorrect, concept, correctMsg) {
+            if (answered) return;
+            answered = true;
+            nextButton.style.display = 'block';
+            submitButton.style.display = 'none';
+            nextButton.classList.remove('mastery'); 
+
+            if (isCorrect) {
+                playCorrectSound();
+                feedbackMessage.textContent = "Correct! " + correctMsg;
+                feedbackMessage.classList.remove('incorrect-feedback');
+                feedbackMessage.classList.add('correct-feedback');
+
+                if (concept.stage === 1) {
+                    // Passed MCQ: move to Recall (ID) - STAY ON CONCEPT
+                    concept.stage = 2;
+                    nextButton.textContent = "Begin Recall Test →";
+                } else if (concept.stage === 2) {
+                    // Passed ID: Mastery achieved! - ADVANCE CONCEPT
+                    concept.mastered = true;
+                    nextButton.textContent = "Mastered: Next Concept →";
+                    nextButton.classList.add('mastery');
+                }
+
+            } else {
+                playIncorrectSound();
+                shakeScreen();
+                
+                // Failed MCQ or ID: Move to Explanation stage - ADVANCE CONCEPT (after review)
+                concept.stage = 3;
+                feedbackMessage.textContent = `Incorrect. The correct step is Review.`;
+                feedbackMessage.classList.remove('correct-feedback');
+                feedbackMessage.classList.add('incorrect-feedback');
+                
+                // Set button text to view the explanation
+                nextButton.textContent = "View Explanation →";
+                
+                // Requeue the concept immediately for spaced repetition later
+                requeueConcept(concept);
+            }
+            updateScoreDisplay();
+        }
+
+        function selectOption(selectedButton, selectedAnswer) {
+            const concept = getCurrentConcept();
+            if (!concept) return; 
+
+            const isCorrect = selectedAnswer === concept.mcq.answer;
+
+            // Highlight buttons
+            optionsContainer.querySelectorAll('.options').forEach(button => {
+                button.disabled = true;
+                if (button.textContent === concept.mcq.answer) {
+                    button.classList.add('correct');
+                }
+                if (button === selectedButton && !isCorrect) {
+                    button.classList.add('incorrect');
+                }
             });
-            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. The identification questions will begin after question ${quizData.multipleChoice.length}.`;
-        } else {
-            isIdentificationSection = true;
-            submitButton.style.display = 'block'; // Show submit button for identification questions
-            currentQuizData = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
-            optionsContainer.style.display = 'none';
-            identificationContainer.style.display = 'block';
-            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}. You are now in the identification questions section.`;
+
+            handleFeedback(isCorrect, concept, `The answer is **${concept.mcq.answer}**. Now, let's test your recall.`);
         }
-        
-        questionText.textContent = currentQuizData.question;
-        updateProgressBar();
-    }
 
-    function selectOption(selectedButton, selectedAnswer) {
-        if (answered) return;
-        answered = true;
+        function checkIdentificationAnswer() {
+            const concept = getCurrentConcept();
+            if (!concept) return; 
 
-        const currentQuestion = quizData.multipleChoice[currentQuestionIndex];
-        const isCorrect = selectedAnswer === currentQuestion.answer;
-        
-        selectedButton.classList.add(isCorrect ? 'correct' : 'incorrect');
+            const rawInput = identificationInput.value.trim();
+            const normalizedInput = normalizeAnswer(rawInput);
+            
+            identificationInput.disabled = true;
 
-        if (isCorrect) {
-            score++;
-            feedbackText.textContent = "Correct!";
-            feedbackSection.classList.add('correct');
-        } else {
-            feedbackText.textContent = `Incorrect. The correct answer was: ${currentQuestion.answer}`;
-            feedbackSection.classList.add('incorrect');
-            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: selectedAnswer, type: 'multipleChoice' });
-        }
-        explanationText.textContent = currentQuestion.explanation;
-        feedbackSection.style.display = 'block';
+            const isCorrect = concept.identification.correctAnswers.some(acceptableAnswer => {
+                return normalizeAnswer(acceptableAnswer) === normalizedInput;
+            });
 
-        const allOptions = optionsContainer.querySelectorAll('.option');
-        allOptions.forEach(option => {
-            if (option.textContent === currentQuestion.answer) {
-                option.classList.add('correct');
+            const officialAnswer = concept.identification.correctAnswers[0];
+
+            if (isCorrect) {
+                identificationInput.style.borderColor = 'var(--correct-color)';
+            } else {
+                identificationInput.style.borderColor = 'var(--incorrect-color)';
             }
-            option.disabled = true;
+
+            handleFeedback(isCorrect, concept, `You successfully recalled **${officialAnswer}** from memory!`);
+        }
+
+        /** Renders the UI based on the current concept's stage. */
+        function renderConcept() {
+            const concept = getCurrentConcept();
+
+            if (!concept) {
+                // Quiz is complete (quizFlow is empty)
+                showEndScreen();
+                return;
+            }
+
+            answered = false;
+            feedbackMessage.textContent = '';
+            feedbackMessage.classList.remove('correct-feedback', 'incorrect-feedback');
+            identificationInput.style.borderColor = 'var(--border-color-light)';
+            identificationInput.disabled = false;
+            nextButton.style.display = 'none';
+            nextButton.classList.remove('mastery');
+
+            // Hide/clear all optional UI elements first
+            optionsContainer.style.display = 'none';
+            optionsContainer.innerHTML = '';
+            identificationInput.style.display = 'none';
+            explanationText.style.display = 'none';
+            submitButton.style.display = 'none';
+            
+            updateProgressBar();
+            
+            // --- Stage Rendering ---
+            if (concept.stage === 1) {
+                // Stage 1: MCQ (Recognize)
+                stageIndicator.textContent = "Step 1: Recognize (Multiple Choice)";
+                stageIndicator.className = 'stage-mcq';
+
+                const mcq = concept.mcq;
+                questionText.textContent = mcq.question;
+                
+                optionsContainer.style.display = 'flex';
+                
+                // Shuffle options for cognitive load
+                const shuffledOptions = [...mcq.options].sort(() => Math.random() - 0.5);
+                
+                shuffledOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.classList.add('options');
+                    button.textContent = option;
+                    button.onclick = () => selectOption(button, option);
+                    optionsContainer.appendChild(button);
+                });
+
+            } else if (concept.stage === 2) {
+                // Stage 2: Identification (Recall)
+                stageIndicator.textContent = "Step 2: Recall (Identification)";
+                stageIndicator.className = 'stage-id';
+
+                const id = concept.identification;
+                questionText.textContent = id.question;
+
+                identificationInput.style.display = 'block';
+                identificationInput.value = ''; // Clear previous input
+                submitButton.style.display = 'block';
+
+            } else if (concept.stage === 3) {
+                // Stage 3: Explanation (Learn / Correct)
+                stageIndicator.textContent = "Step 3: Review & Re-Learn (Retry Scheduled)";
+                stageIndicator.className = 'stage-exp';
+
+                questionText.textContent = `Concept Review: ${concept.mcq.question}`; // Show original context
+                explanationText.innerHTML = concept.explanation;
+                explanationText.style.display = 'block';
+                
+                // Show feedback immediately upon entering Stage 3
+                feedbackMessage.textContent = "Review the explanation below. This concept will be shown again later.";
+                feedbackMessage.classList.add('incorrect-feedback');
+                
+                nextButton.style.display = 'block';
+                nextButton.textContent = "Understood, Next Concept →";
+            }
+        }
+
+        /** Moves to the next question in the queue or handles mastery removal. */
+        function nextConcept() {
+            const concept = getCurrentConcept();
+            
+            // --- State Transition Logic on Button Click ---
+            
+            if (concept.stage === 2 && !concept.mastered) {
+                // Case 1: Correct MCQ answer was just made (Stage 1 -> Stage 2). Stay on current concept.
+                renderConcept();
+                return;
+            }
+            
+            if (concept.mastered) {
+                // Case 2: Concept was just mastered (Stage 2 -> Mastered). Remove from queue and advance index.
+                const indexToRemove = quizFlow.indexOf(concept.id);
+                if (indexToRemove !== -1) {
+                    quizFlow.splice(indexToRemove, 1);
+                    // Since we removed an element at the current index, the next question is now at the same index
+                    // We only need to advance the index if it points to an empty slot, but since we re-calculate 
+                    // the wrap-around below, we can just leave the index as is.
+                }
+            } else if (concept.stage === 3) {
+                // Case 3: Explanation was just completed (Stage 3 -> Retry). Reset stage and advance index.
+                concept.stage = 1;
+                currentConceptIndex++;
+            } else {
+                 // Case 4: Any other state transition that requires advancing (e.g., failed check that already requeued)
+                 currentConceptIndex++;
+            }
+            
+            // Handle wrap-around: if we passed the end of the queue, loop back to the start (0)
+            if (currentConceptIndex >= quizFlow.length) {
+                currentConceptIndex = 0;
+            }
+            
+            renderConcept();
+        }
+
+        function showEndScreen() {
+             quizArea.style.display = 'none';
+             endScreen.style.display = 'block';
+             
+             const mastered = Object.values(conceptMap).filter(c => c.mastered);
+             const unmastered = Object.values(conceptMap).filter(c => !c.mastered);
+             
+             masteredCountSpan.textContent = mastered.length;
+             unmasteredCountSpan.textContent = unmastered.length;
+             
+             masteryList.innerHTML = '';
+             
+             // List all concepts with mastery status
+             conceptData.forEach(concept => {
+                 const li = document.createElement('li');
+                 li.textContent = concept.mcq.question;
+                 if (concept.mastered) {
+                     li.classList.add('mastered-list-item');
+                     li.textContent = `✅ Mastered: ${li.textContent}`;
+                 } else {
+                     li.classList.add('unmastered-list-item');
+                     li.textContent = `❌ Requires Review: ${li.textContent}`;
+                 }
+                 masteryList.appendChild(li);
+             });
+             
+             updateProgressBar();
+        }
+
+
+        // --- Event Listeners and Initialization ---
+
+        nextButton.addEventListener('click', nextConcept);
+
+        submitButton.addEventListener('click', checkIdentificationAnswer);
+
+        restartButton.addEventListener('click', () => {
+            // Reset ALL state variables and data stages
+            
+            // Reset concept stages and mastery flags
+            Object.values(conceptMap).forEach(concept => {
+                concept.stage = 1;
+                concept.mastered = false;
+            });
+            
+            // Reset flow and index (shuffle initial flow for a fresh session)
+            quizFlow = conceptData.map(c => c.id).sort(() => Math.random() - 0.5);
+            currentConceptIndex = 0;
+            
+            endScreen.style.display = 'none';
+            quizArea.style.display = 'block';
+            renderConcept();
         });
 
-        setTimeout(() => {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < totalQuestions) {
-                showQuestion();
+        // Theme Toggle Logic
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.textContent = '🌙 Dark Mode';
+                setCookie('theme', 'dark', 365);
             } else {
-                showEndScreen();
+                themeToggle.textContent = '☀️ Light Mode';
+                setCookie('theme', 'light', 365);
             }
-        }, 3000);
-    }
+        });
 
-    submitButton.onclick = () => {
-        if (!isIdentificationSection) {
-            return;
-        }
-
-        if (answered) return;
-        answered = true;
-        submitButton.disabled = true;
-
-        const currentQuestion = quizData.identification[currentQuestionIndex - quizData.multipleChoice.length];
-        const userAnswer = identificationInput.value.trim();
-        const correctAnswer = currentQuestion.answer.trim();
-
-        const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
-        
-        if (isCorrect) {
-            score++;
-            feedbackText.textContent = "Correct!";
-            feedbackSection.classList.add('correct');
-        } else {
-            feedbackText.textContent = `Incorrect. The correct answer was: ${currentQuestion.answer}`;
-            feedbackSection.classList.add('incorrect');
-            wrongAnswers.push({ question: currentQuestion.question, correctAnswer: currentQuestion.answer, yourAnswer: userAnswer, type: 'identification' });
-        }
-        explanationText.textContent = currentQuestion.explanation;
-        feedbackSection.style.display = 'block';
-
-        setTimeout(() => {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < totalQuestions) {
-                showQuestion();
+        // Load theme from cookie and initialize the quiz
+        window.onload = () => {
+            const savedTheme = getCookie('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.textContent = '🌙 Dark Mode';
             } else {
-                showEndScreen();
+                document.body.classList.remove('dark-mode');
+                themeToggle.textContent = '☀️ Light Mode';
             }
-        }, 3000);
-    };
+            
+            // Start the quiz with a fresh shuffled order
+            quizFlow.sort(() => Math.random() - 0.5);
+            renderConcept();
+        };
 
-    function updateProgressBar() {
-        const progress = (currentQuestionIndex / totalQuestions) * 100;
-        progressBar.style.width = `${progress}%`;
-    }
-
-    function showEndScreen() {
-        quizArea.style.display = 'none';
-        endScreen.style.display = 'block';
-        finalScoreSpan.textContent = score;
-        totalQuestionsSpan.textContent = totalQuestions;
-
-        const currentBestScore = parseInt(getCookie("bestScore") || '0', 10);
-        if (score > currentBestScore) {
-            setCookie("bestScore", score, 365);
-            bestScoreSpan.textContent = score;
-        } else {
-            bestScoreSpan.textContent = currentBestScore;
-        }
-
-        wrongAnswersList.innerHTML = '';
-        if (wrongAnswers.length > 0) {
-            wrongAnswers.forEach(item => {
-                const li = document.createElement('li');
-                li.innerHTML = `<strong>Q:</strong> ${item.question}<br><strong>Your Answer:</strong> ${item.yourAnswer}<br><strong>Correct Answer:</strong> ${item.correctAnswer}`;
-                wrongAnswersList.appendChild(li);
-            });
-        } else {
-            wrongAnswersList.innerHTML = "<li>You got all questions right! 🎉</li>";
-        }
-    }
-
-    restartButton.addEventListener('click', () => {
-        currentQuestionIndex = 0;
-        score = 0;
-        wrongAnswers = [];
-        endScreen.style.display = 'none';
-        quizArea.style.display = 'block';
-        showQuestion();
-    });
-
-    // Start the quiz
-    showQuestion();
-
-</script>
-
+    </script>
 </body>
 </html>
