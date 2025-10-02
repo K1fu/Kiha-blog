@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title class="subjectName"></title>
+    <!-- Using Poppins for headers and Inter for body text -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styling */
+        :root {
+            /* Calm, Study-Focused Palette */
+            --bg-color-light: #f9f9fb; /* Very light, slightly warm gray */
+            --text-color-light: #1f2a37; /* Dark charcoal for high contrast */
+            --container-bg-light: #ffffff;
+            --primary-color-light: #6366f1; /* Deep Indigo/Violet for academic focus */
+            --secondary-color-light: #4f46e5; /* Darker Indigo */
+            --correct-color: #059669; /* Deep, stable green */
+            --incorrect-color: #ef4444; /* Accessible red */
+            --border-color-light: #e5e7eb; /* Light separator */
+            --shadow-color-light: rgba(17, 24, 39, 0.08); /* Subtle dark shadow */
+            --placeholder-color-light: #9ca3af;
+            --stage1-color: #3b82f6; /* Blue for Recognize (MCQ) */
+            --stage2-color: #f59e0b; /* Amber for Recall (ID) */
+            --stage3-color: #10b981; /* Green for Mastery */
+        }
+
+        .dark-mode {
+            /* Dark Mode for reduced eye strain */
+            --bg-color-light: #1f2a37;
+            --text-color-light: #e5e7eb;
+            --container-bg-light: #374151;
+            --primary-color-light: #60a5fa; 
+            --secondary-color-light: #3b82f6;
+            --correct-color: #34d399;
+            --incorrect-color: #f87171;
+            --border-color-light: #4b5563;
+            --shadow-color-light: rgba(0, 0, 0, 0.4);
+            --placeholder-color-light: #9ca3af;
+        }
+
+        /* Screen Shake Animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* Subtle Progress Animation (Pulse) */
+        @keyframes pulse-progress {
+            0% { box-shadow: 0 0 0 0 var(--correct-color); }
+            70% { box-shadow: 0 0 0 5px rgba(5, 150, 105, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+        }
+
+        /* Typography and Base Layout */
+        body {
+            /* Using Inter for high readability in body text and general UI elements */
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.4s, color 0.4s;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 760px; 
+            margin: 20px;
+            padding: 40px 30px;
+            background-color: var(--container-bg-light);
+            border-radius: 16px; 
+            box-shadow: 0 15px 35px var(--shadow-color-light); 
+            transition: background-color 0.4s, box-shadow 0.4s;
+        }
+
+        /* Header and Mode Toggle */
+        h1 {
+            font-family: 'Poppins', sans-serif; /* Poppins for a distinct, modern header */
+            text-align: center;
+            color: var(--primary-color-light);
+            font-weight: 700;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        /* Stage Indicator */
+        #stage-indicator {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 1.1em;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        
+        .stage-mcq { background-color: var(--stage1-color); }
+        .stage-id { background-color: var(--stage2-color); }
+        .stage-exp { background-color: var(--incorrect-color); } /* Use incorrect color for required review */
+        .stage-mastered { background-color: var(--correct-color); } /* Added style for mastery status */
+
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color-light);
+        }
+
+        .theme-toggle, #current-score {
+            font-size: 0.9em;
+            font-weight: 700;
+            color: var(--primary-color-light);
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .theme-toggle {
+            cursor: pointer;
+            border: 2px solid var(--primary-color-light);
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--primary-color-light);
+            color: white;
+            box-shadow: 0 2px 5px rgba(99, 102, 241, 0.3); 
+        }
+        
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            background-color: var(--border-color-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            height: 18px; 
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--correct-color);
+            transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            animation: pulse-progress 2s infinite alternate; 
+        }
+        
+        #progress-text {
+            font-size: 1em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: var(--text-color-light);
+            text-align: center;
+        }
+        
+        /* Question Grouping for Focus */
+        .question-group {
+            background-color: var(--bg-color-light);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color-light);
+        }
+        
+        #explanation-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: var(--text-color-light);
+        }
+        
+        #explanation-text strong {
+            color: var(--primary-color-light);
+            font-weight: 700;
+        }
+
+        /* Question Area */
+        #quiz-area {
+            min-height: 400px; 
+            display: block;
+        }
+
+        #question-text {
+            font-size: 1.4em; 
+            margin-bottom: 25px;
+            font-weight: 700;
+            line-height: 1.6;
+            text-align: left;
+            color: var(--text-color-light);
+        }
+
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        /* Options/Buttons/Inputs */
+        .options, #submit-button, #next-button, #restart-button, #start-review-button {
+            padding: 18px 25px; 
+            border: 2px solid var(--border-color-light);
+            background-color: var(--container-bg-light);
+            color: var(--text-color-light);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.05em;
+            font-weight: 700;
+            transition: all 0.2s ease-in-out;
+            text-align: left;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+        }
+
+        /* Focus Ring for Accessibility */
+        .options:focus, #submit-button:focus, #next-button:focus, #restart-button:focus, #identification-input:focus {
+            outline: 3px solid var(--primary-color-light);
+            outline-offset: 2px;
+        }
+
+
+        .options:hover:not(.selected):not(.correct):not(.incorrect) {
+            background-color: var(--primary-color-light);
+            color: white;
+            border-color: var(--primary-color-light);
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.2); 
+        }
+
+        .options.selected {
+            background-color: var(--primary-color-light);
+            color: white;
+            border-color: var(--primary-color-light);
+            transform: scale(1.01);
+            box-shadow: 0 4px 8px rgba(99, 102, 241, 0.4); 
+        }
+        
+        /* Interactive Cues for Feedback */
+        .options.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+            box-shadow: 0 4px 8px rgba(5, 150, 105, 0.4);
+            pointer-events: none;
+            position: relative;
+        }
+        
+        .options.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+            border-color: var(--incorrect-color);
+            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.4);
+            pointer-events: none;
+            position: relative;
+        }
+        
+        #identification-input {
+            width: 100%;
+            padding: 18px;
+            margin-top: 10px;
+            border: 2px solid var(--border-color-light);
+            border-radius: 10px;
+            font-size: 1em;
+            box-sizing: border-box;
+            color: var(--text-color-light);
+            background-color: var(--container-bg-light);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        #identification-input::placeholder {
+            color: var(--placeholder-color-light);
+            font-weight: 400;
+        }
+
+        #submit-button, #next-button {
+            display: none; 
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        #submit-button {
+            background-color: var(--stage2-color);
+            color: white;
+            border-color: var(--stage2-color);
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3); 
+        }
+        
+        #submit-button:hover:not(:disabled) {
+            background-color: #d97706;
+            border-color: #d97706;
+            box-shadow: 0 6px 12px rgba(245, 158, 11, 0.4); 
+        }
+        
+        #next-button {
+            background-color: var(--primary-color-light);
+            color: white;
+            border-color: var(--primary-color-light);
+        }
+        #next-button.mastery {
+            background-color: var(--correct-color);
+            border-color: var(--correct-color);
+        }
+        #next-button:hover:not(:disabled) {
+            background-color: var(--secondary-color-light);
+            border-color: var(--secondary-color-light);
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.4); 
+        }
+
+        /* Feedback Message */
+        #feedback-message {
+            text-align: center;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            font-weight: 700;
+            min-height: 20px;
+            border-radius: 8px;
+            font-size: 1.1em;
+        }
+
+        .correct-feedback {
+            color: var(--correct-color);
+            background-color: rgba(5, 150, 105, 0.1);
+            border: 1px solid var(--correct-color);
+        }
+
+        .incorrect-feedback {
+            color: var(--incorrect-color);
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--incorrect-color);
+        }
+
+        /* End Screen */
+        #end-screen {
+            display: none;
+            text-align: center;
+        }
+
+        #end-screen h2 {
+            font-family: 'Poppins', sans-serif; 
+            color: var(--correct-color);
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        #score-summary {
+            background-color: var(--bg-color-light);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color-light);
+            text-align: left;
+        }
+
+        #score-summary p {
+            margin: 10px 0;
+            font-size: 1.2em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #score-summary strong {
+            font-weight: 700;
+            color: var(--primary-color-light);
+            font-size: 1.1em;
+        }
+        
+        #score-summary h3 {
+             font-family: 'Poppins', sans-serif;
+             color: var(--primary-color-light);
+             margin-bottom: 15px;
+             border-bottom: 2px solid var(--border-color-light);
+             padding-bottom: 5px;
+        }
+        
+        .mastered-list-item {
+            color: var(--correct-color);
+            font-weight: 600;
+        }
+        .unmastered-list-item {
+            color: var(--incorrect-color);
+            font-weight: 600;
+        }
+        
+        #mastery-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: left;
+        }
+        
+        #mastery-list li {
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border-color-light);
+        }
+        
+        #mastery-list li:last-child {
+            border-bottom: none;
+        }
+
+        #restart-button {
+            margin-top: 25px;
+            background-color: var(--primary-color-light);
+            color: white;
+            border-color: var(--primary-color-light);
+        }
+        /* Add this new class to your <style> block */
+        .explanation-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: var(--container-bg-light); 
+            border-radius: 6px;
+            border: 1px solid var(--border-color-light);
+            font-size: 0.9em;
+            color: var(--text-color-light);
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-container">
+        <div class="header-controls">
+            <span id="current-score">Score: 0</span>
+            <span class="theme-toggle" id="theme-toggle">☀️ Light Mode</span>
+        </div>
+
+        <h1 class="subjectName">Init</h1>
+        
+        <div id="quiz-area">
+            <div id="stage-indicator"></div>
+            <div id="progress-text"></div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div id="feedback-message"></div>
+            
+            <div class="question-group">
+                <p id="question-text"></p>
+                
+                <div id="options-container">
+                    <!-- Multiple Choice Options are inserted here -->
+                </div>
+                
+                <p id="explanation-text" style="display: none;"></p>
+
+                <input type="text" id="identification-input" placeholder="Type your answer here..." style="display: none;">
+            </div>
+
+            <button id="submit-button">Submit Answer</button>
+            <button id="next-button">Continue</button>
+        </div>
+
+        <div id="end-screen">
+            <h2>Mastery Check Complete!</h2>
+            
+            <div id="score-summary">
+                <p>Concepts Mastered: <strong id="mastered-count-span">0</strong></p>
+                <p>Concepts Remaining: <span id="unmastered-count-span">0</span></p>
+                
+                <h3>Mastery Status:</h3>
+                <ul id="mastery-list">
+                    <!-- Mastery status of concepts inserted here -->
+                </ul>
+            </div>
+
+            <button id="restart-button">Start New Session</button>
+        </div>
+
+    </div>
+    <script src="Understand.js"></script>
+    <script>
+        const subjectDisplays = document.querySelectorAll('.subjectName'); 
+
+// Loop through the NodeList and update the text content of each element
+subjectDisplays.forEach(element => {
+    element.textContent = subjectName;
+});
+
+const initialConceptCount = conceptData.length;
+
+// This array holds the IDs of concepts in the order they will be presented.
+let quizFlow = conceptData.map(c => c.id); 
+
+// Lookup map for fast access to concept objects by ID
+const conceptMap = conceptData.reduce((map, concept) => {
+    map[concept.id] = concept;
+    // Add initial tracking properties
+    concept.stage = 1; // 1: MCQ, 2: ID, 3: Explanation
+    concept.mastered = false;
+    concept.firstAttemptCorrect = null; // Tracks initial attempt success (for Raw Score)
+    concept.reviewAttempts = 0; // Tracks successful attempts after review (for Review Score)
+    return map;
+}, {});
+
+let currentConceptIndex = 0; // Index within the quizFlow array
+let answered = false;
+let rawScore = 0; // Correct on first Stage 1 attempt
+let reviewScore = 0; // Correct on final Stage 2 attempt (Mastery)
+
+// --- DOM Elements ---
+const quizContainer = document.getElementById('quiz-container');
+const quizArea = document.getElementById('quiz-area');
+const endScreen = document.getElementById('end-screen');
+const stageIndicator = document.getElementById('stage-indicator');
+const questionText = document.getElementById('question-text');
+const explanationText = document.getElementById('explanation-text');
+const optionsContainer = document.getElementById('options-container');
+const identificationInput = document.getElementById('identification-input');
+const nextButton = document.getElementById('next-button');
+const submitButton = document.getElementById('submit-button');
+const feedbackMessage = document.getElementById('feedback-message');
+const progressBar = document.getElementById('progress-bar');
+const progressText = document.getElementById('progress-text');
+const restartButton = document.getElementById('restart-button');
+const currentScoreSpan = document.getElementById('current-score');
+const masteredCountSpan = document.getElementById('mastered-count-span');
+const unmasteredCountSpan = document.getElementById('unmastered-count-span');
+const masteryList = document.getElementById('mastery-list');
+const themeToggle = document.getElementById('theme-toggle');
+
+
+// --- Audio and Visual Effects (Web Audio API) ---
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+
+/** Plays a quick, high-pitched ding sound for a correct answer. */
+function playCorrectSound() {
+    const gainNode = audioCtx.createGain();
+    gainNode.connect(audioCtx.destination);
+    function playNote(freq, startTime, duration) {
+        const osc = audioCtx.createOscillator();
+        const noteGain = audioCtx.createGain();
+        osc.type = "sine"; 
+        osc.frequency.setValueAtTime(freq, startTime);
+        osc.connect(noteGain);
+        noteGain.connect(gainNode);
+        noteGain.gain.setValueAtTime(0.5, startTime);
+        noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+    }
+    const now = audioCtx.currentTime;
+    playNote(660, now, 0.25); 
+    playNote(880, now + 0.1, 0.3);
+}
+
+/** Plays a short, low-frequency buzz/error sound for an incorrect answer. */
+function playIncorrectSound() {
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(150, audioCtx.currentTime); 
+    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+    oscillator.start();
+    setTimeout(() => oscillator.stop(), 400);
+}
+
+/** Applies the CSS shake animation to the quiz container. */
+function shakeScreen() {
+    quizContainer.classList.add('shake');
+    setTimeout(() => {
+        quizContainer.classList.remove('shake');
+    }, 500); 
+}
+
+// --- Utility Functions (Cookies) ---
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+/** Cleans a string for flexible comparison (used for Identification questions). */
+function normalizeAnswer(str) {
+    let normalized = str.toLowerCase();
+    normalized = normalized.replace(/[^\w\s]/g, ''); // Remove punctuation
+    normalized = normalized.replace(/\s/g, '');      // Remove all whitespace
+    return normalized;
+}
+
+// --- Core Quiz Logic ---
+
+function updateScoreDisplay() {
+    const masteredCount = Object.values(conceptMap).filter(c => c.mastered).length;
+    currentScoreSpan.textContent = `Mastered: ${masteredCount} / ${initialConceptCount}`;
+}
+
+function updateProgressBar() {
+    const totalMastered = Object.values(conceptMap).filter(c => c.mastered).length;
+    const progress = (totalMastered / initialConceptCount) * 100;
+    progressBar.style.width = `${progress}%`;
+    
+    const remaining = quizFlow.length;
+    
+    if (remaining === 0 && totalMastered === initialConceptCount) {
+        progressText.textContent = "All Concepts Mastered!";
+        progressBar.style.animation = 'none';
+    } else {
+        // Show how many concepts are left in the queue
+        progressText.textContent = `Concepts in Queue: ${remaining}`;
+        progressBar.style.animation = 'pulse-progress 2s infinite alternate';
+    }
+}
+
+/** Gets the current concept object based on the flow and index. */
+function getCurrentConcept() {
+    const currentId = quizFlow[currentConceptIndex];
+    return conceptMap[currentId];
+}
+
+/**
+ * Re-queues the current concept to the end of the flow for spaced repetition.
+ */
+function requeueConcept(concept) {
+    // Only requeue if not already at the end and if it's currently in the flow
+    const currentIndex = quizFlow.indexOf(concept.id);
+    
+    if (currentIndex !== -1 && currentIndex < quizFlow.length - 1) {
+         quizFlow.splice(currentIndex, 1); 
+         quizFlow.push(concept.id);
+    }
+}
+
+/**
+         * Generic state handler after an answer attempt.
+         * @param {boolean} isCorrect - Result of the check.
+         * @param {object} concept - The current concept object.
+         * @param {string} correctMsg - Message for a correct answer.
+         */
+         function handleFeedback(isCorrect, concept, correctMsg) {
+            if (answered) return;
+            answered = true;
+            nextButton.style.display = 'block';
+            submitButton.style.display = 'none';
+            nextButton.classList.remove('mastery'); 
+            
+            // Clear any previous text/explanation boxes
+            explanationText.style.display = 'none'; 
+
+            if (isCorrect) {
+                playCorrectSound();
+                feedbackMessage.classList.remove('incorrect-feedback');
+                feedbackMessage.classList.add('correct-feedback');
+
+                if (concept.stage === 1) {
+                    // Passed MCQ: move to Recall (ID) - STAY ON CONCEPT (Case 3: Correct part 1)
+                    concept.stage = 2;
+                    if (concept.firstAttemptCorrect === null) {
+                        concept.firstAttemptCorrect = true;
+                        rawScore++;
+                    }
+                    feedbackMessage.textContent = "Correct! " + correctMsg;
+                    nextButton.textContent = "Begin Recall Test →";
+                    
+                } else if (concept.stage === 2) {
+                    // Passed ID: Mastery achieved! (Case 3: All correct)
+                    concept.mastered = true;
+                    reviewScore++;
+                    feedbackMessage.textContent = "Mastered! You successfully recalled this concept.";
+                    nextButton.textContent = "Mastered: Next Concept →";
+                    nextButton.classList.add('mastery');
+                }
+
+            } else { // If Incorrect
+                playIncorrectSound();
+                shakeScreen();
+                
+                feedbackMessage.classList.remove('correct-feedback');
+                feedbackMessage.classList.add('incorrect-feedback');
+
+                if (concept.stage === 1) {
+                    // Case 1: MCQ Wrong -> Show explanation, proceed to ID
+                    
+                    // Note failure for scoring
+                    if (concept.firstAttemptCorrect === null) {
+                        concept.firstAttemptCorrect = false;
+                    }
+                    
+                    // Inject explanation into the feedback message
+                    feedbackMessage.innerHTML = `❌ **Incorrect on Multiple Choice.** Please review the key takeaway before proceeding to the recall test.<hr>
+                        <div class="explanation-feedback">${concept.explanation}</div>`;
+                    
+                    // Switch to ID stage and re-render on next click
+                    concept.stage = 2; 
+                    nextButton.textContent = "Proceed to Identification →";
+                    
+                } else if (concept.stage === 2) {
+                    // Case 2: ID Wrong -> Show explanation, Requeue, proceed to next concept
+                    
+                    feedbackMessage.innerHTML = `❌ **Incorrect on Identification.** You need to re-learn this concept.<hr>
+                        <div class="explanation-feedback">${concept.explanation}</div>`;
+                        
+                    // Requeue for spaced repetition later
+                    requeueConcept(concept);
+                    
+                    // Reset stage to 1 so nextConcept knows to advance
+                    concept.stage = 1; 
+                    nextButton.textContent = "Understood, Next Concept →";
+                }
+            }
+            updateScoreDisplay();
+        }
+
+function selectOption(selectedButton, selectedAnswer) {
+    const concept = getCurrentConcept();
+    if (!concept || concept.stage !== 1) return; 
+
+    const isCorrect = selectedAnswer === concept.mcq.answer;
+
+    // Highlight buttons
+    optionsContainer.querySelectorAll('.options').forEach(button => {
+        button.disabled = true;
+        if (button.textContent === concept.mcq.answer) {
+            button.classList.add('correct');
+        }
+        if (button === selectedButton && !isCorrect) {
+            button.classList.add('incorrect');
+        }
+    });
+
+    handleFeedback(isCorrect, concept, `The answer is **${concept.mcq.answer}**. Prepare for the recall test.`);
+}
+
+function checkIdentificationAnswer() {
+    const concept = getCurrentConcept();
+    if (!concept || concept.stage !== 2) return; 
+
+    const rawInput = identificationInput.value.trim();
+    const normalizedInput = normalizeAnswer(rawInput);
+    
+    identificationInput.disabled = true;
+
+    const isCorrect = concept.identification.correctAnswers.some(acceptableAnswer => {
+        return normalizeAnswer(acceptableAnswer) === normalizedInput;
+    });
+
+    const officialAnswer = concept.identification.correctAnswers[0];
+
+    if (isCorrect) {
+        identificationInput.style.borderColor = 'var(--correct-color)';
+    } else {
+        identificationInput.style.borderColor = 'var(--incorrect-color)';
+    }
+
+    handleFeedback(isCorrect, concept, `You successfully recalled **${officialAnswer}** from memory!`);
+}
+
+/** Renders the UI based on the current concept's stage. */
+/** Renders the UI based on the current concept's stage. */
+function renderConcept() {
+            const concept = getCurrentConcept();
+
+            if (!concept) {
+                // Quiz is complete (quizFlow is empty)
+                showEndScreen();
+                return;
+            }
+
+            answered = false;
+            // IMPORTANT: The feedback message is cleared in nextConcept() before calling renderConcept()
+            // to prevent the previous answer's feedback from staying visible.
+            
+            identificationInput.style.borderColor = 'var(--border-color-light)';
+            identificationInput.disabled = false;
+            nextButton.style.display = 'none';
+            nextButton.classList.remove('mastery');
+
+            // Hide/clear all optional UI elements first
+            optionsContainer.style.display = 'none';
+            optionsContainer.innerHTML = '';
+            identificationInput.style.display = 'none';
+            explanationText.style.display = 'none'; // Keep this permanently hidden for the new flow
+            submitButton.style.display = 'none';
+            
+            updateProgressBar();
+            
+            // --- Stage Rendering ---
+            if (concept.stage === 1) {
+                // Stage 1: MCQ (Recognize)
+                stageIndicator.textContent = "Step 1: Recognize (Multiple Choice)";
+                stageIndicator.className = 'stage-mcq';
+
+                const mcq = concept.mcq;
+                questionText.textContent = mcq.question;
+                
+                optionsContainer.style.display = 'flex';
+                
+                // Shuffle options for cognitive load
+                const shuffledOptions = [...mcq.options].sort(() => Math.random() - 0.5);
+                
+                shuffledOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.classList.add('options');
+                    button.textContent = option;
+                    button.onclick = () => selectOption(button, option);
+                    optionsContainer.appendChild(button);
+                });
+
+            } else if (concept.stage === 2) {
+                // Stage 2: Identification (Recall)
+                stageIndicator.textContent = "Step 2: Recall (Identification)";
+                stageIndicator.className = 'stage-id';
+
+                const id = concept.identification;
+                questionText.textContent = id.question;
+
+                identificationInput.style.display = 'block';
+                identificationInput.value = ''; // Clear previous input
+                submitButton.style.display = 'block';
+
+            } 
+            // Stage 3 removed as per new flow.
+        }
+
+/** Moves to the next question in the queue or handles mastery removal. */
+/** Moves to the next question in the queue or handles mastery removal. */
+/** Moves to the next question in the queue or handles mastery removal. */
+/** Moves to the next question in the queue or handles mastery removal. */
+function nextConcept() {
+            const concept = getCurrentConcept();
+            
+            // Advance the index ONLY if the concept was mastered OR if it just failed ID (meaning it was requeued)
+            let shouldAdvanceIndex = false;
+
+            if (concept.mastered) {
+                // Case 3: Concept was just mastered (ID success). Remove from queue.
+                const indexToRemove = quizFlow.indexOf(concept.id);
+                if (indexToRemove !== -1) {
+                    quizFlow.splice(indexToRemove, 1);
+                }
+                shouldAdvanceIndex = true;
+                
+            } else if (concept.stage === 1) {
+                // Case 2: Concept just failed ID and was requeued (stage was reset to 1 in handleFeedback). 
+                // We now advance to the next concept in the original flow.
+                shouldAdvanceIndex = true;
+            } 
+            // If stage is 2 (after a correct or wrong MCQ), we do NOT advance index; 
+            // we let renderConcept show the ID question next.
+            
+            if (shouldAdvanceIndex) {
+                 currentConceptIndex++;
+            }
+            
+            // Handle wrap-around
+            if (currentConceptIndex >= quizFlow.length) {
+                currentConceptIndex = 0;
+            }
+            
+            // Clear feedback *before* rendering the new question
+            feedbackMessage.textContent = '';
+            
+            renderConcept();
+        }
+
+function showEndScreen() {
+     quizArea.style.display = 'none';
+     endScreen.style.display = 'block';
+     
+     const mastered = Object.values(conceptMap).filter(c => c.mastered);
+     const unmastered = Object.values(conceptMap).filter(c => !c.mastered);
+     
+     masteredCountSpan.textContent = mastered.length;
+     unmasteredCountSpan.textContent = unmastered.length;
+     
+     // Update the score summary elements
+     const rawScoreSpan = document.createElement('p');
+     rawScoreSpan.innerHTML = `Raw Score (First MCQ Attempt): <strong>${rawScore} / ${initialConceptCount}</strong>`;
+     
+     const reviewScoreSpan = document.createElement('p');
+     reviewScoreSpan.innerHTML = `Post-Review Mastery Score: <strong>${reviewScore} / ${initialConceptCount}</strong>`;
+
+     const scoreSummary = document.getElementById('score-summary');
+     // Remove old score summaries if they exist before adding new ones
+     scoreSummary.querySelectorAll('p').forEach((p, index) => {
+         // Keep the first two (Mastered and Remaining counts)
+         if (index > 1) p.remove(); 
+     });
+     
+     // Insert new score details before the Mastery Status heading
+     const masteryStatusHeading = scoreSummary.querySelector('h3');
+     scoreSummary.insertBefore(reviewScoreSpan, masteryStatusHeading);
+     scoreSummary.insertBefore(rawScoreSpan, reviewScoreSpan);
+
+
+     masteryList.innerHTML = '';
+     
+     // List all concepts with mastery status
+     conceptData.forEach(concept => {
+         const li = document.createElement('li');
+         const reviewText = concept.reviewAttempts > 0 ? `(Re-attempted ${concept.reviewAttempts} time${concept.reviewAttempts > 1 ? 's' : ''})` : '';
+
+         if (concept.mastered) {
+             li.classList.add('mastered-list-item');
+             li.innerHTML = `✅ Mastered ${reviewText}: ${concept.mcq.question}`;
+         } else {
+             li.classList.add('unmastered-list-item');
+             li.innerHTML = `❌ Requires Review: ${concept.mcq.question}`;
+         }
+         masteryList.appendChild(li);
+     });
+     
+     updateProgressBar();
+}
+
+
+// --- Event Listeners and Initialization ---
+
+nextButton.addEventListener('click', nextConcept);
+
+submitButton.addEventListener('click', checkIdentificationAnswer);
+
+restartButton.addEventListener('click', () => {
+            // Reset ALL state variables and data stages
+            
+            // Reset concept stages and mastery flags
+            Object.values(conceptMap).forEach(concept => {
+                concept.stage = 1;
+                concept.mastered = false;
+                concept.firstAttemptCorrect = null;
+                concept.reviewAttempts = 0;
+            });
+            
+            // Reset flow and index to the ORIGINAL, fixed order
+            // FIX: Use map() only to get the original IDs
+            quizFlow = conceptData.map(c => c.id); 
+            currentConceptIndex = 0;
+            rawScore = 0;
+            reviewScore = 0;
+            
+            endScreen.style.display = 'none';
+            quizArea.style.display = 'block';
+            renderConcept();
+        });
+
+// Theme Toggle Logic
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+        themeToggle.textContent = '🌙 Dark Mode';
+        setCookie('theme', 'dark', 365);
+    } else {
+        themeToggle.textContent = '☀️ Light Mode';
+        setCookie('theme', 'light', 365);
+    }
+});
+
+// Load theme from cookie and initialize the quiz
+window.onload = () => {
+            const savedTheme = getCookie('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.textContent = '🌙 Dark Mode';
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeToggle.textContent = '☀️ Light Mode';
+            }
+            
+            // Start the quiz with concepts in their defined order
+            // FIX: Removed .sort() to maintain fixed order
+            quizFlow = conceptData.map(c => c.id); 
+            renderConcept();
+        };
+</script>
+</body>
+</html>
