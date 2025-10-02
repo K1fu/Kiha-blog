@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding the self - v1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styling */
+        :root {
+            --bg-color-light: #f4f7f6;
+            --text-color-light: #2c3e50;
+            --container-bg-light: #ffffff;
+            --primary-color-light: #3498db;
+            --secondary-color-light: #2980b9;
+            --correct-color: #27ae60;
+            --incorrect-color: #e74c3c;
+            --border-color-light: #bdc3c7;
+            --shadow-color-light: rgba(0, 0, 0, 0.1);
+            --placeholder-color-light: #7f8c8d;
+        }
+
+        .dark-mode {
+            --bg-color-light: #2c3e50;
+            --text-color-light: #ecf0f1;
+            --container-bg-light: #34495e;
+            --primary-color-light: #3498db;
+            --secondary-color-light: #2980b9;
+            --correct-color: #2ecc71;
+            --incorrect-color: #e74c3c;
+            --border-color-light: #7f8c8d;
+            --shadow-color-light: rgba(0, 0, 0, 0.3);
+            --placeholder-color-light: #bdc3c7;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 20px;
+            padding: 30px;
+            background-color: var(--container-bg-light);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px var(--shadow-color-light);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        /* Header and Mode Toggle */
+        h1 {
+            text-align: center;
+            color: var(--primary-color-light);
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color-light);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 2px solid var(--primary-color-light);
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--primary-color-light);
+            color: white;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            background-color: var(--border-color-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            height: 15px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--correct-color);
+            transition: width 0.4s ease;
+        }
+
+        #progress-text {
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color-light);
+            text-align: center;
+        }
+
+        /* Question Area */
+        #quiz-area {
+            min-height: 300px; /* Ensures consistent layout height */
+            display: block;
+        }
+
+        #question-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: 600;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Options/Buttons/Inputs */
+        .options, #submit-button, #next-button, #restart-button {
+            padding: 15px 20px;
+            border: 2px solid var(--primary-color-light);
+            background-color: transparent;
+            color: var(--primary-color-light);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
+            text-align: center;
+            width: 100%;
+        }
+
+        .options:hover:not(.selected):not(.correct):not(.incorrect),
+        #submit-button:hover, #restart-button:hover {
+            background-color: var(--primary-color-light);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .options.selected {
+            background-color: var(--secondary-color-light);
+            color: white;
+            border-color: var(--secondary-color-light);
+            transform: scale(1.02);
+        }
+
+        .options.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+            pointer-events: none; /* Disable clicking after selecting */
+        }
+
+        .options.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+            border-color: var(--incorrect-color);
+            pointer-events: none; /* Disable clicking after selecting */
+        }
+
+        .options:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        #identification-input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid var(--border-color-light);
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+            color: var(--text-color-light);
+            background-color: var(--container-bg-light);
+            transition: border-color 0.2s;
+        }
+
+        #identification-input::placeholder {
+            color: var(--placeholder-color-light);
+        }
+
+        #identification-input:focus {
+            border-color: var(--primary-color-light);
+            outline: none;
+        }
+
+        #submit-button, #next-button {
+            display: none; /* Controlled by JS */
+        }
+        
+        #submit-button {
+            margin-top: 10px;
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+        
+        #submit-button:hover {
+            background-color: #2ecc71;
+            box-shadow: 0 4px 8px rgba(39, 174, 96, 0.4);
+        }
+
+        #next-button {
+            margin-top: 10px;
+        }
+
+        /* Feedback Message */
+        #feedback-message {
+            text-align: center;
+            padding: 10px 0;
+            margin-bottom: 15px;
+            font-weight: 700;
+            min-height: 20px;
+            border-radius: 8px;
+        }
+
+        .correct-feedback {
+            color: var(--correct-color);
+            background-color: rgba(39, 174, 96, 0.1);
+        }
+
+        .incorrect-feedback {
+            color: var(--incorrect-color);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        /* End Screen */
+        #end-screen {
+            display: none;
+            text-align: center;
+        }
+
+        #end-screen h2 {
+            color: var(--correct-color);
+            margin-bottom: 20px;
+        }
+
+        #score-summary {
+            background-color: var(--bg-color-light);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color-light);
+            text-align: left;
+        }
+
+        #score-summary p {
+            margin: 8px 0;
+            font-size: 1.1em;
+        }
+
+        #score-summary strong {
+            font-weight: 700;
+            color: var(--primary-color-light);
+        }
+
+        #wrong-answers-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #wrong-answers-list li {
+            background-color: var(--container-bg-light);
+            border: 1px solid var(--incorrect-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.1);
+        }
+        
+        #restart-button {
+            background-color: var(--primary-color-light);
+            color: white;
+            border-color: var(--primary-color-light);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <div class="header-controls">
+            <span id="current-score">Score: 0</span>
+            <span class="theme-toggle" id="theme-toggle">☀️ Light Mode</span>
+        </div>
+
+        <h1>Understanding the self</h1>
+        
+        <div id="quiz-area">
+            <div id="progress-text"></div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div id="feedback-message"></div>
+
+            <p id="question-text"></p>
+            
+            <div id="options-container">
+                <!-- Multiple Choice Options are inserted here -->
+            </div>
+
+            <input type="text" id="identification-input" placeholder="Type your answer here..." style="display: none;">
+
+            <button id="submit-button">Submit Answer</button>
+            <button id="next-button">Next Question</button>
+        </div>
+
+        <div id="end-screen">
+            <h2>Quiz Complete!</h2>
+            
+            <div id="score-summary">
+                <p>Final Score: <span id="final-score-span">0</span> / <span id="total-questions-span">0</span></p>
+                <p>Best Score: <strong id="best-score-span">0</strong></p>
+                
+                <h3>Incorrect Answers Review:</h3>
+                <ul id="wrong-answers-list">
+                    <!-- Wrong answers are inserted here -->
+                </ul>
+            </div>
+
+            <button id="restart-button">Restart Quiz</button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Data and State ---
+        //
+        // --- START OF QUIZ DATA ---
+        //
+        const quizData = {
+    multipleChoice: [
+        {
+            question: "Which statement best defines the field of Anthropology?",
+            options: [
+                "The study of ancient civilizations through written texts and monuments.",
+                "The study of the physical environment and its impact on human culture.",
+                "The exclusive study of primitive societies and their social structures.",
+                "The study of people throughout the world in all periods of time."
+            ],
+            answer: "The study of people throughout the world in all periods of time.",
+            explanation: "Anthropology is a broad field defined as **the study of people throughout the world in all periods of time**. This holistic approach is what distinguishes it from other social sciences, as it includes biology, culture, language, and history. Other options are too narrow."
+        },
+        {
+            question: "The word 'Anthropology' is derived from which combination of Greek words?",
+            options: [
+                "Anthropos (human) and Logia (study)",
+                "Andros (man) and Logos (reason)",
+                "Anthros (life) and Pathos (suffering)",
+                "Philos (love) and Sophia (wisdom)"
+            ],
+            answer: "Anthropos (human), and Logia (study)",
+            explanation: "The term **Anthropology** comes from the Greek words **Anthropos** meaning 'human' and **Logia** meaning 'study'. A common mix-up is with **Logos** (reason, word) or with **Philosophia** (love of wisdom), but anthropology specifically emphasizes the study of humans."
+        },
+        {
+            question: "How many major subdisciplines are traditionally recognized within the field of Anthropology?",
+            options: [
+                "Three (3)",
+                "Four (4)",
+                "Five (5)",
+                "Two (2)"
+            ],
+            answer: "Four (4)",
+            explanation: "Anthropology is traditionally divided into **four** major subdisciplines in the American tradition: Cultural (or Social) Anthropology, Archaeological Anthropology, Biological (or Physical) Anthropology, and Linguistic Anthropology."
+        },
+        {
+            question: "Which subdiscipline of anthropology primarily focuses on the learned behavior of groups of people in specific environments?",
+            options: [
+                "Archaeology",
+                "Linguistic anthropology",
+                "Biological anthropology",
+                "Cultural anthropology"
+            ],
+            answer: "Cultural anthropology",
+            explanation: "**Cultural anthropology** studies the learned, shared behavior of people, including their customs, beliefs, and social organization. This focus on learned behavior is key to understanding its scope, which often overlaps with sociology but is typically more holistic and cross-cultural."
+        },
+        {
+            question: "Cultural anthropology is also frequently referred to by what other name?",
+            options: [
+                "Physical anthropology",
+                "Historical anthropology",
+                "Social anthropology",
+                "Applied anthropology"
+            ],
+            answer: "Social anthropology",
+            explanation: "**Cultural anthropology** is often known as **Social anthropology**, particularly outside of the US. While the names have slightly different historical emphasis (culture vs. social structure), they largely describe the same subdiscipline."
+        },
+        {
+            question: "The subdiscipline of anthropology that investigates how language influences social life and culture is called:",
+            options: [
+                "Forensic anthropology",
+                "Linguistic anthropology",
+                "Archaeology",
+                "Biological anthropology"
+            ],
+            answer: "Linguistic anthropology",
+            explanation: "**Linguistic anthropology** explores the relationship between language and culture. It studies how language shapes and is shaped by social life, patterns of thought, and communication, making it distinct from the other three core subdisciplines."
+        },
+        {
+            question: "Which subdiscipline of anthropology focuses on human evolution within the context of human culture and behavior?",
+            options: [
+                "Linguistic anthropology",
+                "Archaeology",
+                "Biological anthropology",
+                "Socio-cultural anthropology"
+            ],
+            answer: "Biological anthropology",
+            explanation: "**Biological anthropology** (also known as **Physical anthropology**) is concerned with humans as a biological species, focusing on topics like human evolution, genetics, and how culture and environment influence our physical form and behavior."
+        },
+        {
+            question: "Biological anthropology is also commonly referred to as what?",
+            options: [
+                "Physical Anthropology",
+                "Cultural Anthropology",
+                "Forensic Anthropology",
+                "Applied Anthropology"
+            ],
+            answer: "Physical Anthropology",
+            explanation: "**Biological anthropology** is the more current name for the field that was traditionally known as **Physical Anthropology**. Both terms describe the study of human biological variation, evolution, and primatology."
+        },
+        {
+            question: "The subdiscipline of anthropology that interprets human history by analyzing material remains is:",
+            options: [
+                "Linguistic anthropology",
+                "Ethnography",
+                "Archaeology",
+                "Biological anthropology"
+            ],
+            answer: "Archaeology",
+            explanation: "**Archaeology** involves the systematic recovery and analysis of **material remains** (artifacts, features, ecofacts) to reconstruct and interpret past human culture and behavior. This makes it distinct from the focus on living cultures in cultural anthropology."
+        },
+        {
+            question: "Contemporary anthropology views the 'Self' primarily as a concept shaped by what factors?",
+            options: [
+                "Universal, innate biological drives and genetic blueprints.",
+                "Individual introspection, completely independent of social life.",
+                "Culturally specific norms, values, and social practices.",
+                "Economic status and global political movements alone."
+            ],
+            answer: "Culturally specific norms, values, and social practices.",
+            explanation: "In contemporary anthropology, the **Self** is understood to be profoundly **culturally shaped**. It is constructed through exposure to cultural norms, values, and the routine social practices of a given society. It is not viewed as a purely universal or innate concept."
+        },
+        {
+            question: "The anthropological perspective emphasizes that social relationships have a profound influence on an individual's:",
+            options: [
+                "Physical health and diet preference.",
+                "Identity and self-concept.",
+                "Geographical location and migration patterns.",
+                "Subconscious fears and anxieties."
+            ],
+            answer: "Identity and self-concept.",
+            explanation: "Anthropologists highlight that **social relationships** are critical in forming an individual's **identity** and sense of personhood. Identity is not solo-generated but rather emerges and is maintained through interaction with others."
+        },
+        {
+            question: "Based on anthropological findings, how are gender roles characterized across different cultures?",
+            options: [
+                "They are largely biologically determined and identical worldwide.",
+                "They are rigid, inflexible, and resistant to change in every society.",
+                "They differ significantly, being products of cultural context rather than universals.",
+                "They are purely dictated by government laws and economic policies."
+            ],
+            answer: "They differ significantly, being products of cultural context rather than universals.",
+            explanation: "Anthropology demonstrates that **gender roles** are highly variable and **differ across cultures**. This is a central critique of universalist claims, showing that what is considered 'masculine' or 'feminine' is defined by cultural context."
+        },
+        {
+            question: "What is the primary function of **socialization** within a cultural context?",
+            options: [
+                "To establish rigid social hierarchies and caste systems.",
+                "To teach individuals the core cultural norms and expected behaviors.",
+                "To promote isolation and discourage community interaction.",
+                "To document historical events for future generations."
+            ],
+            answer: "To teach individuals the core cultural norms and expected behaviors.",
+            explanation: "**Socialization** is the lifelong process through which individuals learn and internalize the beliefs, customs, and **cultural norms** necessary to function effectively as a member of their society. It is how culture is transmitted."
+        },
+        {
+            question: "A key feature of human identities recognized by anthropologists is their quality of being:",
+            options: [
+                "Permanent and unchangeable after childhood.",
+                "Solely dependent on national citizenship.",
+                "Flexible and adaptable to new social contexts.",
+                "Determined exclusively by professional career paths."
+            ],
+            answer: "Flexible and adaptable to new social contexts.",
+            explanation: "The anthropological view of identity is dynamic: identities are considered **flexible and adaptable**. They change over an individual's lifespan and can shift as a person moves between different social groups, environments, or cultural roles."
+        },
+        {
+            question: "Which American anthropologist is best known for his theories on **interpretive anthropology** and the symbolic significance of culture?",
+            options: [
+                "Franz Boas",
+                "Clifford James Geertz",
+                "Marvin Harris",
+                "Claude Lévi-Strauss"
+            ],
+            answer: "Clifford James Geertz",
+            explanation: "**Clifford James Geertz** is the most prominent figure in **interpretive anthropology**, arguing that culture is a system of symbols and meaning that must be interpreted, much like a text, to be understood."
+        },
+        {
+            question: "Which field of anthropology posits that cultural symbols and meanings significantly influence individual identities?",
+            options: [
+                "Archaeology",
+                "Symbolic anthropology",
+                "Biological anthropology",
+                "Materialist anthropology"
+            ],
+            answer: "Symbolic anthropology",
+            explanation: "**Symbolic anthropology** focuses on the symbolic rather than the material aspects of culture. It emphasizes that human actions and individual identities are given meaning and direction by shared cultural symbols and the interpretations people make of them."
+        },
+        {
+            question: "The concept that an individual's sense of self is deeply rooted in and inseparable from their cultural contexts is termed:",
+            options: [
+                "Psychological universalism",
+                "Cultural embeddedness",
+                "Cognitive dissonance",
+                "Biological determinism"
+            ],
+            answer: "Cultural embeddedness",
+            explanation: "**Cultural embeddedness** refers to the idea that the self is not a free-standing, universal entity but is deeply integrated into and shaped by the specific cultural environment, including its norms and practices."
+        },
+        {
+            question: "The idea that the self is continuously negotiated, expressed, and is not fixed, but rather acted out through social interactions and interpretations of cultural symbols is known as:",
+            options: [
+                "Ecological adaptation",
+                "Social determinism",
+                "Performance and Interpretation",
+                "Structural functionalism"
+            ],
+            answer: "Performance and Interpretation",
+            explanation: "The concept of **Performance and Interpretation** views the self as a flexible entity that is constantly 'performed' and negotiated in social life. Individuals express their identities through interactions that are interpreted according to shared cultural symbols."
+        },
+        {
+            question: "The American cultural anthropologist renowned for her studies on cultural relativism, gender roles, and the influence of socialization on individuals is:",
+            options: [
+                "Ruth Benedict",
+                "Margaret Mead",
+                "Zora Neale Hurston",
+                "Nancy Scheper-Hughes"
+            ],
+            answer: "Margaret Mead",
+            explanation: "**Margaret Mead** was an influential American cultural anthropologist who is famous for her work demonstrating the cultural variability of gender roles and the profound influence of **socialization** on identity, supporting the principle of **cultural relativism**."
+        },
+        {
+            question: "The principle that cultural norms and values shape individual identities, suggesting that what is 'normal' or 'good' for the self is culturally specific, is an application of:",
+            options: [
+                "Ethnocentrism",
+                "Sociobiology",
+                "Cultural Relativity",
+                "Historical materialism"
+            ],
+            answer: "Cultural Relativity",
+            explanation: "**Cultural Relativity** is the principle that an individual's beliefs and activities should be understood in terms of their own culture. Applied to the self, it means that the cultural norms and values shape identity differently across societies."
+        },
+        {
+            question: "The broad process through which individuals acquire knowledge, skills, values, and identities from their upbringing and social interactions is known as:",
+            options: [
+                "Genetic inheritance",
+                "Acculturation",
+                "Socialization and learning",
+                "Biological maturation"
+            ],
+            answer: "Socialization and learning",
+            explanation: "**Socialization and learning** encompass the methods—from formal schooling to informal interactions—by which individuals are taught to become functional members of their society, acquiring cultural knowledge and developing a sense of self."
+        },
+        {
+            question: "The statement that 'Identities are adaptable cross cultures' refers to which quality of identity?",
+            options: [
+                "Rigidity of cultural boundaries",
+                "Innate permanence",
+                "Flexibility of identity",
+                "Static social roles"
+            ],
+            answer: "Flexibility of identity",
+            explanation: "**Flexibility of identity** recognizes that the self is not a fixed construct but can adjust, change, and be negotiated as individuals encounter new cultural expectations and social environments."
+        },
+        {
+            question: "How do Clifford Geertz's and Margaret Mead's primary contributions to the study of the self differ?",
+            options: [
+                "Geertz focused on genetics; Mead focused on economics.",
+                "Geertz focused on socialization; Mead focused on material culture.",
+                "Geertz focused on symbolic interpretation; Mead explored diversity and socialization.",
+                "Geertz focused on evolution; Mead focused on historical archaeology."
+            ],
+            answer: "Geertz focused on symbolic interpretation; Mead explored diversity and socialization.",
+            explanation: "**Geertz** is known for his interpretive approach, focusing on **symbolic interpretation** and 'performance' of culture. **Mead** is famous for documenting the **diversity of identities** and the impact of **socialization** across different cultures, strongly promoting cultural relativism."
+        },
+        {
+            question: "According to William James, the objective aspect of the self, which includes external attributes like profession, social roles, and reputation (how the world views you), is known as the:",
+            options: [
+                "The I",
+                "The Global Self",
+                "The Ideal Self",
+                "The Me"
+            ],
+            answer: "The Me",
+            explanation: "William James divided the self into the **Me** (the empirical, known self—objective, social roles, reputation) and the **I** (the pure ego—subjective, process of knowing). The **Me** is the objective self that the world views."
+        },
+        {
+            question: "When an individual is focusing purely on their subjective experiences, feelings, and the sense of being in the present moment, they are experiencing the self as defined by William James's concept of the:",
+            options: [
+                "Me",
+                "Agentic Behavior",
+                "Real Self",
+                "I"
+            ],
+            answer: "I",
+            explanation: "The **I** is William James's term for the pure, subjective self, or the 'stream of consciousness.' It represents the immediate experience of being, distinct from the **Me**, which is the objective, known self."
+        },
+        {
+            question: "The Global Model of the self would best predict which of the following behaviors?",
+            options: [
+                "An individual acting shy at a party but bold at work.",
+                "An individual distinguishing between their own feelings and their friend's feelings.",
+                "An individual having consistent honesty across all situations (at home, school, and work).",
+                "An individual frequently adjusting their goals based on new feedback."
+            ],
+            answer: "An individual having consistent honesty across all situations (at home, school, and work).",
+            explanation: "The **Global Model** suggests the self is a unified, single entity, predicting high consistency in behavior across all situations. Distractors like situation-specific behavior align better with models like the **Theory of Multiple Selves**."
+        },
+        {
+            question: "Murray Bowen's contribution to self-theory, the Differentiated Model, emphasizes that psychological and interpersonal functioning is rooted in:",
+            options: [
+                "The individual's ability to achieve their Ideal Self.",
+                "The constant monitoring of behavior for consistency.",
+                "The protective persona formed under societal pressure.",
+                "The degree to which one can separate one's own self from others."
+            ],
+            answer: "The degree to which one can separate one's own self from others.",
+            explanation: "Bowen's **Differentiated Model** centers on the 'differentiation of self,' which is the ability to separate one's intellectual/emotional processes from others, thus preventing emotional fusion in relationships."
+        },
+        {
+            question: "A person who can calmly identify that they are feeling angry, but simultaneously distinguish that this anger is separate from their rational decision-making process, is demonstrating high:",
+            options: [
+                "Interpersonal differentiation",
+                "Self-reactiveness",
+                "Global consistency",
+                "Intrapsychic differentiation"
+            ],
+            answer: "Intrapsychic differentiation",
+            explanation: "**Intrapsychic differentiation** is the internal component of Bowen's model, focusing on the ability to separate one's own thoughts (rationality) from one's emotions. **Interpersonal differentiation** is the external component, separating one's experience from another's."
+        },
+        {
+            question: "Interpersonal differentiation is the component of Bowen’s theory that focuses on the ability to:",
+            options: [
+                "Control one's own goals and destinies.",
+                "Distinguish one's own experience from the experience of people one is connected to.",
+                "Think ahead and anticipate outcomes.",
+                "Distinguish thoughts from emotions."
+            ],
+            answer: "Distinguish one's own experience from the experience of people one is connected to.",
+            explanation: "**Interpersonal differentiation** is the ability to maintain a separate emotional and intellectual identity from important others. Distinguishing thoughts from emotions is **Intrapsychic differentiation**."
+        },
+        {
+            question: "In Carl Rogers's Self theory, the term used to describe how an individual currently perceives their abilities, traits, and characteristics is the:",
+            options: [
+                "Ideal self",
+                "Unified self",
+                "True Self",
+                "Real Self"
+            ],
+            answer: "Real Self",
+            explanation: "Carl Rogers defined the **Real Self** (or actual self) as how a person currently sees themselves. The **Ideal Self** is the person they wish to be, and the gap between them is a source of psychological distress."
+        },
+        {
+            question: "If a clinical psychologist is working with a patient to narrow the gap between 'who they are' and 'who they want to be,' the psychologist is primarily working to reconcile the patient's:",
+            options: [
+                "Multiple Selves and Unified Self",
+                "I and Me",
+                "True Self and False Self",
+                "Real Self and Ideal Self"
+            ],
+            answer: "Real Self and Ideal Self",
+            explanation: "In Rogers's theory, the goal of therapy is to achieve **congruence**, or a smaller gap, between the **Real Self** (who one is) and the **Ideal Self** (who one wants to be). This is a central concept in humanistic psychology."
+        },
+        {
+            question: "David Lester's Theory of Multiple Selves suggests that an individual can:",
+            options: [
+                "Only exist as a cohesive, single identity.",
+                "Fail to achieve any form of Human Agency.",
+                "Never separate their thoughts from their feelings.",
+                "Simultaneously exhibit different values and personalities in different contexts."
+            ],
+            answer: "Simultaneously exhibit different values and personalities in different contexts.",
+            explanation: "Lester's **Theory of Multiple Selves** rejects the Global Model, positing that individuals possess different, context-specific selves (e.g., 'work self,' 'family self') and can hold different values across these roles."
+        },
+        {
+            question: "The goal of achieving a cohesive identity by integrating all the different roles and personalities a person exhibits across contexts, according to David Lester's framework, is the:",
+            options: [
+                "False Self",
+                "Global Model",
+                "Agentic behavior",
+                "Unified self"
+            ],
+            answer: "Unified self",
+            explanation: "While Lester acknowledges the existence of multiple selves, the **Unified self** is the aspirational goal—the integration of these different roles into a single, cohesive identity, much like an overarching 'manager' self."
+        },
+        {
+            question: "According to Donald Winnicott, the self characterized by authentic and innate qualities that are present from birth is the:",
+            options: [
+                "False Self",
+                "Me",
+                "Real Self",
+                "True Self"
+            ],
+            answer: "True Self",
+            explanation: "Donald Winnicott's **True Self** is the spontaneous, authentic core of the individual. This is contrasted with the **False Self**, which develops as a protective shield to conform to the expectations of others."
+        },
+        {
+            question: "A student who behaves in a way they think their strict parents expect, rather than expressing their personal interests, may be relying on which aspect of Donald Winnicott's theory?",
+            options: [
+                "The Agentic Self",
+                "The True Self",
+                "The Ideal Self",
+                "The False Self"
+            ],
+            answer: "The False Self",
+            explanation: "The **False Self** is a defensive organization, a kind of 'mask' that develops when a child has to comply with the demands of an environment that fails to meet their genuine needs, thus hiding the **True Self**."
+        },
+        {
+            question: "Albert Bandura described the self as engaged in Proactive behavior, which means the behavior is:",
+            options: [
+                "Reactive to external feedback from others.",
+                "A protective response to societal pressure.",
+                "Primarily focused on maintaining consistency.",
+                "Initiated by the self, rather than by external demands."
+            ],
+            answer: "Initiated by the self, rather than by external demands.",
+            explanation: "Bandura views the self as **proactive**, meaning it acts upon and influences the environment, rather than being merely reactive. This ties into his concept of **Human Agency**."
+        },
+        {
+            question: "Bandura's concept of Agentic behavior primarily refers to the individual's ability to:",
+            options: [
+                "Conform to the expectations of their social roles (Me).",
+                "Reflect on past actions without making adjustments.",
+                "Distinguish their experiences from others (Interpersonal differentiation).",
+                "Control their own goals, actions, and destinies."
+            ],
+            answer: "Control their own goals, actions, and destinies.",
+            explanation: "**Agentic behavior**, or **Human Agency**, is the ability to exert influence over one's life. Its four core features are Intentionality, Forethought, Self-reactiveness, and Self-reflection."
+        },
+        {
+            question: "A young executive dedicates time every Sunday to writing out her career milestones for the next five years. This aligns best with which core feature of Human Agency?",
+            options: [
+                "Self-reflection",
+                "Forethought",
+                "Self-reactiveness",
+                "Intentionality"
+            ],
+            answer: "Intentionality",
+            explanation: "**Intentionality** involves forming action plans and setting goals, representing a proactive commitment to a future course of action. This is the goal-setting element of Bandura's **Human Agency**."
+        },
+        {
+            question: "Before beginning a complex DIY home project, a homeowner spends an hour reviewing the instructions and visualizing potential problems and necessary steps. This is an example of which feature of Human Agency?",
+            options: [
+                "Intentionality",
+                "Self-reactiveness",
+                "Global consistency",
+                "Forethought"
+            ],
+            answer: "Forethought",
+            explanation: "**Forethought** is the ability to anticipate and plan for the future, including the likely consequences of actions. This allows an individual to guide and motivate their current behavior effectively."
+        },
+        {
+            question: "A musician records a song and then listens back to the track multiple times, comparing the performance to their original vision to ensure the recording is consistent with their artistic goals. This process is called:",
+            options: [
+                "Self-reflection",
+                "Intrapsychic differentiation",
+                "Self-reactiveness",
+                "Interpersonal differentiation"
+            ],
+            answer: "Self-reactiveness",
+            explanation: "**Self-reactiveness** involves monitoring one's progress and regulating behavior to match the intended goals and performance standards (like a musician checking their track against their vision). It's the self-regulatory aspect of agency."
+        },
+        {
+            question: "A hiker reaches the peak of a mountain and mentally congratulates herself for sticking to her training regimen and achieving her goal. She decides to sign up for a more difficult hike next month. This is an example of:",
+            options: [
+                "Forethought",
+                "Proactive behavior",
+                "False Self",
+                "Self-reflection"
+            ],
+            answer: "Self-reflection",
+            explanation: "**Self-reflection** is the metacognitive ability to examine one's own functioning, thoughts, and personal efficacy. The hiker is reflecting on her success and competence, which motivates her subsequent goal-setting (forethought)."
+        },
+        {
+            question: "Which two concepts are MOST related to a protective, inauthentic self that arises from external demands, rather than genuine internal feelings?",
+            options: [
+                "The I (James) and the Real Self (Rogers)",
+                "The Me (James) and the Unified self (Lester)",
+                "The False Self (Winnicott) and the Differentiated Model (Bowen)",
+                "The False Self (Winnicott) and the Me (James)"
+            ],
+            answer: "The False Self (Winnicott) and the Me (James)",
+            explanation: "The **False Self** (Winnicott) is a self developed to meet external expectations, and the **Me** (James) is the objective self defined by social roles and reputation (how others see you). Both are externally driven/defined, in contrast to the subjective **True Self** or **I**."
+        },
+        {
+            question: "Which core feature of Bandura's Human Agency is most closely linked to the idea of setting goals?",
+            options: [
+                "Self-reactiveness",
+                "Forethought",
+                "Self-reflection",
+                "Intentionality"
+            ],
+            answer: "Intentionality",
+            explanation: "**Intentionality** is the planning and goal-setting component of **Human Agency**. Forethought is the planning to meet those goals, and Self-reactiveness is the regulating of action to achieve them."
+        },
+        {
+            question: "The primary distinction between Intrapsychic differentiation and Interpersonal differentiation is whether the separation occurs:",
+            options: [
+                "Between the Real Self and the Ideal Self.",
+                "Between one's own thoughts/emotions (within) or one's own experience and another's (between).",
+                "Between goals and actions, or between actions and outcomes.",
+                "Between the objective Me and the subjective I."
+            ],
+            answer: "Between one's own thoughts/emotions (within) or one's own experience and another's (between).",
+            explanation: "**Intrapsychic differentiation** is internal, separating thoughts from feelings (within the psyche). **Interpersonal differentiation** is external, separating one's self/experience from the experience of others (between people)."
+        },
+        {
+            question: "Which characteristic is central to the Individualistic Self model, commonly associated with Western thought?",
+            options: [
+                "Prioritizing group harmony and communal expectations.",
+                "Focusing primarily on group membership and family reputation.",
+                "Valuing personal autonomy, self-expression, and pursuing individual goals.",
+                "Advocating for complete social isolation and self-sufficiency."
+            ],
+            answer: "Valuing personal autonomy, self-expression, and pursuing individual goals.",
+            explanation: "The **Individualistic Self**, prevalent in Western cultures, emphasizes personal autonomy, independence, and the pursuit of individual goals, often driven by unique attributes and achievements. This is sometimes associated with **egoism**, but it does not advocate isolation."
+        },
+        {
+            question: "The Collective Self model, typical of Eastern thought, is primarily defined by which characteristic?",
+            options: [
+                "A strong stress on self-reliance and complete independence from the group.",
+                "The prioritization of individual preferences over societal obligations.",
+                "An identity closely tied to group membership, prioritizing harmony and communal expectations.",
+                "The belief that individual attributes are the sole source of identity."
+            ],
+            answer: "An identity closely tied to group membership, prioritizing harmony and communal expectations.",
+            explanation: "The **Collective Self**, common in Eastern cultures, defines identity through group membership, prioritizing **group harmony** and cooperation over individual needs. This is in sharp contrast to the Western focus on personal autonomy."
+        },
+        {
+            question: "Confucius, China's most influential teacher and philosopher, was born in what year?",
+            options: [
+                "551 BC",
+                "479 BC",
+                "621 AD",
+                "206 BC"
+            ],
+            answer: "551 BC",
+            explanation: "Confucius, born as **Kong Fuzi** (Master Kong), was born in **551 BC** and became China's most influential teacher and philosopher, profoundly shaping Chinese and East Asian civilizations."
+        },
+        {
+            question: "From a Confucian perspective, one's identity is primarily formed by the group they belong to, leading to the concept of the:",
+            options: [
+                "Individualistic self",
+                "Subdued self",
+                "Transcendental self",
+                "Relational self"
+            ],
+            answer: "Relational self",
+            explanation: "The Confucian perspective defines identity as the **Relational self**, meaning one's identity is formed and maintained through their role within the group and the established social order, such as the **Five Cardinal Relationships**."
+        },
+        {
+            question: "Which of the following is NOT one of Confucius's Five Cardinal Relationships that structure social and personal identity?",
+            options: [
+                "Husband - Wife",
+                "Elder Brother - Younger Brother",
+                "Ruler - Subject",
+                "Teacher - Student"
+            ],
+            answer: "Teacher - Student",
+            explanation: "The **Five Cardinal Relationships** define the Confucian social order: Ruler-Subject, Father-Son, Husband-Wife, Elder Brother-Younger Brother, and Friends. These define the roles and duties central to the **Relational self**."
+        },
+        {
+            question: "In Confucianism, the concept of the Subdued Self means:",
+            options: [
+                "Actively pursuing one's personal desires above all else.",
+                "Emphasizing spiritual growth over moral cultivation.",
+                "Prioritizing social duties and communal obligations over personal desires.",
+                "Achieving complete isolation from the community."
+            ],
+            answer: "Prioritizing social duties and communal obligations over personal desires.",
+            explanation: "The **Subdued self** is a Confucian ideal where one sacrifices personal desires in favor of fulfilling social duties and moral obligations. This self embodies **Ren** (human-heartedness) and strives for harmony."
+        },
+        {
+            question: "The Confucian concept of Ren (Human-heartedness) primarily emphasizes:",
+            options: [
+                "The pursuit of wealth and personal achievement.",
+                "Isolation and self-reliance in decision-making.",
+                "Altruism, benevolence, and fulfilling societal obligations.",
+                "The separation of thoughts from emotions."
+            ],
+            answer: "Altruism, benevolence, and fulfilling societal obligations.",
+            explanation: "**Ren** is the foundational Confucian virtue, representing 'human-heartedness' or 'benevolence.' It encompasses **altruism** and the commitment to uphold moral order by fulfilling societal obligations (the core of the **Subdued Self**)."
+        },
+        {
+            question: "The Confucian view states that the self primarily develops through:",
+            options: [
+                "Intense focus on inner reflection and individual preferences.",
+                "Achieving maximum personal profit and status.",
+                "Relationships, moral cultivation, and harmony with the natural order.",
+                "Rejecting tradition in favor of personal choice and freedom."
+            ],
+            answer: "Relationships, moral cultivation, and harmony with the natural order.",
+            explanation: "The Confucian self develops through active participation in **relationships**, rigorous **moral cultivation** (like practicing Ren and Xiao), and achieving **harmony** with the social and natural order."
+        },
+        {
+            question: "What is the Confucian concept that describes the virtue of filial piety by respecting and taking care of one's parents and elders?",
+            options: [
+                "Ren",
+                "Tao",
+                "Xiao",
+                "Li"
+            ],
+            answer: "Xiao",
+            explanation: "**Xiao** is the Confucian term for **filial piety**, a core virtue that involves deep respect and care for one's parents, elders, and ancestors. This duty is fundamental to the **Relational Self**."
+        },
+        {
+            question: "The Individualistic Self in Western thought primarily focuses on which trio of core values?",
+            options: [
+                "Group harmony, cooperation, and social duty.",
+                "Filial piety, benevolence, and the Subdued Self.",
+                "Freedom, choice, and independence.",
+                "Relational identity, spiritual growth, and moral cultivation."
+            ],
+            answer: "Freedom, choice, and independence.",
+            explanation: "The Western Individualistic Self strongly emphasizes **freedom**, personal **choice**, and **independence**. These values underpin its stress on personal goals, self-realization, and autonomy in decision-making."
+        },
+        {
+            question: "In the Eastern Collective Self, what takes precedence over the pursuit of individual goals?",
+            options: [
+                "Egoism and unique attributes.",
+                "Self-realization and personal autonomy.",
+                "Group harmony and communal expectations.",
+                "The subjective 'I' and self-expression."
+            ],
+            answer: "Group harmony and communal expectations.",
+            explanation: "The Eastern **Collective Self** prioritizes **group harmony** and **communal expectations**. This focus drives cooperation and the fulfillment of social duties, contrasting with the Western emphasis on individual achievement."
+        },
+        {
+            question: "Which two theorists are primarily concerned with the concept of separation, where one emphasizes separating the objective self from the subjective self, and the other emphasizes separating the self from the influence of others?",
+            options: [
+                "Carl Rogers (Real/Ideal) and Donald Winnicott (True/False)",
+                "Murray Bowen (Differentiation) and Albert Bandura (Agency)",
+                "William James (I/Me) and Carl Rogers (Real/Ideal)",
+                "William James (I/Me) and Murray Bowen (Differentiation)"
+            ],
+            answer: "William James (I/Me) and Murray Bowen (Differentiation)",
+            explanation: "William James separates the internal **I** from the external **Me**. Murray Bowen's **Differentiation of Self** separates the self from others (Interpersonal) and thoughts from feelings (Intrapsychic). Both central themes are about distinguishing components of the self."
+        },
+        {
+            question: "In the theories of both Donald Winnicott and William James, what common theme links the False Self and the Me?",
+            options: [
+                "Both represent the individual's inherent, spontaneous core.",
+                "Both are driven by achieving congruence between two internal states.",
+                "Both are aspects of the self that are shaped by or responsive to external demands and social roles.",
+                "Both reflect the self's capacity for self-regulation and goal setting."
+            ],
+            answer: "Both are aspects of the self that are shaped by or responsive to external demands and social roles.",
+            explanation: "Winnicott's **False Self** is a shield built for external conformity, and James's **Me** is the objective self defined by social roles. Both are non-authentic, externally-driven aspects of identity, unlike the spontaneous **True Self** or subjective **I**."
+        },
+        {
+            question: "A student sets a specific goal (Intentionality), creates a weekly study schedule (Forethought), and modifies that schedule based on quiz results (Self-reactiveness). Which core feature of Human Agency is missing from this scenario?",
+            options: [
+                "Proactivity",
+                "Self-reflection",
+                "Self-efficacy",
+                "Self-determination"
+            ],
+            answer: "Self-reflection",
+            explanation: "The four core features of **Human Agency** are Intentionality (setting goals), Forethought (planning), Self-reactiveness (monitoring and adjustment), and **Self-reflection** (evaluating one's thoughts and functioning). All four are necessary for complete agency."
+        },
+        {
+            question: "The primary goal of the self, according to Carl Rogers's theory, is to achieve what state between the two components of the self?",
+            options: [
+                "Interpersonal differentiation",
+                "Congruence",
+                "Subdued self",
+                "Agentic behavior"
+            ],
+            answer: "Congruence",
+            explanation: "Rogers's theory centers on achieving **congruence**, a state where the **Real Self** (who you are) aligns with the **Ideal Self** (who you want to be). Incongruence is the source of maladjustment."
+        },
+        {
+            question: "According to Murray Bowen's Differentiated Model, a person with low Interpersonal differentiation would MOST likely exhibit which behavior?",
+            options: [
+                "The capacity to set highly specific, proactive goals.",
+                "Emotional fusion with a partner, leading to difficulty making independent decisions.",
+                "High self-reflection about past choices and outcomes.",
+                "A preference for individual goals over group harmony."
+            ],
+            answer: "Emotional fusion with a partner, leading to difficulty making independent decisions.",
+            explanation: "Low **Interpersonal differentiation** results in emotional **fusion**, where boundaries between the self and others are blurred. The person struggles to maintain their own thoughts and feelings when under pressure from the relationship."
+        },
+        {
+            question: "The fundamental difference between the Western Individualistic Self and the Eastern Collective Self lies in the primary source of identity. The Western self is defined by unique attributes, while the Eastern self is defined by:",
+            options: [
+                "Subdued emotions and spiritual isolation.",
+                "Abstract moral philosophy (Ren).",
+                "The gap between the Real and Ideal Self.",
+                "Relational membership and social roles."
+            ],
+            answer: "Relational membership and social roles.",
+            explanation: "The Western self is rooted in individual attributes (**egoism**), while the Eastern self is rooted in **Relational membership** and fulfilling social roles (like the **Five Cardinal Relationships**), prioritizing harmony over self-expression."
+        },
+        {
+            question: "Which pairing correctly links a self-concept with its primary psychological function?",
+            options: [
+                "Real Self (Rogers): Self-regulatory adjustment toward goals.",
+                "Intentionality (Bandura): Evaluation of past actions and competence.",
+                "Intrapsychic Differentiation (Bowen): Separation of one’s thoughts from one’s feelings.",
+                "Me (James): Subjective, unobservable stream of consciousness."
+            ],
+            answer: "Intrapsychic Differentiation (Bowen): Separation of one’s thoughts from one’s feelings.",
+            explanation: "**Intrapsychic Differentiation** is the internal separation of emotionality from intellect. The **Real Self** is current perception, not adjustment; **Intentionality** is goal-setting, not evaluation; and the **Me** is the objective, observable self, not the subjective 'I'."
+        }
+    ],
+    identification: [
+        {
+            question: "The field defined as the study of people throughout the world in all periods of time.",
+            correctAnswers: [
+                "Anthropology"
+            ],
+            explanation: "Anthropology is a broad field defined as **the study of people throughout the world in all periods of time**."
+        },
+        {
+            question: "What are the two Greek words, meaning 'human' and 'study', that form the origin of 'Anthropology'?",
+            correctAnswers: [
+                "Anthropos and Logia",
+                "Anthropos (human) and Logia (study)"
+            ],
+            explanation: "The term **Anthropology** comes from the Greek words **Anthropos** meaning 'human' and **Logia** meaning 'study'."
+        },
+        {
+            question: "What is the number of major subdisciplines traditionally recognized in Anthropology's four-field approach?",
+            correctAnswers: [
+                "Four",
+                "4"
+            ],
+            explanation: "Anthropology is traditionally divided into **four** major subdisciplines."
+        },
+        {
+            question: "The subdiscipline of anthropology that primarily focuses on the learned, shared behavior of groups of people.",
+            correctAnswers: [
+                "Cultural anthropology"
+            ],
+            explanation: "**Cultural anthropology** studies the learned, shared behavior of people."
+        },
+        {
+            question: "What is the alternative name for Cultural Anthropology, especially common outside the US?",
+            correctAnswers: [
+                "Social anthropology"
+            ],
+            explanation: "**Cultural anthropology** is often known as **Social anthropology**."
+        },
+        {
+            question: "The subdiscipline of anthropology that investigates how language influences social life and culture.",
+            correctAnswers: [
+                "Linguistic anthropology"
+            ],
+            explanation: "**Linguistic anthropology** explores the relationship between language and culture."
+        },
+        {
+            question: "The subdiscipline of anthropology that focuses on human evolution, genetics, and physical variation.",
+            correctAnswers: [
+                "Biological anthropology"
+            ],
+            explanation: "**Biological anthropology** is concerned with humans as a biological species, focusing on human evolution."
+        },
+        {
+            question: "What is the older, alternative name for Biological Anthropology?",
+            correctAnswers: [
+                "Physical Anthropology"
+            ],
+            explanation: "**Biological anthropology** is the more current name for the field that was traditionally known as **Physical Anthropology**."
+        },
+        {
+            question: "The subdiscipline of anthropology that interprets human history by analyzing material remains (artifacts, features).",
+            correctAnswers: [
+                "Archaeology"
+            ],
+            explanation: "**Archaeology** involves the systematic recovery and analysis of **material remains**."
+        },
+        {
+            question: "According to contemporary anthropology, the self is primarily shaped by culturally specific norms, values, and what else?",
+            correctAnswers: [
+                "Social practices",
+                "routine social practices"
+            ],
+            explanation: "The **Self** is understood to be profoundly **culturally shaped** by cultural norms, values, and the routine **social practices**."
+        },
+        {
+            question: "Anthropologists emphasize that an individual's identity and sense of personhood are profoundly influenced by what?",
+            correctAnswers: [
+                "Social relationships"
+            ],
+            explanation: "**Social relationships** are critical in forming an individual's **identity** and sense of personhood."
+        },
+        {
+            question: "Anthropological findings demonstrate that gender roles are not universal but are products of what?",
+            correctAnswers: [
+                "Cultural context"
+            ],
+            explanation: "**Gender roles** are highly variable and are products of **cultural context**."
+        },
+        {
+            question: "The lifelong process through which individuals learn the beliefs, customs, and cultural norms of their society.",
+            correctAnswers: [
+                "Socialization"
+            ],
+            explanation: "**Socialization** is the lifelong process through which individuals learn and internalize the beliefs, customs, and **cultural norms**."
+        },
+        {
+            question: "What characteristic of human identities allows them to change and shift as a person moves between different social groups?",
+            correctAnswers: [
+                "Flexibility",
+                "adaptability",
+                "flexible and adaptable"
+            ],
+            explanation: "Identities are considered **flexible and adaptable** to new social contexts."
+        },
+        {
+            question: "Name the American anthropologist known for his theories on interpretive anthropology and the symbolic significance of culture.",
+            correctAnswers: [
+                "Clifford James Geertz",
+                "Clifford Geertz",
+                "Geertz"
+            ],
+            explanation: "**Clifford James Geertz** is the most prominent figure in **interpretive anthropology**."
+        },
+        {
+            question: "What field of anthropology focuses on the idea that cultural symbols and meanings influence individual identities?",
+            correctAnswers: [
+                "Symbolic anthropology"
+            ],
+            explanation: "**Symbolic anthropology** focuses on the symbolic rather than the material aspects of culture."
+        },
+        {
+            question: "What term describes the anthropological idea that an individual's sense of self is deeply rooted in and inseparable from their cultural contexts?",
+            correctAnswers: [
+                "Cultural embeddedness"
+            ],
+            explanation: "**Cultural embeddedness** refers to the idea that the self is deeply integrated into and shaped by the specific cultural environment."
+        },
+        {
+            question: "The idea that the self is continuously negotiated and acted out through social interactions and interpretations of cultural symbols.",
+            correctAnswers: [
+                "Performance and Interpretation"
+            ],
+            explanation: "The concept of **Performance and Interpretation** views the self as a flexible entity that is constantly 'performed' and negotiated."
+        },
+        {
+            question: "Name the American cultural anthropologist known for her work on cultural relativism and the influence of socialization (e.g., *Coming of Age in Samoa*).",
+            correctAnswers: [
+                "Margaret Mead",
+                "Mead"
+            ],
+            explanation: "**Margaret Mead** was an influential American cultural anthropologist famous for her work on the influence of **socialization**."
+        },
+        {
+            question: "What anthropological principle suggests that the self must be understood in terms of its own culture's norms and values?",
+            correctAnswers: [
+                "Cultural Relativity"
+            ],
+            explanation: "**Cultural Relativity** is the principle that an individual's beliefs and activities should be understood in terms of their own culture."
+        },
+        {
+            question: "The broad process by which individuals acquire knowledge, skills, values, and identities from their social interactions.",
+            correctAnswers: [
+                "Socialization and learning",
+                "Socialization"
+            ],
+            explanation: "**Socialization and learning** encompass the methods by which individuals are taught to become functional members of their society."
+        },
+        {
+            question: "What quality of identity allows the self to adjust and be negotiated when individuals encounter new cultural expectations?",
+            correctAnswers: [
+                "Flexibility of identity",
+                "Adaptability"
+            ],
+            explanation: "**Flexibility of identity** recognizes that the self can adjust, change, and be negotiated."
+        },
+        {
+            question: "Clifford Geertz focused on symbolic interpretation; Margaret Mead focused on diversity of identities and what process?",
+            correctAnswers: [
+                "Socialization"
+            ],
+            explanation: "**Geertz** focused on symbolic interpretation; **Mead** explored the impact of **socialization**."
+        },
+        {
+            question: "According to William James, what is the objective aspect of the self, encompassing social roles and reputation?",
+            correctAnswers: [
+                "The Me",
+                "Me"
+            ],
+            explanation: "The **Me** is the empirical, known self—objective, social roles, reputation."
+        },
+        {
+            question: "According to William James, what is the subjective, pure ego of the self, representing one's stream of consciousness and immediate experience?",
+            correctAnswers: [
+                "The I",
+                "I"
+            ],
+            explanation: "The **I** is William James's term for the pure, subjective self, or the 'stream of consciousness.'"
+        },
+        {
+            question: "Which model of the self predicts high consistency in behavior and personality traits across all different contexts and situations?",
+            correctAnswers: [
+                "The Global Model",
+                "Global Model"
+            ],
+            explanation: "The **Global Model** suggests the self is a unified, single entity, predicting high consistency."
+        },
+        {
+            question: "Murray Bowen's Differentiated Model emphasizes the ability to separate one's self from others, which is termed what?",
+            correctAnswers: [
+                "Differentiation of self",
+                "Differentiation"
+            ],
+            explanation: "Bowen's **Differentiated Model** centers on the '**differentiation of self**.'"
+        },
+        {
+            question: "What component of Bowen's differentiation refers to the ability to separate one's own intellectual/thought process from one's emotional/feeling process?",
+            correctAnswers: [
+                "Intrapsychic differentiation"
+            ],
+            explanation: "**Intrapsychic differentiation** is the internal component, separating thoughts from emotions."
+        },
+        {
+            question: "Which type of differentiation in Bowen's model refers to the ability to maintain a sense of self separate from the emotional influence of others in relationships?",
+            correctAnswers: [
+                "Interpersonal differentiation"
+            ],
+            explanation: "**Interpersonal differentiation** is the ability to maintain a separate emotional and intellectual identity from important others."
+        },
+        {
+            question: "What term did Carl Rogers use to describe a person's current perception of their own qualities, abilities, and characteristics?",
+            correctAnswers: [
+                "Real Self",
+                "The Real Self"
+            ],
+            explanation: "Carl Rogers defined the **Real Self** as how a person currently sees themselves."
+        },
+        {
+            question: "In Carl Rogers's theory, the gap between the Real Self and the Ideal Self is a source of psychological distress. What is the gap itself called?",
+            correctAnswers: [
+                "Incongruence"
+            ],
+            explanation: "The goal of therapy is to achieve **congruence**, or a smaller gap, between the **Real Self** and the **Ideal Self**."
+        },
+        {
+            question: "What theory, proposed by David Lester, suggests that a person possesses distinct, context-dependent roles and personalities?",
+            correctAnswers: [
+                "Theory of Multiple Selves",
+                "Multiple Selves Theory"
+            ],
+            explanation: "Lester's **Theory of Multiple Selves** posits that individuals possess different, context-specific selves."
+        },
+        {
+            question: "In David Lester's framework, what is the aspirational goal of integrating all of one's different contextual roles and personalities into a single, cohesive identity?",
+            correctAnswers: [
+                "Unified self",
+                "The Unified Self"
+            ],
+            explanation: "The **Unified self** is the aspirational goal—the integration of different roles into a single, cohesive identity."
+        },
+        {
+            question: "What term did Donald Winnicott use for the self based on genuine, authentic, and innate personal qualities present from birth?",
+            correctAnswers: [
+                "True Self",
+                "The True Self"
+            ],
+            explanation: "Donald Winnicott's **True Self** is the spontaneous, authentic core of the individual."
+        },
+        {
+            question: "According to Donald Winnicott, what is the term for the self that acts as a protective shield, complying with external demands?",
+            correctAnswers: [
+                "False Self",
+                "The False Self"
+            ],
+            explanation: "The **False Self** is a defensive organization, a kind of 'mask' that complies with external demands."
+        },
+        {
+            question: "Albert Bandura used what term to describe behavior that is self-initiated, rather than being solely a response to external demands?",
+            correctAnswers: [
+                "Proactive behavior",
+                "Proaction"
+            ],
+            explanation: "Bandura views the self as **proactive**, meaning it is initiated by the self."
+        },
+        {
+            question: "What is the term for Bandura's concept that refers to the individual's capacity to control their own goals, actions, and destinies?",
+            correctAnswers: [
+                "Agentic behavior",
+                "Human Agency",
+                "Agency"
+            ],
+            explanation: "**Agentic behavior**, or **Human Agency**, is the ability to exert influence over one's life."
+        },
+        {
+            question: "Which core feature of Bandura's Human Agency is defined by the formulation of action plans and the setting of goals for the future?",
+            correctAnswers: [
+                "Intentionality"
+            ],
+            explanation: "**Intentionality** involves forming action plans and setting goals."
+        },
+        {
+            question: "Which core feature of Bandura's Human Agency involves anticipating the likely consequences of one's actions and planning to meet future needs?",
+            correctAnswers: [
+                "Forethought"
+            ],
+            explanation: "**Forethought** is the ability to anticipate and plan for the future, including the likely consequences of actions."
+        },
+        {
+            question: "Which core feature of Bandura's Human Agency involves the monitoring and adjustment of one's behavior to ensure it aligns with one's goals and standards?",
+            correctAnswers: [
+                "Self-reactiveness"
+            ],
+            explanation: "**Self-reactiveness** involves monitoring one's progress and regulating behavior to match the intended goals."
+        },
+        {
+            question: "Which core feature of Bandura's Human Agency involves self-examination and the evaluation of one's own functioning, thoughts, and personal efficacy?",
+            correctAnswers: [
+                "Self-reflection"
+            ],
+            explanation: "**Self-reflection** is the metacognitive ability to examine one's own functioning."
+        },
+        {
+            question: "The False Self (Winnicott) and the Me (James) are similar in that both concepts represent a self that is highly influenced by what type of demands?",
+            correctAnswers: [
+                "External demands",
+                "Social roles",
+                "Societal expectations"
+            ],
+            explanation: "The **False Self** and the **Me** are both externally driven/defined aspects of identity."
+        },
+        {
+            question: "Intentionality, as a core feature of Human Agency, is primarily associated with which proactive action?",
+            correctAnswers: [
+                "Setting goals",
+                "Goal setting",
+                "Formulating action plans"
+            ],
+            explanation: "**Intentionality** is the planning and goal-setting component of **Human Agency**."
+        },
+        {
+            question: "What is the key difference between Intrapsychic differentiation and Interpersonal differentiation?",
+            correctAnswers: [
+                "Intrapsychic is internal (separating thoughts from feelings); Interpersonal is external (separating self from others)."
+            ],
+            explanation: "**Intrapsychic differentiation** is internal, and **Interpersonal differentiation** is external."
+        },
+        {
+            question: "The self model commonly associated with Western thought that values personal autonomy, self-expression, and the pursuit of individual goals.",
+            correctAnswers: [
+                "Individualistic self",
+                "Western self"
+            ],
+            explanation: "The **Individualistic Self** emphasizes personal autonomy, self-expression, and pursuing individual goals."
+        },
+        {
+            question: "The self model typical of Eastern thought where identity is closely tied to group membership, prioritizing harmony and communal expectations.",
+            correctAnswers: [
+                "Collective self",
+                "Eastern self"
+            ],
+            explanation: "The **Collective Self** defines identity through group membership, prioritizing **group harmony** and cooperation."
+        },
+        {
+            question: "In what year was Confucius, the influential Chinese philosopher, born?",
+            correctAnswers: [
+                "551 BC"
+            ],
+            explanation: "Confucius was born in **551 BC**."
+        },
+        {
+            question: "What term is used in the Confucian perspective to describe the self as fundamentally defined and formed by their role within the group and social relationships?",
+            correctAnswers: [
+                "Relational self"
+            ],
+            explanation: "The Confucian perspective defines identity as the **Relational self**."
+        },
+        {
+            question: "Name one of the Five Cardinal Relationships established by Confucius (excluding Teacher-Student).",
+            correctAnswers: [
+                "Ruler - Subject",
+                "Father - Son",
+                "Husband - Wife",
+                "Elder Brother - Younger Brother",
+                "Friends"
+            ],
+            explanation: "The **Five Cardinal Relationships** are: Ruler-Subject, Father-Son, Husband-Wife, Elder Brother-Younger Brother, and Friends."
+        },
+        {
+            question: "What term in Confucianism refers to the self that achieves harmony by prioritizing social duties and societal obligations over personal desires?",
+            correctAnswers: [
+                "Subdued self",
+                "The Subdued Self"
+            ],
+            explanation: "The **Subdued self** is a Confucian ideal where one sacrifices personal desires in favor of fulfilling social duties."
+        },
+        {
+            question: "What is the core Confucian concept, often translated as 'Human-heartedness,' that emphasizes altruism and benevolence?",
+            correctAnswers: [
+                "Ren"
+            ],
+            explanation: "**Ren** is the foundational Confucian virtue, representing 'human-heartedness' or 'benevolence.'"
+        },
+        {
+            question: "According to the Confucian perspective, the self primarily develops through relationships, moral cultivation, and harmony with what else?",
+            correctAnswers: [
+                "Natural order",
+                "the natural order"
+            ],
+            explanation: "The Confucian self develops through active participation in **relationships**, rigorous **moral cultivation**, and achieving **harmony** with the social and **natural order**."
+        },
+        {
+            question: "What is the Confucian term for the virtue of filial piety, which mandates deep respect and care for one's parents and elders?",
+            correctAnswers: [
+                "Xiao"
+            ],
+            explanation: "**Xiao** is the Confucian term for **filial piety**."
+        },
+        {
+            question: "Name one of the three core values (freedom, choice, or independence) that the Western Individualistic self model stresses.",
+            correctAnswers: [
+                "Freedom",
+                "Choice",
+                "Independence"
+            ],
+            explanation: "The Western Individualistic Self strongly emphasizes **freedom**, personal **choice**, and **independence**."
+        },
+        {
+            question: "What are the two concepts that the Eastern Collective Self prioritizes above individual desires?",
+            correctAnswers: [
+                "Group harmony and communal expectations",
+                "Group harmony and cooperation"
+            ],
+            explanation: "The Eastern **Collective Self** prioritizes **group harmony** and **communal expectations**."
+        },
+        {
+            question: "The theoretical contrast between James's 'I' vs. 'Me' and Bowen's 'Intrapsychic vs. Interpersonal Differentiation' both deal fundamentally with the concept of what?",
+            correctAnswers: [
+                "Separation",
+                "Differentiation"
+            ],
+            explanation: "Both William James and Murray Bowen's theories central themes are about **distinguishing** (separating/differentiating) components of the self."
+        },
+        {
+            question: "The False Self (Winnicott) and the Me (James) share the characteristic of being primarily defined by what kind of influence?",
+            correctAnswers: [
+                "External influence",
+                "Social roles",
+                "Societal expectations"
+            ],
+            explanation: "Both are non-authentic, **externally-driven** aspects of identity."
+        },
+        {
+            question: "Name the four core features of Albert Bandura's Human Agency.",
+            correctAnswers: [
+                "Intentionality, Forethought, Self-reactiveness, and Self-reflection"
+            ],
+            explanation: "The four core features of **Human Agency** are Intentionality, Forethought, Self-reactiveness, and **Self-reflection**."
+        },
+        {
+            question: "What is the term for the state of harmony that Carl Rogers believed the self must achieve between the Real Self and the Ideal Self?",
+            correctAnswers: [
+                "Congruence"
+            ],
+            explanation: "Rogers's theory centers on achieving **congruence**."
+        },
+        {
+            question: "In Bowen's theory, what term describes the emotional lack of distinction between one's feelings and the feelings of connected others, seen in low Interpersonal Differentiation?",
+            correctAnswers: [
+                "Emotional fusion",
+                "Fusion"
+            ],
+            explanation: "Low **Interpersonal differentiation** results in emotional **fusion**."
+        },
+        {
+            question: "What is the primary source of identity in the Eastern Collective Self, according to Confucian and related thought?",
+            correctAnswers: [
+                "Relational membership",
+                "Group membership",
+                "Social roles"
+            ],
+            explanation: "The Eastern self is rooted in **Relational membership** and fulfilling social roles."
+        },
+        {
+            question: "What self-concept involves separating one's rational thinking process from one's emotional state, a component of Murray Bowen's Differentiated Model?",
+            correctAnswers: [
+                "Intrapsychic Differentiation"
+            ],
+            explanation: "**Intrapsychic Differentiation** is the internal separation of emotionality from intellect."
+        }
+    ]
+};
+        //
+        // --- END OF QUIZ DATA ---
+        //
+        const initialTotalQuestions = quizData.multipleChoice.length + quizData.identification.length;
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+        let wrongAnswers = [];
+        let totalQuestions = initialTotalQuestions;
+
+        // --- DOM Elements ---
+        const quizArea = document.getElementById('quiz-area');
+        const endScreen = document.getElementById('end-screen');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const identificationInput = document.getElementById('identification-input');
+        const nextButton = document.getElementById('next-button');
+        const submitButton = document.getElementById('submit-button');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const restartButton = document.getElementById('restart-button');
+        const finalScoreSpan = document.getElementById('final-score-span');
+        const totalQuestionsSpan = document.getElementById('total-questions-span');
+        const bestScoreSpan = document.getElementById('best-score-span');
+        const wrongAnswersList = document.getElementById('wrong-answers-list');
+        const currentScoreSpan = document.getElementById('current-score');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        // --- NEW HELPER FUNCTION: Answer Normalization ---
+        /**
+         * Cleans a string by removing punctuation and spaces, and converting to lowercase.
+         * This ensures flexible matching for identification questions (handling 
+         * capitalization, spacing, abbreviations, and full names).
+         * @param {string} str - The input string (user answer or correct answer).
+         * @returns {string} The normalized string.
+         */
+        function normalizeAnswer(str) {
+            // 1. Convert to lowercase
+            let normalized = str.toLowerCase();
+            // 2. Remove all non-alphanumeric characters (including punctuation like periods, parentheses, etc.)
+            normalized = normalized.replace(/[^\w\s]/g, ''); 
+            // 3. Remove all whitespace (spaces, tabs, newlines)
+            normalized = normalized.replace(/\s/g, ''); 
+            return normalized;
+        }
+
+        // --- Utility Functions (Cookies) ---
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // --- Core Quiz Logic ---
+
+        function updateScoreDisplay() {
+            currentScoreSpan.textContent = `Score: ${score}`;
+        }
+
+        function updateProgressBar() {
+            const progress = (currentQuestionIndex / totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function selectOption(selectedButton, selectedAnswer) {
+            if (answered) return;
+
+            const currentQuizData = quizData.multipleChoice[currentQuestionIndex];
+            const isCorrect = selectedAnswer === currentQuizData.answer;
+
+            answered = true;
+            nextButton.style.display = 'block';
+
+            // Disable all options and show correct/incorrect status
+            optionsContainer.querySelectorAll('.options').forEach(button => {
+                button.disabled = true;
+                if (button.textContent === currentQuizData.answer) {
+                    button.classList.add('correct');
+                }
+                if (button === selectedButton && !isCorrect) {
+                    button.classList.add('incorrect');
+                }
+            });
+
+            if (isCorrect) {
+                score++;
+                feedbackMessage.textContent = "Correct! Well done.";
+                feedbackMessage.classList.add('correct-feedback');
+            } else {
+                feedbackMessage.textContent = `Incorrect. The correct answer was: ${currentQuizData.answer}`;
+                feedbackMessage.classList.add('incorrect-feedback');
+                wrongAnswers.push({
+                    question: currentQuizData.question,
+                    yourAnswer: selectedAnswer,
+                    correctAnswer: currentQuizData.answer
+                });
+            }
+            updateScoreDisplay();
+        }
+        
+        function checkIdentificationAnswer() {
+            if (answered) return;
+            
+            const identificationIndex = currentQuestionIndex - quizData.multipleChoice.length;
+            const currentQuizData = quizData.identification[identificationIndex];
+
+            // 1. Get and normalize user input
+            const rawInput = identificationInput.value.trim(); 
+            const normalizedInput = normalizeAnswer(rawInput);
+
+            // 2. Normalize all acceptable answers and check for a match
+            // The .some() function checks if AT LEAST ONE of the normalized correct answers matches the normalized input.
+            const isCorrect = currentQuizData.correctAnswers.some(acceptableAnswer => {
+                return normalizeAnswer(acceptableAnswer) === normalizedInput;
+            });
+
+            answered = true;
+            submitButton.style.display = 'none';
+            nextButton.style.display = 'block';
+            identificationInput.disabled = true;
+            
+            // For feedback, use the first official answer from the list
+            const officialAnswer = currentQuizData.correctAnswers[0];
+
+            if (isCorrect) {
+                score++;
+                feedbackMessage.textContent = "Correct! Well done.";
+                feedbackMessage.classList.add('correct-feedback');
+                identificationInput.style.borderColor = 'var(--correct-color)';
+            } else {
+                feedbackMessage.textContent = `Incorrect. The correct answer was: ${officialAnswer}`;
+                feedbackMessage.classList.add('incorrect-feedback');
+                identificationInput.style.borderColor = 'var(--incorrect-color)';
+                wrongAnswers.push({
+                    question: currentQuizData.question,
+                    yourAnswer: rawInput || "(No answer provided)",
+                    correctAnswer: officialAnswer
+                });
+            }
+            updateScoreDisplay();
+        }
+
+        function showQuestion() {
+            // Check if there are any questions at all
+            if (totalQuestions === 0) {
+                quizArea.innerHTML = "<h2>Quiz is empty! Please add questions to the `quizData` object in the script.</h2>";
+                return;
+            }
+
+            answered = false;
+            feedbackMessage.textContent = '';
+            feedbackMessage.classList.remove('correct-feedback', 'incorrect-feedback');
+            identificationInput.style.borderColor = 'var(--border-color-light)';
+            identificationInput.disabled = false;
+            
+            let currentQuizData;
+
+            if (currentQuestionIndex < quizData.multipleChoice.length) {
+                // --- Multiple Choice Section ---
+                currentQuizData = quizData.multipleChoice[currentQuestionIndex];
+                
+                // Element visibility
+                optionsContainer.style.display = 'flex';
+                identificationInput.style.display = 'none';
+                submitButton.style.display = 'none';
+                nextButton.style.display = 'none';
+
+                // Question and Options
+                questionText.textContent = currentQuizData.question;
+                optionsContainer.innerHTML = '';
+                
+                // Correctly loop through options
+                currentQuizData.options.forEach(option => { 
+                    const button = document.createElement('button');
+                    button.classList.add('options');
+                    button.textContent = option;
+                    button.onclick = () => selectOption(button, option);
+                    optionsContainer.appendChild(button);
+                });
+                
+                // Progress Text
+                progressText.textContent = `Multiple Choice Question ${currentQuestionIndex + 1} of ${totalQuestions}`;
+
+            } else if (currentQuestionIndex < totalQuestions) {
+                // --- Identification Section ---
+                const identificationIndex = currentQuestionIndex - quizData.multipleChoice.length;
+                currentQuizData = quizData.identification[identificationIndex];
+                
+                // Element visibility
+                optionsContainer.style.display = 'none';
+                identificationInput.style.display = 'block';
+                submitButton.style.display = 'block';
+                nextButton.style.display = 'none';
+
+                // Question and Input
+                questionText.textContent = currentQuizData.question;
+                identificationInput.value = ''; // Clear previous input
+                
+                // Progress Text
+                progressText.textContent = `Identification Question ${identificationIndex + 1} of ${totalQuestions}`;
+
+            } else {
+                // --- End of Quiz ---
+                showEndScreen();
+                return;
+            }
+            
+            updateProgressBar();
+            updateScoreDisplay();
+        }
+
+        function showEndScreen() {
+            quizArea.style.display = 'none';
+            endScreen.style.display = 'block';
+            finalScoreSpan.textContent = score;
+            totalQuestionsSpan.textContent = totalQuestions;
+
+            const currentBestScore = parseInt(getCookie("bestScore") || '0', 10);
+            if (score > currentBestScore) {
+                setCookie("bestScore", score, 365);
+                bestScoreSpan.textContent = score;
+            } else {
+                bestScoreSpan.textContent = currentBestScore;
+            }
+
+            // Display Wrong Answers
+            wrongAnswersList.innerHTML = '';
+            if (wrongAnswers.length > 0) {
+                wrongAnswers.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>Q:</strong> ${item.question}<br><strong>Your Answer:</strong> ${item.yourAnswer}<br><strong>Correct Answer:</strong> ${item.correctAnswer}`;
+                    wrongAnswersList.appendChild(li);
+                });
+            } else {
+                wrongAnswersList.innerHTML = "<li>You got all questions right! 🎉</li>";
+            }
+        }
+        
+        // --- Event Listeners and Initialization ---
+
+        nextButton.addEventListener('click', () => {
+            currentQuestionIndex++;
+            showQuestion();
+        });
+
+        submitButton.addEventListener('click', checkIdentificationAnswer);
+
+        restartButton.addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            wrongAnswers = [];
+            endScreen.style.display = 'none';
+            quizArea.style.display = 'block';
+            showQuestion();
+        });
+
+        // Theme Toggle Logic
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.textContent = '🌙 Dark Mode';
+                setCookie('theme', 'dark', 365);
+            } else {
+                themeToggle.textContent = '☀️ Light Mode';
+                setCookie('theme', 'light', 365);
+            }
+        });
+
+        // Load theme from cookie
+        window.onload = () => {
+            const savedTheme = getCookie('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.textContent = '🌙 Dark Mode';
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeToggle.textContent = '☀️ Light Mode';
+            }
+            // Initialize the quiz
+            showQuestion(); 
+        };
+
+    </script>
+</body>
+</html>

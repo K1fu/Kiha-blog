@@ -607,7 +607,8 @@ const conceptData = [
         "question": "Murray Bowen's Differentiated Model focuses on the degree of emotional and intellectual separation between one's self and others, which is termed what?",
         "correctAnswers": [
             "Differentiation of self",
-            "Differentiation"
+            "Differentiation",
+
         ]
         },
         "explanation": "Bowen's **Differentiated Model** centers on the 'differentiation of self,' which is the ability to separate one's intellectual/emotional processes from others, thus preventing emotional fusion in relationships."
@@ -651,7 +652,8 @@ const conceptData = [
         "identification": {
         "question": "Which type of differentiation in Bowen's model refers to the ability to maintain a sense of self separate from the emotional influence of others in relationships?",
         "correctAnswers": [
-            "Interpersonal differentiation"
+            "Interpersonal differentiation",
+            "Interpersonal"
         ]
         },
         "explanation": "**Interpersonal differentiation** is the ability to maintain a separate emotional and intellectual identity from important others. Distinguishing thoughts from emotions is **Intrapsychic differentiation**."
