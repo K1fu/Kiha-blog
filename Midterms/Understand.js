@@ -18,9 +18,9 @@ const conceptData = [
             answer: "The study of people throughout the world in all periods of time.",
         },
         identification: {
-            question: "What is the primary focus of Anthropology as a discipline?",
+            question: "It is the study of people throughout the world in all periods of time.",
             correctAnswers: [
-                "The study of people throughout the world in all periods of time"
+                "Archaeology"
             ],
         },
         explanation: "Anthropology is a broad field defined as **the study of people throughout the world in all periods of time**. This holistic approach is what distinguishes it from other social sciences, as it includes biology, culture, language, and history. Other options are too narrow.",
@@ -37,7 +37,7 @@ const conceptData = [
                 "Anthros (life) and Pathos (suffering)",
                 "Philos (love) and Sophia (wisdom)"
             ],
-            answer: "Anthropos (human) and Logia (study)",
+            answer: "Anthropos (human), and Logia (study)",
         },
         identification: {
             question: "What Greek words form the origin of 'Anthropology'?",

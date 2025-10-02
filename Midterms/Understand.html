@@ -415,6 +415,17 @@
             color: white;
             border-color: var(--primary-color-light);
         }
+        /* Add this new class to your <style> block */
+        .explanation-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: var(--container-bg-light); 
+            border-radius: 6px;
+            border: 1px solid var(--border-color-light);
+            font-size: 0.9em;
+            color: var(--text-color-light);
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -473,262 +484,301 @@
     <script>
         const subjectDisplays = document.querySelectorAll('.subjectName'); 
 
-        // Loop through the NodeList and update the text content of each element
-        subjectDisplays.forEach(element => {
-            element.textContent = subjectName;
-        });
-        
-        const initialConceptCount = conceptData.length;
-        
-        // This array holds the IDs of concepts in the order they will be presented.
-        let quizFlow = conceptData.map(c => c.id); 
-        
-        // Lookup map for fast access to concept objects by ID
-        const conceptMap = conceptData.reduce((map, concept) => {
-            map[concept.id] = concept;
-            return map;
-        }, {});
+// Loop through the NodeList and update the text content of each element
+subjectDisplays.forEach(element => {
+    element.textContent = subjectName;
+});
 
-        let currentConceptIndex = 0; // Index within the quizFlow array
-        let answered = false;
-        
-        // --- DOM Elements ---
-        const quizContainer = document.getElementById('quiz-container');
-        const quizArea = document.getElementById('quiz-area');
-        const endScreen = document.getElementById('end-screen');
-        const stageIndicator = document.getElementById('stage-indicator');
-        const questionText = document.getElementById('question-text');
-        const explanationText = document.getElementById('explanation-text');
-        const optionsContainer = document.getElementById('options-container');
-        const identificationInput = document.getElementById('identification-input');
-        const nextButton = document.getElementById('next-button');
-        const submitButton = document.getElementById('submit-button');
-        const feedbackMessage = document.getElementById('feedback-message');
-        const progressBar = document.getElementById('progress-bar');
-        const progressText = document.getElementById('progress-text');
-        const restartButton = document.getElementById('restart-button');
-        const currentScoreSpan = document.getElementById('current-score');
-        const masteredCountSpan = document.getElementById('mastered-count-span');
-        const unmasteredCountSpan = document.getElementById('unmastered-count-span');
-        const masteryList = document.getElementById('mastery-list');
-        const themeToggle = document.getElementById('theme-toggle');
+const initialConceptCount = conceptData.length;
+
+// This array holds the IDs of concepts in the order they will be presented.
+let quizFlow = conceptData.map(c => c.id); 
+
+// Lookup map for fast access to concept objects by ID
+const conceptMap = conceptData.reduce((map, concept) => {
+    map[concept.id] = concept;
+    // Add initial tracking properties
+    concept.stage = 1; // 1: MCQ, 2: ID, 3: Explanation
+    concept.mastered = false;
+    concept.firstAttemptCorrect = null; // Tracks initial attempt success (for Raw Score)
+    concept.reviewAttempts = 0; // Tracks successful attempts after review (for Review Score)
+    return map;
+}, {});
+
+let currentConceptIndex = 0; // Index within the quizFlow array
+let answered = false;
+let rawScore = 0; // Correct on first Stage 1 attempt
+let reviewScore = 0; // Correct on final Stage 2 attempt (Mastery)
+
+// --- DOM Elements ---
+const quizContainer = document.getElementById('quiz-container');
+const quizArea = document.getElementById('quiz-area');
+const endScreen = document.getElementById('end-screen');
+const stageIndicator = document.getElementById('stage-indicator');
+const questionText = document.getElementById('question-text');
+const explanationText = document.getElementById('explanation-text');
+const optionsContainer = document.getElementById('options-container');
+const identificationInput = document.getElementById('identification-input');
+const nextButton = document.getElementById('next-button');
+const submitButton = document.getElementById('submit-button');
+const feedbackMessage = document.getElementById('feedback-message');
+const progressBar = document.getElementById('progress-bar');
+const progressText = document.getElementById('progress-text');
+const restartButton = document.getElementById('restart-button');
+const currentScoreSpan = document.getElementById('current-score');
+const masteredCountSpan = document.getElementById('mastered-count-span');
+const unmasteredCountSpan = document.getElementById('unmastered-count-span');
+const masteryList = document.getElementById('mastery-list');
+const themeToggle = document.getElementById('theme-toggle');
 
 
-        // --- Audio and Visual Effects (Web Audio API) ---
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const audioCtx = new AudioContext();
+// --- Audio and Visual Effects (Web Audio API) ---
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
 
-        /** Plays a quick, high-pitched ding sound for a correct answer. */
-        function playCorrectSound() {
-            const gainNode = audioCtx.createGain();
-            gainNode.connect(audioCtx.destination);
-            function playNote(freq, startTime, duration) {
-                const osc = audioCtx.createOscillator();
-                const noteGain = audioCtx.createGain();
-                osc.type = "sine"; 
-                osc.frequency.setValueAtTime(freq, startTime);
-                osc.connect(noteGain);
-                noteGain.connect(gainNode);
-                noteGain.gain.setValueAtTime(0.5, startTime);
-                noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-                osc.start(startTime);
-                osc.stop(startTime + duration);
-            }
-            const now = audioCtx.currentTime;
-            playNote(660, now, 0.25); 
-            playNote(880, now + 0.1, 0.3);
-        }
+/** Plays a quick, high-pitched ding sound for a correct answer. */
+function playCorrectSound() {
+    const gainNode = audioCtx.createGain();
+    gainNode.connect(audioCtx.destination);
+    function playNote(freq, startTime, duration) {
+        const osc = audioCtx.createOscillator();
+        const noteGain = audioCtx.createGain();
+        osc.type = "sine"; 
+        osc.frequency.setValueAtTime(freq, startTime);
+        osc.connect(noteGain);
+        noteGain.connect(gainNode);
+        noteGain.gain.setValueAtTime(0.5, startTime);
+        noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+    }
+    const now = audioCtx.currentTime;
+    playNote(660, now, 0.25); 
+    playNote(880, now + 0.1, 0.3);
+}
 
-        /** Plays a short, low-frequency buzz/error sound for an incorrect answer. */
-        function playIncorrectSound() {
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.type = 'square';
-            oscillator.frequency.setValueAtTime(150, audioCtx.currentTime); 
-            gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
-            oscillator.start();
-            setTimeout(() => oscillator.stop(), 400);
-        }
+/** Plays a short, low-frequency buzz/error sound for an incorrect answer. */
+function playIncorrectSound() {
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(150, audioCtx.currentTime); 
+    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+    oscillator.start();
+    setTimeout(() => oscillator.stop(), 400);
+}
 
-        /** Applies the CSS shake animation to the quiz container. */
-        function shakeScreen() {
-            quizContainer.classList.add('shake');
-            setTimeout(() => {
-                quizContainer.classList.remove('shake');
-            }, 500); 
-        }
+/** Applies the CSS shake animation to the quiz container. */
+function shakeScreen() {
+    quizContainer.classList.add('shake');
+    setTimeout(() => {
+        quizContainer.classList.remove('shake');
+    }, 500); 
+}
 
-        // --- Utility Functions (Cookies) ---
-        function setCookie(name, value, days) {
-            let expires = "";
-            if (days) {
-                const date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
-        }
+// --- Utility Functions (Cookies) ---
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+}
 
-        function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for (let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        }
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
 
-        /** Cleans a string for flexible comparison (used for Identification questions). */
-        function normalizeAnswer(str) {
-            let normalized = str.toLowerCase();
-            normalized = normalized.replace(/[^\w\s]/g, ''); // Remove punctuation
-            normalized = normalized.replace(/\s/g, '');      // Remove all whitespace
-            return normalized;
-        }
+/** Cleans a string for flexible comparison (used for Identification questions). */
+function normalizeAnswer(str) {
+    let normalized = str.toLowerCase();
+    normalized = normalized.replace(/[^\w\s]/g, ''); // Remove punctuation
+    normalized = normalized.replace(/\s/g, '');      // Remove all whitespace
+    return normalized;
+}
 
-        // --- Core Quiz Logic ---
+// --- Core Quiz Logic ---
 
-        function updateScoreDisplay() {
-            const masteredCount = Object.values(conceptMap).filter(c => c.mastered).length;
-            currentScoreSpan.textContent = `Mastered: ${masteredCount} / ${initialConceptCount}`;
-        }
+function updateScoreDisplay() {
+    const masteredCount = Object.values(conceptMap).filter(c => c.mastered).length;
+    currentScoreSpan.textContent = `Mastered: ${masteredCount} / ${initialConceptCount}`;
+}
 
-        function updateProgressBar() {
-            const totalMastered = Object.values(conceptMap).filter(c => c.mastered).length;
-            const progress = (totalMastered / initialConceptCount) * 100;
-            progressBar.style.width = `${progress}%`;
-            
-            const remaining = quizFlow.length;
-            
-            if (remaining === 0 && totalMastered === initialConceptCount) {
-                progressText.textContent = "All Concepts Mastered!";
-                progressBar.style.animation = 'none';
-            } else {
-                // Show how many concepts are left in the queue
-                progressText.textContent = `Concepts in Queue: ${remaining}`;
-                progressBar.style.animation = 'pulse-progress 2s infinite alternate';
-            }
-        }
-        
-        /** Gets the current concept object based on the flow and index. */
-        function getCurrentConcept() {
-            const currentId = quizFlow[currentConceptIndex];
-            return conceptMap[currentId];
-        }
+function updateProgressBar() {
+    const totalMastered = Object.values(conceptMap).filter(c => c.mastered).length;
+    const progress = (totalMastered / initialConceptCount) * 100;
+    progressBar.style.width = `${progress}%`;
+    
+    const remaining = quizFlow.length;
+    
+    if (remaining === 0 && totalMastered === initialConceptCount) {
+        progressText.textContent = "All Concepts Mastered!";
+        progressBar.style.animation = 'none';
+    } else {
+        // Show how many concepts are left in the queue
+        progressText.textContent = `Concepts in Queue: ${remaining}`;
+        progressBar.style.animation = 'pulse-progress 2s infinite alternate';
+    }
+}
 
-        /**
-         * Re-queues the current concept to the end of the flow for spaced repetition.
-         * The stage is reset later when rendering/advancing.
-         */
-        function requeueConcept(concept) {
-            // Remove from current position in quizFlow
-            quizFlow.splice(currentConceptIndex, 1); 
-            
-            // Add to the end of the queue
-            quizFlow.push(concept.id);
-            
-            // The index will advance in nextConcept, so we don't adjust it here.
-        }
+/** Gets the current concept object based on the flow and index. */
+function getCurrentConcept() {
+    const currentId = quizFlow[currentConceptIndex];
+    return conceptMap[currentId];
+}
 
-        /**
+/**
+ * Re-queues the current concept to the end of the flow for spaced repetition.
+ */
+function requeueConcept(concept) {
+    // Only requeue if not already at the end and if it's currently in the flow
+    const currentIndex = quizFlow.indexOf(concept.id);
+    
+    if (currentIndex !== -1 && currentIndex < quizFlow.length - 1) {
+         quizFlow.splice(currentIndex, 1); 
+         quizFlow.push(concept.id);
+    }
+}
+
+/**
          * Generic state handler after an answer attempt.
          * @param {boolean} isCorrect - Result of the check.
          * @param {object} concept - The current concept object.
+         * @param {string} correctMsg - Message for a correct answer.
          */
-        function handleFeedback(isCorrect, concept, correctMsg) {
+         function handleFeedback(isCorrect, concept, correctMsg) {
             if (answered) return;
             answered = true;
             nextButton.style.display = 'block';
             submitButton.style.display = 'none';
             nextButton.classList.remove('mastery'); 
+            
+            // Clear any previous text/explanation boxes
+            explanationText.style.display = 'none'; 
 
             if (isCorrect) {
                 playCorrectSound();
-                feedbackMessage.textContent = "Correct! " + correctMsg;
                 feedbackMessage.classList.remove('incorrect-feedback');
                 feedbackMessage.classList.add('correct-feedback');
 
                 if (concept.stage === 1) {
-                    // Passed MCQ: move to Recall (ID) - STAY ON CONCEPT
+                    // Passed MCQ: move to Recall (ID) - STAY ON CONCEPT (Case 3: Correct part 1)
                     concept.stage = 2;
+                    if (concept.firstAttemptCorrect === null) {
+                        concept.firstAttemptCorrect = true;
+                        rawScore++;
+                    }
+                    feedbackMessage.textContent = "Correct! " + correctMsg;
                     nextButton.textContent = "Begin Recall Test →";
+                    
                 } else if (concept.stage === 2) {
-                    // Passed ID: Mastery achieved! - ADVANCE CONCEPT
+                    // Passed ID: Mastery achieved! (Case 3: All correct)
                     concept.mastered = true;
+                    reviewScore++;
+                    feedbackMessage.textContent = "Mastered! You successfully recalled this concept.";
                     nextButton.textContent = "Mastered: Next Concept →";
                     nextButton.classList.add('mastery');
                 }
 
-            } else {
+            } else { // If Incorrect
                 playIncorrectSound();
                 shakeScreen();
                 
-                // Failed MCQ or ID: Move to Explanation stage - ADVANCE CONCEPT (after review)
-                concept.stage = 3;
-                feedbackMessage.textContent = `Incorrect. The correct step is Review.`;
                 feedbackMessage.classList.remove('correct-feedback');
                 feedbackMessage.classList.add('incorrect-feedback');
-                
-                // Set button text to view the explanation
-                nextButton.textContent = "View Explanation →";
-                
-                // Requeue the concept immediately for spaced repetition later
-                requeueConcept(concept);
+
+                if (concept.stage === 1) {
+                    // Case 1: MCQ Wrong -> Show explanation, proceed to ID
+                    
+                    // Note failure for scoring
+                    if (concept.firstAttemptCorrect === null) {
+                        concept.firstAttemptCorrect = false;
+                    }
+                    
+                    // Inject explanation into the feedback message
+                    feedbackMessage.innerHTML = `❌ **Incorrect on Multiple Choice.** Please review the key takeaway before proceeding to the recall test.<hr>
+                        <div class="explanation-feedback">${concept.explanation}</div>`;
+                    
+                    // Switch to ID stage and re-render on next click
+                    concept.stage = 2; 
+                    nextButton.textContent = "Proceed to Identification →";
+                    
+                } else if (concept.stage === 2) {
+                    // Case 2: ID Wrong -> Show explanation, Requeue, proceed to next concept
+                    
+                    feedbackMessage.innerHTML = `❌ **Incorrect on Identification.** You need to re-learn this concept.<hr>
+                        <div class="explanation-feedback">${concept.explanation}</div>`;
+                        
+                    // Requeue for spaced repetition later
+                    requeueConcept(concept);
+                    
+                    // Reset stage to 1 so nextConcept knows to advance
+                    concept.stage = 1; 
+                    nextButton.textContent = "Understood, Next Concept →";
+                }
             }
             updateScoreDisplay();
         }
 
-        function selectOption(selectedButton, selectedAnswer) {
-            const concept = getCurrentConcept();
-            if (!concept) return; 
+function selectOption(selectedButton, selectedAnswer) {
+    const concept = getCurrentConcept();
+    if (!concept || concept.stage !== 1) return; 
 
-            const isCorrect = selectedAnswer === concept.mcq.answer;
+    const isCorrect = selectedAnswer === concept.mcq.answer;
 
-            // Highlight buttons
-            optionsContainer.querySelectorAll('.options').forEach(button => {
-                button.disabled = true;
-                if (button.textContent === concept.mcq.answer) {
-                    button.classList.add('correct');
-                }
-                if (button === selectedButton && !isCorrect) {
-                    button.classList.add('incorrect');
-                }
-            });
-
-            handleFeedback(isCorrect, concept, `The answer is **${concept.mcq.answer}**. Now, let's test your recall.`);
+    // Highlight buttons
+    optionsContainer.querySelectorAll('.options').forEach(button => {
+        button.disabled = true;
+        if (button.textContent === concept.mcq.answer) {
+            button.classList.add('correct');
         }
-
-        function checkIdentificationAnswer() {
-            const concept = getCurrentConcept();
-            if (!concept) return; 
-
-            const rawInput = identificationInput.value.trim();
-            const normalizedInput = normalizeAnswer(rawInput);
-            
-            identificationInput.disabled = true;
-
-            const isCorrect = concept.identification.correctAnswers.some(acceptableAnswer => {
-                return normalizeAnswer(acceptableAnswer) === normalizedInput;
-            });
-
-            const officialAnswer = concept.identification.correctAnswers[0];
-
-            if (isCorrect) {
-                identificationInput.style.borderColor = 'var(--correct-color)';
-            } else {
-                identificationInput.style.borderColor = 'var(--incorrect-color)';
-            }
-
-            handleFeedback(isCorrect, concept, `You successfully recalled **${officialAnswer}** from memory!`);
+        if (button === selectedButton && !isCorrect) {
+            button.classList.add('incorrect');
         }
+    });
 
-        /** Renders the UI based on the current concept's stage. */
-        function renderConcept() {
+    handleFeedback(isCorrect, concept, `The answer is **${concept.mcq.answer}**. Prepare for the recall test.`);
+}
+
+function checkIdentificationAnswer() {
+    const concept = getCurrentConcept();
+    if (!concept || concept.stage !== 2) return; 
+
+    const rawInput = identificationInput.value.trim();
+    const normalizedInput = normalizeAnswer(rawInput);
+    
+    identificationInput.disabled = true;
+
+    const isCorrect = concept.identification.correctAnswers.some(acceptableAnswer => {
+        return normalizeAnswer(acceptableAnswer) === normalizedInput;
+    });
+
+    const officialAnswer = concept.identification.correctAnswers[0];
+
+    if (isCorrect) {
+        identificationInput.style.borderColor = 'var(--correct-color)';
+    } else {
+        identificationInput.style.borderColor = 'var(--incorrect-color)';
+    }
+
+    handleFeedback(isCorrect, concept, `You successfully recalled **${officialAnswer}** from memory!`);
+}
+
+/** Renders the UI based on the current concept's stage. */
+/** Renders the UI based on the current concept's stage. */
+function renderConcept() {
             const concept = getCurrentConcept();
 
             if (!concept) {
@@ -738,8 +788,9 @@
             }
 
             answered = false;
-            feedbackMessage.textContent = '';
-            feedbackMessage.classList.remove('correct-feedback', 'incorrect-feedback');
+            // IMPORTANT: The feedback message is cleared in nextConcept() before calling renderConcept()
+            // to prevent the previous answer's feedback from staying visible.
+            
             identificationInput.style.borderColor = 'var(--border-color-light)';
             identificationInput.disabled = false;
             nextButton.style.display = 'none';
@@ -749,7 +800,7 @@
             optionsContainer.style.display = 'none';
             optionsContainer.innerHTML = '';
             identificationInput.style.display = 'none';
-            explanationText.style.display = 'none';
+            explanationText.style.display = 'none'; // Keep this permanently hidden for the new flow
             submitButton.style.display = 'none';
             
             updateProgressBar();
@@ -788,130 +839,146 @@
                 identificationInput.value = ''; // Clear previous input
                 submitButton.style.display = 'block';
 
-            } else if (concept.stage === 3) {
-                // Stage 3: Explanation (Learn / Correct)
-                stageIndicator.textContent = "Step 3: Review & Re-Learn (Retry Scheduled)";
-                stageIndicator.className = 'stage-exp';
-
-                questionText.textContent = `Concept Review: ${concept.mcq.question}`; // Show original context
-                explanationText.innerHTML = concept.explanation;
-                explanationText.style.display = 'block';
-                
-                // Show feedback immediately upon entering Stage 3
-                feedbackMessage.textContent = "Review the explanation below. This concept will be shown again later.";
-                feedbackMessage.classList.add('incorrect-feedback');
-                
-                nextButton.style.display = 'block';
-                nextButton.textContent = "Understood, Next Concept →";
-            }
+            } 
+            // Stage 3 removed as per new flow.
         }
 
-        /** Moves to the next question in the queue or handles mastery removal. */
-        function nextConcept() {
+/** Moves to the next question in the queue or handles mastery removal. */
+/** Moves to the next question in the queue or handles mastery removal. */
+/** Moves to the next question in the queue or handles mastery removal. */
+/** Moves to the next question in the queue or handles mastery removal. */
+function nextConcept() {
             const concept = getCurrentConcept();
             
-            // --- State Transition Logic on Button Click ---
-            
-            if (concept.stage === 2 && !concept.mastered) {
-                // Case 1: Correct MCQ answer was just made (Stage 1 -> Stage 2). Stay on current concept.
-                renderConcept();
-                return;
-            }
-            
+            // Advance the index ONLY if the concept was mastered OR if it just failed ID (meaning it was requeued)
+            let shouldAdvanceIndex = false;
+
             if (concept.mastered) {
-                // Case 2: Concept was just mastered (Stage 2 -> Mastered). Remove from queue and advance index.
+                // Case 3: Concept was just mastered (ID success). Remove from queue.
                 const indexToRemove = quizFlow.indexOf(concept.id);
                 if (indexToRemove !== -1) {
                     quizFlow.splice(indexToRemove, 1);
-                    // Since we removed an element at the current index, the next question is now at the same index
-                    // We only need to advance the index if it points to an empty slot, but since we re-calculate 
-                    // the wrap-around below, we can just leave the index as is.
                 }
-            } else if (concept.stage === 3) {
-                // Case 3: Explanation was just completed (Stage 3 -> Retry). Reset stage and advance index.
-                concept.stage = 1;
-                currentConceptIndex++;
-            } else {
-                 // Case 4: Any other state transition that requires advancing (e.g., failed check that already requeued)
+                shouldAdvanceIndex = true;
+                
+            } else if (concept.stage === 1) {
+                // Case 2: Concept just failed ID and was requeued (stage was reset to 1 in handleFeedback). 
+                // We now advance to the next concept in the original flow.
+                shouldAdvanceIndex = true;
+            } 
+            // If stage is 2 (after a correct or wrong MCQ), we do NOT advance index; 
+            // we let renderConcept show the ID question next.
+            
+            if (shouldAdvanceIndex) {
                  currentConceptIndex++;
             }
             
-            // Handle wrap-around: if we passed the end of the queue, loop back to the start (0)
+            // Handle wrap-around
             if (currentConceptIndex >= quizFlow.length) {
                 currentConceptIndex = 0;
             }
             
+            // Clear feedback *before* rendering the new question
+            feedbackMessage.textContent = '';
+            
             renderConcept();
         }
 
-        function showEndScreen() {
-             quizArea.style.display = 'none';
-             endScreen.style.display = 'block';
-             
-             const mastered = Object.values(conceptMap).filter(c => c.mastered);
-             const unmastered = Object.values(conceptMap).filter(c => !c.mastered);
-             
-             masteredCountSpan.textContent = mastered.length;
-             unmasteredCountSpan.textContent = unmastered.length;
-             
-             masteryList.innerHTML = '';
-             
-             // List all concepts with mastery status
-             conceptData.forEach(concept => {
-                 const li = document.createElement('li');
-                 li.textContent = concept.mcq.question;
-                 if (concept.mastered) {
-                     li.classList.add('mastered-list-item');
-                     li.textContent = `✅ Mastered: ${li.textContent}`;
-                 } else {
-                     li.classList.add('unmastered-list-item');
-                     li.textContent = `❌ Requires Review: ${li.textContent}`;
-                 }
-                 masteryList.appendChild(li);
-             });
-             
-             updateProgressBar();
-        }
+function showEndScreen() {
+     quizArea.style.display = 'none';
+     endScreen.style.display = 'block';
+     
+     const mastered = Object.values(conceptMap).filter(c => c.mastered);
+     const unmastered = Object.values(conceptMap).filter(c => !c.mastered);
+     
+     masteredCountSpan.textContent = mastered.length;
+     unmasteredCountSpan.textContent = unmastered.length;
+     
+     // Update the score summary elements
+     const rawScoreSpan = document.createElement('p');
+     rawScoreSpan.innerHTML = `Raw Score (First MCQ Attempt): <strong>${rawScore} / ${initialConceptCount}</strong>`;
+     
+     const reviewScoreSpan = document.createElement('p');
+     reviewScoreSpan.innerHTML = `Post-Review Mastery Score: <strong>${reviewScore} / ${initialConceptCount}</strong>`;
+
+     const scoreSummary = document.getElementById('score-summary');
+     // Remove old score summaries if they exist before adding new ones
+     scoreSummary.querySelectorAll('p').forEach((p, index) => {
+         // Keep the first two (Mastered and Remaining counts)
+         if (index > 1) p.remove(); 
+     });
+     
+     // Insert new score details before the Mastery Status heading
+     const masteryStatusHeading = scoreSummary.querySelector('h3');
+     scoreSummary.insertBefore(reviewScoreSpan, masteryStatusHeading);
+     scoreSummary.insertBefore(rawScoreSpan, reviewScoreSpan);
 
 
-        // --- Event Listeners and Initialization ---
+     masteryList.innerHTML = '';
+     
+     // List all concepts with mastery status
+     conceptData.forEach(concept => {
+         const li = document.createElement('li');
+         const reviewText = concept.reviewAttempts > 0 ? `(Re-attempted ${concept.reviewAttempts} time${concept.reviewAttempts > 1 ? 's' : ''})` : '';
 
-        nextButton.addEventListener('click', nextConcept);
+         if (concept.mastered) {
+             li.classList.add('mastered-list-item');
+             li.innerHTML = `✅ Mastered ${reviewText}: ${concept.mcq.question}`;
+         } else {
+             li.classList.add('unmastered-list-item');
+             li.innerHTML = `❌ Requires Review: ${concept.mcq.question}`;
+         }
+         masteryList.appendChild(li);
+     });
+     
+     updateProgressBar();
+}
 
-        submitButton.addEventListener('click', checkIdentificationAnswer);
 
-        restartButton.addEventListener('click', () => {
+// --- Event Listeners and Initialization ---
+
+nextButton.addEventListener('click', nextConcept);
+
+submitButton.addEventListener('click', checkIdentificationAnswer);
+
+restartButton.addEventListener('click', () => {
             // Reset ALL state variables and data stages
             
             // Reset concept stages and mastery flags
             Object.values(conceptMap).forEach(concept => {
                 concept.stage = 1;
                 concept.mastered = false;
+                concept.firstAttemptCorrect = null;
+                concept.reviewAttempts = 0;
             });
             
-            // Reset flow and index (shuffle initial flow for a fresh session)
-            quizFlow = conceptData.map(c => c.id).sort(() => Math.random() - 0.5);
+            // Reset flow and index to the ORIGINAL, fixed order
+            // FIX: Use map() only to get the original IDs
+            quizFlow = conceptData.map(c => c.id); 
             currentConceptIndex = 0;
+            rawScore = 0;
+            reviewScore = 0;
             
             endScreen.style.display = 'none';
             quizArea.style.display = 'block';
             renderConcept();
         });
 
-        // Theme Toggle Logic
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                themeToggle.textContent = '🌙 Dark Mode';
-                setCookie('theme', 'dark', 365);
-            } else {
-                themeToggle.textContent = '☀️ Light Mode';
-                setCookie('theme', 'light', 365);
-            }
-        });
+// Theme Toggle Logic
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+        themeToggle.textContent = '🌙 Dark Mode';
+        setCookie('theme', 'dark', 365);
+    } else {
+        themeToggle.textContent = '☀️ Light Mode';
+        setCookie('theme', 'light', 365);
+    }
+});
 
-        // Load theme from cookie and initialize the quiz
-        window.onload = () => {
+// Load theme from cookie and initialize the quiz
+// Load theme from cookie and initialize the quiz
+window.onload = () => {
             const savedTheme = getCookie('theme');
             if (savedTheme === 'dark') {
                 document.body.classList.add('dark-mode');
@@ -921,11 +988,11 @@
                 themeToggle.textContent = '☀️ Light Mode';
             }
             
-            // Start the quiz with a fresh shuffled order
-            quizFlow.sort(() => Math.random() - 0.5);
+            // Start the quiz with concepts in their defined order
+            // FIX: Removed .sort() to maintain fixed order
+            quizFlow = conceptData.map(c => c.id); 
             renderConcept();
         };
-
-    </script>
+</script>
 </body>
 </html>
