@@ -20,7 +20,7 @@ const conceptData = [
         identification: {
             question: "It is the study of people throughout the world in all periods of time.",
             correctAnswers: [
-                "Archaeology"
+                "Anthropology"
             ],
         },
         explanation: "Anthropology is a broad field defined as **the study of people throughout the world in all periods of time**. This holistic approach is what distinguishes it from other social sciences, as it includes biology, culture, language, and history. Other options are too narrow.",
