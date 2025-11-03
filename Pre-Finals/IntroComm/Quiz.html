@@ -453,11 +453,34 @@
             throw new Error("Missing quizData object.");
         }
         
-        const allQuestions = [
+        // Group 1: Multiple Choice and True/False questions (to be shuffled first)
+        const group1Questions = [
             ...quizData.multipleChoice,
+            ...quizData.trueFalse
+        ];
+        
+        // Group 2: Identification and Fill in the Blank questions (to be shuffled second)
+        const group2Questions = [
             ...quizData.identification,
-            ...quizData.trueFalse,
             ...quizData.fillInTheBlank
+        ];
+        
+        // Shuffle each group separately if randomization is enabled
+        if (CONFIG.RANDOMIZE_QUESTIONS) {
+            for (let i = group1Questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [group1Questions[i], group1Questions[j]] = [group1Questions[j], group1Questions[i]];
+            }
+            for (let i = group2Questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [group2Questions[i], group2Questions[j]] = [group2Questions[j], group2Questions[i]];
+            }
+        }
+        
+        // Combine the groups in the desired order: Group 1 first, then Group 2
+        const allQuestions = [
+            ...group1Questions,
+            ...group2Questions
         ];
         
         const initialTotalQuestions = allQuestions.length;
