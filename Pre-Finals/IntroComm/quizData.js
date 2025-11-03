@@ -184,7 +184,7 @@ const quizData = {
         }
     ],
 
-    // Multiple Choice questions (40 Items)
+    // Multiple Choice questions (40 + 10 New OSI Items)
     // Score Value: 1 point per item
     multipleChoice: [
         {
@@ -549,6 +549,82 @@ const quizData = {
                 "Install new anti-malware software"
             ],
             answer: "Daily monitoring of cables and network devices",
+            scoreValue: 1,
+            type: "multipleChoice"
+        },
+        // --- NEW OSI MODEL QUESTIONS START HERE ---
+        {
+            question: "Which layer of the OSI model is responsible for the physical transmission of the raw bit stream over the communication medium?",
+            options: ["Data Link Layer", "Physical Layer", "Network Layer", "Transport Layer"],
+            answer: "Physical Layer",
+            scoreValue: 1,
+            type: "multipleChoice"
+        },
+        {
+            question: "Routers primarily operate at which layer of the OSI model to perform logical addressing and routing across networks?",
+            options: ["Transport Layer", "Data Link Layer", "Network Layer", "Session Layer"],
+            answer: "Network Layer",
+            scoreValue: 1,
+            type: "multipleChoice"
+        },
+        {
+            question: "The Data Link Layer (Layer 2) is primarily responsible for framing data and uses what type of address for local delivery?",
+            options: ["IP Address", "Port Number", "MAC Address", "Service Address"],
+            answer: "MAC Address",
+            scoreValue: 1,
+            type: "multipleChoice"
+        },
+        {
+            question: "Which layer of the OSI model is responsible for segmenting and reassembling data, and uses the TCP and UDP protocols?",
+            options: ["Network Layer", "Transport Layer", "Application Layer", "Presentation Layer"],
+            answer: "Transport Layer",
+            scoreValue: 1,
+            type: "multipleChoice"
+        },
+        {
+            question: "Which layer is the closest to the end-user, providing the interface for applications such as web browsers and email clients?",
+            options: ["Transport Layer", "Presentation Layer", "Session Layer", "Application Layer"],
+            answer: "Application Layer",
+            scoreValue: 1,
+            type: "multipleChoice"
+        },
+        {
+            question: "Which layer handles establishing, managing, and terminating communication sessions between applications?",
+            options: ["Transport Layer", "Session Layer", "Network Layer", "Presentation Layer"],
+            answer: "Session Layer",
+            scoreValue: 1,
+            type: "multipleChoice"
+        },
+        {
+            question: "Encryption and compression of data are functions performed at which layer of the OSI model?",
+            options: ["Application Layer", "Presentation Layer", "Data Link Layer", "Network Layer"],
+            answer: "Presentation Layer",
+            scoreValue: 1,
+            type: "multipleChoice"
+        },
+        {
+            question: "What is the correct order of the bottom three layers of the OSI model (Layer 1 to Layer 3)?",
+            options: [
+                "Network, Data Link, Physical",
+                "Physical, Data Link, Network",
+                "Physical, Network, Transport",
+                "Transport, Network, Data Link"
+            ],
+            answer: "Physical, Data Link, Network",
+            scoreValue: 1,
+            type: "multipleChoice"
+        },
+        {
+            question: "The Protocol Data Unit (PDU) for the Network Layer (Layer 3) is commonly referred to as a:",
+            options: ["Segment", "Frame", "Packet", "Bit"],
+            answer: "Packet",
+            scoreValue: 1,
+            type: "multipleChoice"
+        },
+        {
+            question: "A simple networking hub that does not read MAC or IP addresses operates only at which OSI layer?",
+            options: ["Physical Layer", "Data Link Layer", "Network Layer", "Transport Layer"],
+            answer: "Physical Layer",
             scoreValue: 1,
             type: "multipleChoice"
         }
