@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Computing Quiz</title>
+    <!-- Using Inter font for a clean, modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styling */
+        :root {
+            --bg-color-light: #f4f7f6;
+            --text-color-light: #2c3e50;
+            --container-bg-light: #ffffff;
+            --primary-color-light: #3498db;
+            --secondary-color-light: #2980b9;
+            --correct-color: #27ae60;
+            --incorrect-color: #e74c3c;
+            --unanswered-color: #7f8c8d; /* New color for unanswered/grey */
+            --border-color-light: #bdc3c7;
+            --shadow-color-light: rgba(0, 0, 0, 0.1);
+            --placeholder-color-light: #7f8c8d;
+        }
+
+        .dark-mode {
+            --bg-color-light: #2c3e50;
+            --text-color-light: #ecf0f1;
+            --container-bg-light: #34495e;
+            --primary-color-light: #3498db;
+            --secondary-color-light: #2980b9;
+            --correct-color: #2ecc71;
+            --incorrect-color: #e74c3c;
+            --unanswered-color: #95a5a6;
+            --border-color-light: #7f8c8d;
+            --shadow-color-light: rgba(0, 0, 0, 0.3);
+            --placeholder-color-light: #bdc3c7;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 20px;
+            padding: 30px;
+            background-color: var(--container-bg-light);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px var(--shadow-color-light);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        /* Header and Controls */
+        h1 {
+            text-align: center;
+            color: var(--primary-color-light);
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color-light);
+            flex-wrap: wrap; /* Added for mobile responsiveness */
+            gap: 10px;
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 2px solid var(--primary-color-light);
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--primary-color-light);
+            color: white;
+        }
+
+        /* Progress Bar - Multi-Segment Styling */
+        .progress-bar-container {
+            width: 100%;
+            background-color: var(--border-color-light);
+            /* Softening the look with a global radius for the container */
+            border-radius: 8px; 
+            overflow: hidden; 
+            margin-bottom: 25px;
+            height: 15px;
+            display: flex; 
+        }
+
+        .progress-segment {
+            height: 100%;
+            /* TWEENING FIX: Apply transition for smooth width changes */
+            transition: width 0.6s ease-in-out; 
+            min-width: 0; 
+            box-sizing: border-box;
+            /* Reset radius on segments, relying on the container and first/last child overrides */
+            border-radius: 0; 
+        }
+        
+        /* Ensure the first segment starts with a rounded edge (if it's the correct segment) */
+        .progress-bar-container .progress-segment:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+        /* Ensure the last segment ends with a rounded edge (which will be the unanswered segment) */
+        .progress-bar-container .progress-segment:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+
+        .progress-segment.correct {
+            background-color: var(--correct-color); /* Green */
+        }
+        
+        .progress-segment.incorrect {
+            background-color: var(--incorrect-color); /* Red */
+        }
+        
+        .progress-segment.unanswered {
+            background-color: var(--unanswered-color); /* Grey */
+        }
+
+        #progress-text {
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color-light);
+            text-align: center;
+        }
+        
+        /* Timer Display */
+        #timer-display {
+            font-size: 1em;
+            font-weight: 700;
+            color: var(--incorrect-color);
+        }
+        
+        /* Question Area */
+        #quiz-area {
+            min-height: 300px; 
+            display: block;
+        }
+
+        #question-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: 600;
+            line-height: 1.5;
+            text-align: center;
+        }
+        
+        /* Styling for the inline input field for Fill-in-the-Blank */
+        .inline-blank-input {
+             border: none;
+             border-bottom: 2px solid var(--text-color-light); 
+             padding: 0 5px; 
+             margin: 0 5px;
+             font-size: 1em;
+             font-family: inherit;
+             font-weight: 600;
+             text-align: center;
+             background-color: transparent;
+             color: var(--primary-color-light);
+             width: auto;
+             max-width: 150px;
+             transition: border-color 0.2s;
+        }
+
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* True/False Container Styling (to place buttons side by side) */
+        .true-false-container {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .true-false-container .options {
+            flex: 1; /* Makes the buttons share the space equally */
+        }
+
+        /* Options/Buttons/Inputs */
+        .options, #submit-button, #next-button, #restart-button, #start-review-button {
+            padding: 15px 20px;
+            border: 2px solid var(--primary-color-light);
+            background-color: transparent;
+            color: var(--primary-color-light);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
+            text-align: center;
+            width: 100%;
+            box-shadow: 0 4px 6px -1px var(--shadow-color-light);
+        }
+
+        .options:hover:not(.selected):not(.correct):not(.incorrect),
+        #submit-button:hover:not(:disabled), #restart-button:hover, #start-review-button:hover {
+            background-color: var(--primary-color-light);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px -1px var(--shadow-color-light);
+        }
+
+        .options.selected {
+            background-color: var(--secondary-color-light);
+            color: white;
+            border-color: var(--secondary-color-light);
+        }
+
+        .options.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+            pointer-events: none; 
+        }
+
+        .options.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+            border-color: var(--incorrect-color);
+            pointer-events: none; 
+        }
+
+        .options:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Identification Input - Kept for Identification type questions */
+        #identification-input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid var(--border-color-light);
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+            color: var(--text-color-light);
+            background-color: var(--container-bg-light);
+            transition: border-color 0.2s;
+        }
+
+        #submit-button {
+            margin-top: 10px;
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+        
+        #submit-button:hover:not(:disabled) {
+            background-color: #2ecc71;
+        }
+        
+        #next-button {
+            margin-top: 10px;
+        }
+
+        /* Feedback Message */
+        #feedback-message {
+            text-align: center;
+            padding: 10px 0;
+            margin-bottom: 15px;
+            font-weight: 700;
+            min-height: 20px;
+            border-radius: 8px;
+        }
+
+        .correct-feedback {
+            color: var(--correct-color);
+            background-color: rgba(39, 174, 96, 0.1);
+        }
+
+        .incorrect-feedback {
+            color: var(--incorrect-color);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        /* End Screen */
+        #end-screen {
+            display: none;
+            text-align: center;
+        }
+
+        #end-screen h2 {
+            color: var(--correct-color);
+            margin-bottom: 20px;
+        }
+
+        #score-summary {
+            background-color: var(--bg-color-light);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color-light);
+            text-align: left;
+        }
+
+        #score-summary p {
+            margin: 8px 0;
+            font-size: 1.1em;
+        }
+
+        #score-summary strong {
+            font-weight: 700;
+            color: var(--primary-color-light);
+        }
+
+        #wrong-answers-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #wrong-answers-list li {
+            background-color: var(--container-bg-light);
+            border: 1px solid var(--incorrect-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.1);
+        }
+        
+        #restart-button, #start-review-button {
+            background-color: var(--primary-color-light);
+            color: white;
+            border-color: var(--primary-color-light);
+        }
+        
+        #review-summary {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-container">
+        <div class="header-controls">
+            <!-- Score display now includes points -->
+            <span id="current-score">Score: 0 (0 points)</span> 
+            <!-- Timer Display, hidden until quiz starts -->
+            <span id="timer-display" style="display: none;"></span> 
+            <span class="theme-toggle" id="theme-toggle">☀️ Light Mode</span>
+        </div>
+
+        <h1>Advanced Computing Quiz</h1>
+        
+        <div id="quiz-area">
+            <div id="progress-text"></div>
+            <!-- Progress Bar Container (Segments are created in JS and updated here) -->
+            <div class="progress-bar-container" id="progress-bar-container"></div>
+
+            <div id="feedback-message"></div>
+
+            <p id="question-text"></p>
+            
+            <div id="options-container">
+                <!-- Options inserted here (Multiple Choice/True/False) -->
+            </div>
+
+            <!-- Original Identification Input (only for 'identification' type questions) -->
+            <input type="text" id="identification-input" placeholder="Type your answer here..." style="display: none;">
+
+            <!-- Submit button is present for Identification and as a fallback for Fill-in-the-Blank -->
+            <button id="submit-button">Submit Answer</button>
+            <button id="next-button">Next Question</button>
+        </div>
+
+        <div id="end-screen">
+            <h2>Quiz Complete!</h2>
+            
+            <div id="score-summary">
+                <p>Total Score Earned: <strong><span id="initial-score-span">0 points</span></strong></p>
+                <p>Maximum Possible Score: <strong><span id="initial-total-questions-span">0 points</span></strong></p>
+                <p>Best Score Recorded: <strong><span id="best-score-span">0 points</span></strong></p>
+                
+                <div id="review-summary">
+                    <!-- Review button or completion message goes here -->
+                </div>
+
+                <h3>Questions Missed:</h3>
+                <ul id="wrong-answers-list">
+                    <!-- Wrong answers list goes here -->
+                </ul>
+            </div>
+
+            <button id="restart-button">Start New Quiz</button>
+        </div>
+    </div>
+    
+    <!-- 1. Load the external data file (MUST be in the same directory) -->
+    <script src="quizData.js"></script> 
+    
+    <!-- 2. Main quiz logic -->
+    <script>
+        // --- Configuration (Modify these values) ---
+        const CONFIG = {
+            // General Quiz Flow
+            RANDOMIZE_QUESTIONS: true, // true to shuffle all questions at the start, false to keep order
+            
+            // Timer Settings
+            QUIZ_TIME_LIMIT_BOOL: false, // Master switch for the whole quiz time limit
+            QUIZ_TIME_LIMIT_SECONDS: 300, // 5 minutes (300 seconds) for the entire quiz
+            QUESTION_TIME_LIMIT_BOOL: false, // Switch for individual question time limit
+            QUESTION_TIME_LIMIT_SECONDS: 20, // 20 seconds per question
+        };
+        
+        // --- Data and State ---
+
+        // Combine all question types into one flat array for easier management
+        if (typeof quizData === 'undefined') {
+            console.error("Error: quizData.js not loaded. Please ensure the file exists and is included before this script.");
+            // Halt execution if data is missing
+            document.getElementById('question-text').textContent = "ERROR: Quiz data not found. Check console for details.";
+            throw new Error("Missing quizData object.");
+        }
+        
+        // Group 1: Multiple Choice and True/False questions (to be shuffled first)
+        const group1Questions = [
+            ...quizData.multipleChoice,
+            ...quizData.trueFalse
+        ];
+        
+        // Group 2: Identification and Fill in the Blank questions (to be shuffled second)
+        const group2Questions = [
+            ...quizData.identification,
+            ...quizData.fillInTheBlank
+        ];
+        
+        // Shuffle each group separately if randomization is enabled
+        if (CONFIG.RANDOMIZE_QUESTIONS) {
+            for (let i = group1Questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [group1Questions[i], group1Questions[j]] = [group1Questions[j], group1Questions[i]];
+            }
+            for (let i = group2Questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [group2Questions[i], group2Questions[j]] = [group2Questions[j], group2Questions[i]];
+            }
+        }
+        
+        // Combine the groups in the desired order: Group 1 first, then Group 2
+        const allQuestions = [
+            ...group1Questions,
+            ...group2Questions
+        ];
+        
+        const initialTotalQuestions = allQuestions.length;
+        const maxPossibleScore = allQuestions.reduce((sum, q) => sum + (q.scoreValue || 0), 0);
+
+        let currentFlow = 'main'; // 'main', 'review', or 'finished'
+        let currentQuestionIndex = 0; 
+        let currentQuestionSet = []; 
+        let mainScore = 0;          
+        let answered = false;
+        
+        let incorrectQuestions = []; 
+        
+        // Tracking for the multi-colored progress bar
+        // Array of { status: 'correct'|'incorrect'|'unanswered', score: number }
+        let quizStatus = []; 
+        
+        // Timer Variables
+        let quizTimerInterval;
+        let questionTimerInterval;
+        let quizTimeRemaining = CONFIG.QUIZ_TIME_LIMIT_SECONDS;
+        let questionTimeRemaining = CONFIG.QUESTION_TIME_LIMIT_SECONDS;
+        
+        // --- DOM Elements ---
+        const quizContainer = document.getElementById('quiz-container');
+        const quizArea = document.getElementById('quiz-area');
+        const endScreen = document.getElementById('end-screen');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const identificationInput = document.getElementById('identification-input');
+        // Note: fillInTheBlankInput is now created dynamically
+        const nextButton = document.getElementById('next-button');
+        const submitButton = document.getElementById('submit-button');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const progressBarContainer = document.getElementById('progress-bar-container'); 
+        const progressText = document.getElementById('progress-text');
+        const restartButton = document.getElementById('restart-button');
+        const initialScoreSpan = document.getElementById('initial-score-span');
+        const initialTotalQuestionsSpan = document.getElementById('initial-total-questions-span');
+        const bestScoreSpan = document.getElementById('best-score-span');
+        const wrongAnswersList = document.getElementById('wrong-answers-list');
+        const currentScoreSpan = document.getElementById('current-score');
+        const themeToggle = document.getElementById('theme-toggle');
+        const reviewSummary = document.getElementById('review-summary');
+        const timerDisplay = document.getElementById('timer-display'); 
+
+        // --- Audio and Visual Effects (same as previous version) ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        function playCorrectSound() {
+            const gainNode = audioCtx.createGain();
+            gainNode.connect(audioCtx.destination);
+            function playNote(freq, startTime, duration) {
+                const osc = audioCtx.createOscillator();
+                const noteGain = audioCtx.createGain();
+                osc.type = "sine"; 
+                osc.frequency.setValueAtTime(freq, startTime);
+                osc.connect(noteGain);
+                noteGain.connect(gainNode);
+                noteGain.gain.setValueAtTime(0.5, startTime);
+                noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+                osc.start(startTime);
+                osc.stop(startTime + duration);
+            }
+            const now = audioCtx.currentTime;
+            playNote(660, now, 0.25);  
+            playNote(880, now + 0.1, 0.3); 
+        }
+
+        function playIncorrectSound() {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(150, audioCtx.currentTime); 
+            gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), 400);
+        }
+
+        function shakeScreen() {
+            quizContainer.classList.add('shake');
+            setTimeout(() => {
+                quizContainer.classList.remove('shake');
+            }, 500); 
+        }
+
+        // --- Utility Functions (same as previous version) ---
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function normalizeAnswer(str) {
+            let normalized = str.toLowerCase();
+            normalized = normalized.replace(/[^\w\s]/g, ''); 
+            normalized = normalized.replace(/\s/g, '');      
+            return normalized;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        function formatTime(totalSeconds) {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // --- Timer Logic ---
+        function startQuizTimer() {
+            if (!CONFIG.QUIZ_TIME_LIMIT_BOOL) {
+                timerDisplay.style.display = 'none';
+                return;
+            }
+            
+            timerDisplay.style.display = 'inline';
+            quizTimerInterval = setInterval(() => {
+                quizTimeRemaining--;
+                timerDisplay.textContent = `Quiz Time: ${formatTime(quizTimeRemaining)}`;
+                
+                if (quizTimeRemaining <= 0) {
+                    clearInterval(quizTimerInterval);
+                    handleTimeOut(); 
+                }
+            }, 1000);
+        }
+        
+        function startQuestionTimer() {
+            if (!CONFIG.QUESTION_TIME_LIMIT_BOOL || currentFlow !== 'main') {
+                progressText.textContent = `Question ${currentQuestionIndex + 1} of ${currentQuestionSet.length}`;
+                return;
+            }
+            
+            questionTimeRemaining = CONFIG.QUESTION_TIME_LIMIT_SECONDS;
+            
+            const updateVisualTimer = () => {
+                 progressText.textContent = `Time Remaining: ${questionTimeRemaining}s | Q: ${currentQuestionIndex + 1} of ${currentQuestionSet.length}`;
+            };
+            
+            updateVisualTimer(); // Initial display
+            
+            questionTimerInterval = setInterval(() => {
+                questionTimeRemaining--;
+                updateVisualTimer();
+                
+                if (questionTimeRemaining <= 0) {
+                    clearInterval(questionTimerInterval);
+                    handleTimeOut(true); // true means it's a question timeout
+                }
+            }, 1000);
+        }
+        
+        function stopTimers() {
+            // Stops BOTH quiz and question timers (used only for full quiz end/reset)
+            clearInterval(quizTimerInterval);
+            clearInterval(questionTimerInterval);
+        }
+        
+        function handleTimeOut(isQuestionTimeout = false) {
+            
+            if (isQuestionTimeout) {
+                clearInterval(questionTimerInterval); // Ensure question timer is cleared
+                const question = getCurrentQuestion();
+                handleAnswer(
+                    "(Timed Out)", 
+                    question.answer || question.correctAnswers?.[0] || question.blankWord, 
+                    false, 
+                    question, 
+                    true // isTimeout
+                );
+                nextButton.style.display = 'block'; 
+                
+            } else {
+                // Full quiz time out
+                stopTimers();
+                while(currentQuestionIndex < currentQuestionSet.length) {
+                    if (currentFlow === 'main' && currentQuestionIndex >= quizStatus.length) {
+                         quizStatus.push({ status: 'unanswered', score: 0 });
+                    }
+                    currentQuestionIndex++;
+                }
+                
+                const modal = document.createElement('div');
+                modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 100;';
+                modal.innerHTML = '<div style="background: var(--container-bg-light); padding: 30px; border-radius: 10px; text-align: center; color: var(--text-color-light);"><h2>Time\'s Up!</h2><p>The entire quiz time limit has expired. Your score is being calculated.</p><button class="options" style="margin-top: 15px;" onclick="document.body.removeChild(this.parentNode.parentNode)">Continue</button></div>';
+                document.body.appendChild(modal);
+                
+                prepareReviewScreen();
+            }
+        }
+        
+        
+        // --- Core Quiz Logic ---
+
+        function updateScoreDisplay() {
+            const totalQuestionsAttempted = quizStatus.length;
+            const maxScoreText = currentFlow === 'main' ? `(Max: ${maxPossibleScore} points)` : '';
+            currentScoreSpan.textContent = `Score: ${mainScore} points | Q: ${totalQuestionsAttempted} of ${initialTotalQuestions} ${maxScoreText}`;
+        }
+        
+        /**
+         * Renders the progress bar with a fixed order: Correct (Green), Incorrect (Red), Unanswered (Grey).
+         * Since the elements are now permanently fixed in the DOM, the CSS transition will work.
+         */
+        function updateProgressBar() {
+            if (currentFlow === 'main' || currentFlow === 'review_prep' || currentFlow === 'finished') {
+                
+                const totalQuestions = initialTotalQuestions;
+
+                let correctCount = quizStatus.filter(s => s.status === 'correct').length;
+                let incorrectCount = quizStatus.filter(s => s.status === 'incorrect').length;
+                let unansweredCount = totalQuestions - quizStatus.length;
+                
+                const correctWidth = (correctCount / totalQuestions) * 100;
+                const incorrectWidth = (incorrectCount / totalQuestions) * 100;
+                // The remaining width should fill the rest of the bar up to 100%
+                const unansweredWidth = (unansweredCount / totalQuestions) * 100;
+                
+                // Get the permanently placed elements
+                const correctElement = progressBarContainer.querySelector('.progress-segment.correct');
+                const incorrectElement = progressBarContainer.querySelector('.progress-segment.incorrect');
+                const unansweredElement = progressBarContainer.querySelector('.progress-segment.unanswered');
+
+                // 1. Apply widths (this triggers the CSS transition now that elements are stable)
+                correctElement.style.width = `${correctWidth}%`;
+                incorrectElement.style.width = `${incorrectWidth}%`;
+                unansweredElement.style.width = `${unansweredWidth}%`;
+                
+                // Show/Hide based on width to manage visual continuity/rounding
+                correctElement.style.display = correctWidth > 0 ? 'block' : 'none';
+                incorrectElement.style.display = incorrectWidth > 0 ? 'block' : 'none';
+                unansweredElement.style.display = unansweredWidth > 0 ? 'block' : 'none';
+            }
+            
+            // Update Text (will be overwritten by question timer if active)
+            if (!CONFIG.QUESTION_TIME_LIMIT_BOOL || !questionTimerInterval) {
+                let total = currentQuestionSet.length;
+                let current = currentQuestionIndex;
+                let description = `Question ${current + 1} of ${total}`;
+                
+                if (currentFlow === 'review') {
+                    description = `Reviewing Mistakes: ${current + 1} of ${total}`;
+                } else if (currentFlow === 'finished' || currentFlow === 'review_prep') {
+                    description = `Quiz Finished!`;
+                }
+                progressText.textContent = description;
+            }
+        }
+        
+        function getCurrentQuestion() {
+            return currentQuestionSet[currentQuestionIndex];
+        }
+
+
+        function handleAnswer(userAnswer, officialAnswer, isCorrect, questionData, isTimeout = false) {
+            if (answered) return;
+            answered = true;
+            clearInterval(questionTimerInterval); // ONLY stop the question timer, not the quiz timer!
+
+            nextButton.style.display = 'block';
+            submitButton.style.display = 'none';
+
+            let status = isCorrect ? 'correct' : 'incorrect';
+
+            // Disable all interactive elements
+            const inputElement = document.querySelector('.inline-blank-input, #identification-input');
+            if(inputElement) inputElement.disabled = true;
+            optionsContainer.querySelectorAll('.options').forEach(btn => btn.disabled = true);
+            
+            // Remove live input listener if present
+            if(questionData.type === 'fillInTheBlank') {
+                const liveInput = document.querySelector('.inline-blank-input');
+                if(liveInput && liveInput.listener) liveInput.removeEventListener('input', liveInput.listener);
+            }
+
+
+            if (isCorrect) {
+                playCorrectSound();
+                feedbackMessage.textContent = "Correct! Well done. (+" + (questionData.scoreValue || 0) + " points)";
+                feedbackMessage.classList.add('correct-feedback');
+
+                if (currentFlow === 'main') {
+                    mainScore += (questionData.scoreValue || 0);
+                    quizStatus.push({ status: 'correct', score: (questionData.scoreValue || 0) });
+                } else if (currentFlow === 'review') {
+                    // Mastered question: remove from review list
+                    currentQuestionSet.splice(currentQuestionIndex, 1);
+                    currentQuestionIndex--; // Decrement index to counteract the later increment in nextButton logic
+                }
+            } else {
+                playIncorrectSound();
+                shakeScreen();
+                
+                let feedbackText = `Incorrect. The correct answer was: ${officialAnswer}`;
+                if (isTimeout) {
+                    feedbackText = `Time's up! The correct answer was: ${officialAnswer}`;
+                } else if (userAnswer === "(No answer provided)") {
+                     feedbackText = `Unanswered. The correct answer was: ${officialAnswer}`;
+                }
+                feedbackMessage.textContent = feedbackText;
+                feedbackMessage.classList.add('incorrect-feedback');
+
+                if (currentFlow === 'main') {
+                    // Record mistake and status
+                    quizStatus.push({ status: 'incorrect', score: 0 }); 
+                    incorrectQuestions.push({
+                        ...questionData,
+                        userAnswer: userAnswer,
+                        correctAnswer: officialAnswer 
+                    });
+                } else if (currentFlow === 'review') {
+                    // Still wrong: move question to the end of the review list for another try
+                    const item = currentQuestionSet.splice(currentQuestionIndex, 1)[0];
+                    item.userAnswer = userAnswer; 
+                    currentQuestionSet.push(item);
+                    currentQuestionIndex--; 
+                }
+            }
+            updateScoreDisplay();
+            updateProgressBar();
+        }
+
+        // --- Question Type Handlers ---
+
+        function selectMultipleChoiceOption(selectedButton, selectedAnswer) {
+            const currentQuestion = getCurrentQuestion();
+            const isCorrect = selectedAnswer === currentQuestion.answer;
+
+            // Highlight buttons
+            optionsContainer.querySelectorAll('.options').forEach(button => {
+                button.disabled = true;
+                if (button.textContent === currentQuestion.answer) {
+                    button.classList.add('correct');
+                }
+                if (button === selectedButton && !isCorrect) {
+                    button.classList.add('incorrect');
+                }
+            });
+
+            handleAnswer(selectedAnswer, currentQuestion.answer, isCorrect, currentQuestion);
+        }
+        
+        function selectTrueFalseOption(selectedButton, selectedAnswer) {
+            const currentQuestion = getCurrentQuestion();
+            const correctBool = currentQuestion.answer;
+            const isCorrect = selectedAnswer === correctBool;
+            const officialAnswer = correctBool ? 'True' : 'False';
+
+            // Highlight buttons
+            optionsContainer.querySelectorAll('.options').forEach(button => {
+                button.disabled = true;
+                const buttonTextIsCorrect = (button.textContent === 'True' && correctBool) || (button.textContent === 'False' && !correctBool);
+                
+                if (buttonTextIsCorrect) {
+                    button.classList.add('correct');
+                }
+                if (button === selectedButton && !isCorrect) {
+                    button.classList.add('incorrect');
+                }
+            });
+
+            handleAnswer(selectedAnswer ? 'True' : 'False', officialAnswer, isCorrect, currentQuestion);
+        }
+
+        function checkTextAnswer(isFillInTheBlank) {
+            const currentQuestion = getCurrentQuestion();
+            const inputElement = isFillInTheBlank ? document.querySelector('.inline-blank-input') : identificationInput;
+
+            if (!inputElement) return; // Safety check
+
+            const rawInput = inputElement.value.trim();
+            const normalizedInput = normalizeAnswer(rawInput);
+            
+            
+            let officialAnswer;
+            let isCorrect;
+
+            if (isFillInTheBlank) {
+                officialAnswer = currentQuestion.blankWord;
+                isCorrect = normalizeAnswer(currentQuestion.blankWord) === normalizedInput;
+            } else { // Identification
+                officialAnswer = currentQuestion.correctAnswers?.[0];
+                isCorrect = currentQuestion.correctAnswers.some(acceptableAnswer => {
+                    return normalizeAnswer(acceptableAnswer) === normalizedInput;
+                });
+            }
+
+            if (isCorrect) {
+                inputElement.style.borderColor = 'var(--correct-color)';
+                if (isFillInTheBlank) inputElement.style.color = 'var(--correct-color)';
+            } else {
+                inputElement.style.borderColor = 'var(--incorrect-color)';
+                if (isFillInTheBlank) inputElement.style.color = 'var(--incorrect-color)';
+            }
+            
+            // Only submit if not already answered
+            if (!answered) {
+                handleAnswer(rawInput || "(No answer provided)", officialAnswer, isCorrect, currentQuestion);
+            }
+        }
+        
+        /**
+         * Checks the answer live as the user types in the inline-blank-input.
+         * Automatically submits if correct.
+         */
+        function checkLiveAnswer() {
+            const inputElement = this; // 'this' refers to the input element
+            const currentQuestion = getCurrentQuestion();
+            const normalizedInput = normalizeAnswer(inputElement.value.trim());
+            const correctNormalized = normalizeAnswer(currentQuestion.blankWord);
+
+            if (normalizedInput === correctNormalized) {
+                // Correct answer! Change visual and submit immediately
+                inputElement.style.borderColor = 'var(--correct-color)';
+                inputElement.style.color = 'var(--correct-color)';
+                
+                // Use setTimeout to allow the current input event to finish before submission logic runs
+                setTimeout(() => {
+                   checkTextAnswer(true); // Call the main submission logic
+                }, 50); 
+            } else {
+                // Clear any temporary highlight if they start typing again
+                inputElement.style.borderColor = 'var(--text-color-light)';
+                inputElement.style.color = 'var(--primary-color-light)';
+            }
+        }
+
+
+        function showQuestion() {
+            const currentQuestion = getCurrentQuestion();
+
+            // Check if we are at the end of the question set
+            if (!currentQuestion) {
+                if (currentFlow === 'main') {
+                    // Fill remaining slots with 'unanswered' status if quiz was not timed out
+                    while (quizStatus.length < initialTotalQuestions) {
+                         quizStatus.push({ status: 'unanswered', score: 0 });
+                    }
+                    currentFlow = 'review_prep';
+                    prepareReviewScreen();
+                } else if (currentFlow === 'review') {
+                    currentFlow = 'finished';
+                    showFinalEndScreen();
+                }
+                return;
+            }
+
+            // Reset state and visuals
+            answered = false;
+            feedbackMessage.textContent = '';
+            feedbackMessage.classList.remove('correct-feedback', 'incorrect-feedback');
+            identificationInput.style.borderColor = 'var(--border-color-light)';
+            identificationInput.style.display = 'none';
+            identificationInput.disabled = false;
+            nextButton.style.display = 'none';
+            submitButton.style.display = 'none';
+            optionsContainer.style.display = 'flex';
+            optionsContainer.classList.remove('true-false-container');
+            
+            // Restart question timer only in main flow
+            clearInterval(questionTimerInterval);
+            if (currentFlow === 'main') {
+                startQuestionTimer();
+            }
+
+            let questionTextContent = currentQuestion.question;
+            questionText.innerHTML = ''; // Clear question text
+            updateProgressBar();
+
+            // --- Render Question Based on Type ---
+            optionsContainer.innerHTML = '';
+            
+            if (currentQuestion.type === 'multipleChoice') {
+                // Multiple Choice Setup
+                questionText.textContent = currentQuestion.question;
+                optionsContainer.style.flexDirection = 'column';
+                currentQuestion.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.classList.add('options');
+                    button.textContent = option;
+                    button.onclick = () => selectMultipleChoiceOption(button, option);
+                    optionsContainer.appendChild(button);
+                });
+
+            } else if (currentQuestion.type === 'trueFalse') {
+                // True/False Setup (Side-by-side buttons)
+                questionText.textContent = currentQuestion.question;
+                optionsContainer.style.flexDirection = 'row';
+                optionsContainer.classList.add('true-false-container');
+                
+                const trueButton = document.createElement('button');
+                trueButton.classList.add('options');
+                trueButton.textContent = 'True';
+                trueButton.onclick = () => selectTrueFalseOption(trueButton, true);
+                optionsContainer.appendChild(trueButton);
+                
+                const falseButton = document.createElement('button');
+                falseButton.classList.add('options');
+                falseButton.textContent = 'False';
+                falseButton.onclick = () => selectTrueFalseOption(falseButton, false);
+                optionsContainer.appendChild(falseButton);
+
+            } else if (currentQuestion.type === 'identification') {
+                // Identification Setup (Full-width text input)
+                questionText.textContent = currentQuestion.question;
+                optionsContainer.style.display = 'none';
+                identificationInput.style.display = 'block';
+                submitButton.style.display = 'block';
+                identificationInput.value = ''; 
+                submitButton.onclick = () => checkTextAnswer(false); 
+
+            } else if (currentQuestion.type === 'fillInTheBlank') {
+                // Fill-in-the-Blank Setup (Inline text input)
+                optionsContainer.style.display = 'none';
+                // 1. Split the question text by the blank marker
+                const parts = currentQuestion.question.split('___');
+
+                // 2. Create the input element
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'inline-blank-input';
+                input.placeholder = 'Type here';
+                input.autocomplete = 'off';
+                
+                // 3. Attach the live checking listener
+                // We save the listener on the element so we can remove it later
+                input.listener = checkLiveAnswer.bind(input); 
+                input.addEventListener('input', input.listener); 
+
+                // 4. Construct the question text with the input element
+                const spanBefore = document.createElement('span');
+                spanBefore.textContent = parts[0].trim();
+                questionText.appendChild(spanBefore);
+                questionText.appendChild(input);
+                if (parts[1]) {
+                    const spanAfter = document.createElement('span');
+                    spanAfter.textContent = parts[1].trim();
+                    questionText.appendChild(spanAfter);
+                }
+                
+                // 5. Show the submit button as a fallback
+                submitButton.style.display = 'block';
+                submitButton.onclick = () => checkTextAnswer(true); 
+            }
+            
+            updateScoreDisplay();
+        }
+
+        // --- Event Listeners and Initialization ---
+        
+        function prepareReviewScreen() {
+            stopTimers();
+            quizArea.style.display = 'none';
+            endScreen.style.display = 'block';
+            timerDisplay.style.display = 'none';
+            
+            initialScoreSpan.textContent = `${mainScore} points`;
+            initialTotalQuestionsSpan.textContent = maxPossibleScore;
+
+            const currentBestScore = parseInt(getCookie("bestScore") || '0', 10);
+            if (mainScore > currentBestScore) {
+                setCookie("bestScore", mainScore, 365);
+                bestScoreSpan.textContent = `${mainScore} points (New High Score!)`;
+            } else {
+                bestScoreSpan.textContent = `${currentBestScore} points`;
+            }
+
+            wrongAnswersList.innerHTML = '';
+            reviewSummary.innerHTML = '';
+            
+            if (incorrectQuestions.length > 0) {
+                // Set up the review flow
+                currentQuestionSet = [...incorrectQuestions];
+                currentQuestionIndex = 0;
+                
+                const reviewButton = document.createElement('button');
+                reviewButton.id = 'start-review-button';
+                reviewButton.textContent = `Review ${currentQuestionSet.length} Mistakes!`;
+                reviewButton.addEventListener('click', startReview);
+                reviewSummary.appendChild(reviewButton);
+
+                incorrectQuestions.forEach(item => {
+                    const correctAns = item.answer || item.correctAnswers?.[0] || item.blankWord; 
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>Q:</strong> ${item.question.replace('___', '<span style="font-weight: 900; color: var(--primary-color-light);">[BLANK]</span>')}<br><strong>Your Answer:</strong> ${item.userAnswer}<br><strong>Correct Answer:</strong> ${correctAns}`;
+                    wrongAnswersList.appendChild(li);
+                });
+                
+            } else {
+                reviewSummary.innerHTML = "<p class='correct-feedback'>You got all questions right on the first try! 🎉</p>";
+                wrongAnswersList.innerHTML = "<li>No mistakes to review!</li>";
+            }
+            updateProgressBar();
+        }
+        
+        function startReview() {
+            quizArea.style.display = 'block';
+            endScreen.style.display = 'none';
+            currentFlow = 'review';
+            currentQuestionIndex = 0;
+            showQuestion();
+        }
+
+        function showFinalEndScreen() {
+             quizArea.style.display = 'none';
+             endScreen.style.display = 'block';
+             
+             reviewSummary.innerHTML = "<p class='correct-feedback'>All mistakes have been corrected! Excellent job.</p>";
+             wrongAnswersList.innerHTML = "<li>You have successfully mastered all challenging questions.</li>";
+             updateProgressBar(); 
+        }
+
+        function initializeQuiz() {
+            // Create ordered question set: True/False -> MCQ -> (Shuffled Identification & Fill-in-blank)
+            const trueFalseQuestions = quizData.trueFalse || [];
+            const mcqQuestions = quizData.multipleChoice || [];
+            const identificationQuestions = quizData.identification || [];
+            const fillInBlankQuestions = quizData.fillInTheBlank || [];
+
+            // Shuffle identification and fill-in-blank questions together
+            const mixedQuestions = shuffleArray([...identificationQuestions, ...fillInBlankQuestions]);
+
+            // Combine in specific order: True/False -> MCQ -> Mixed
+            currentQuestionSet = [...trueFalseQuestions, ...mcqQuestions, ...mixedQuestions];
+            
+            currentFlow = 'main';
+            currentQuestionIndex = 0;
+            mainScore = 0;
+            incorrectQuestions = [];
+            quizStatus = [];
+            
+            // --- FIX: Initialize the three permanent progress segments for tweening ---
+            progressBarContainer.innerHTML = ''; 
+            
+            const createSegment = (status) => {
+                const segment = document.createElement('div');
+                segment.classList.add('progress-segment', status);
+                segment.style.width = '0%'; // Start at 0%
+                segment.style.display = 'none'; // Initially hidden
+                return segment;
+            };
+            
+            // Segments must be created and added in a fixed order (Correct, Incorrect, Unanswered)
+            progressBarContainer.appendChild(createSegment('correct'));
+            progressBarContainer.appendChild(createSegment('incorrect'));
+            progressBarContainer.appendChild(createSegment('unanswered'));
+            // --- END FIX ---
+
+
+            endScreen.style.display = 'none';
+            quizArea.style.display = 'block';
+            
+            // Initialize Timer
+            stopTimers(); // Clears any old intervals
+            if (CONFIG.QUIZ_TIME_LIMIT_BOOL) {
+                 quizTimeRemaining = CONFIG.QUIZ_TIME_LIMIT_SECONDS;
+                 timerDisplay.textContent = `Quiz Time: ${formatTime(quizTimeRemaining)}`;
+                 startQuizTimer();
+            } else {
+                 timerDisplay.style.display = 'none';
+            }
+            
+            showQuestion();
+            updateScoreDisplay(); // Initial display update
+        }
+
+
+        nextButton.addEventListener('click', () => {
+            currentQuestionIndex++;
+            showQuestion();
+        });
+
+        restartButton.addEventListener('click', initializeQuiz);
+
+        // Theme Toggle Logic
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            themeToggle.textContent = isDark ? '🌙 Dark Mode' : '☀️ Light Mode';
+            setCookie('theme', isDark ? 'dark' : 'light', 365);
+        });
+
+        // Load theme from cookie and initialize the quiz
+        window.onload = () => {
+            const savedTheme = getCookie('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.textContent = '🌙 Dark Mode';
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeToggle.textContent = '☀️ Light Mode';
+            }
+            
+            // Start the main quiz
+            initializeQuiz();
+        };
+
+    </script>
+</body>
+</html>
