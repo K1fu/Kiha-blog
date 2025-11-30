@@ -523,7 +523,7 @@ const quizData = {
         },
         {
             question: "What concept describes religious groups leveraging global communication to actively resist or challenge perceived external cultural threats?",
-            correctAnswers: ["Religious Counter-globalization", "Religious counter-globalization"],
+            correctAnswers: ["Religious Counter-globalization", "Religious counter-globalization", "Religious counter globalization", "Religious Counter globalization"],
             scoreValue: 3,
             type: "identification"
         },
