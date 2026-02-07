@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Art Quiz</title>
+<title id="pageTitle">Quiz</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 /* ─── RESET & VARS ─────────────────────── */
@@ -247,8 +247,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 
 <!-- header -->
 <div class="header">
-  <h1>The <em>Art</em> Quiz</h1>
-  <p>Answer each question — the correct answer is revealed right away</p>
+  <h1><em id="headerTitle">Art</em> Quiz</h1>
+  <p id="headerSubtitle">Answer each question — the correct answer is revealed right away</p>
 </div>
 
 <!-- stage -->
@@ -270,13 +270,46 @@ const modeMap = {
   "STS": "Courses/1st year/2ndsemester/Prelims/STS.js"
 };
 
+// Map of modes to their display titles
+const titleMap = {
+  "ArtApp": "Art Appreciation",
+  "ComProg": "Computer Programming",
+  "STS": "Science, Technology, and Society"
+};
+
+// Set page title and header based on mode
+if (mode && titleMap[mode]) {
+  const displayTitle = titleMap[mode];
+  document.getElementById('pageTitle').textContent = displayTitle + ' Quiz';
+  document.getElementById('headerTitle').textContent = displayTitle;
+  document.getElementById('headerSubtitle').textContent = 'Answer each question — the correct answer is revealed right away';
+}
+
 // Load the appropriate script file based on the mode parameter
+console.log("Current URL:", window.location.href);
+console.log("Mode parameter:", mode);
+console.log("Mode map:", modeMap);
+
 if (mode && modeMap[mode]) {
   const script = document.createElement("script");
   script.src = modeMap[mode];
+  console.log("Loading script:", script.src);
+  
+  script.onload = function() {
+    console.log("Script loaded successfully!");
+    console.log("QUESTIONS array:", typeof QUESTIONS, QUESTIONS ? QUESTIONS.length + " questions" : "not found");
+    initializeConfig();
+    render();
+  };
+  
+  script.onerror = function() {
+    console.error("Failed to load script:", script.src);
+  };
+  
   document.head.appendChild(script);
 } else {
   console.warn("No valid mode parameter provided or mode not found in modeMap");
+  console.warn("Available modes:", Object.keys(modeMap));
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -290,24 +323,22 @@ if (mode && modeMap[mode]) {
 // Questions are injected here by the API. This default template provides a fallback.
 // ──────────────────────────────────────────────────────────────
 /* ══════════════════════════════════════════════════════════════
-   CONFIG  (auto-derived – no need to touch)
-   ══════════════════════════════════════════════════════════════ */
-const TOTAL  = QUESTIONS.length;
-const LABELS = ['A','B','C','D','E','F','G','H'];
-
-/* labels shown in the results grid */
-const TYPE_LABELS = { mc:'MC', id:'ID', tf:'T/F', fitb:'FITB' };
-
-/* badge colour class per type */
-const BADGE = { mc:'', id:'badge-rust', tf:'badge-blue', fitb:'badge-plum' };
-
-/* phase-tag text per type */
-const PHASE = { mc:'Multiple Choice', id:'Identification', tf:'True or False', fitb:'Fill in the Blank' };
-
-/* ══════════════════════════════════════════════════════════════
    STATE
    ══════════════════════════════════════════════════════════════ */
 let current = 0, score = 0, wrongs = [];
+
+/* ══════════════════════════════════════════════════════════════
+   CONFIG  (will be initialized after QUESTIONS loads)
+   ══════════════════════════════════════════════════════════════ */
+let TOTAL;
+const LABELS = ['A','B','C','D','E','F','G','H'];
+const TYPE_LABELS = { mc:'MC', id:'ID', tf:'T/F', fitb:'FITB' };
+const BADGE = { mc:'', id:'badge-rust', tf:'badge-blue', fitb:'badge-plum' };
+const PHASE = { mc:'Multiple Choice', id:'Identification', tf:'True or False', fitb:'Fill in the Blank' };
+
+function initializeConfig() {
+  TOTAL = QUESTIONS.length;
+}
 
 /* ══════════════════════════════════════════════════════════════
    RENDER  –  master dispatcher
@@ -631,7 +662,7 @@ function restart(){ current=0; score=0; wrongs=[]; render(); window.scrollTo({to
 function norm(s){ return s.toLowerCase().replace(/[^a-z0-9]/g,''); }
 
 /* ── INIT ── */
-render();
+// render() is called from the script loading callback after QUESTIONS is loaded
 </script>
 </body>
 </html>
