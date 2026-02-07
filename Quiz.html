@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Art Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ─── RESET & VARS ─────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#f5f0e8;--card:#fff;--ink:#2c2420;--ink2:#6b5e52;
+  --gold:#c9a84c;--gold2:#e2c97a;--rust:#b85c38;
+  --sage:#5a9a6a;--sage-bg:rgba(90,154,106,.11);
+  --red:#c75b4a;--red-bg:rgba(199,91,74,.10);
+  --blue:#4a7fb5;--blue-bg:rgba(74,127,181,.10);
+  --plum:#8a5fa8;--plum-bg:rgba(138,95,168,.10);
+  --shadow:0 2px 28px rgba(44,36,32,.11);
+  --r:16px;--tr:.3s cubic-bezier(.4,0,.2,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.6}
+
+/* ─── HEADER ────────────────────────────── */
+.header{
+  background:linear-gradient(135deg,#2c2420 0%,#4a3728 55%,#6b5e52 100%);
+  padding:36px 20px 30px;text-align:center;position:relative;overflow:hidden;
+}
+.header::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 15% 85%,rgba(201,168,76,.18) 0%,transparent 65%),
+             radial-gradient(ellipse 55% 50% at 82% 18%,rgba(201,168,76,.12) 0%,transparent 65%);
+  pointer-events:none;
+}
+.header h1{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,4.5vw,2.4rem);color:#fff;position:relative}
+.header h1 em{color:var(--gold2);font-style:italic}
+.header p{color:rgba(255,255,255,.6);font-size:.9rem;margin-top:6px;position:relative;font-weight:300}
+
+/* ─── PROGRESS ──────────────────────────── */
+.progress-wrap{
+  position:sticky;top:0;z-index:40;
+  background:rgba(245,240,232,.93);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(44,36,32,.08);padding:11px 0 9px;
+}
+.progress-inner{max-width:680px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:14px}
+.p-label{font-size:.77rem;font-weight:600;color:var(--ink2);white-space:nowrap;min-width:52px}
+.p-bar{flex:1;height:7px;border-radius:4px;background:rgba(44,36,32,.1);overflow:hidden}
+.p-fill{height:100%;width:0%;border-radius:4px;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .45s ease}
+.p-pct{font-size:.77rem;font-weight:700;color:var(--gold);min-width:36px;text-align:right}
+
+/* ─── PHASE TAGS ────────────────────────── */
+.phase-tag{
+  display:inline-block;font-size:.7rem;font-weight:600;letter-spacing:.13em;
+  text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:12px;
+}
+.phase-tag.mc   {background:rgba(44,36,32,.08);color:var(--ink2)}
+.phase-tag.id   {background:rgba(184,92,56,.1);color:var(--rust)}
+.phase-tag.tf   {background:var(--blue-bg);color:var(--blue)}
+.phase-tag.fitb {background:var(--plum-bg);color:var(--plum)}
+
+/* ─── CARD ──────────────────────────────── */
+.stage{max-width:680px;margin:40px auto 60px;padding:0 20px;min-height:420px;display:flex;flex-direction:column;align-items:center}
+
+.card{
+  width:100%;background:var(--card);border-radius:var(--r);
+  box-shadow:var(--shadow);padding:38px 34px 34px;
+  position:relative;animation:slideUp .38s var(--tr) both;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+.q-badge{
+  position:absolute;top:-14px;left:30px;
+  background:var(--ink);color:#fff;
+  font-size:.72rem;font-weight:600;letter-spacing:.11em;
+  padding:4px 14px;border-radius:20px;text-transform:uppercase;
+}
+.card.badge-rust .q-badge{background:var(--rust)}
+.card.badge-blue .q-badge{background:var(--blue)}
+.card.badge-plum .q-badge{background:var(--plum)}
+
+.q-text{font-size:1.08rem;font-weight:500;color:var(--ink);margin-top:8px;margin-bottom:22px;line-height:1.55}
+
+/* ─── MC OPTIONS ────────────────────────── */
+.options{display:flex;flex-direction:column;gap:9px}
+.opt{
+  display:flex;align-items:center;gap:13px;
+  border:1.8px solid rgba(44,36,32,.14);border-radius:12px;
+  padding:13px 17px;cursor:pointer;
+  transition:border-color var(--tr),background var(--tr),transform .15s ease;
+  user-select:none;position:relative;overflow:hidden;
+}
+.opt::before{content:'';position:absolute;inset:0;background:var(--gold2);opacity:0;transition:opacity .25s}
+.opt:hover{border-color:var(--gold);transform:translateX(3px)}
+.opt:hover::before{opacity:.06}
+.opt .marker{
+  width:28px;height:28px;min-width:28px;border-radius:50%;
+  border:2px solid rgba(44,36,32,.22);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.78rem;font-weight:700;color:var(--ink2);
+  transition:all var(--tr);position:relative;z-index:1;
+}
+.opt .lbl{font-size:.96rem;color:var(--ink);position:relative;z-index:1}
+.opt .icon{margin-left:auto;font-size:1.1rem;position:relative;z-index:1;opacity:0;transition:opacity .2s}
+
+.opt.correct{border-color:var(--sage);background:var(--sage-bg)}
+.opt.correct .marker{border-color:var(--sage);background:var(--sage);color:#fff}
+.opt.correct .icon{opacity:1}
+.opt.wrong{border-color:var(--red);background:var(--red-bg)}
+.opt.wrong .marker{border-color:var(--red);background:var(--red);color:#fff}
+.opt.wrong .icon{opacity:1}
+.opt.reveal-correct{border-color:var(--sage);background:var(--sage-bg)}
+.opt.reveal-correct .marker{border-color:var(--sage);background:var(--sage);color:#fff}
+.opt.reveal-correct .icon{opacity:1}
+.opt.locked{cursor:default;pointer-events:none;transform:none !important}
+.opt.locked:hover{border-color:rgba(44,36,32,.14) !important;transform:none !important}
+.opt.locked:hover::before{opacity:0 !important}
+
+/* ─── TRUE / FALSE TOGGLE ───────────────── */
+.tf-row{display:flex;gap:12px}
+.tf-btn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:10px;
+  border:1.8px solid rgba(44,36,32,.14);border-radius:12px;
+  padding:16px 10px;cursor:pointer;
+  transition:border-color var(--tr),background var(--tr),transform .15s;
+  user-select:none;
+}
+.tf-btn:hover{border-color:var(--gold);transform:translateY(-2px)}
+.tf-btn .tf-icon{font-size:1.5rem}
+.tf-btn .tf-lbl{font-size:1rem;font-weight:600;color:var(--ink)}
+
+.tf-btn.correct{border-color:var(--sage);background:var(--sage-bg)}
+.tf-btn.correct .tf-lbl{color:var(--sage)}
+.tf-btn.wrong{border-color:var(--red);background:var(--red-bg)}
+.tf-btn.wrong .tf-lbl{color:var(--red)}
+.tf-btn.reveal-correct{border-color:var(--sage);background:var(--sage-bg)}
+.tf-btn.reveal-correct .tf-lbl{color:var(--sage)}
+.tf-btn.locked{cursor:default;pointer-events:none;transform:none !important}
+.tf-btn.locked:hover{border-color:rgba(44,36,32,.14) !important;transform:none !important}
+
+/* ─── TEXT INPUT (shared by ID + FITB) ──── */
+.input-row{display:flex;gap:10px;align-items:stretch}
+.text-input{
+  flex:1;padding:13px 18px;border:1.8px solid rgba(44,36,32,.18);border-radius:12px;
+  font-family:inherit;font-size:.97rem;color:var(--ink);background:#faf8f4;outline:none;
+  transition:border-color var(--tr),box-shadow var(--tr);
+}
+.text-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.2)}
+.text-input:disabled{opacity:.7;cursor:not-allowed}
+.text-input.correct{border-color:var(--sage);background:var(--sage-bg)}
+.text-input.wrong{border-color:var(--red);background:var(--red-bg)}
+
+.go-btn{
+  font-family:inherit;font-size:.85rem;font-weight:600;
+  background:var(--gold);color:var(--ink);border:none;
+  padding:0 22px;border-radius:12px;cursor:pointer;
+  transition:background var(--tr),transform .15s;white-space:nowrap;
+}
+.go-btn:hover{background:var(--gold2);transform:translateY(-1px)}
+.go-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ─── FITB SENTENCE ─────────────────────── */
+.fitb-sentence{
+  font-size:1.02rem;color:var(--ink);line-height:2;margin-bottom:18px;
+  background:rgba(138,95,168,.04);padding:14px 18px;border-radius:10px;
+  border:1.5px dashed rgba(138,95,168,.25);
+}
+.fitb-blank{
+  display:inline-block;
+  border-bottom:2.5px solid var(--plum);
+  min-width:140px;width:140px;
+  margin:0 6px;text-align:center;
+  font-weight:600;color:var(--plum);font-style:italic;
+  vertical-align:bottom;line-height:1.8;
+}
+
+/* ─── FEEDBACK BAR ──────────────────────── */
+.feedback{
+  margin-top:14px;padding:11px 16px;border-radius:10px;
+  font-size:.88rem;font-weight:500;display:none;align-items:center;gap:8px;
+}
+.feedback.show{display:flex}
+.feedback.correct{background:var(--sage-bg);color:var(--sage)}
+.feedback.wrong{background:var(--red-bg);color:var(--red)}
+.feedback .ans-label{font-weight:600}
+
+/* ─── NAV BUTTON ────────────────────────── */
+.nav-btn{
+  margin-top:22px;width:100%;
+  font-family:inherit;font-size:.9rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--ink);
+  border:none;padding:14px;border-radius:30px;cursor:pointer;
+  box-shadow:0 3px 16px rgba(201,168,76,.33);
+  transition:transform .18s,box-shadow .18s;display:none;
+}
+.nav-btn:hover{transform:translateY(-2px);box-shadow:0 5px 22px rgba(201,168,76,.4)}
+.nav-btn.show{display:block;animation:fadeIn .28s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── RESULTS ───────────────────────────── */
+.results{display:none;width:100%;animation:slideUp .4s var(--tr) both}
+.results.show{display:block}
+.res-hero{
+  background:linear-gradient(135deg,#2c2420,#4a3728);border-radius:20px;
+  padding:44px 24px 38px;text-align:center;color:#fff;
+}
+.res-hero h2{font-family:'Playfair Display',serif;font-size:1.65rem;margin-bottom:4px}
+.res-score{font-family:'Playfair Display',serif;font-size:4.2rem;font-weight:700;color:var(--gold2);line-height:1.1}
+.res-sub{font-size:.78rem;color:rgba(255,255,255,.55);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-top:22px}
+.res-box{background:rgba(255,255,255,.07);border-radius:12px;padding:16px 8px;text-align:center}
+.res-box .v{font-size:1.5rem;font-weight:700}
+.res-box .v.g{color:#8dcc9e}.res-box .v.r{color:#e89088}.res-box .v.gold{color:var(--gold2)}
+.res-box .l{font-size:.68rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+
+.bd-title{font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;color:var(--ink2);margin:24px 0 10px}
+.bd-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid rgba(44,36,32,.07);font-size:.87rem}
+.bd-item .bd-icon{font-size:1rem;margin-top:1px}
+.bd-item .bd-num{font-weight:700;color:var(--ink);min-width:24px}
+.bd-item .bd-q{color:var(--ink2);flex:1}
+.bd-item .bd-a{font-size:.78rem;color:var(--sage);font-weight:600;white-space:nowrap;margin-left:8px}
+
+.res-btn-row{display:flex;justify-content:center;gap:12px;margin-top:30px;flex-wrap:wrap}
+.btn{font-family:inherit;font-size:.86rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:13px 30px;border:none;border-radius:30px;cursor:pointer;transition:transform .18s,box-shadow .18s}
+.btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--ink);box-shadow:0 3px 16px rgba(201,168,76,.33)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 5px 22px rgba(201,168,76,.4)}
+.perfect{text-align:center;padding:18px;font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--sage);font-style:italic}
+
+/* ─── RESPONSIVE ────────────────────────── */
+@media(max-width:520px){
+  .card{padding:32px 20px 26px}
+  .res-grid{grid-template-columns:repeat(2,1fr)}
+  .stage{margin-top:28px}
+  .tf-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- progress -->
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <span class="p-label" id="pLabel">1 / …</span>
+    <div class="p-bar"><div class="p-fill" id="pFill"></div></div>
+    <span class="p-pct" id="pPct">0%</span>
+  </div>
+</div>
+
+<!-- header -->
+<div class="header">
+  <h1>The <em>Art</em> Quiz</h1>
+  <p>Answer each question — the correct answer is revealed right away</p>
+</div>
+
+<!-- stage -->
+<div class="stage">
+  <div id="cardWrap"></div>
+  <div class="results" id="results"></div>
+</div>
+
+<script>
+// load questions based on URL param (e.g. ?mode=ArtApp or ?mode=ComProg)
+
+const params = new URLSearchParams(window.location.search);
+const mode = params.get("mode");
+
+// Map of modes to their respective JS file paths
+const modeMap = {
+  "ArtApp": "Courses/1st year/2ndsemester/Prelims/ArtApp.js",
+  "ComProg": "Courses/1st year/2ndsemester/Prelims/ComProg.js",
+  "STS": "Courses/1st year/2ndsemester/Prelims/STS.js"
+};
+
+// Load the appropriate script file based on the mode parameter
+if (mode && modeMap[mode]) {
+  const script = document.createElement("script");
+  script.src = modeMap[mode];
+  document.head.appendChild(script);
+} else {
+  console.warn("No valid mode parameter provided or mode not found in modeMap");
+}
+
+/* ══════════════════════════════════════════════════════════════
+   QUESTIONS  –  Each object has a  type  key:
+     "mc"   → { q, o:[…], a: index }
+     "id"   → { q, a: "string" }
+     "tf"   → { q, a: true | false }
+     "fitb" → { before, after, a: "string" }   (sentence = before + ___ + after)
+   ══════════════════════════════════════════════════════════════ */
+// ─── QUESTIONS SOURCE ────────────────────────────────────────
+// Questions are injected here by the API. This default template provides a fallback.
+// ──────────────────────────────────────────────────────────────
+/* ══════════════════════════════════════════════════════════════
+   CONFIG  (auto-derived – no need to touch)
+   ══════════════════════════════════════════════════════════════ */
+const TOTAL  = QUESTIONS.length;
+const LABELS = ['A','B','C','D','E','F','G','H'];
+
+/* labels shown in the results grid */
+const TYPE_LABELS = { mc:'MC', id:'ID', tf:'T/F', fitb:'FITB' };
+
+/* badge colour class per type */
+const BADGE = { mc:'', id:'badge-rust', tf:'badge-blue', fitb:'badge-plum' };
+
+/* phase-tag text per type */
+const PHASE = { mc:'Multiple Choice', id:'Identification', tf:'True or False', fitb:'Fill in the Blank' };
+
+/* ══════════════════════════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════════════════════════ */
+let current = 0, score = 0, wrongs = [];
+
+/* ══════════════════════════════════════════════════════════════
+   RENDER  –  master dispatcher
+   ══════════════════════════════════════════════════════════════ */
+function render(){
+  const wrap = document.getElementById('cardWrap');
+  wrap.innerHTML = '';
+  document.getElementById('results').classList.remove('show');
+  if(current >= TOTAL){ showResults(); return; }
+  updateProgress();
+
+  const item = QUESTIONS[current];
+  const num  = current + 1;
+
+  /* shared wrapper open */
+  let html =
+    `<div class="card ${BADGE[item.type]}" id="qCard">
+       <div class="q-badge">Question ${num} of ${TOTAL}</div>
+       <div class="phase-tag ${item.type}">${PHASE[item.type]}</div>`;
+
+  /* ── type-specific body ── */
+  switch(item.type){
+
+    case 'mc':
+      html += `<div class="q-text">${item.q}</div>
+               <div class="options" id="options">` +
+        item.o.map((o,i) =>
+          `<div class="opt" id="opt-${i}" onclick="pickMC(${i})">
+             <div class="marker">${LABELS[i]}</div>
+             <span class="lbl">${o}</span>
+             <span class="icon"></span>
+           </div>`
+        ).join('') + '</div>';
+      break;
+
+    case 'id':
+      html += `<div class="q-text">${item.q}</div>
+               <div class="input-row">
+                 <input class="text-input" id="textInput" type="text" placeholder="Type your answer…"
+                        onkeydown="if(event.key==='Enter')submitText()">
+                 <button class="go-btn" id="goBtn" onclick="submitText()">Go</button>
+               </div>`;
+      break;
+
+    case 'tf':
+      html += `<div class="q-text">${item.q}</div>
+               <div class="tf-row">
+                 <div class="tf-btn" id="tf-true"  onclick="pickTF(true)">
+                   <span class="tf-icon">✓</span><span class="tf-lbl">True</span>
+                 </div>
+                 <div class="tf-btn" id="tf-false" onclick="pickTF(false)">
+                   <span class="tf-icon">✕</span><span class="tf-lbl">False</span>
+                 </div>
+               </div>`;
+      break;
+
+    case 'fitb':
+      html += `<div class="fitb-sentence">
+                 ${item.before} <span class="fitb-blank" id="fitbPreview">___</span> ${item.after}
+               </div>
+               <div class="input-row">
+                 <input class="text-input" id="textInput" type="text" placeholder="Fill in the blank…"
+                        onkeydown="if(event.key==='Enter')submitText()" oninput="document.getElementById('fitbPreview').textContent=this.value||'___'">
+                 <button class="go-btn" id="goBtn" onclick="submitText()">Go</button>
+               </div>`;
+      break;
+
+    default:
+      // unknown type — skip it automatically
+      html = '';
+      current++;
+      if(current < TOTAL){ render(); } else { showResults(); }
+      return;
+  }
+
+  /* shared wrapper close */
+  html += `<div class="feedback" id="feedback"></div>
+           <button class="nav-btn" id="navBtn" onclick="advance()">
+             ${current < TOTAL-1 ? 'Next Question →' : 'See Results'}
+           </button>
+         </div>`;
+
+  wrap.innerHTML = html;
+
+  /* auto-focus inputs */
+  const inp = document.getElementById('textInput');
+  if(inp) inp.focus();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HANDLERS – one per type
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Multiple Choice ── */
+function pickMC(chosen){
+  document.querySelectorAll('.opt').forEach(o => o.classList.add('locked'));
+  const item    = QUESTIONS[current];
+  const correct = item.a;
+  const isRight = chosen === correct;
+
+  if(isRight){
+    score++;
+    playCorrectSound();
+  }
+  else{
+    wrongs.push({ num: current+1, q: item.q, ans: item.o[correct] });
+    playIncorrectSound();
+  }
+
+  document.getElementById('opt-'+chosen).classList.add(isRight ? 'correct' : 'wrong');
+  document.getElementById('opt-'+chosen).querySelector('.icon').textContent = isRight ? '✓' : '✗';
+
+  if(!isRight){
+    document.getElementById('opt-'+correct).classList.add('reveal-correct');
+    document.getElementById('opt-'+correct).querySelector('.icon').textContent = '✓';
+  }
+  showFeedback(isRight, item.o[correct]);
+  revealNav();
+}
+
+/* ── True / False ── */
+function pickTF(chosen){
+  document.getElementById('tf-true').classList.add('locked');
+  document.getElementById('tf-false').classList.add('locked');
+
+  const item    = QUESTIONS[current];
+  const isRight = chosen === item.a;
+  const correctId = item.a ? 'tf-true' : 'tf-false';
+  const chosenId  = chosen ? 'tf-true' : 'tf-false';
+
+  if(isRight){
+    score++;
+    playCorrectSound();
+  } 
+  else{
+    wrongs.push({ num: current+1, q: item.q, ans: item.a ? 'True' : 'False' });
+    playIncorrectSound();
+  }
+
+  document.getElementById(chosenId).classList.add(isRight ? 'correct' : 'wrong');
+
+  if(!isRight) document.getElementById(correctId).classList.add('reveal-correct');
+
+  showFeedback(isRight, item.a ? 'True' : 'False');
+  revealNav();
+}
+
+/* ── Identification + Fill-in-the-Blank (shared) ── */
+function submitText(){
+  const inp   = document.getElementById('textInput');
+  const goBtn = document.getElementById('goBtn');
+  const val   = inp.value.trim();
+  if(!val) return;
+
+  inp.disabled   = true;
+  goBtn.disabled = true;
+
+  const item    = QUESTIONS[current];
+  const isRight = norm(val) === norm(item.a);
+
+  if(isRight) {
+    score++;
+    playCorrectSound();
+  } else {
+    playIncorrectSound();
+  }
+
+  wrongs.push({ num: current+1, q: item.type === 'fitb' ? (item.before + ' ___ ' + item.after) : item.q, ans: item.a });
+
+  inp.classList.add(isRight ? 'correct' : 'wrong');
+
+  /* update live preview for FITB */
+  if(item.type === 'fitb'){
+    const preview = document.getElementById('fitbPreview');
+    if(isRight){
+      preview.style.color = 'var(--sage)';
+    } else {
+      // overwrite the blank with the correct answer so the sentence reads right
+      preview.textContent = item.a;
+      preview.style.color = 'var(--sage)';
+    }
+  }
+
+  showFeedback(isRight, item.a);
+  revealNav();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SHARED UI HELPERS
+   ══════════════════════════════════════════════════════════════ */
+
+/* Music function */
+
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+  const audioCtx = new AudioContext();
+
+  function playCorrectSound() {
+    const gainNode = audioCtx.createGain();
+    gainNode.connect(audioCtx.destination);
+      function playNote(freq, startTime, duration){
+        const osc = audioCtx.createOscillator();
+        const noteGain = audioCtx.createGain();
+        osc.type = "triangle"; 
+        osc.frequency.setValueAtTime(freq, startTime);
+        osc.connect(noteGain);
+        noteGain.connect(gainNode);
+        noteGain.gain.setValueAtTime(0.4, startTime);
+        noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+        }
+        const now = audioCtx.currentTime;
+        playNote(220, now, 0.2);  
+        playNote(330, now + 0.15, 0.35); 
+      }
+
+      function playIncorrectSound() {
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.type = 'triangle';
+        oscillator.frequency.setValueAtTime(110, audioCtx.currentTime); 
+        gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+        oscillator.start();
+        setTimeout(() => oscillator.stop(), 500);
+      }
+
+/* show feedback message */
+function showFeedback(isRight, correctAns){
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback show ' + (isRight ? 'correct' : 'wrong');
+  fb.innerHTML = isRight
+    ? '<span>✓</span> <span class="ans-label">Correct!</span> Great job.'
+    : '<span>✗</span> The correct answer is: <span class="ans-label">' + correctAns + '</span>';
+}
+function revealNav(){
+  const btn = document.getElementById('navBtn');
+  btn.classList.add('show');
+  btn.textContent = current < TOTAL-1 ? 'Next Question →' : 'See Results';
+}
+function advance(){
+  current++;
+  render();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PROGRESS BAR
+   ══════════════════════════════════════════════════════════════ */
+function updateProgress(){
+  const pct = Math.round((current / TOTAL) * 100);
+  document.getElementById('pLabel').textContent = (current+1) + ' / ' + TOTAL;
+  document.getElementById('pFill').style.width  = pct + '%';
+  document.getElementById('pPct').textContent   = pct + '%';
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESULTS SCREEN
+   ══════════════════════════════════════════════════════════════ */
+function showResults(){
+  document.getElementById('cardWrap').innerHTML = '';
+  document.getElementById('pLabel').textContent = TOTAL + ' / ' + TOTAL;
+  document.getElementById('pFill').style.width  = '100%';
+  document.getElementById('pPct').textContent   = '100%';
+
+  const pct = Math.round((score / TOTAL) * 100);
+
+  /* per-type counts */
+  const types = ['mc','id','tf','fitb'];
+  let statBoxes = `<div class="res-box"><div class="v gold">${pct}%</div><div class="l">Score</div></div>`;
+  types.forEach(t => {
+    const total   = QUESTIONS.filter(q => q.type === t).length;
+    if(!total) return;                                         // skip types not used
+    const missed  = wrongs.filter((w,i) => {
+      /* find the original index of this wrong answer */
+      return w.num && QUESTIONS[w.num-1] && QUESTIONS[w.num-1].type === t;
+    }).length;
+    const correct = total - missed;
+    statBoxes += `<div class="res-box"><div class="v g">${correct}/${total}</div><div class="l">${TYPE_LABELS[t]}</div></div>`;
+  });
+  statBoxes += `<div class="res-box"><div class="v r">${wrongs.length}</div><div class="l">Missed</div></div>`;
+
+  /* missed-items breakdown */
+  let bdHtml = '';
+  if(wrongs.length){
+    bdHtml += '<div class="bd-title">Items Missed</div>';
+    wrongs.forEach(w => {
+      bdHtml +=
+        `<div class="bd-item">
+           <span class="bd-icon">❌</span>
+           <span class="bd-num">#${w.num}</span>
+           <span class="bd-q">${w.q}</span>
+           <span class="bd-a">${w.ans}</span>
+         </div>`;
+    });
+  } else {
+    bdHtml = '<div class="perfect">🎉 Perfect score — outstanding work!</div>';
+  }
+
+  document.getElementById('results').innerHTML =
+    `<div class="res-hero">
+       <h2>Quiz Complete</h2>
+       <div class="res-score">${score} / ${TOTAL}</div>
+       <div class="res-sub">Total Score</div>
+       <div class="res-grid">${statBoxes}</div>
+     </div>
+     ${bdHtml}
+     <div class="res-btn-row">
+       <button class="btn btn-primary" onclick="restart()">Retake Quiz</button>
+     </div>`;
+
+  document.getElementById('results').classList.add('show');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESTART  |  UTIL
+   ══════════════════════════════════════════════════════════════ */
+function restart(){ current=0; score=0; wrongs=[]; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+function norm(s){ return s.toLowerCase().replace(/[^a-z0-9]/g,''); }
+
+/* ── INIT ── */
+render();
+</script>
+</body>
+</html>
