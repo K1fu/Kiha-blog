@@ -3,56 +3,353 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finals exams!</title>
+    <title>Let's all pass!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --prussian-blue: #002b4d;
+            --cobalt-deep: #001a30;
+            --cyanotype-white: #e6f3f8;
+            --etch-line: rgba(230, 243, 248, 0.2);
+            --highlight: #4cc9f0;
+            --oxide: #d4af37;
+            --transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            background-color: var(--cobalt-deep);
+            color: var(--cyanotype-white);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
+            padding: 40px 20px;
         }
-        .container {
+
+        /* ─── CYANOTYPE TEXTURE OVERLAY ─── */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url("https://www.transparenttextures.com/patterns/carbon-fibre.png"),
+                radial-gradient(circle at 50% 50%, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* ─── BLUEPRINT GRID ─── */
+        .blueprint-bg {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(var(--etch-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--etch-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+        }
+
+        /* ─── HEADER SECTION ─── */
+        .header {
+            max-width: 1000px;
+            width: 100%;
+            margin-bottom: 60px;
+            position: relative;
             text-align: center;
-            background-color: #fff;
-            padding: 20px 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeInDown 1s ease-out;
         }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .button {
+
+        .header-meta {
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.4em;
+            color: var(--highlight);
+            margin-bottom: 12px;
             display: block;
-            width: 250px;
-            margin: 10px auto;
-            padding: 15px;
-            font-size: 16px;
-            color: white;
-            background-color: #007BFF;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            text-align: center;
-            transition: background-color 0.3s ease;
         }
-        .button:hover {
-            background-color: #0056b3;
+
+        .header h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 0.9;
+            text-transform: uppercase;
+            mix-blend-mode: screen;
+            position: relative;
+        }
+
+        .header h1 span {
+            -webkit-text-stroke: 1px var(--cyanotype-white);
+            color: transparent;
+        }
+
+        .header-desc {
+            max-width: 600px;
+            margin: 20px auto 0;
+            font-weight: 300;
+            opacity: 0.8;
+            font-size: 1.1rem;
+            border-top: 1px solid var(--etch-line);
+            padding-top: 20px;
+        }
+
+        /* ─── GRID CONTAINER ─── */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1100px;
+            width: 100%;
+            perspective: 1000px;
+        }
+
+        /* ─── ETCHED CARDS ─── */
+        .blueprint-card {
+            position: relative;
+            background: rgba(0, 43, 77, 0.4);
+            border: 1px solid var(--etch-line);
+            padding: 40px 30px;
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 380px;
+            animation: cardEntrance 0.8s cubic-bezier(0.2, 1, 0.3, 1) both;
+        }
+
+        .blueprint-card:nth-child(2) { animation-delay: 0.1s; }
+        .blueprint-card:nth-child(3) { animation-delay: 0.2s; }
+
+        .blueprint-card::before {
+            content: "SEC-0" attr(data-index);
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            opacity: 0.4;
+        }
+
+        /* Corner Etching */
+        .blueprint-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(to right, var(--cyanotype-white) 15px, transparent 15px) 0 0,
+                linear-gradient(to bottom, var(--cyanotype-white) 15px, transparent 15px) 0 0,
+                linear-gradient(to left, var(--cyanotype-white) 15px, transparent 15px) 100% 100%,
+                linear-gradient(to top, var(--cyanotype-white) 15px, transparent 15px) 100% 100%;
+            background-repeat: no-repeat;
+            background-size: 20px 20px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .blueprint-card:hover {
+            background: var(--prussian-blue);
+            transform: translateY(-10px) translateZ(20px);
+            border-color: var(--cyanotype-white);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        .blueprint-card:hover::after {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            filter: grayscale(1) brightness(2);
+            transition: var(--transition);
+        }
+
+        .blueprint-card:hover .card-icon {
+            filter: grayscale(0) brightness(1.2);
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .card-tagline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--highlight);
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .card-action {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: auto;
+        }
+
+        .card-action svg {
+            width: 20px;
+            height: 20px;
+            transition: var(--transition);
+        }
+
+        .blueprint-card:hover .card-action svg {
+            transform: translateX(10px);
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            margin-top: 80px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--etch-line);
+            text-align: center;
+            letter-spacing: 0.2em;
+            max-width: 600px;
+        }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 900px) {
+            .exam-grid { grid-template-columns: 1fr; max-width: 500px; }
+            .header h1 { font-size: 4rem; }
+        }
+
+        /* ─── NOISE SVG FILTER ─── */
+        .noise-svg {
+            position: absolute;
+            width: 0;
+            height: 0;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Select a Quiz</h1>
-        <a href="Quiz.html?mode=ArtApp" class="button">Art Appreciation</a>
-        <a href="Quiz.html?mode=STS" class="button">Science, Technology, and Society</a>
-        <a href="Quiz.html?mode=ComProg" class="button">Computer Programming</a>
-    </div>
+    <svg class="noise-svg">
+        <filter id="grainy">
+            <feTurbulence type="fractalNoise" baseFrequency="0.60" numOctaves="3" stitchTiles="stitch" />
+            <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.4 0" />
+        </filter>
+    </svg>
+
+    <div class="blueprint-bg"></div>
+
+    <header class="header">
+        <span class="header-meta">Academic Assessment v4.02</span>
+        <h1>Prelims <span>Exams</span></h1>
+        <p class="header-desc">Technical evaluation suite. Select a module to initiate the comprehensive finals protocol. Immediate synaptic feedback enabled.</p>
+    </header>
+
+    <main class="exam-grid">
+        <!-- Card 1 -->
+        <a href="Quiz.html?mode=ArtApp" class="blueprint-card" data-index="1">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                </div>
+                <div class="card-tagline">// VISUAL.AESTHETICS</div>
+                <h3 class="card-title">Art<br>Appreciation</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Deconstruction of visual culture, historical movements, and the philosophy of human expression.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="Quiz.html?mode=STS" class="blueprint-card" data-index="2">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/></svg>
+                </div>
+                <div class="card-tagline">// SOC.TECH.STRAT</div>
+                <h3 class="card-title">Science, Tech<br>& Society</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">The symbiotic evolution of innovation and the ethical implications on global civilizations.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="Quiz.html?mode=ComProg" class="blueprint-card" data-index="3">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </div>
+                <div class="card-tagline">// LOGIC.SYSTEMS</div>
+                <h3 class="card-title">Computer<br>Programming</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Testing algorithmic proficiency, data structure optimization, and architectural logic.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+    </main>
+
+    <footer class="footer">
+        <p>[ EST. TERMINAL TIME: 45:00 ]</p>
+        <p style="margin-top: 10px;">ALL INPUTS ARE PERMANENTLY RECORDED UPON SUBMISSION. GOOD LUCK OPERATOR.</p>
+    </footer>
+
+    <script>
+        // Subtle Mouse parallax effect for the blueprint grid
+        document.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+            document.querySelector('.blueprint-bg').style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+
+        // Add "developing" effect on load
+        window.addEventListener('load', () => {
+            document.body.style.filter = 'contrast(1.2) brightness(0.8)';
+            setTimeout(() => {
+                document.body.style.transition = 'filter 2s ease';
+                document.body.style.filter = 'contrast(1) brightness(1)';
+            }, 500);
+        });
+    </script>
 </body>
 </html>
