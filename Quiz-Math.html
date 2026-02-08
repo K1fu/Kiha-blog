@@ -213,6 +213,200 @@ body::after {
 .phase-tag.tf   {background: rgba(76, 201, 240, 0.1); color: var(--highlight); border-color: rgba(76, 201, 240, 0.3)}
 .phase-tag.fitb {background: rgba(212, 175, 55, 0.1); color: var(--oxide); border-color: rgba(212, 175, 55, 0.3)}
 
+/* ─── QUESTION TYPE FILTER MODAL ────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: linear-gradient(135deg, rgba(0, 43, 77, 0.95) 0%, rgba(0, 26, 48, 0.95) 100%);
+  border: 1px solid var(--etch-line);
+  border-radius: 12px;
+  padding: 40px;
+  max-width: 500px;
+  width: 90%;
+  backdrop-filter: blur(10px);
+  position: relative;
+  animation: slideDown 0.4s cubic-bezier(0.2, 1, 0.3, 1) both;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(76, 201, 240, 0.1) 0%, transparent 60%);
+  pointer-events: none;
+  border-radius: 12px;
+}
+
+.modal-header {
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.modal-header h2 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--cyanotype-white);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.modal-header h2 em {
+  color: var(--highlight);
+  font-style: normal;
+  -webkit-text-stroke: 1px var(--highlight);
+}
+
+.modal-header p {
+  color: rgba(230, 243, 248, 0.6);
+  font-size: 0.9rem;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.05em;
+}
+
+.modal-body {
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(230, 243, 248, 0.04);
+  border: 1.5px solid var(--etch-line);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.checkbox-item:hover {
+  background: rgba(230, 243, 248, 0.08);
+  border-color: var(--highlight);
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--highlight);
+}
+
+.checkbox-label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.checkbox-label-title {
+  font-weight: 600;
+  color: var(--cyanotype-white);
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+.checkbox-label-desc {
+  font-size: 0.75rem;
+  color: rgba(230, 243, 248, 0.5);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.checkbox-item.mc {
+  border-left: 3px solid rgba(230, 243, 248, 0.3);
+}
+
+.checkbox-item.id {
+  border-left: 3px solid var(--red);
+}
+
+.checkbox-item.tf {
+  border-left: 3px solid var(--highlight);
+}
+
+.checkbox-item.fitb {
+  border-left: 3px solid var(--oxide);
+}
+
+.checkbox-item input:checked + .checkbox-label-title {
+  color: var(--highlight);
+}
+
+.modal-footer {
+  display: flex;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 14px 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.modal-btn-submit {
+  background: linear-gradient(135deg, var(--highlight), var(--oxide));
+  color: var(--cobalt-deep);
+}
+
+.modal-btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 201, 240, 0.4);
+}
+
+.modal-btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* ─── CARD ─────────────────────────────────────────── */
 .stage{
   max-width: 680px;
@@ -859,6 +1053,56 @@ body::after {
 </head>
 <body>
 
+<!-- QUESTION TYPE FILTER MODAL -->
+<div class="modal-overlay show" id="filterModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Question <em>Filter</em></h2>
+      <p>Select which question types you want to receive:</p>
+    </div>
+    
+    <div class="modal-body">
+      <div class="checkbox-group">
+        <label class="checkbox-item mc">
+          <input type="checkbox" class="type-filter" value="mc" checked>
+          <div class="checkbox-label">
+            <div class="checkbox-label-title">Multiple Choice</div>
+            <div class="checkbox-label-desc">Pick the correct option</div>
+          </div>
+        </label>
+        
+        <label class="checkbox-item id">
+          <input type="checkbox" class="type-filter" value="id" checked>
+          <div class="checkbox-label">
+            <div class="checkbox-label-title">Identification</div>
+            <div class="checkbox-label-desc">Type the answer</div>
+          </div>
+        </label>
+        
+        <label class="checkbox-item tf">
+          <input type="checkbox" class="type-filter" value="tf" checked>
+          <div class="checkbox-label">
+            <div class="checkbox-label-title">True or False</div>
+            <div class="checkbox-label-desc">Choose true or false</div>
+          </div>
+        </label>
+        
+        <label class="checkbox-item fitb">
+          <input type="checkbox" class="type-filter" value="fitb" checked>
+          <div class="checkbox-label">
+            <div class="checkbox-label-title">Fill in the Blank</div>
+            <div class="checkbox-label-desc">Complete the sentence</div>
+          </div>
+        </label>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-submit" onclick="applyFilter()">Start Quiz</button>
+    </div>
+  </div>
+</div>
+
 <!-- HEADER -->
 <div class="header">
   <h1><em>Math</em> Quiz</h1>
@@ -1009,8 +1253,41 @@ let wrongs  = [];
 let TOTAL;
 const TYPE_LABELS = {mc:'Multiple Choice', id:'Identification', tf:'True/False', fitb:'Fill Blank'};
 
+// Store filtered questions
+let QUESTIONS_FILTERED = [];
+
 function initializeConfig() {
   TOTAL = QUESTIONS.length;
+  QUESTIONS_FILTERED = QUESTIONS;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   QUESTION TYPE FILTER
+   ══════════════════════════════════════════════════════════════ */
+function applyFilter() {
+  // Get selected checkboxes
+  const checkboxes = document.querySelectorAll('.type-filter:checked');
+  const selectedTypes = Array.from(checkboxes).map(cb => cb.value);
+  
+  // Validate at least one type is selected
+  if (selectedTypes.length === 0) {
+    alert('Please select at least one question type!');
+    return;
+  }
+  
+  // Filter questions based on selected types
+  QUESTIONS_FILTERED = QUESTIONS.filter(q => selectedTypes.includes(q.type));
+  
+  // Update TOTAL and reset progress
+  TOTAL = QUESTIONS_FILTERED.length;
+  current = 0;
+  score = 0;
+  wrongs = [];
+  
+  // Hide modal and start quiz
+  document.getElementById('filterModal').classList.remove('show');
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1075,7 +1352,7 @@ function render(){
     return;
   }
 
-  const item = QUESTIONS[current];
+  const item = QUESTIONS_FILTERED[current];
   let html = '';
 
   /* Question Badge + Text */
@@ -1134,7 +1411,7 @@ function render(){
 /* ── Multiple Choice ── */
 function pickMC(chosen){
   document.querySelectorAll('.opt').forEach(o => o.classList.add('locked'));
-  const item    = QUESTIONS[current];
+  const item    = QUESTIONS_FILTERED[current];
   const correct = item.a;
   const isRight = chosen === correct;
 
@@ -1164,7 +1441,7 @@ function pickTF(chosen){
   document.getElementById('tf-true').classList.add('locked');
   document.getElementById('tf-false').classList.add('locked');
 
-  const item    = QUESTIONS[current];
+  const item    = QUESTIONS_FILTERED[current];
   const isRight = chosen === item.a;
   const correctId = item.a ? 'tf-true' : 'tf-false';
   const chosenId  = chosen ? 'tf-true' : 'tf-false';
@@ -1197,7 +1474,7 @@ function submitText(){
   inp.disabled   = true;
   goBtn.disabled = true;
 
-  const item    = QUESTIONS[current];
+  const item    = QUESTIONS_FILTERED[current];
   const isRight = norm(val) === norm(item.a);
 
   if(isRight) {
@@ -1229,7 +1506,7 @@ function submitText(){
 
 /* ── FITB Live Preview ── */
 function updateBlank(){
-  const item = QUESTIONS[current];
+  const item = QUESTIONS_FILTERED[current];
   if(item.type !== 'fitb') return;
   const val = document.getElementById('textInput').value.trim();
   document.getElementById('fitbPreview').textContent = val || '___';
