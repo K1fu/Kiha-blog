@@ -799,6 +799,14 @@ if (mode && modeMap[mode]) {
     console.log("Script loaded successfully!");
     console.log("QUESTIONS array:", typeof QUESTIONS, QUESTIONS ? QUESTIONS.length + " questions" : "not found");
     initializeConfig();
+    
+    // Try to restore saved progress
+    if (loadProgress()) {
+      console.log("Resumed quiz from saved progress");
+    } else {
+      console.log("Starting fresh quiz");
+    }
+    
     render();
   };
   
@@ -826,6 +834,59 @@ if (mode && modeMap[mode]) {
    STATE
    ══════════════════════════════════════════════════════════════ */
 let current = 0, score = 0, wrongs = [];
+
+/* ══════════════════════════════════════════════════════════════
+   COOKIES - Save/Load Progress
+   ══════════════════════════════════════════════════════════════ */
+function setCookie(name, value, days = 7) {
+  const date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = "expires=" + date.toUTCString();
+  document.cookie = name + "=" + encodeURIComponent(JSON.stringify(value)) + ";" + expires + ";path=/";
+}
+
+function getCookie(name) {
+  const nameEQ = name + "=";
+  const cookies = document.cookie.split(';');
+  for (let cookie of cookies) {
+    cookie = cookie.trim();
+    if (cookie.indexOf(nameEQ) === 0) {
+      try {
+        return JSON.parse(decodeURIComponent(cookie.substring(nameEQ.length)));
+      } catch(e) {
+        return null;
+      }
+    }
+  }
+  return null;
+}
+
+function deleteQuizCookie() {
+  document.cookie = "quizProgress=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
+
+function saveProgress() {
+  const progressData = {
+    mode: mode,
+    current: current,
+    score: score,
+    wrongs: wrongs,
+    timestamp: new Date().toISOString()
+  };
+  setCookie('quizProgress', progressData);
+}
+
+function loadProgress() {
+  const saved = getCookie('quizProgress');
+  if (saved && saved.mode === mode) {
+    current = saved.current || 0;
+    score = saved.score || 0;
+    wrongs = saved.wrongs || [];
+    console.log("Progress restored:", { current, score, wrongs });
+    return true;
+  }
+  return false;
+}
 
 /* ══════════════════════════════════════════════════════════════
    CONFIG  (will be initialized after QUESTIONS loads)
@@ -956,6 +1017,7 @@ function pickMC(chosen){
     document.getElementById('opt-'+correct).querySelector('.icon').textContent = '✓';
   }
   showFeedback(isRight, item.o[correct]);
+  saveProgress();
   revealNav();
 }
 
@@ -983,6 +1045,7 @@ function pickTF(chosen){
   if(!isRight) document.getElementById(correctId).classList.add('reveal-correct');
 
   showFeedback(isRight, item.a ? 'True' : 'False');
+  saveProgress();
   revealNav();
 }
 
@@ -1023,6 +1086,7 @@ function submitText(){
   }
 
   showFeedback(isRight, item.a);
+  saveProgress();
   revealNav();
 }
 
@@ -1038,35 +1102,45 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
   function playCorrectSound() {
     const gainNode = audioCtx.createGain();
     gainNode.connect(audioCtx.destination);
-      function playNote(freq, startTime, duration){
-        const osc = audioCtx.createOscillator();
-        const noteGain = audioCtx.createGain();
-        osc.type = "triangle"; 
-        osc.frequency.setValueAtTime(freq, startTime);
-        osc.connect(noteGain);
-        noteGain.connect(gainNode);
-        noteGain.gain.setValueAtTime(0.4, startTime);
-        noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-        osc.start(startTime);
-        osc.stop(startTime + duration);
-        }
-        const now = audioCtx.currentTime;
-        playNote(220, now, 0.2);  
-        playNote(330, now + 0.15, 0.35); 
-      }
+    
+    // Cyberpunk ascending synth beeps
+    function playNote(freq, startTime, duration, waveType = "square") {
+      const osc = audioCtx.createOscillator();
+      const noteGain = audioCtx.createGain();
+      osc.type = waveType;
+      osc.frequency.setValueAtTime(freq, startTime);
+      osc.connect(noteGain);
+      noteGain.connect(gainNode);
+      noteGain.gain.setValueAtTime(0.3, startTime);
+      noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+    }
+    
+    const now = audioCtx.currentTime;
+    // High-pitch ascending sequence with square waves (more digital/synth)
+    playNote(880, now, 0.15, "square");        // A5
+    playNote(1046, now + 0.12, 0.15, "square"); // C6
+    playNote(1318, now + 0.24, 0.2, "square");  // E6
+  }
 
-      function playIncorrectSound() {
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.type = 'triangle';
-        oscillator.frequency.setValueAtTime(110, audioCtx.currentTime); 
-        gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
-        oscillator.start();
-        setTimeout(() => oscillator.stop(), 500);
-      }
+  function playIncorrectSound() {
+    // Cyberpunk error sound - descending sawtooth with harsh character
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    oscillator.type = 'sawtooth'; // Harsh sawtooth for cyberpunk feel
+    oscillator.frequency.setValueAtTime(450, audioCtx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.4);
+    
+    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+    
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 0.4);
+  }
 
 /* show feedback message */
 function showFeedback(isRight, correctAns){
@@ -1083,6 +1157,7 @@ function revealNav(){
 }
 function advance(){
   current++;
+  saveProgress();
   render();
   window.scrollTo({ top:0, behavior:'smooth' });
 }
@@ -1158,7 +1233,14 @@ function showResults(){
 /* ══════════════════════════════════════════════════════════════
    RESTART  |  UTIL
    ══════════════════════════════════════════════════════════════ */
-function restart(){ current=0; score=0; wrongs=[]; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+function restart(){ 
+  current=0; 
+  score=0; 
+  wrongs=[]; 
+  deleteQuizCookie();
+  render(); 
+  window.scrollTo({top:0,behavior:'smooth'}); 
+}
 function norm(s){ return s.toLowerCase().replace(/[^a-z0-9]/g,''); }
 
 /* ── INIT ── */
