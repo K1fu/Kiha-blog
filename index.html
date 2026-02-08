@@ -32,9 +32,8 @@
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            padding: 40px 20px;
+            padding: 0;
         }
 
         /* ─── CYANOTYPE TEXTURE OVERLAY ─── */
@@ -70,6 +69,8 @@
             max-width: 1000px;
             width: 100%;
             margin-bottom: 60px;
+            margin-top: 40px;
+            padding: 0 20px;
             position: relative;
             text-align: center;
             animation: fadeInDown 1s ease-out;
@@ -108,6 +109,16 @@
             font-size: 1.1rem;
             border-top: 1px solid var(--etch-line);
             padding-top: 20px;
+        }
+
+        /* ─── CONTENT WRAPPER ─── */
+        .content-wrapper {
+            flex: 1;
+            width: 100%;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         /* ─── GRID CONTAINER ─── */
@@ -228,13 +239,36 @@
 
         /* ─── FOOTER ─── */
         .footer {
-            margin-top: 80px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--etch-line);
+            width: 100%;
+            margin-top: auto;
+            padding: 40px 20px;
+            background: rgba(0, 43, 77, 0.3);
+            border-top: 1px solid var(--etch-line);
             text-align: center;
-            letter-spacing: 0.2em;
-            max-width: 600px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: rgba(230, 243, 248, 0.6);
+            letter-spacing: 0.05em;
+            line-height: 1.8;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer::before{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--etch-line) 50%, transparent 100%);
+        }
+
+        .footer p{
+            margin: 0;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* ─── ANIMATIONS ─── */
@@ -273,13 +307,14 @@
 
     <div class="blueprint-bg"></div>
 
-    <header class="header">
-        <span class="header-meta">Academic Assessment v4.02</span>
-        <h1>Prelims <span>Exams</span></h1>
-        <p class="header-desc">Technical evaluation suite. Select a module to initiate the comprehensive finals protocol. Immediate synaptic feedback enabled.</p>
-    </header>
+    <div class="content-wrapper">
+        <header class="header">
+            <span class="header-meta">Academic Assessment v4.02</span>
+            <h1>Prelims <span>Exams</span></h1>
+            <p class="header-desc">Technical evaluation suite. Select a module to initiate the comprehensive finals protocol. Immediate synaptic feedback enabled.</p>
+        </header>
 
-    <main class="exam-grid">
+        <main class="exam-grid">
         <!-- Card 1 -->
         <a href="Quiz.html?mode=ArtApp" class="blueprint-card" data-index="1">
             <div>
@@ -327,11 +362,56 @@
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
             </div>
         </a>
+        <!-- Card 4 -->
+        <a href="Quiz-Math.html?mode=Discrete" class="blueprint-card" data-index="4">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+                </div>
+                <div class="card-tagline">// DISCRETE.MATH</div>
+                <h3 class="card-title">Discrete<br>Mathematics</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Exploring the mathematical foundations of computer science and logical reasoning.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+        <!-- Card 5 -->
+        <a href="Quiz-Math.html?mode=MMW" class="blueprint-card" data-index="5">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M12 3v18M6 6l12 12M18 6L6 18"/><circle cx="12" cy="12" r="9"/></svg>
+                </div>
+                <div class="card-tagline">// MMW</div>
+                <h3 class="card-title">Mathematics<br>in the Modern World</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Exploring the practical applications of mathematics in contemporary society.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+        <!-- Card 5 -->
+        <a href="Quiz-Math.html?mode=Calculus" class="blueprint-card" data-index="5">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M12 3v15M6 9c0-2 2-3 3-3s3 1 3 3-1 4-3 4-3-2-3-4M15 15c0-2 2-3 3-3s3 1 3 3-1 4-3 4-3-2-3-4"/></svg>
+                </div>
+                <div class="card-tagline">// CALCULUS</div>
+                <h3 class="card-title">Calculus</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Exploring the fundamental concepts of differential calculus.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
     </main>
+    </div>
 
     <footer class="footer">
-        <p>[ EST. TERMINAL TIME: 45:00 ]</p>
-        <p style="margin-top: 10px;">ALL INPUTS ARE PERMANENTLY RECORDED UPON SUBMISSION. GOOD LUCK OPERATOR.</p>
+        <p>This website is for educational and review purposes only. The developer shall not be held liable for any forms of cheating done by the user.</p>
     </footer>
 
     <script>

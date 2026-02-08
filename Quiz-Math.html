@@ -7,6 +7,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
+
+<!-- MathJax for mathematical notation -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+
 <style>
 /* ─── CYANOTYPE THEME VARIABLES ─────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -258,368 +274,408 @@ body::after {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.card.badge-rust .q-badge{background: var(--red); border-color: rgba(255, 107, 107, 0.4)}
-.card.badge-blue .q-badge{background: var(--highlight); border-color: rgba(76, 201, 240, 0.4); color: var(--cobalt-deep)}
-.card.badge-plum .q-badge{background: var(--oxide); border-color: rgba(212, 175, 55, 0.4); color: var(--cobalt-deep)}
-
 .q-text{
-  font-size: 1.08rem;
-  font-weight: 500;
-  color: var(--cyanotype-white);
-  margin-top: 8px;
-  margin-bottom: 22px;
+  font-size: 1.15rem;
   line-height: 1.65;
+  margin-bottom: 28px;
+  color: var(--cyanotype-white);
+  font-weight: 400;
 }
 
-/* ─── MC OPTIONS ───────────────────────────────────── */
-.options{display:flex;flex-direction:column;gap:10px}
+/* Math styling for MathJax */
+.q-text mjx-container,
+.opt-text mjx-container,
+.feedback mjx-container,
+.bd-q mjx-container,
+.bd-a mjx-container {
+  color: inherit !important;
+}
+
+.q-text mjx-container {
+  font-size: 1.1em;
+}
+
+.opt-text mjx-container {
+  font-size: 1.05em;
+}
+
+.q-text .math-inline {
+  display: inline-block;
+  margin: 0 2px;
+}
+
+/* ─── OPTIONS (MC) ───────────────────────────────────── */
+.opts{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
 .opt{
   display: flex;
   align-items: center;
-  gap: 13px;
-  border: 1.8px solid var(--etch-line);
-  border-radius: 10px;
-  padding: 14px 18px;
+  gap: 14px;
+  padding: 16px 18px;
+  background: rgba(230, 243, 248, 0.05);
+  border: 1px solid var(--etch-line);
+  border-radius: var(--r);
   cursor: pointer;
-  transition: border-color var(--tr), background var(--tr), transform 0.15s ease;
-  user-select: none;
+  transition: var(--tr);
   position: relative;
-  overflow: hidden;
-  background: rgba(0, 43, 77, 0.2);
 }
 
-.opt::before{
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--highlight);
-  opacity: 0;
-  transition: opacity 0.25s;
-}
-
-.opt:hover{
+.opt:hover:not(.locked){
+  background: rgba(230, 243, 248, 0.09);
   border-color: var(--highlight);
-  transform: translateX(5px);
-  background: rgba(76, 201, 240, 0.05);
 }
 
-.opt:hover::before{opacity: 0.08}
+.opt.locked{
+  cursor: not-allowed;
+  opacity: 0.7;
+}
 
-.opt .marker{
+.opt.correct{
+  background: var(--sage-bg);
+  border-color: var(--sage);
+}
+
+.opt.wrong{
+  background: var(--red-bg);
+  border-color: var(--red);
+}
+
+.opt.reveal-correct{
+  background: var(--sage-bg);
+  border-color: var(--sage);
+  animation: pulse 0.5s ease;
+}
+
+@keyframes pulse{
+  0%   {transform: scale(1)}
+  50%  {transform: scale(1.02)}
+  100% {transform: scale(1)}
+}
+
+.opt .icon{
   width: 28px;
   height: 28px;
-  min-width: 28px;
   border-radius: 50%;
   border: 2px solid var(--etch-line);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  transition: var(--tr);
   font-weight: 700;
+}
+
+.opt.correct .icon{
+  background: var(--sage);
+  border-color: var(--sage);
+  color: #fff;
+}
+
+.opt.wrong .icon{
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+}
+
+.opt.reveal-correct .icon{
+  background: var(--sage);
+  border-color: var(--sage);
+  color: #fff;
+}
+
+.opt-text{
+  flex: 1;
+  font-size: 0.95rem;
+  line-height: 1.5;
   color: var(--cyanotype-white);
-  transition: all var(--tr);
-  position: relative;
-  z-index: 1;
-  background: rgba(0, 26, 48, 0.6);
 }
 
-.opt .lbl{
-  font-size: 0.96rem;
-  color: var(--cyanotype-white);
-  position: relative;
-  z-index: 1;
+/* ─── TRUE / FALSE ────────────────────────────────── */
+.tf-row{
+  display: flex;
+  gap: 12px;
 }
-
-.opt .icon{
-  margin-left: auto;
-  font-size: 1.1rem;
-  position: relative;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.opt.correct{border-color: var(--sage); background: var(--sage-bg)}
-.opt.correct .marker{border-color: var(--sage); background: var(--sage); color: #fff}
-.opt.correct .icon{opacity: 1}
-
-.opt.wrong{border-color: var(--red); background: var(--red-bg)}
-.opt.wrong .marker{border-color: var(--red); background: var(--red); color: #fff}
-.opt.wrong .icon{opacity: 1}
-
-.opt.reveal-correct{border-color: var(--sage); background: var(--sage-bg)}
-.opt.reveal-correct .marker{border-color: var(--sage); background: var(--sage); color: #fff}
-.opt.reveal-correct .icon{opacity: 1}
-
-.opt.locked{cursor: default; pointer-events: none; transform: none !important}
-.opt.locked:hover{border-color: var(--etch-line) !important; transform: none !important}
-.opt.locked:hover::before{opacity: 0 !important}
-
-/* ─── TRUE / FALSE TOGGLE ──────────────────────────── */
-.tf-row{display: flex; gap: 12px}
 
 .tf-btn{
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  border: 1.8px solid var(--etch-line);
-  border-radius: 10px;
-  padding: 18px 10px;
+  padding: 18px;
+  text-align: center;
+  border: 1px solid var(--etch-line);
+  border-radius: var(--r);
+  background: rgba(230, 243, 248, 0.05);
   cursor: pointer;
-  transition: border-color var(--tr), background var(--tr), transform 0.15s;
-  user-select: none;
-  background: rgba(0, 43, 77, 0.2);
-}
-
-.tf-btn:hover{
-  border-color: var(--highlight);
-  transform: translateY(-3px);
-  background: rgba(76, 201, 240, 0.08);
-}
-
-.tf-btn .tf-icon{font-size: 1.5rem}
-.tf-btn .tf-lbl{
   font-size: 1rem;
   font-weight: 600;
   color: var(--cyanotype-white);
-  font-family: 'JetBrains Mono', monospace;
+  transition: var(--tr);
+}
+
+.tf-btn:hover:not(.locked){
+  background: rgba(230, 243, 248, 0.09);
+  border-color: var(--highlight);
+}
+
+.tf-btn.locked{
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.tf-btn.correct{
+  background: var(--sage-bg);
+  border-color: var(--sage);
+  color: var(--sage);
+}
+
+.tf-btn.wrong{
+  background: var(--red-bg);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.tf-btn.reveal-correct{
+  background: var(--sage-bg);
+  border-color: var(--sage);
+  color: var(--sage);
+  animation: pulse 0.5s ease;
+}
+
+/* ─── ID / FITB  ──────────────────────────────────── */
+.text-wrap{
+  position: relative;
+}
+
+.text-inp{
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  background: rgba(230, 243, 248, 0.05);
+  border: 1px solid var(--etch-line);
+  border-radius: var(--r);
+  color: var(--cyanotype-white);
+  transition: var(--tr);
+}
+
+.text-inp:focus{
+  outline: none;
+  border-color: var(--highlight);
+  background: rgba(230, 243, 248, 0.08);
+}
+
+.text-inp:disabled{
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.text-inp.correct{
+  border-color: var(--sage);
+  background: var(--sage-bg);
+}
+
+.text-inp.wrong{
+  border-color: var(--red);
+  background: var(--red-bg);
+}
+
+.go-btn{
+  margin-top: 14px;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--highlight), var(--oxide));
+  color: var(--cobalt-deep);
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: var(--tr);
+  text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.tf-btn.correct{border-color: var(--sage); background: var(--sage-bg)}
-.tf-btn.correct .tf-lbl{color: var(--sage)}
-
-.tf-btn.wrong{border-color: var(--red); background: var(--red-bg)}
-.tf-btn.wrong .tf-lbl{color: var(--red)}
-
-.tf-btn.reveal-correct{border-color: var(--sage); background: var(--sage-bg)}
-.tf-btn.reveal-correct .tf-lbl{color: var(--sage)}
-
-.tf-btn.locked{cursor: default; pointer-events: none; transform: none !important}
-.tf-btn.locked:hover{border-color: var(--etch-line) !important; transform: none !important}
-
-/* ─── TEXT INPUT (shared by ID + FITB) ───────────── */
-.input-row{display: flex; gap: 10px; align-items: stretch}
-
-.text-input{
-  flex: 1;
-  padding: 13px 18px;
-  border: 1.8px solid var(--etch-line);
-  border-radius: 10px;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.97rem;
-  color: var(--cyanotype-white);
-  background: rgba(0, 26, 48, 0.6);
-  outline: none;
-  transition: border-color var(--tr), box-shadow var(--tr);
-}
-
-.text-input::placeholder{color: rgba(230, 243, 248, 0.4)}
-
-.text-input:focus{
-  border-color: var(--highlight);
-  box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
-  background: rgba(0, 26, 48, 0.8);
-}
-
-.text-input:disabled{opacity: 0.7; cursor: not-allowed}
-.text-input.correct{border-color: var(--sage); background: var(--sage-bg)}
-.text-input.wrong{border-color: var(--red); background: var(--red-bg)}
-
-.go-btn{
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: var(--highlight);
-  color: var(--cobalt-deep);
-  border: none;
-  padding: 0 24px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background var(--tr), transform 0.15s;
-  white-space: nowrap;
-}
-
-.go-btn:hover{
-  background: var(--oxide);
+.go-btn:hover:not(:disabled){
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(76, 201, 240, 0.3);
+  box-shadow: 0 4px 12px rgba(76, 201, 240, 0.4);
 }
 
-.go-btn:disabled{opacity: 0.5; cursor: not-allowed; transform: none}
-
-/* ─── FITB SENTENCE ────────────────────────────────── */
-.fitb-sentence{
-  font-size: 1.02rem;
-  color: var(--cyanotype-white);
-  line-height: 2;
-  margin-bottom: 18px;
-  background: rgba(212, 175, 55, 0.08);
-  padding: 16px 20px;
-  border-radius: 8px;
-  border: 1.5px dashed rgba(212, 175, 55, 0.3);
+.go-btn:disabled{
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
-.fitb-blank{
+/* ─── FITB PREVIEW ────────────────────────────────── */
+.fitb-preview{
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(230, 243, 248, 0.03);
+  border: 1px dashed var(--etch-line);
+  border-radius: var(--r);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(230, 243, 248, 0.7);
+}
+
+.fitb-preview .blank{
   display: inline-block;
-  border-bottom: 2.5px solid var(--oxide);
-  min-width: 140px;
-  width: 140px;
-  margin: 0 6px;
-  text-align: center;
+  min-width: 80px;
+  padding: 2px 8px;
+  margin: 0 4px;
+  background: rgba(76, 201, 240, 0.15);
+  border-bottom: 2px solid var(--highlight);
+  color: var(--highlight);
   font-weight: 600;
-  color: var(--oxide);
-  font-style: italic;
-  vertical-align: bottom;
-  line-height: 1.8;
+  transition: var(--tr);
 }
 
-/* ─── FEEDBACK BAR ─────────────────────────────────── */
+/* ─── FEEDBACK ───────────────────────────────────────── */
 .feedback{
-  margin-top: 16px;
-  padding: 12px 18px;
-  border-radius: 8px;
-  font-size: 0.88rem;
+  margin-top: 22px;
+  padding: 16px 18px;
+  border-radius: var(--r);
+  font-size: 0.9rem;
   font-weight: 500;
   display: none;
   align-items: center;
   gap: 10px;
-  border: 1px solid;
 }
 
-.feedback.show{display: flex}
+.feedback.show{
+  display: flex;
+  animation: slideUp 0.35s var(--tr) both;
+}
+
 .feedback.correct{
   background: var(--sage-bg);
+  border: 1px solid var(--sage);
   color: var(--sage);
-  border-color: rgba(90, 154, 106, 0.3);
 }
+
 .feedback.wrong{
   background: var(--red-bg);
+  border: 1px solid var(--red);
   color: var(--red);
-  border-color: rgba(255, 107, 107, 0.3);
 }
-.feedback .ans-label{font-weight: 700}
 
-/* ─── NAV BUTTON ───────────────────────────────────── */
-.nav-btn{
-  margin-top: 24px;
-  width: 100%;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.85rem;
+.feedback span:first-child{
+  font-size: 1.2rem;
+}
+
+.ans-label{
   font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  background: var(--highlight);
-  color: var(--cobalt-deep);
-  border: none;
-  padding: 16px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all var(--tr);
-  display: none;
-}
-
-.nav-btn.show{display: block; animation: fadeIn 0.28s ease both}
-.nav-btn:hover{
-  background: var(--oxide);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(76, 201, 240, 0.4);
-}
-
-@keyframes fadeIn{
-  from{opacity: 0; transform: translateY(6px)}
-  to{opacity: 1; transform: translateY(0)}
-}
-
-/* ─── RESULTS SCREEN ───────────────────────────────── */
-.results{
-  display: none;
-  width: 100%;
-  animation: slideUp 0.4s var(--tr) both;
-}
-
-.results.show{display: block}
-
-.res-hero{
-  background: rgba(0, 43, 77, 0.5);
-  border: 1px solid var(--etch-line);
-  border-radius: var(--r);
-  padding: 50px 40px;
-  text-align: center;
-  position: relative;
-  backdrop-filter: blur(5px);
-  margin-bottom: 30px;
   color: var(--cyanotype-white);
 }
 
-.res-hero::after {
+/* ─── NAV BUTTON ──────────────────────────────────── */
+.nav-btn{
+  margin-top: 20px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, var(--highlight), var(--oxide));
+  color: var(--cobalt-deep);
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: var(--tr);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: none;
+}
+
+.nav-btn.show{
+  display: inline-block;
+  animation: slideUp 0.4s var(--tr) both;
+}
+
+.nav-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 201, 240, 0.4);
+}
+
+/* ─── RESULTS ──────────────────────────────────────── */
+#results{
+  display: none;
+  max-width: 680px;
+  margin: 40px auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+#results.show{
+  display: block;
+  animation: slideUp 0.5s var(--tr) both;
+}
+
+.res-hero{
+  background: rgba(0, 43, 77, 0.4);
+  border: 1px solid var(--etch-line);
+  border-radius: var(--r);
+  padding: 40px 30px;
+  text-align: center;
+  backdrop-filter: blur(5px);
+  position: relative;
+}
+
+.res-hero::after{
   content: "";
   position: absolute;
   inset: 0;
   background: 
-    linear-gradient(to right, var(--cyanotype-white) 15px, transparent 15px) 0 0,
-    linear-gradient(to bottom, var(--cyanotype-white) 15px, transparent 15px) 0 0,
-    linear-gradient(to left, var(--cyanotype-white) 15px, transparent 15px) 100% 100%,
-    linear-gradient(to top, var(--cyanotype-white) 15px, transparent 15px) 100% 100%;
+    linear-gradient(to right, var(--cyanotype-white) 12px, transparent 12px) 0 0,
+    linear-gradient(to bottom, var(--cyanotype-white) 12px, transparent 12px) 0 0,
+    linear-gradient(to left, var(--cyanotype-white) 12px, transparent 12px) 100% 100%,
+    linear-gradient(to top, var(--cyanotype-white) 12px, transparent 12px) 100% 100%;
   background-repeat: no-repeat;
-  background-size: 20px 20px;
-  opacity: 0.2;
+  background-size: 16px 16px;
+  opacity: 0.15;
   pointer-events: none;
   border-radius: var(--r);
 }
 
 .res-hero h2{
-  font-family: 'Inter', sans-serif;
-  font-size: 1.65rem;
+  font-size: 2rem;
   font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
   color: var(--cyanotype-white);
   margin-bottom: 20px;
-  position: relative;
-  z-index: 1;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
 }
 
 .res-score{
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 4.2rem;
+  font-size: 3.5rem;
   font-weight: 900;
   color: var(--highlight);
-  line-height: 1.1;
-  position: relative;
-  z-index: 1;
+  line-height: 1;
+  margin-bottom: 8px;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .res-sub{
+  font-size: 0.85rem;
+  color: rgba(230, 243, 248, 0.6);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.78rem;
-  color: rgba(230, 243, 248, 0.55);
+  margin-bottom: 30px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  margin-top: 4px;
-  position: relative;
-  z-index: 1;
 }
 
 .res-grid{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: 12px;
-  margin-top: 30px;
-  position: relative;
-  z-index: 1;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 14px;
+  margin-top: 24px;
 }
 
 .res-box{
-  background: rgba(0, 26, 48, 0.6);
+  background: rgba(230, 243, 248, 0.04);
   border: 1px solid var(--etch-line);
-  border-radius: 8px;
+  border-radius: var(--r);
   padding: 16px 12px;
   text-align: center;
 }
@@ -628,111 +684,142 @@ body::after {
   font-family: 'JetBrains Mono', monospace;
   font-size: 1.5rem;
   font-weight: 700;
-  line-height: 1;
   margin-bottom: 6px;
 }
 
-.res-box .v.gold{color: var(--highlight)}
-.res-box .v.g{color: var(--sage)}
-.res-box .v.r{color: var(--red)}
-
-.res-box .l{
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  color: rgba(230, 243, 248, 0.5);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-top: 3px;
+.res-box .v.gold{
+  color: var(--oxide);
 }
 
-/* ─── BREAKDOWN ────────────────────────────────────── */
+.res-box .v.g{
+  color: var(--sage);
+}
+
+.res-box .v.r{
+  color: var(--red);
+}
+
+.res-box .l{
+  font-size: 0.7rem;
+  color: rgba(230, 243, 248, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+/* ─── BREAKDOWN ───────────────────────────────────── */
 .bd-title{
-  font-family: 'Inter', sans-serif;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--cyanotype-white);
-  margin: 24px 0 10px;
+  margin: 32px 0 18px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .bd-item{
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--etch-line);
-  font-size: 0.87rem;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  gap: 14px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: var(--r);
+  align-items: center;
+  font-size: 0.9rem;
 }
 
-.bd-item .bd-icon{font-size: 1rem; margin-top: 1px}
-.bd-item .bd-num{
+.bd-icon{
+  font-size: 1.1rem;
+}
+
+.bd-num{
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  color: var(--highlight);
-  min-width: 24px;
+  color: var(--red);
 }
-.bd-item .bd-q{color: rgba(230, 243, 248, 0.8); flex: 1}
-.bd-item .bd-a{
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.78rem;
-  color: var(--sage);
+
+.bd-q{
+  color: rgba(230, 243, 248, 0.85);
+}
+
+.bd-a{
   font-weight: 600;
-  white-space: nowrap;
-  margin-left: 8px;
+  color: var(--cyanotype-white);
+  text-align: right;
 }
 
 .perfect{
   text-align: center;
-  padding: 18px;
-  font-family: 'Inter', sans-serif;
-  font-size: 1.15rem;
+  font-size: 1.3rem;
+  font-weight: 600;
   color: var(--sage);
-  background: rgba(90, 154, 106, 0.15);
-  border: 1px solid rgba(90, 154, 106, 0.3);
-  border-radius: 8px;
+  margin: 32px 0;
+  padding: 24px;
+  background: var(--sage-bg);
+  border: 1px solid var(--sage);
+  border-radius: var(--r);
 }
 
-/* ─── RESULT BUTTONS ───────────────────────────────── */
+/* ─── RESULT BUTTONS ──────────────────────────────── */
 .res-btn-row{
   display: flex;
+  gap: 14px;
   justify-content: center;
-  gap: 12px;
-  margin-top: 30px;
-  flex-wrap: wrap;
+  margin-top: 28px;
 }
 
 .btn{
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.86rem;
+  padding: 14px 32px;
+  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  padding: 13px 30px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--r);
   cursor: pointer;
-  transition: transform 0.18s, box-shadow 0.18s;
+  transition: var(--tr);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .btn-primary{
-  background: var(--highlight);
+  background: linear-gradient(135deg, var(--highlight), var(--oxide));
   color: var(--cobalt-deep);
-  box-shadow: 0 3px 16px rgba(76, 201, 240, 0.33);
 }
 
 .btn-primary:hover{
-  background: var(--oxide);
   transform: translateY(-2px);
-  box-shadow: 0 5px 22px rgba(76, 201, 240, 0.4);
+  box-shadow: 0 6px 16px rgba(76, 201, 240, 0.4);
 }
 
-/* ─── RESPONSIVE ───────────────────────────────────── */
-@media(max-width:520px){
-  .card{padding: 32px 20px 26px}
-  .res-grid{grid-template-columns: repeat(2, 1fr)}
-  .stage{margin-top: 28px}
-  .tf-row{flex-direction: column}
+/* ─── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 600px){
+  .header h1{
+    font-size: 1.5rem;
+  }
+  .res-score{
+    font-size: 2.8rem;
+  }
+  .res-grid{
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .bd-item{
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+  }
+  .bd-num{
+    grid-column: 1;
+  }
+  .bd-q{
+    grid-column: 2;
+  }
+  .bd-a{
+    grid-column: 1 / -1;
+    text-align: left;
+    margin-top: 6px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 107, 107, 0.2);
+  }
 }
 
 /* ─── FOOTER ───────────────────────────────────── */
@@ -771,104 +858,159 @@ body::after {
 </head>
 <body>
 
-<!-- progress -->
+<!-- HEADER -->
+<div class="header">
+  <h1><em>Math</em> Quiz</h1>
+  <p>Now with Mathematical Notation Support</p>
+</div>
+
+<!-- PROGRESS BAR -->
 <div class="progress-wrap">
   <div class="progress-inner">
-    <span class="p-label" id="pLabel">1 / …</span>
+    <div class="p-label" id="pLabel">1 / 5</div>
     <div class="p-bar"><div class="p-fill" id="pFill"></div></div>
-    <span class="p-pct" id="pPct">0%</span>
+    <div class="p-pct" id="pPct">0%</div>
   </div>
 </div>
 
-<!-- header -->
-<div class="header">
-  <h1><em id="headerTitle">Art</em> Quiz</h1>
-  <p id="headerSubtitle">Answer each question — the correct answer is revealed right away</p>
-</div>
-
-<!-- stage -->
+<!-- STAGE -->
 <div class="stage">
   <div id="cardWrap"></div>
-  <div class="results" id="results"></div>
+  <button class="nav-btn" id="navBtn" onclick="advance()"></button>
 </div>
 
+<!-- RESULTS -->
+<div id="results"></div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>This website is for educational and review purposes only. The developer shall not be held liable for any forms of cheating done by the user.</p>
+</footer>
+
 <script>
-// load questions based on URL param (e.g. ?mode=ArtApp or ?mode=ComProg)
+// load questions based on URL param (e.g. ?mode=MMW or ?mode=Calculus)
 
 const params = new URLSearchParams(window.location.search);
 const mode = params.get("mode");
 
+console.log("=== QUIZ LOADER DEBUG ===");
+console.log("Current URL:", window.location.href);
+console.log("Parsed mode parameter:", mode);
+
 // Map of modes to their respective JS file paths
 const modeMap = {
-  "ArtApp": "Courses/1st year/2ndsemester/Prelims/ArtApp.js",
-  "ComProg": "Courses/1st year/2ndsemester/Prelims/ComProg.js",
-  "STS": "Courses/1st year/2ndsemester/Prelims/STS.js"
+  "MMW": "Courses/1st year/2ndsemester/Prelims/MMW.js",
+  "Calculus": "Courses/1st year/2ndsemester/Prelims/Calculus.js",
+  "Discrete": "Courses/1st year/2ndsemester/Prelims/Discrete.js"
 };
 
 // Map of modes to their display titles
 const titleMap = {
-  "ArtApp": "Art Appreciation",
-  "ComProg": "Computer Programming",
-  "STS": "Science, Technology, and Society"
+  "MMW": "Mathematics in the Modern World",
+  "Calculus": "Calculus",
+  "Discrete": "Discrete Mathematics"
 };
+
+console.log("Available modes:", Object.keys(modeMap));
 
 // Set page title and header based on mode
 if (mode && titleMap[mode]) {
   const displayTitle = titleMap[mode];
   document.getElementById('pageTitle').textContent = displayTitle + ' Quiz';
-  document.getElementById('headerTitle').textContent = displayTitle;
-  document.getElementById('headerSubtitle').textContent = 'Answer each question — the correct answer is revealed right away';
+  // Update the header title - find the em tag and update it
+  const headerEm = document.querySelector('.header h1 em');
+  if (headerEm) {
+    headerEm.textContent = displayTitle.split(' ')[0];
+  }
+  const headerP = document.querySelector('.header p');
+  if (headerP) {
+    headerP.textContent = 'Answer each question — the correct answer is revealed right away';
+  }
 }
 
 // Load the appropriate script file based on the mode parameter
 console.log("Current URL:", window.location.href);
 console.log("Mode parameter:", mode);
 console.log("Mode map:", modeMap);
+console.log("modeMap[mode]:", mode && modeMap[mode]);
 
 if (mode && modeMap[mode]) {
   const script = document.createElement("script");
   script.src = modeMap[mode];
-  console.log("Loading script:", script.src);
+  console.log("Loading script from:", script.src);
   
   script.onload = function() {
-    console.log("Script loaded successfully!");
-    console.log("QUESTIONS array:", typeof QUESTIONS, QUESTIONS ? QUESTIONS.length + " questions" : "not found");
+    console.log("✓ Script loaded successfully!");
+    console.log("QUESTIONS array type:", typeof QUESTIONS);
+    console.log("QUESTIONS length:", QUESTIONS ? QUESTIONS.length : "undefined");
     initializeConfig();
+    console.log("TOTAL set to:", TOTAL);
     
     // Try to restore saved progress
     if (loadProgress()) {
-      console.log("Resumed quiz from saved progress");
+      console.log("✓ Resumed quiz from saved progress");
     } else {
-      console.log("Starting fresh quiz");
+      console.log("✓ Starting fresh quiz");
+    }
+    
+    // Trigger MathJax to render if available
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      console.log("Rendering MathJax...");
+      MathJax.typesetPromise().catch(err => console.log('MathJax render error:', err));
     }
     
     render();
   };
   
-  script.onerror = function() {
-    console.error("Failed to load script:", script.src);
+  script.onerror = function(error) {
+    console.error("✗ Failed to load script:", script.src);
+    console.error("Error details:", error);
   };
   
+  console.log("Appending script to head...");
   document.head.appendChild(script);
 } else {
-  console.warn("No valid mode parameter provided or mode not found in modeMap");
+  console.warn("✗ No valid mode or mode not in modeMap");
+  console.warn("Mode:", mode);
   console.warn("Available modes:", Object.keys(modeMap));
 }
 
 /* ══════════════════════════════════════════════════════════════
-   QUESTIONS  –  Each object has a  type  key:
-     "mc"   → { q, o:[…], a: index }
-     "id"   → { q, a: "string" }
-     "tf"   → { q, a: true | false }
-     "fitb" → { before, after, a: "string" }   (sentence = before + ___ + after)
+   SAMPLE QUESTIONS WITH MATH NOTATION
+   ══════════════════════════════════════════════════════════════
+   
+   To use math in questions or answers, wrap expressions in:
+   - $...$ for inline math (e.g., $x^2 + y^2$)
+   - $$...$$ for display math (centered equations)
+   
+   Examples of LaTeX math:
+   - Fractions: $\\frac{a}{b}$
+   - Exponents: $x^2$ or $e^{2x}$
+   - Square roots: $\\sqrt{x}$ or $\\sqrt[3]{x}$
+   - Greek letters: $\\alpha$, $\\beta$, $\\pi$, $\\theta$
+   - Subscripts: $x_1$, $x_{12}$
+   - Sums: $\\sum_{i=1}^{n} i$
+   - Integrals: $\\int_0^1 x^2 dx$
+   - Complex: $\\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$
+   
    ══════════════════════════════════════════════════════════════ */
-// ─── QUESTIONS SOURCE ────────────────────────────────────────
-// Questions are injected here by the API. This default template provides a fallback.
-// ──────────────────────────────────────────────────────────────
+
 /* ══════════════════════════════════════════════════════════════
    STATE
    ══════════════════════════════════════════════════════════════ */
-let current = 0, score = 0, wrongs = [];
+let current = 0;
+let score   = 0;
+let wrongs  = [];
+
+/* ══════════════════════════════════════════════════════════════
+   CONFIG  (will be initialized after QUESTIONS loads)
+   ══════════════════════════════════════════════════════════════ */
+let TOTAL;
+const TYPE_LABELS = {mc:'Multiple Choice', id:'Identification', tf:'True/False', fitb:'Fill Blank'};
+
+function initializeConfig() {
+  TOTAL = QUESTIONS.length;
+}
 
 /* ══════════════════════════════════════════════════════════════
    COOKIES - Save/Load Progress
@@ -924,104 +1066,64 @@ function loadProgress() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   CONFIG  (will be initialized after QUESTIONS loads)
-   ══════════════════════════════════════════════════════════════ */
-let TOTAL;
-const LABELS = ['A','B','C','D','E','F','G','H'];
-const TYPE_LABELS = { mc:'MC', id:'ID', tf:'T/F', fitb:'FITB' };
-const BADGE = { mc:'', id:'badge-rust', tf:'badge-blue', fitb:'badge-plum' };
-const PHASE = { mc:'Multiple Choice', id:'Identification', tf:'True or False', fitb:'Fill in the Blank' };
-
-function initializeConfig() {
-  TOTAL = QUESTIONS.length;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   RENDER  –  master dispatcher
+   MAIN RENDER
    ══════════════════════════════════════════════════════════════ */
 function render(){
-  const wrap = document.getElementById('cardWrap');
-  wrap.innerHTML = '';
-  document.getElementById('results').classList.remove('show');
-  if(current >= TOTAL){ showResults(); return; }
-  updateProgress();
-
-  const item = QUESTIONS[current];
-  const num  = current + 1;
-
-  /* shared wrapper open */
-  let html =
-    `<div class="card ${BADGE[item.type]}" id="qCard">
-       <div class="q-badge">Question ${num} of ${TOTAL}</div>
-       <div class="phase-tag ${item.type}">${PHASE[item.type]}</div>`;
-
-  /* ── type-specific body ── */
-  switch(item.type){
-
-    case 'mc':
-      html += `<div class="q-text">${item.q}</div>
-               <div class="options" id="options">` +
-        item.o.map((o,i) =>
-          `<div class="opt" id="opt-${i}" onclick="pickMC(${i})">
-             <div class="marker">${LABELS[i]}</div>
-             <span class="lbl">${o}</span>
-             <span class="icon"></span>
-           </div>`
-        ).join('') + '</div>';
-      break;
-
-    case 'id':
-      html += `<div class="q-text">${item.q}</div>
-               <div class="input-row">
-                 <input class="text-input" id="textInput" type="text" placeholder="Type your answer…"
-                        onkeydown="if(event.key==='Enter')submitText()">
-                 <button class="go-btn" id="goBtn" onclick="submitText()">Go</button>
-               </div>`;
-      break;
-
-    case 'tf':
-      html += `<div class="q-text">${item.q}</div>
-               <div class="tf-row">
-                 <div class="tf-btn" id="tf-true"  onclick="pickTF(true)">
-                   <span class="tf-icon">✓</span><span class="tf-lbl">True</span>
-                 </div>
-                 <div class="tf-btn" id="tf-false" onclick="pickTF(false)">
-                   <span class="tf-icon">✕</span><span class="tf-lbl">False</span>
-                 </div>
-               </div>`;
-      break;
-
-    case 'fitb':
-      html += `<div class="fitb-sentence">
-                 ${item.before} <span class="fitb-blank" id="fitbPreview">___</span> ${item.after}
-               </div>
-               <div class="input-row">
-                 <input class="text-input" id="textInput" type="text" placeholder="Fill in the blank…"
-                        onkeydown="if(event.key==='Enter')submitText()" oninput="document.getElementById('fitbPreview').textContent=this.value||'___'">
-                 <button class="go-btn" id="goBtn" onclick="submitText()">Go</button>
-               </div>`;
-      break;
-
-    default:
-      // unknown type — skip it automatically
-      html = '';
-      current++;
-      if(current < TOTAL){ render(); } else { showResults(); }
-      return;
+  if(current >= TOTAL){
+    showResults();
+    return;
   }
 
-  /* shared wrapper close */
-  html += `<div class="feedback" id="feedback"></div>
-           <button class="nav-btn" id="navBtn" onclick="advance()">
-             ${current < TOTAL-1 ? 'Next Question →' : 'See Results'}
-           </button>
-         </div>`;
+  const item = QUESTIONS[current];
+  let html = '';
 
-  wrap.innerHTML = html;
+  /* Question Badge + Text */
+  html += `<div class="q-badge">Question ${current+1}</div>`;
+  html += `<div class="phase-tag ${item.type}">${TYPE_LABELS[item.type]}</div>`;
+  html += `<div class="q-text">${item.q}</div>`;
 
-  /* auto-focus inputs */
-  const inp = document.getElementById('textInput');
-  if(inp) inp.focus();
+  /* Type-Specific UI */
+  if(item.type === 'mc'){
+    html += '<div class="opts">';
+    item.o.forEach((opt, i) => {
+      html += `<div class="opt" id="opt-${i}" onclick="pickMC(${i})">
+                 <div class="icon"></div>
+                 <div class="opt-text">${opt}</div>
+               </div>`;
+    });
+    html += '</div>';
+  }
+  else if(item.type === 'tf'){
+    html += `<div class="tf-row">
+               <div class="tf-btn" id="tf-true" onclick="pickTF(true)">True</div>
+               <div class="tf-btn" id="tf-false" onclick="pickTF(false)">False</div>
+             </div>`;
+  }
+  else if(item.type === 'id' || item.type === 'fitb'){
+    if(item.type === 'fitb'){
+      html += `<div class="fitb-preview">
+                 ${item.before} <span class="blank" id="fitbPreview">___</span> ${item.after}
+               </div>`;
+    }
+    html += `<div class="text-wrap">
+               <input type="text" class="text-inp" id="textInput" placeholder="Type your answer..." 
+                      ${item.type === 'fitb' ? 'oninput="updateBlank()"' : ''} />
+               <button class="go-btn" id="goBtn" onclick="submitText()">Submit Answer</button>
+             </div>`;
+  }
+
+  html += '<div class="feedback" id="feedback"></div>';
+
+  document.getElementById('cardWrap').innerHTML = `<div class="card">${html}</div>`;
+  document.getElementById('navBtn').classList.remove('show');
+  document.getElementById('results').classList.remove('show');
+  
+  updateProgress();
+  
+  // Typeset math after rendering
+  if(window.MathJax && window.MathJax.typesetPromise){
+    MathJax.typesetPromise().catch((err) => console.log('MathJax error:', err));
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1101,10 +1203,9 @@ function submitText(){
     score++;
     playCorrectSound();
   } else {
+    wrongs.push({ num: current+1, q: item.type === 'fitb' ? (item.before + ' ___ ' + item.after) : item.q, ans: item.a });
     playIncorrectSound();
   }
-
-  wrongs.push({ num: current+1, q: item.type === 'fitb' ? (item.before + ' ___ ' + item.after) : item.q, ans: item.a });
 
   inp.classList.add(isRight ? 'correct' : 'wrong');
 
@@ -1125,57 +1226,61 @@ function submitText(){
   revealNav();
 }
 
+/* ── FITB Live Preview ── */
+function updateBlank(){
+  const item = QUESTIONS[current];
+  if(item.type !== 'fitb') return;
+  const val = document.getElementById('textInput').value.trim();
+  document.getElementById('fitbPreview').textContent = val || '___';
+}
+
 /* ══════════════════════════════════════════════════════════════
    SHARED UI HELPERS
    ══════════════════════════════════════════════════════════════ */
 
-/* Music function */
-
+/* Music functions */
 const AudioContext = window.AudioContext || window.webkitAudioContext;
-  const audioCtx = new AudioContext();
+const audioCtx = new AudioContext();
 
-  function playCorrectSound() {
-    const gainNode = audioCtx.createGain();
-    gainNode.connect(audioCtx.destination);
-    
-    // Cyberpunk ascending synth beeps
-    function playNote(freq, startTime, duration, waveType = "square") {
-      const osc = audioCtx.createOscillator();
-      const noteGain = audioCtx.createGain();
-      osc.type = waveType;
-      osc.frequency.setValueAtTime(freq, startTime);
-      osc.connect(noteGain);
-      noteGain.connect(gainNode);
-      noteGain.gain.setValueAtTime(0.3, startTime);
-      noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-      osc.start(startTime);
-      osc.stop(startTime + duration);
-    }
-    
-    const now = audioCtx.currentTime;
-    // High-pitch ascending sequence with square waves (more digital/synth)
-    playNote(880, now, 0.15, "square");        // A5
-    playNote(1046, now + 0.12, 0.15, "square"); // C6
-    playNote(1318, now + 0.24, 0.2, "square");  // E6
+function playCorrectSound() {
+  const gainNode = audioCtx.createGain();
+  gainNode.connect(audioCtx.destination);
+  
+  function playNote(freq, startTime, duration, waveType = "square") {
+    const osc = audioCtx.createOscillator();
+    const noteGain = audioCtx.createGain();
+    osc.type = waveType;
+    osc.frequency.setValueAtTime(freq, startTime);
+    osc.connect(noteGain);
+    noteGain.connect(gainNode);
+    noteGain.gain.setValueAtTime(0.3, startTime);
+    noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+    osc.start(startTime);
+    osc.stop(startTime + duration);
   }
+  
+  const now = audioCtx.currentTime;
+  playNote(880, now, 0.15, "square");
+  playNote(1046, now + 0.12, 0.15, "square");
+  playNote(1318, now + 0.24, 0.2, "square");
+}
 
-  function playIncorrectSound() {
-    // Cyberpunk error sound - descending sawtooth with harsh character
-    const oscillator = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-    
-    oscillator.type = 'sawtooth'; // Harsh sawtooth for cyberpunk feel
-    oscillator.frequency.setValueAtTime(450, audioCtx.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.4);
-    
-    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
-    
-    oscillator.start();
-    oscillator.stop(audioCtx.currentTime + 0.4);
-  }
+function playIncorrectSound() {
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  
+  oscillator.type = 'sawtooth';
+  oscillator.frequency.setValueAtTime(450, audioCtx.currentTime);
+  oscillator.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.4);
+  
+  gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+  
+  oscillator.start();
+  oscillator.stop(audioCtx.currentTime + 0.4);
+}
 
 /* show feedback message */
 function showFeedback(isRight, correctAns){
@@ -1184,12 +1289,19 @@ function showFeedback(isRight, correctAns){
   fb.innerHTML = isRight
     ? '<span>✓</span> <span class="ans-label">Correct!</span> Great job.'
     : '<span>✗</span> The correct answer is: <span class="ans-label">' + correctAns + '</span>';
+  
+  // Typeset math in feedback
+  if(window.MathJax && window.MathJax.typesetPromise){
+    MathJax.typesetPromise([fb]).catch((err) => console.log('MathJax error:', err));
+  }
 }
+
 function revealNav(){
   const btn = document.getElementById('navBtn');
   btn.classList.add('show');
   btn.textContent = current < TOTAL-1 ? 'Next Question →' : 'See Results';
 }
+
 function advance(){
   current++;
   saveProgress();
@@ -1223,9 +1335,8 @@ function showResults(){
   let statBoxes = `<div class="res-box"><div class="v gold">${pct}%</div><div class="l">Score</div></div>`;
   types.forEach(t => {
     const total   = QUESTIONS.filter(q => q.type === t).length;
-    if(!total) return;                                         // skip types not used
+    if(!total) return;
     const missed  = wrongs.filter((w,i) => {
-      /* find the original index of this wrong answer */
       return w.num && QUESTIONS[w.num-1] && QUESTIONS[w.num-1].type === t;
     }).length;
     const correct = total - missed;
@@ -1263,6 +1374,11 @@ function showResults(){
      </div>`;
 
   document.getElementById('results').classList.add('show');
+  
+  // Typeset math in results
+  if(window.MathJax && window.MathJax.typesetPromise){
+    MathJax.typesetPromise().catch((err) => console.log('MathJax error:', err));
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1280,10 +1396,7 @@ function norm(s){ return s.toLowerCase().replace(/[^a-z0-9]/g,''); }
 
 /* ── INIT ── */
 // render() is called from the script loading callback after QUESTIONS is loaded
-</script>
 
-<footer class="footer">
-  <p>This website is for educational and review purposes only. The developer shall not be held liable for any forms of cheating done by the user.</p>
-</footer>
+</script>
 </body>
 </html>
