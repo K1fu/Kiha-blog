@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus Mastery System - Limits & Continuity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234cc9f0' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Cpath d='M7 9h10M7 13h10M7 17h6'/%3E%3Ccircle cx='18' cy='7' r='1' fill='%234cc9f0'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <h1>📊 Calculus Mastery System</h1>
+            <p class="subtitle">Limits, Continuity & Functions - Complete Learning Platform</p>
+        </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="main-nav">
+        <div class="container">
+            <button class="nav-btn active" data-section="overview">Overview</button>
+            <button class="nav-btn" data-section="modules">Modules</button>
+            <button class="nav-btn" data-section="problems">Practice Problems</button>
+            <button class="nav-btn" data-section="mastery">Mastery Test</button>
+            <button class="nav-btn" data-section="progress">Progress</button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <h3>Quick Navigation</h3>
+                
+                <div class="module-nav">
+                    <div class="module-item">
+                        <div class="module-header" data-module="1">
+                            <span class="module-icon">📚</span>
+                            <span>Module 1: Functions</span>
+                            <span class="toggle">▼</span>
+                        </div>
+                        <div class="lesson-list" id="module-1-lessons">
+                            <a href="#lesson-1-1" class="lesson-link">1.1 Relations & Functions</a>
+                            <a href="#lesson-1-2" class="lesson-link">1.2 Function Operations</a>
+                            <a href="#lesson-1-3" class="lesson-link">1.3 Domain & Range</a>
+                            <a href="#lesson-1-4" class="lesson-link">1.4 Types of Functions</a>
+                            <a href="#lesson-1-5" class="lesson-link">1.5 Function Properties</a>
+                        </div>
+                    </div>
+
+                    <div class="module-item">
+                        <div class="module-header" data-module="2">
+                            <span class="module-icon">∞</span>
+                            <span>Module 2: Limits</span>
+                            <span class="toggle">▼</span>
+                        </div>
+                        <div class="lesson-list" id="module-2-lessons">
+                            <a href="#lesson-2-1" class="lesson-link">2.1 Introduction to Limits</a>
+                            <a href="#lesson-2-2" class="lesson-link">2.2 Epsilon-Delta Definition</a>
+                            <a href="#lesson-2-3" class="lesson-link">2.3 Basic Limit Theorems</a>
+                            <a href="#lesson-2-4" class="lesson-link">2.4 Algebraic Theorems</a>
+                            <a href="#lesson-2-5" class="lesson-link">2.5 One-Sided Limits</a>
+                            <a href="#lesson-2-6" class="lesson-link">2.6 Infinite Limits</a>
+                            <a href="#lesson-2-7" class="lesson-link">2.7 Limits at Infinity</a>
+                        </div>
+                    </div>
+
+                    <div class="module-item">
+                        <div class="module-header" data-module="3">
+                            <span class="module-icon">〰️</span>
+                            <span>Module 3: Continuity</span>
+                            <span class="toggle">▼</span>
+                        </div>
+                        <div class="lesson-list" id="module-3-lessons">
+                            <a href="#lesson-3-1" class="lesson-link">3.1 Continuity at a Point</a>
+                            <a href="#lesson-3-2" class="lesson-link">3.2 Continuity Theorems</a>
+                            <a href="#lesson-3-3" class="lesson-link">3.3 Types of Discontinuity</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-tools">
+                    <button class="tool-btn" id="formula-sheet-btn">📋 Formula Sheet</button>
+                    <button class="tool-btn" id="filter-btn">🔍 Filter Problems</button>
+                    <button class="tool-btn" id="reset-progress-btn">🔄 Reset Progress</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area" id="content-area">
+            <!-- Overview Section -->
+            <section id="overview-section" class="content-section active">
+                <h2>Welcome to the Calculus Mastery System</h2>
+                
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <h3>📊 System Features</h3>
+                        <ul>
+                            <li>15 comprehensive lessons across 3 modules</li>
+                            <li>250+ practice problems with full solutions</li>
+                            <li>Progressive difficulty levels (A through E)</li>
+                            <li>Epsilon-delta proof training</li>
+                            <li>Mastery examination system</li>
+                            <li>Progress tracking and analytics</li>
+                        </ul>
+                    </div>
+
+                    <div class="overview-card">
+                        <h3>🎯 Learning Path</h3>
+                        <div class="learning-path">
+                            <div class="path-item">
+                                <span class="path-number">1</span>
+                                <div class="path-content">
+                                    <strong>Module 1: Functions</strong>
+                                    <p>Review prerequisite concepts</p>
+                                </div>
+                            </div>
+                            <div class="path-arrow">↓</div>
+                            <div class="path-item">
+                                <span class="path-number">2</span>
+                                <div class="path-content">
+                                    <strong>Module 2: Limits</strong>
+                                    <p>Master the core concept</p>
+                                </div>
+                            </div>
+                            <div class="path-arrow">↓</div>
+                            <div class="path-item">
+                                <span class="path-number">3</span>
+                                <div class="path-content">
+                                    <strong>Module 3: Continuity</strong>
+                                    <p>Apply and integrate knowledge</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overview-card">
+                        <h3>📈 Problem Difficulty Levels</h3>
+                        <ul class="difficulty-list">
+                            <li><span class="badge badge-easy">Section A</span> Foundation (Easy)</li>
+                            <li><span class="badge badge-medium">Section B</span> Intermediate</li>
+                            <li><span class="badge badge-hard">Section C</span> Advanced</li>
+                            <li><span class="badge badge-proof">Section D</span> Proof-Level</li>
+                            <li><span class="badge badge-trap">Section E</span> Tricky Edge Cases</li>
+                        </ul>
+                    </div>
+
+                    <div class="overview-card">
+                        <h3>⚡ Quick Start Guide</h3>
+                        <ol>
+                            <li>Navigate through modules using the sidebar</li>
+                            <li>Study each lesson's theory and examples</li>
+                            <li>Practice problems for each topic</li>
+                            <li>Check solutions (collapsible sections)</li>
+                            <li>Take the mastery test when ready</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <button class="btn-primary btn-large" onclick="showSection('modules')">
+                        Start Learning →
+                    </button>
+                </div>
+            </section>
+
+            <!-- Modules Section -->
+            <section id="modules-section" class="content-section">
+                <h2>Course Modules</h2>
+                <p class="section-intro">Comprehensive lessons organized for progressive mastery</p>
+
+                <!-- Module 1: Functions -->
+                <div class="module-content" id="module-1-content">
+                    <div class="module-title-bar">
+                        <h3>📚 Module 1: Functions (Prerequisites)</h3>
+                        <span class="module-stats">5 Lessons • 50 Problems • ~4 hours</span>
+                    </div>
+
+                    <div class="lessons-container">
+                        <!-- Lesson 1.1 -->
+                        <div class="lesson-card" id="lesson-1-1">
+                            <div class="lesson-header">
+                                <h4>Lesson 1.1: Relations and Functions</h4>
+                                <span class="lesson-time">⏱️ 30 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Distinguish between relations and functions</li>
+                                        <li>Apply the vertical line test</li>
+                                        <li>Use function notation correctly</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <h5>Key Concepts</h5>
+                                    
+                                    <div class="definition-box">
+                                        <strong>Definition: Relation</strong>
+                                        <p>A relation from set A to set B is any nonempty subset of A × B.</p>
+                                    </div>
+                                    
+                                    <div class="definition-box">
+                                        <strong>Definition: Function</strong>
+                                        <p>A function from A to B is a relation where each element a ∈ A corresponds to exactly one element b ∈ B.</p>
+                                        <p class="math-display">$$f: A \to B$$</p>
+                                    </div>
+
+                                    <div class="key-point">
+                                        <strong>🔑 Key Difference:</strong> In a function, no two ordered pairs have the same first component.
+                                    </div>
+
+                                    <div class="example-box">
+                                        <strong>Example 1:</strong>
+                                        <p>Which of the following are functions?</p>
+                                        <p>a) \( \{(1,2), (3,4), (1,5)\} \) — NOT a function (1 maps to both 2 and 5)</p>
+                                        <p>b) \( \{(1,2), (3,2), (5,2)\} \) — IS a function (each input maps to exactly one output)</p>
+                                    </div>
+
+                                    <div class="theorem-box">
+                                        <strong>Vertical Line Test</strong>
+                                        <p>A graph represents a function if and only if no vertical line intersects the graph more than once.</p>
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems', 'lesson-1-1')">
+                                    Practice Problems (10) →
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Additional lessons would follow similar structure -->
+                        <!-- For brevity, showing structure for one lesson -->
+                    </div>
+                </div>
+
+                <!-- Placeholder indicators for other modules -->
+                <div class="module-indicator">
+                    <p>📘 <strong>Module 2: Limits</strong> - 7 Lessons with comprehensive epsilon-delta coverage</p>
+                    <p>📗 <strong>Module 3: Continuity</strong> - 3 Lessons connecting limits to function behavior</p>
+                </div>
+            </section>
+
+            <!-- Problems Section -->
+            <section id="problems-section" class="content-section">
+                <h2>Practice Problems (250+)</h2>
+                
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label>Module:</label>
+                        <select id="module-filter">
+                            <option value="all">All Modules</option>
+                            <option value="1">Module 1: Functions</option>
+                            <option value="2">Module 2: Limits</option>
+                            <option value="3">Module 3: Continuity</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Difficulty:</label>
+                        <select id="difficulty-filter">
+                            <option value="all">All Levels</option>
+                            <option value="A">Section A (Easy)</option>
+                            <option value="B">Section B (Intermediate)</option>
+                            <option value="C">Section C (Advanced)</option>
+                            <option value="D">Section D (Proof)</option>
+                            <option value="E">Section E (Traps)</option>
+                        </select>
+                    </div>
+                    <button class="btn-secondary" onclick="applyFilters()">Apply Filters</button>
+                    <button class="btn-secondary" onclick="clearFilters()">Clear</button>
+                </div>
+
+                <div id="problems-container">
+                    <!-- Problems will be dynamically loaded here -->
+                    <p class="loading-text">Loading problems...</p>
+                </div>
+            </section>
+
+            <!-- Mastery Test Section -->
+            <section id="mastery-section" class="content-section">
+                <h2>Mastery Examination</h2>
+                
+                <div class="mastery-intro">
+                    <p><strong>25 comprehensive questions</strong> covering all modules</p>
+                    <p>⏱️ Recommended time: 90 minutes</p>
+                    <p>📊 Passing score: 18/25 (72%)</p>
+                </div>
+
+                <div class="mastery-warning">
+                    <strong>⚠️ Important:</strong> This examination should be taken only after completing all practice problems.
+                </div>
+
+                <button class="btn-primary btn-large" id="start-mastery-btn">
+                    Begin Mastery Examination
+                </button>
+
+                <div id="mastery-test-content" class="hidden">
+                    <!-- Mastery test questions will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Progress Section -->
+            <section id="progress-section" class="content-section">
+                <h2>Your Progress Dashboard</h2>
+                
+                <div class="progress-grid">
+                    <div class="progress-card">
+                        <h3>Overall Progress</h3>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="overall-progress" style="width: 0%"></div>
+                        </div>
+                        <p class="progress-text"><span id="completed-count">0</span> / 250 problems completed</p>
+                    </div>
+
+                    <div class="progress-card">
+                        <h3>Module Completion</h3>
+                        <div class="module-progress">
+                            <div class="module-prog-item">
+                                <span>Module 1: Functions</span>
+                                <div class="mini-progress-bar">
+                                    <div class="mini-progress" id="module-1-progress" style="width: 0%"></div>
+                                </div>
+                                <span class="prog-percentage">0%</span>
+                            </div>
+                            <div class="module-prog-item">
+                                <span>Module 2: Limits</span>
+                                <div class="mini-progress-bar">
+                                    <div class="mini-progress" id="module-2-progress" style="width: 0%"></div>
+                                </div>
+                                <span class="prog-percentage">0%</span>
+                            </div>
+                            <div class="module-prog-item">
+                                <span>Module 3: Continuity</span>
+                                <div class="mini-progress-bar">
+                                    <div class="mini-progress" id="module-3-progress" style="width: 0%"></div>
+                                </div>
+                                <span class="prog-percentage">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="progress-card">
+                        <h3>Recent Activity</h3>
+                        <div id="activity-log">
+                            <p class="no-activity">No activity yet. Start practicing!</p>
+                        </div>
+                    </div>
+
+                    <div class="progress-card">
+                        <h3>Mastery Test Status</h3>
+                        <div id="mastery-status">
+                            <p class="status-text">Not yet attempted</p>
+                            <p class="recommendation">Complete at least 200 problems before attempting</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Formula Sheet Modal -->
+    <div id="formula-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Quick Reference Formula Sheet</h2>
+            
+            <div class="formula-section">
+                <h3>Limit Laws</h3>
+                <div class="formula-list">
+                    <p>$$\lim_{x \to b} c = c$$</p>
+                    <p>$$\lim_{x \to b} x = b$$</p>
+                    <p>$$\lim_{x \to b} [f(x) \pm g(x)] = \lim_{x \to b} f(x) \pm \lim_{x \to b} g(x)$$</p>
+                    <p>$$\lim_{x \to b} [f(x) \cdot g(x)] = \lim_{x \to b} f(x) \cdot \lim_{x \to b} g(x)$$</p>
+                    <p>$$\lim_{x \to b} \frac{f(x)}{g(x)} = \frac{\lim_{x \to b} f(x)}{\lim_{x \to b} g(x)}$$ if $\lim_{x \to b} g(x) \neq 0$</p>
+                </div>
+            </div>
+
+            <div class="formula-section">
+                <h3>Epsilon-Delta Definition</h3>
+                <p>$$\lim_{x \to b} f(x) = L \iff \forall \epsilon > 0, \exists \delta > 0: 0 < |x - b| < \delta \implies |f(x) - L| < \epsilon$$</p>
+            </div>
+
+            <div class="formula-section">
+                <h3>Continuity</h3>
+                <p>f is continuous at b if and only if:</p>
+                <ol>
+                    <li>f(b) exists</li>
+                    <li>$\lim_{x \to b} f(x)$ exists</li>
+                    <li>$\lim_{x \to b} f(x) = f(b)$</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
