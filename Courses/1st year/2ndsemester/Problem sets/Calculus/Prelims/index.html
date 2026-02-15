@@ -3,992 +3,1462 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculus Mastery System - Limits & Continuity</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Calculus Mastery | Tectonic System</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234cc9f0' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Cpath d='M7 9h10M7 13h10M7 17h6'/%3E%3Ccircle cx='18' cy='7' r='1' fill='%234cc9f0'/%3E%3C/svg%3E">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --slate-950: #0a0c10;
+            --slate-900: #12151c;
+            --slate-800: #1e242e;
+            --slate-700: #2d3645;
+            --slate-600: #3d4758;
+            --cyan-accent: #00f2ff;
+            --cyan-glow: rgba(0, 242, 255, 0.4);
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Hide Default Scrollbar (The "Right Sidebar") */
+        body::-webkit-scrollbar {
+            display: none;
+        }
+        body {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--slate-950);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(0, 242, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(0, 242, 255, 0.03) 0%, transparent 40%);
+            min-height: 100vh;
+        }
+
+        .monolith-wrapper {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            grid-template-rows: auto 1fr;
+            min-height: 100vh;
+            gap: 1px;
+            background-color: var(--border);
+        }
+
+        .crest {
+            grid-column: 1 / -1;
+            background: var(--slate-900);
+            padding: 2.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .crest-brand h1 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4rem;
+            font-weight: 900;
+            color: var(--cyan-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .crest-brand p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            color: var(--text-main);
+            letter-spacing: -0.05rem;
+        }
+
+        .crest-stats {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .stat-item {
+            text-align: right;
+        }
+
+        .stat-value {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            color: var(--text-muted);
+        }
+
+        .nav-monolith {
+            background: var(--slate-900);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: sticky;
+            top: 0;
+            height: 100vh; /* Flex to bottom of viewport */
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+        }
+
+        .nav-monolith::-webkit-scrollbar { width: 4px; }
+        .nav-monolith::-webkit-scrollbar-thumb { background: var(--slate-700); }
+
+        .nav-group-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .nav-slab {
+            background: var(--slate-800);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-slab:hover {
+            background: var(--slate-700);
+            border-color: var(--cyan-accent);
+            transform: translateX(8px);
+        }
+
+        .nav-slab.active {
+            background: var(--slate-700);
+            border-left: 4px solid var(--cyan-accent);
+        }
+
+        .nav-slab h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .module-slab {
+            background: var(--slate-800);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+
+        .module-slab:hover {
+            background: var(--slate-700);
+            border-color: var(--cyan-accent);
+            transform: translateX(8px);
+        }
+
+        .module-slab.expanded {
+            background: var(--slate-700);
+            border-left: 4px solid var(--cyan-accent);
+        }
+
+        .module-slab h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .module-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .module-slab.expanded .module-toggle {
+            transform: rotate(180deg);
+        }
+
+        .progress-mini {
+            height: 2px;
+            background: var(--slate-950);
+            margin-top: 0.8rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--cyan-accent);
+            box-shadow: 0 0 10px var(--cyan-glow);
+            transition: width 0.5s ease;
+        }
+
+        .lesson-list {
+            display: none;
+            padding-left: 1rem;
+            margin-top: 0.5rem;
+            border-left: 2px solid var(--cyan-accent);
+            margin-left: 0.5rem;
+        }
+
+        .lesson-list.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 500px; }
+        }
+
+        .lesson-link {
+            display: block;
+            padding: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 0.25rem 0;
+            border-radius: 2px;
+            font-size: 0.85rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .lesson-link:hover {
+            background-color: var(--slate-800);
+            color: var(--cyan-accent);
+            padding-left: 0.75rem;
+        }
+
+        .btn-tool {
+            width: 100%;
+            background: var(--slate-800);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.75rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+
+        .btn-tool:hover {
+            background: var(--slate-700);
+            border-color: var(--cyan-accent);
+            color: var(--cyan-accent);
+        }
+
+        .content-slate {
+            background: var(--slate-950);
+            padding: 4rem;
+            max-width: 1200px;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes reveal {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: -0.15rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to bottom, #fff, #64748b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .section-intro {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            font-family: 'Lora', serif;
+            line-height: 1.8;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .overview-card {
+            background: var(--slate-900);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .overview-card:hover {
+            border-color: var(--cyan-accent);
+            transform: translateY(-4px);
+        }
+
+        .overview-card h3 {
+            color: var(--cyan-accent);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .overview-card ul {
+            margin-left: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .overview-card li {
+            margin-bottom: 0.75rem;
+        }
+
+        .learning-path {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .path-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--slate-800);
+            border: 1px solid var(--border);
+        }
+
+        .path-number {
+            width: 40px;
+            height: 40px;
+            background: var(--cyan-accent);
+            color: var(--slate-950);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+        }
+
+        .path-content strong {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .path-content p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            min-width: 100px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+        }
+
+        .badge-easy { background: #27ae60; color: white; }
+        .badge-medium { background: var(--cyan-accent); color: var(--slate-950); }
+        .badge-hard { background: #f39c12; color: white; }
+        .badge-proof { background: #9b59b6; color: white; }
+        .badge-trap { background: #e74c3c; color: white; }
+
+        .btn-tectonic {
+            background: transparent;
+            border: 1px solid var(--cyan-accent);
+            color: var(--cyan-accent);
+            padding: 1rem 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.1rem;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-tectonic:hover {
+            background: var(--cyan-accent);
+            color: var(--slate-950);
+            box-shadow: 0 0 30px var(--cyan-glow);
+        }
+
+        .module-title-bar {
+            background: var(--slate-900);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--cyan-accent);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .module-title-bar h3 {
+            font-size: 2rem;
+        }
+
+        .module-stats {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .lesson-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .lesson-slab {
+            background: var(--slate-900);
+            border: 1px solid var(--border);
+            padding: 3rem;
+            border-radius: 2px;
+            position: relative;
+            transition: var(--transition);
+            margin-bottom: 2rem;
+        }
+
+        .lesson-slab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cyan-accent), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .lesson-slab:hover::before {
+            opacity: 1;
+        }
+
+        .lesson-tag {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--cyan-accent);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 1.5rem;
+        }
+
+        .lesson-slab h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .learning-objectives {
+            background: rgba(0, 242, 255, 0.05);
+            border-left: 3px solid var(--cyan-accent);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .learning-objectives strong {
+            color: var(--cyan-accent);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .learning-objectives ul {
+            margin-left: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .learning-objectives li {
+            margin-bottom: 0.5rem;
+        }
+
+        .definition-box {
+            background: var(--slate-800);
+            border-left: 2px solid #f39c12;
+            background: rgba(243, 156, 18, 0.05);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .definition-box strong {
+            color: #f39c12;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .theorem-box {
+            background: var(--slate-800);
+            border-left: 2px solid var(--cyan-accent);
+            background: rgba(0, 242, 255, 0.05);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .theorem-box strong {
+            color: var(--cyan-accent);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .example-box {
+            background: var(--slate-800);
+            border-left: 2px solid #27ae60;
+            background: rgba(39, 174, 96, 0.05);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .example-box strong {
+            color: #27ae60;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .key-point {
+            background: var(--slate-800);
+            border-left: 2px solid #e74c3c;
+            background: rgba(231, 76, 60, 0.05);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .key-point strong {
+            color: #e74c3c;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .math-block {
+            background: var(--slate-950);
+            padding: 2rem;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background: var(--slate-900);
+            border: 1px solid var(--border);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .filter-group select {
+            padding: 0.75rem;
+            background: var(--slate-800);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        #problems-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .module-problems h3 {
+            color: var(--cyan-accent);
+            padding: 1.5rem;
+            background: var(--slate-900);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--cyan-accent);
+            margin-bottom: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .problem-card {
+            border: 1px solid var(--border);
+            background: var(--slate-900);
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+        }
+
+        .problem-card:hover {
+            border-color: var(--cyan-accent);
+        }
+
+        .problem-header {
+            background: var(--slate-800);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .problem-meta {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .problem-body {
+            padding: 2rem;
+        }
+
+        .problem-statement {
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .solution-toggle {
+            background: transparent;
+            border: 1px solid var(--cyan-accent);
+            color: var(--cyan-accent);
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            transition: var(--transition);
+        }
+
+        .solution-toggle:hover {
+            background: var(--cyan-accent);
+            color: var(--slate-950);
+        }
+
+        .solution-content {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--slate-800);
+            border-left: 3px solid var(--cyan-accent);
+        }
+
+        .solution-content.visible {
+            display: block;
+        }
+
+        .answer-box {
+            background: rgba(39, 174, 96, 0.1);
+            border-left: 3px solid #27ae60;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .test-question {
+            background: var(--slate-900);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--cyan-accent);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .test-question h4 {
+            color: var(--cyan-accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .dash-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .dash-card {
+            background: var(--slate-900);
+            border: 1px solid var(--border);
+            padding: 2rem;
+        }
+
+        .dash-card h3 {
+            color: var(--cyan-accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-bar-container {
+            background: var(--slate-800);
+            height: 40px;
+            margin: 1.5rem 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyan-accent), #00d4ff);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--slate-950);
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 0 20px var(--cyan-glow);
+        }
+
+        .progress-text {
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+        }
+
+        .module-prog-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .mini-progress-bar {
+            flex: 1;
+            background: var(--slate-800);
+            height: 8px;
+        }
+
+        .mini-progress {
+            height: 100%;
+            background: var(--cyan-accent);
+            transition: width 0.5s ease;
+        }
+
+        .prog-percentage {
+            min-width: 50px;
+            text-align: right;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--cyan-accent);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 12, 16, 0.95);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--slate-900);
+            border: 1px solid var(--border);
+            padding: 3rem;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 2rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--cyan-accent);
+            transform: rotate(90deg);
+        }
+
+        .formula-section h3 {
+            color: var(--cyan-accent);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .formula-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--cyan-accent);
+            color: var(--slate-950);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transition: var(--transition);
+            z-index: 999;
+        }
+
+        .formula-float:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 0 30px var(--cyan-glow);
+        }
+
+        @media (max-width: 1024px) {
+            .monolith-wrapper { grid-template-columns: 1fr; }
+            .nav-monolith { display: none; }
+            .content-slate { padding: 2rem; }
+            .crest { padding: 2rem; flex-direction: column; gap: 1.5rem; }
+            .section-header h2 { font-size: 2.5rem; }
+        }
+
+        @media (max-width: 600px) {
+            .crest-stats { flex-direction: column; gap: 1rem; }
+            .dash-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="main-header">
-        <div class="container">
-            <h1>📊 Calculus Mastery System</h1>
-            <p class="subtitle">Limits, Continuity & Functions - Complete Learning Platform</p>
+
+<div class="monolith-wrapper">
+    <!-- Header: The Crest -->
+    <header class="crest">
+        <div class="crest-brand">
+            <h1>Academic System</h1>
+            <p>Calculus Mastery <span style="color:var(--cyan-accent);">v2.0</span></p>
+        </div>
+        <div class="crest-stats">
+            <div class="stat-item">
+                <span class="stat-label">Progress</span>
+                <span class="stat-value" id="header-progress">0%</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Problems</span>
+                <span class="stat-value"><span id="header-completed">0</span>/250</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">System</span>
+                <span class="stat-value" style="color:var(--cyan-accent);">Active</span>
+            </div>
         </div>
     </header>
 
-    <!-- Navigation Bar -->
-    <nav class="main-nav">
-        <div class="container">
-            <button class="nav-btn active" data-section="overview">Overview</button>
-            <button class="nav-btn" data-section="modules">Modules</button>
-            <button class="nav-btn" data-section="problems">Practice Problems</button>
-            <button class="nav-btn" data-section="mastery">Mastery Test</button>
-            <button class="nav-btn" data-section="progress">Progress</button>
+    <!-- Navigation Monolith -->
+    <aside class="nav-monolith" id="sidebar">
+        <div>
+            <span class="nav-group-title">Navigation</span>
+            <div class="nav-slab active" data-section="overview">
+                <h4>System Overview</h4>
+            </div>
+            <div class="nav-slab" data-section="modules">
+                <h4>Course Modules</h4>
+            </div>
+            <div class="nav-slab" data-section="problems">
+                <h4>Practice Problems</h4>
+            </div>
+            <div class="nav-slab" data-section="mastery">
+                <h4>Mastery Test</h4>
+            </div>
+            <div class="nav-slab" data-section="progress">
+                <h4>Progress Dashboard</h4>
+            </div>
         </div>
-    </nav>
 
-    <!-- Main Container -->
-    <div class="main-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-content">
-                <h3>Quick Navigation</h3>
-                
-                <div class="module-nav">
-                    <div class="module-item">
-                        <div class="module-header" data-module="1">
-                            <span class="module-icon">📚</span>
-                            <span>Module 1: Functions</span>
-                            <span class="toggle">▼</span>
-                        </div>
-                        <div class="lesson-list" id="module-1-lessons">
-                            <a href="#lesson-1-1" class="lesson-link">1.1 Relations & Functions</a>
-                            <a href="#lesson-1-2" class="lesson-link">1.2 Function Operations</a>
-                            <a href="#lesson-1-3" class="lesson-link">1.3 Domain & Range</a>
-                            <a href="#lesson-1-4" class="lesson-link">1.4 Types of Functions</a>
-                            <a href="#lesson-1-5" class="lesson-link">1.5 Function Properties</a>
-                        </div>
-                    </div>
+        <div>
+            <span class="nav-group-title">Module 01: Functions</span>
+            <div class="module-slab" data-module="1">
+                <h4>📚 Functions</h4>
+                <span class="module-toggle">▼</span>
+                <div class="progress-mini"><div class="progress-fill" id="mod1-mini" style="width: 0%;"></div></div>
+            </div>
+            <div class="lesson-list" id="module-1-lessons">
+                <a href="#lesson-1-1" class="lesson-link">1.1 Relations & Functions</a>
+                <a href="#lesson-1-2" class="lesson-link">1.2 Function Operations</a>
+                <a href="#lesson-1-3" class="lesson-link">1.3 Domain & Range</a>
+                <a href="#lesson-1-4" class="lesson-link">1.4 Types of Functions</a>
+                <a href="#lesson-1-5" class="lesson-link">1.5 Inverse Functions</a>
+            </div>
+        </div>
 
-                    <div class="module-item">
-                        <div class="module-header" data-module="2">
-                            <span class="module-icon">∞</span>
-                            <span>Module 2: Limits</span>
-                            <span class="toggle">▼</span>
-                        </div>
-                        <div class="lesson-list" id="module-2-lessons">
-                            <a href="#lesson-2-1" class="lesson-link">2.1 Introduction to Limits</a>
-                            <a href="#lesson-2-2" class="lesson-link">2.2 Epsilon-Delta Definition</a>
-                            <a href="#lesson-2-3" class="lesson-link">2.3 Basic Limit Theorems</a>
-                            <a href="#lesson-2-4" class="lesson-link">2.4 Algebraic Theorems</a>
-                            <a href="#lesson-2-5" class="lesson-link">2.5 One-Sided Limits</a>
-                            <a href="#lesson-2-6" class="lesson-link">2.6 Infinite Limits</a>
-                            <a href="#lesson-2-7" class="lesson-link">2.7 Limits at Infinity</a>
-                        </div>
-                    </div>
+        <div>
+            <span class="nav-group-title">Module 02: Limits</span>
+            <div class="module-slab" data-module="2">
+                <h4>∞ Limits</h4>
+                <span class="module-toggle">▼</span>
+                <div class="progress-mini"><div class="progress-fill" id="mod2-mini" style="width: 0%;"></div></div>
+            </div>
+            <div class="lesson-list" id="module-2-lessons">
+                <a href="#lesson-2-1" class="lesson-link">2.1 Introduction</a>
+                <a href="#lesson-2-2" class="lesson-link">2.2 Epsilon-Delta</a>
+                <a href="#lesson-2-3" class="lesson-link">2.3 Basic Theorems</a>
+                <a href="#lesson-2-4" class="lesson-link">2.4 Algebraic Theorems</a>
+                <a href="#lesson-2-5" class="lesson-link">2.5 One-Sided Limits</a>
+                <a href="#lesson-2-6" class="lesson-link">2.6 Infinite Limits</a>
+                <a href="#lesson-2-7" class="lesson-link">2.7 Limits at Infinity</a>
+            </div>
+        </div>
 
-                    <div class="module-item">
-                        <div class="module-header" data-module="3">
-                            <span class="module-icon">〰️</span>
-                            <span>Module 3: Continuity</span>
-                            <span class="toggle">▼</span>
+        <div>
+            <span class="nav-group-title">Module 03: Continuity</span>
+            <div class="module-slab" data-module="3">
+                <h4>〰️ Continuity</h4>
+                <span class="module-toggle">▼</span>
+                <div class="progress-mini"><div class="progress-fill" id="mod3-mini" style="width: 0%;"></div></div>
+            </div>
+            <div class="lesson-list" id="module-3-lessons">
+                <a href="#lesson-3-1" class="lesson-link">3.1 At a Point</a>
+                <a href="#lesson-3-2" class="lesson-link">3.2 Theorems</a>
+                <a href="#lesson-3-3" class="lesson-link">3.3 Discontinuity Types</a>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <span class="nav-group-title">System Tools</span>
+            <button class="btn-tool" id="formula-sheet-btn">📋 Formula Sheet</button>
+            <button class="btn-tool" id="reset-progress-btn">🔄 Reset Progress</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Slate -->
+    <main class="content-slate" id="content-area">
+
+        <!-- Overview Section -->
+        <section id="overview-section" class="content-section active">
+            <div class="section-header">
+                <h2>Calculus Mastery System</h2>
+                <p class="section-intro">A comprehensive journey through functions, limits, and continuity using rigorous epsilon-delta foundations and algebraic techniques.</p>
+            </div>
+
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <h3>📚 Module Structure</h3>
+                    <ul>
+                        <li><strong>Module 1:</strong> Functions (5 lessons, 50 problems)</li>
+                        <li><strong>Module 2:</strong> Limits (7 lessons, 135 problems)</li>
+                        <li><strong>Module 3:</strong> Continuity (3 lessons, 65 problems)</li>
+                        <li><strong>Total:</strong> 15 lessons, 250 practice problems</li>
+                    </ul>
+                </div>
+
+                <div class="overview-card">
+                    <h3>🎯 Learning Path</h3>
+                    <div class="learning-path">
+                        <div class="path-item">
+                            <div class="path-number">1</div>
+                            <div class="path-content">
+                                <strong>Study Theory</strong>
+                                <p>Review complete lesson content with definitions and theorems</p>
+                            </div>
                         </div>
-                        <div class="lesson-list" id="module-3-lessons">
-                            <a href="#lesson-3-1" class="lesson-link">3.1 Continuity at a Point</a>
-                            <a href="#lesson-3-2" class="lesson-link">3.2 Continuity Theorems</a>
-                            <a href="#lesson-3-3" class="lesson-link">3.3 Types of Discontinuity</a>
+                        <div class="path-item">
+                            <div class="path-number">2</div>
+                            <div class="path-content">
+                                <strong>Practice Problems</strong>
+                                <p>Solve problems across difficulty levels A through E</p>
+                            </div>
+                        </div>
+                        <div class="path-item">
+                            <div class="path-number">3</div>
+                            <div class="path-content">
+                                <strong>Track Progress</strong>
+                                <p>Monitor completion and mastery across all modules</p>
+                            </div>
+                        </div>
+                        <div class="path-item">
+                            <div class="path-number">4</div>
+                            <div class="path-content">
+                                <strong>Master Exam</strong>
+                                <p>Complete 25-question comprehensive assessment</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="sidebar-tools">
-                    <button class="tool-btn" id="formula-sheet-btn">📋 Formula Sheet</button>
-                    <button class="tool-btn" id="filter-btn">🔍 Filter Problems</button>
-                    <button class="tool-btn" id="reset-progress-btn">🔄 Reset Progress</button>
+                <div class="overview-card">
+                    <h3>📊 Difficulty Levels</h3>
+                    <ul style="list-style: none; margin-left: 0;">
+                        <li style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                            <span class="badge badge-easy">Section A</span>
+                            <span>Foundation - Direct application</span>
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                            <span class="badge badge-medium">Section B</span>
+                            <span>Intermediate - Multi-step</span>
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                            <span class="badge badge-hard">Section C</span>
+                            <span>Advanced - Complex integration</span>
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                            <span class="badge badge-proof">Section D</span>
+                            <span>Proof-level - Rigorous mathematics</span>
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 1rem;">
+                            <span class="badge badge-trap">Section E</span>
+                            <span>Traps - Common misconceptions</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="overview-card">
+                    <h3>⚡ Key Features</h3>
+                    <ul>
+                        <li>Complete epsilon-delta proof coverage</li>
+                        <li>250+ problems with full solutions</li>
+                        <li>Interactive progress tracking</li>
+                        <li>25-question mastery examination</li>
+                        <li>Real-time performance analytics</li>
+                        <li>Formula reference sheet</li>
+                    </ul>
                 </div>
             </div>
-        </aside>
 
-        <!-- Main Content Area -->
-        <main class="content-area" id="content-area">
-            <!-- Overview Section -->
-            <section id="overview-section" class="content-section active">
-                <h2>Welcome to the Calculus Mastery System</h2>
-                
-                <div class="overview-grid">
-                    <div class="overview-card">
-                        <h3>📊 System Features</h3>
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn-tectonic btn-large" onclick="showSection('modules')">Begin Course →</button>
+            </div>
+        </section>
+
+        <!-- Modules Section -->
+        <section id="modules-section" class="content-section">
+            <div class="section-header">
+                <h2>Course Modules</h2>
+                <p class="section-intro">Comprehensive lessons organized for progressive mastery through rigorous mathematical foundations.</p>
+            </div>
+
+            <!-- Module 1 -->
+            <div class="module-title-bar">
+                <h3>📚 Module 1: Functions</h3>
+                <span class="module-stats">5 Lessons • 50 Problems</span>
+            </div>
+
+            <div class="lesson-grid">
+                <!-- Lesson 1.1 -->
+                <div class="lesson-slab" id="lesson-1-1">
+                    <span class="lesson-tag">Core Concept • 30 min</span>
+                    <h3>1.1 Relations & Functions</h3>
+                    
+                    <div class="learning-objectives">
+                        <strong>Learning Objectives</strong>
                         <ul>
-                            <li>15 comprehensive lessons across 3 modules</li>
-                            <li>250+ practice problems with full solutions</li>
-                            <li>Progressive difficulty levels (A through E)</li>
-                            <li>Epsilon-delta proof training</li>
-                            <li>Mastery examination system</li>
-                            <li>Progress tracking and analytics</li>
+                            <li>Distinguish between relations and functions</li>
+                            <li>Apply the vertical line test</li>
+                            <li>Use function notation correctly</li>
                         </ul>
                     </div>
 
-                    <div class="overview-card">
-                        <h3>🎯 Learning Path</h3>
-                        <div class="learning-path">
-                            <div class="path-item">
-                                <span class="path-number">1</span>
-                                <div class="path-content">
-                                    <strong>Module 1: Functions</strong>
-                                    <p>Review prerequisite concepts</p>
-                                </div>
-                            </div>
-                            <div class="path-arrow">↓</div>
-                            <div class="path-item">
-                                <span class="path-number">2</span>
-                                <div class="path-content">
-                                    <strong>Module 2: Limits</strong>
-                                    <p>Master the core concept</p>
-                                </div>
-                            </div>
-                            <div class="path-arrow">↓</div>
-                            <div class="path-item">
-                                <span class="path-number">3</span>
-                                <div class="path-content">
-                                    <strong>Module 3: Continuity</strong>
-                                    <p>Apply and integrate knowledge</p>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="definition-box">
+                        <strong>Definition: Function</strong>
+                        <p>A function from A to B is a relation where each element a ∈ A corresponds to exactly one element b ∈ B.</p>
                     </div>
 
-                    <div class="overview-card">
-                        <h3>📈 Problem Difficulty Levels</h3>
-                        <ul class="difficulty-list">
-                            <li><span class="badge badge-easy">Section A</span> Foundation (Easy)</li>
-                            <li><span class="badge badge-medium">Section B</span> Intermediate</li>
-                            <li><span class="badge badge-hard">Section C</span> Advanced</li>
-                            <li><span class="badge badge-proof">Section D</span> Proof-Level</li>
-                            <li><span class="badge badge-trap">Section E</span> Tricky Edge Cases</li>
+                    <div class="theorem-box">
+                        <strong>Vertical Line Test</strong>
+                        <p>A graph represents a function if and only if no vertical line intersects the graph more than once.</p>
+                    </div>
+
+                    <button class="btn-tectonic" onclick="navigateTo('problems', 'lesson-1-1')">Practice Problems (10)</button>
+                </div>
+
+                <!-- Lesson 1.2 -->
+                <div class="lesson-slab" id="lesson-1-2">
+                    <span class="lesson-tag">Operations • 40 min</span>
+                    <h3>1.2 Function Operations</h3>
+                    
+                    <div class="definition-box">
+                        <strong>Composition</strong>
+                        <p>$$(f \circ g)(x) = f(g(x))$$</p>
+                    </div>
+
+                    <div class="key-point">
+                        <strong>⚠️ Warning</strong>
+                        <p>Composition is NOT commutative: $$(f \circ g)(x) \neq (g \circ f)(x)$$ in general.</p>
+                    </div>
+
+                    <button class="btn-tectonic" onclick="navigateTo('problems', 'lesson-1-2')">Practice Problems (12)</button>
+                </div>
+
+                <!-- Lesson 1.3 -->
+                <div class="lesson-slab" id="lesson-1-3">
+                    <span class="lesson-tag">Domain & Range • 35 min</span>
+                    <h3>1.3 Domain and Range</h3>
+                    
+                    <div class="definition-box">
+                        <strong>Domain $$D_f$$</strong>
+                        <p>The set of all permissible input values (x-values) for which the function is defined.</p>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>Example</strong>
+                        <p>For $$f(x) = \frac{1}{x-3}$$, we need $$x-3 \neq 0$$, so $$x \neq 3$$.</p>
+                        <p>Domain: $$(-\infty, 3) \cup (3, \infty)$$</p>
+                    </div>
+
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">Practice Problems (10)</button>
+                </div>
+
+                <!-- Lesson 1.4 -->
+                <div class="lesson-slab" id="lesson-1-4">
+                    <span class="lesson-tag">Classification • 35 min</span>
+                    <h3>1.4 Types of Functions</h3>
+                    <div class="learning-objectives">
+                        <strong>Learning Objectives</strong>
+                        <ul>
+                            <li>Identify polynomial, rational, and piecewise functions</li>
+                            <li>Understand properties of transcendental functions</li>
                         </ul>
                     </div>
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">Practice Problems (10)</button>
+                </div>
 
-                    <div class="overview-card">
-                        <h3>⚡ Quick Start Guide</h3>
-                        <ol>
-                            <li>Navigate through modules using the sidebar</li>
-                            <li>Study each lesson's theory and examples</li>
-                            <li>Practice problems for each topic</li>
-                            <li>Check solutions (collapsible sections)</li>
-                            <li>Take the mastery test when ready</li>
+                <!-- Lesson 1.5 -->
+                <div class="lesson-slab" id="lesson-1-5">
+                    <span class="lesson-tag">Inverse Theory • 30 min</span>
+                    <h3>1.5 Inverse Functions</h3>
+                    
+                    <div class="theorem-box">
+                        <strong>Horizontal Line Test</strong>
+                        <p>A function is one-to-one (and has an inverse) if and only if no horizontal line intersects its graph more than once.</p>
+                    </div>
+
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">Practice Problems (8)</button>
+                </div>
+            </div>
+
+            <!-- Module 2 -->
+            <div class="module-title-bar" style="margin-top: 4rem;">
+                <h3>∞ Module 2: Limits</h3>
+                <span class="module-stats">7 Lessons • 135 Problems</span>
+            </div>
+
+            <div class="lesson-grid">
+                <!-- Lesson 2.1 -->
+                <div class="lesson-slab" id="lesson-2-1">
+                    <span class="lesson-tag">Introduction • 45 min</span>
+                    <h3>2.1 Introduction to Limits</h3>
+                    <div class="definition-box">
+                        <strong>Intuitive Definition</strong>
+                        <p>We write $$\lim_{x \to b} f(x) = L$$ if f(x) gets arbitrarily close to L as x approaches b.</p>
+                    </div>
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">Practice Problems (20)</button>
+                </div>
+
+                <!-- Lesson 2.2 -->
+                <div class="lesson-slab" id="lesson-2-2">
+                    <span class="lesson-tag">Rigorous Proofs • 90 min</span>
+                    <h3>2.2 Epsilon-Delta Definition</h3>
+                    <div class="theorem-box">
+                        <strong>Formal Definition</strong>
+                        <p>$$\lim_{x \to b} f(x) = L$$ means:</p>
+                        <p>For all $$\epsilon > 0$$, there exists $$\delta > 0$$ such that:</p>
+                        <p>$$0 < |x - b| < \delta \implies |f(x) - L| < \epsilon$$</p>
+                    </div>
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">Practice Problems (20)</button>
+                </div>
+
+                <!-- Lesson 2.3 -->
+                <div class="lesson-slab" id="lesson-2-3">
+                    <span class="lesson-tag">Basic Theorems • 40 min</span>
+                    <h3>2.3 Basic Limit Laws</h3>
+                    <div class="math-block">
+                        $$\lim_{x \to b} [cf(x)] = c \cdot \lim_{x \to b} f(x)$$
+                        $$\lim_{x \to b} [f(x) \pm g(x)] = L \pm M$$
+                    </div>
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">Practice Problems (15)</button>
+                </div>
+
+                <!-- Lesson 2.4 -->
+                <div class="lesson-slab" id="lesson-2-4">
+                    <span class="lesson-tag">Algebraic Methods • 50 min</span>
+                    <h3>2.4 Algebraic Limit Theorems</h3>
+                    <div class="key-point">
+                        <strong>Quotient Rule</strong>
+                        <p>$$\lim_{x \to b} \frac{f(x)}{g(x)} = \frac{L}{M}$$ provided $$M \neq 0$$. If $$M=0$$, further analysis is required.</p>
+                    </div>
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">Practice Problems (20)</button>
+                </div>
+
+                <!-- Lesson 2.5 -->
+                <div class="lesson-slab" id="lesson-2-5">
+                    <span class="lesson-tag">Directional Limits • 45 min</span>
+                    <h3>2.5 One-Sided Limits</h3>
+                    <div class="theorem-box">
+                        <strong>Existence Theorem</strong>
+                        <p>The limit exists if and only if both left and right limits exist and are equal.</p>
+                    </div>
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">Practice Problems (20)</button>
+                </div>
+
+                <!-- Lesson 2.6 -->
+                <div class="lesson-slab" id="lesson-2-6">
+                    <span class="lesson-tag">Asymptotes • 50 min</span>
+                    <h3>2.6 Infinite Limits</h3>
+                    <div class="definition-box">
+                        <strong>Vertical Asymptote</strong>
+                        <p>Line $$x=a$$ is a VA if $$\lim_{x \to a^\pm} f(x) = \pm\infty$$.</p>
+                    </div>
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">Practice Problems (20)</button>
+                </div>
+
+                <!-- Lesson 2.7 -->
+                <div class="lesson-slab" id="lesson-2-7">
+                    <span class="lesson-tag">End Behavior • 45 min</span>
+                    <h3>2.7 Limits at Infinity</h3>
+                    <div class="key-point">
+                        <strong>Degree Rule</strong>
+                        <p>For rational functions, compare degrees of numerator and denominator to determine the horizontal asymptote.</p>
+                    </div>
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">Practice Problems (20)</button>
+                </div>
+            </div>
+
+            <!-- Module 3 -->
+            <div class="module-title-bar" style="margin-top: 4rem;">
+                <h3>〰️ Module 3: Continuity</h3>
+                <span class="module-stats">3 Lessons • 65 Problems</span>
+            </div>
+
+            <div class="lesson-grid">
+                <!-- Lesson 3.1 -->
+                <div class="lesson-slab" id="lesson-3-1">
+                    <span class="lesson-tag">Point Continuity • 60 min</span>
+                    <h3>3.1 Continuity at a Point</h3>
+                    <div class="definition-box">
+                        <strong>Three Conditions</strong>
+                        <ol style="margin-left: 1.5rem;">
+                            <li>$$f(c)$$ is defined</li>
+                            <li>$$\lim_{x \to c} f(x)$$ exists</li>
+                            <li>$$\lim_{x \to c} f(x) = f(c)$$</li>
                         </ol>
                     </div>
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">Practice Problems (25)</button>
                 </div>
 
-                <div class="cta-section">
-                    <button class="btn-primary btn-large" onclick="showSection('modules')">
-                        Start Learning →
-                    </button>
-                </div>
-            </section>
-
-            <!-- Modules Section -->
-            <section id="modules-section" class="content-section">
-                <h2>Course Modules</h2>
-                <p class="section-intro">Comprehensive lessons organized for progressive mastery</p>
-
-                <!-- Module 1: Functions -->
-                <div class="module-content" id="module-1-content">
-                    <div class="module-title-bar">
-                        <h3>📚 Module 1: Functions (Prerequisites)</h3>
-                        <span class="module-stats">5 Lessons • 50 Problems • ~4 hours</span>
+                <!-- Lesson 3.2 -->
+                <div class="lesson-slab" id="lesson-3-2">
+                    <span class="lesson-tag">Theorems • 45 min</span>
+                    <h3>3.2 Continuity Theorems</h3>
+                    <div class="theorem-box">
+                        <strong>Intermediate Value Theorem</strong>
+                        <p>If f is continuous on [a,b] and k is between f(a) and f(b), there exists c in (a,b) such that f(c) = k.</p>
                     </div>
-
-                    <div class="lessons-container">
-                        <!-- Lesson 1.1 -->
-                        <div class="lesson-card" id="lesson-1-1">
-                            <div class="lesson-header">
-                                <h4>Lesson 1.1: Relations and Functions</h4>
-                                <span class="lesson-time">⏱️ 30 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Distinguish between relations and functions</li>
-                                        <li>Apply the vertical line test</li>
-                                        <li>Use function notation correctly</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <h5>Key Concepts</h5>
-                                    
-                                    <div class="definition-box">
-                                        <strong>Definition: Relation</strong>
-                                        <p>A relation from set A to set B is any nonempty subset of A × B.</p>
-                                    </div>
-                                    
-                                    <div class="definition-box">
-                                        <strong>Definition: Function</strong>
-                                        <p>A function from A to B is a relation where each element a ∈ A corresponds to exactly one element b ∈ B.</p>
-                                        <p class="math-display">$$f: A \to B$$</p>
-                                    </div>
-
-                                    <div class="key-point">
-                                        <strong>🔑 Key Difference:</strong> In a function, no two ordered pairs have the same first component.
-                                    </div>
-
-                                    <div class="theorem-box">
-                                        <strong>Vertical Line Test</strong>
-                                        <p>A graph represents a function if and only if no vertical line intersects the graph more than once.</p>
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems', 'lesson-1-1')">
-                                    Practice Problems (10) →
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Lesson 1.2 -->
-                        <div class="lesson-card" id="lesson-1-2">
-                            <div class="lesson-header">
-                                <h4>Lesson 1.2: Function Operations</h4>
-                                <span class="lesson-time">⏱️ 40 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Add, subtract, multiply, and divide functions</li>
-                                        <li>Compose functions correctly</li>
-                                        <li>Find domains of combined functions</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <div class="definition-box">
-                                        <strong>Function Composition</strong>
-                                        <p>$$(f \circ g)(x) = f(g(x))$$</p>
-                                        <p>Apply g first, then f to the result.</p>
-                                    </div>
-                                    
-                                    <div class="key-point">
-                                        <strong>⚠️ Warning:</strong> Composition is NOT commutative: $$(f \circ g)(x) \neq (g \circ f)(x)$$ in general.
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems', 'lesson-1-2')">
-                                    Practice Problems (12) →
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Lesson 1.3 -->
-                        <div class="lesson-card" id="lesson-1-3">
-                            <div class="lesson-header">
-                                <h4>Lesson 1.3: Domain and Range</h4>
-                                <span class="lesson-time">⏱️ 35 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Express domains and ranges using interval notation</li>
-                                        <li>Express domains and ranges using set notation</li>
-                                        <li>Identify domain restrictions for different function types</li>
-                                        <li>Determine range from function behavior</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <h5>Key Concepts</h5>
-                                    
-                                    <div class="definition-box">
-                                        <strong>Domain</strong>
-                                        <p>The domain of a function f is the set of all permissible input values (x-values).</p>
-                                        <p><strong>Notation:</strong></p>
-                                        <p>• Interval: $$[a, b]$$ means $$a \leq x \leq b$$</p>
-                                        <p>• Set: $$D_f = \{x \in \mathbb{R} : x \geq 0\}$$</p>
-                                    </div>
-                                    
-                                    <div class="definition-box">
-                                        <strong>Range</strong>
-                                        <p>The range of a function f is the set of all possible output values (y-values).</p>
-                                    </div>
-
-                                    <div class="theorem-box">
-                                        <strong>Common Domain Restrictions</strong>
-                                        <ul>
-                                            <li><strong>Rational Functions:</strong> Denominator ≠ 0</li>
-                                            <li><strong>Square Root:</strong> Expression under root ≥ 0</li>
-                                            <li><strong>Logarithms:</strong> Argument > 0</li>
-                                            <li><strong>Polynomials:</strong> All real numbers</li>
-                                        </ul>
-                                    </div>
-
-                                    <div class="example-box">
-                                        <strong>Example:</strong> Find domain of $$f(x) = \frac{1}{x-3}$$
-                                        <p>Need $$x - 3 \neq 0$$, so $$x \neq 3$$</p>
-                                        <p>Domain: $$(-\infty, 3) \cup (3, \infty)$$</p>
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (10) →</button>
-                            </div>
-                        </div>
-
-                        <!-- Lesson 1.4 -->
-                        <div class="lesson-card" id="lesson-1-4">
-                            <div class="lesson-header">
-                                <h4>Lesson 1.4: Types of Functions</h4>
-                                <span class="lesson-time">⏱️ 35 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Identify different types of functions</li>
-                                        <li>Understand polynomial degree classification</li>
-                                        <li>Work with piecewise-defined functions</li>
-                                        <li>Recognize transcendental functions</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <h5>Function Types</h5>
-                                    
-                                    <div class="definition-box">
-                                        <strong>Linear Functions</strong>
-                                        <p>$$f(x) = mx + b$$ where $$m, b \in \mathbb{R}$$</p>
-                                        <p>Domain: All real numbers</p>
-                                        <p>Graph: Straight line with slope m</p>
-                                    </div>
-                                    
-                                    <div class="definition-box">
-                                        <strong>Polynomial Functions</strong>
-                                        <p>$$f(x) = a_n x^n + a_{n-1}x^{n-1} + \cdots + a_1 x + a_0$$</p>
-                                        <p>Degree: Highest power of x</p>
-                                        <p>Domain: All real numbers</p>
-                                    </div>
-
-                                    <div class="definition-box">
-                                        <strong>Rational Functions</strong>
-                                        <p>$$f(x) = \frac{p(x)}{q(x)}$$ where p, q are polynomials</p>
-                                        <p>Domain: All x where $$q(x) \neq 0$$</p>
-                                    </div>
-
-                                    <div class="definition-box">
-                                        <strong>Piecewise Functions</strong>
-                                        <p>Defined by different formulas on different intervals</p>
-                                        <p>Example: $$f(x) = \begin{cases} x^2 & x < 0 \\ 2x & x \geq 0 \end{cases}$$</p>
-                                    </div>
-
-                                    <div class="key-point">
-                                        <strong>🔑 Greatest Integer Function:</strong> $$f(x) = \lfloor x \rfloor$$ gives the largest integer ≤ x
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (10) →</button>
-                            </div>
-                        </div>
-
-                        <!-- Lesson 1.5 -->
-                        <div class="lesson-card" id="lesson-1-5">
-                            <div class="lesson-header">
-                                <h4>Lesson 1.5: Inverse Functions</h4>
-                                <span class="lesson-time">⏱️ 30 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Determine if a function is one-to-one</li>
-                                        <li>Apply the horizontal line test</li>
-                                        <li>Find inverse functions algebraically</li>
-                                        <li>Verify inverse relationships</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <h5>Key Concepts</h5>
-                                    
-                                    <div class="definition-box">
-                                        <strong>One-to-One Function</strong>
-                                        <p>A function f is one-to-one if different inputs produce different outputs:</p>
-                                        <p>$$x_1 \neq x_2 \implies f(x_1) \neq f(x_2)$$</p>
-                                    </div>
-                                    
-                                    <div class="theorem-box">
-                                        <strong>Horizontal Line Test</strong>
-                                        <p>A function is one-to-one if and only if no horizontal line intersects its graph more than once.</p>
-                                    </div>
-
-                                    <div class="definition-box">
-                                        <strong>Inverse Function</strong>
-                                        <p>If f is one-to-one, its inverse $$f^{-1}$$ satisfies:</p>
-                                        <p>$$f^{-1}(f(x)) = x$$ and $$f(f^{-1}(x)) = x$$</p>
-                                    </div>
-
-                                    <div class="example-box">
-                                        <strong>Finding an Inverse:</strong>
-                                        <ol>
-                                            <li>Replace f(x) with y</li>
-                                            <li>Swap x and y</li>
-                                            <li>Solve for y</li>
-                                            <li>Replace y with $$f^{-1}(x)$$</li>
-                                        </ol>
-                                        <p><strong>Example:</strong> If $$f(x) = 2x - 3$$</p>
-                                        <p>Then $$f^{-1}(x) = \frac{x + 3}{2}$$</p>
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (8) →</button>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">Practice Problems (20)</button>
                 </div>
 
-                <!-- Module 2: Limits -->
-                <div class="module-content" id="module-2-content" style="margin-top: 3rem;">
-                    <div class="module-title-bar">
-                        <h3>∞ Module 2: Limits (Core Concepts)</h3>
-                        <span class="module-stats">7 Lessons • 135 Problems • ~12 hours</span>
+                <!-- Lesson 3.3 -->
+                <div class="lesson-slab" id="lesson-3-3">
+                    <span class="lesson-tag">Discontinuities • 50 min</span>
+                    <h3>3.3 Types of Discontinuity</h3>
+                    <div class="learning-objectives">
+                        <strong>Classification</strong>
+                        <ul>
+                            <li>Removable (Hole)</li>
+                            <li>Jump (Step)</li>
+                            <li>Infinite (Asymptote)</li>
+                        </ul>
                     </div>
-
-                    <div class="lessons-container">
-                        <!-- Lesson 2.1 -->
-                        <div class="lesson-card" id="lesson-2-1">
-                            <div class="lesson-header">
-                                <h4>Lesson 2.1: Introduction to Limits</h4>
-                                <span class="lesson-time">⏱️ 45 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Understand the intuitive concept of a limit</li>
-                                        <li>Evaluate limits graphically and numerically</li>
-                                        <li>Use basic factoring techniques</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <div class="definition-box">
-                                        <strong>Intuitive Definition</strong>
-                                        <p>We write $$\lim_{x \to b} f(x) = L$$ if f(x) gets arbitrarily close to L as x approaches b.</p>
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems')">
-                                    Practice Problems (20) →
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Lesson 2.2 -->
-                        <div class="lesson-card" id="lesson-2-2">
-                            <div class="lesson-header">
-                                <h4>Lesson 2.2: Epsilon-Delta Definition</h4>
-                                <span class="lesson-time">⏱️ 90 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Understand the formal definition of a limit</li>
-                                        <li>Construct epsilon-delta proofs</li>
-                                        <li>Find appropriate delta values</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <div class="theorem-box">
-                                        <strong>Formal Definition</strong>
-                                        <p>$$\lim_{x \to b} f(x) = L$$ means:</p>
-                                        <p>For all ε > 0, there exists δ > 0 such that</p>
-                                        <p>$$0 < |x - b| < \delta \implies |f(x) - L| < \epsilon$$</p>
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems')">
-                                    Practice Problems (20 with proofs) →
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Lesson 2.3 -->
-                        <div class="lesson-card" id="lesson-2-3">
-                            <div class="lesson-header">
-                                <h4>Lesson 2.3: Basic Limit Theorems</h4>
-                                <span class="lesson-time">⏱️ 40 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Apply the limit of a constant</li>
-                                        <li>Apply the identity limit</li>
-                                        <li>Evaluate polynomial limits</li>
-                                        <li>Use the constant multiple rule</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <div class="theorem-box">
-                                        <strong>Basic Limit Laws</strong>
-                                        <p>1. $$\lim_{x \to b} c = c$$ (constant)</p>
-                                        <p>2. $$\lim_{x \to b} x = b$$ (identity)</p>
-                                        <p>3. $$\lim_{x \to b} [cf(x)] = c \cdot \lim_{x \to b} f(x)$$</p>
-                                        <p>4. $$\lim_{x \to b} f(x) = f(b)$$ (for polynomials)</p>
-                                    </div>
-                                    
-                                    <div class="example-box">
-                                        <strong>Example:</strong> $$\lim_{x \to 2} (3x^2 - 5) = 3(4) - 5 = 7$$
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (15) →</button>
-                            </div>
-                        </div>
-
-                        <!-- Lesson 2.4 -->
-                        <div class="lesson-card" id="lesson-2-4">
-                            <div class="lesson-header">
-                                <h4>Lesson 2.4: Algebraic Limit Theorems</h4>
-                                <span class="lesson-time">⏱️ 50 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Apply sum and difference rules</li>
-                                        <li>Apply product and quotient rules</li>
-                                        <li>Use power and root rules</li>
-                                        <li>Combine multiple limit laws</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <div class="theorem-box">
-                                        <strong>Algebraic Limit Laws</strong>
-                                        <p>If $$\lim_{x \to b} f(x) = L$$ and $$\lim_{x \to b} g(x) = M$$:</p>
-                                        <p>1. $$\lim_{x \to b} [f(x) \pm g(x)] = L \pm M$$</p>
-                                        <p>2. $$\lim_{x \to b} [f(x) \cdot g(x)] = L \cdot M$$</p>
-                                        <p>3. $$\lim_{x \to b} \frac{f(x)}{g(x)} = \frac{L}{M}$$ if $$M \neq 0$$</p>
-                                        <p>4. $$\lim_{x \to b} [f(x)]^n = L^n$$</p>
-                                        <p>5. $$\lim_{x \to b} \sqrt[n]{f(x)} = \sqrt[n]{L}$$</p>
-                                    </div>
-                                    
-                                    <div class="key-point">
-                                        <strong>⚠️ Important:</strong> Quotient rule requires denominator limit ≠ 0
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (20) →</button>
-                            </div>
-                        </div>
-
-                        <!-- Lesson 2.5 -->
-                        <div class="lesson-card" id="lesson-2-5">
-                            <div class="lesson-header">
-                                <h4>Lesson 2.5: One-Sided Limits</h4>
-                                <span class="lesson-time">⏱️ 45 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Evaluate right-hand limits</li>
-                                        <li>Evaluate left-hand limits</li>
-                                        <li>Relate one-sided limits to two-sided limits</li>
-                                        <li>Handle piecewise function limits</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <div class="definition-box">
-                                        <strong>Right-Hand Limit</strong>
-                                        <p>$$\lim_{x \to b^+} f(x) = L$$ means f(x) approaches L as x approaches b from the right</p>
-                                    </div>
-                                    
-                                    <div class="definition-box">
-                                        <strong>Left-Hand Limit</strong>
-                                        <p>$$\lim_{x \to b^-} f(x) = L$$ means f(x) approaches L as x approaches b from the left</p>
-                                    </div>
-
-                                    <div class="theorem-box">
-                                        <strong>Two-Sided Limit Theorem</strong>
-                                        <p>$$\lim_{x \to b} f(x) = L$$ exists if and only if:</p>
-                                        <p>$$\lim_{x \to b^-} f(x) = L$$ and $$\lim_{x \to b^+} f(x) = L$$</p>
-                                        <p>Both one-sided limits must exist and be equal.</p>
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (20) →</button>
-                            </div>
-                        </div>
-
-                        <!-- Lesson 2.6 -->
-                        <div class="lesson-card" id="lesson-2-6">
-                            <div class="lesson-header">
-                                <h4>Lesson 2.6: Infinite Limits</h4>
-                                <span class="lesson-time">⏱️ 50 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Identify vertical asymptotes</li>
-                                        <li>Evaluate infinite limits</li>
-                                        <li>Perform sign analysis</li>
-                                        <li>Recognize indeterminate forms</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <div class="definition-box">
-                                        <strong>Infinite Limit</strong>
-                                        <p>$$\lim_{x \to a} f(x) = +\infty$$ means f(x) increases without bound as x approaches a</p>
-                                        <p>$$\lim_{x \to a} f(x) = -\infty$$ means f(x) decreases without bound as x approaches a</p>
-                                    </div>
-                                    
-                                    <div class="theorem-box">
-                                        <strong>Vertical Asymptote</strong>
-                                        <p>The line $$x = a$$ is a vertical asymptote if at least one of these holds:</p>
-                                        <p>$$\lim_{x \to a^+} f(x) = \pm\infty$$ or $$\lim_{x \to a^-} f(x) = \pm\infty$$</p>
-                                    </div>
-
-                                    <div class="key-point">
-                                        <strong>🔑 Sign Analysis:</strong> For $$\frac{c}{0^+}$$ where c > 0: result is $$+\infty$$<br>
-                                        For $$\frac{c}{0^-}$$ where c > 0: result is $$-\infty$$
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (20) →</button>
-                            </div>
-                        </div>
-
-                        <!-- Lesson 2.7 -->
-                        <div class="lesson-card" id="lesson-2-7">
-                            <div class="lesson-header">
-                                <h4>Lesson 2.7: Limits at Infinity</h4>
-                                <span class="lesson-time">⏱️ 45 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Evaluate limits as x → ∞</li>
-                                        <li>Identify horizontal asymptotes</li>
-                                        <li>Use degree comparison method</li>
-                                        <li>Analyze end behavior of functions</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <div class="definition-box">
-                                        <strong>Limit at Infinity</strong>
-                                        <p>$$\lim_{x \to \infty} f(x) = L$$ means f(x) approaches L as x grows without bound</p>
-                                    </div>
-                                    
-                                    <div class="theorem-box">
-                                        <strong>Horizontal Asymptote</strong>
-                                        <p>The line $$y = L$$ is a horizontal asymptote if:</p>
-                                        <p>$$\lim_{x \to \infty} f(x) = L$$ or $$\lim_{x \to -\infty} f(x) = L$$</p>
-                                    </div>
-
-                                    <div class="theorem-box">
-                                        <strong>Degree Comparison for $$\frac{p(x)}{q(x)}$$</strong>
-                                        <p>Let n = degree of numerator, m = degree of denominator:</p>
-                                        <p>• If n < m: $$\lim_{x \to \infty} = 0$$</p>
-                                        <p>• If n = m: $$\lim_{x \to \infty} = \frac{a_n}{b_m}$$ (ratio of leading coefficients)</p>
-                                        <p>• If n > m: $$\lim_{x \to \infty} = \pm\infty$$</p>
-                                    </div>
-
-                                    <div class="key-point">
-                                        <strong>🔑 Key Rule:</strong> $$\lim_{x \to \infty} \frac{1}{x^r} = 0$$ for any positive r
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (20) →</button>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">Practice Problems (20)</button>
                 </div>
+            </div>
+        </section>
 
-                <!-- Module 3: Continuity -->
-                <div class="module-content" id="module-3-content" style="margin-top: 3rem;">
-                    <div class="module-title-bar">
-                        <h3>〰️ Module 3: Continuity</h3>
-                        <span class="module-stats">3 Lessons • 65 Problems • ~6 hours</span>
-                    </div>
+        <!-- Problems Section -->
+        <section id="problems-section" class="content-section">
+            <div class="section-header">
+                <h2>Practice Problems</h2>
+                <p class="section-intro">Apply your knowledge through carefully designed problems spanning all difficulty levels.</p>
+            </div>
 
-                    <div class="lessons-container">
-                        <!-- Lesson 3.1 -->
-                        <div class="lesson-card" id="lesson-3-1">
-                            <div class="lesson-header">
-                                <h4>Lesson 3.1: Continuity at a Point</h4>
-                                <span class="lesson-time">⏱️ 60 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Test functions for continuity</li>
-                                        <li>Apply the three-condition definition</li>
-                                        <li>Identify points of discontinuity</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <div class="definition-box">
-                                        <strong>Definition: Continuous at b</strong>
-                                        <p>f is continuous at b if:</p>
-                                        <ol>
-                                            <li>f(b) exists</li>
-                                            <li>$$\lim_{x \to b} f(x)$$ exists</li>
-                                            <li>$$\lim_{x \to b} f(x) = f(b)$$</li>
-                                        </ol>
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems')">
-                                    Practice Problems (25) →
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Lesson 3.2 -->
-                        <div class="lesson-card" id="lesson-3-2">
-                            <div class="lesson-header">
-                                <h4>Lesson 3.2: Continuity Theorems</h4>
-                                <span class="lesson-time">⏱️ 45 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Apply continuity preservation theorems</li>
-                                        <li>Identify continuous function types</li>
-                                        <li>Use composition to determine continuity</li>
-                                        <li>Apply theorems to complex functions</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <div class="theorem-box">
-                                        <strong>Continuity Preservation</strong>
-                                        <p>If f and g are continuous at b, then:</p>
-                                        <p>1. $$f \pm g$$ is continuous at b</p>
-                                        <p>2. $$f \cdot g$$ is continuous at b</p>
-                                        <p>3. $$\frac{f}{g}$$ is continuous at b (if $$g(b) \neq 0$$)</p>
-                                    </div>
-                                    
-                                    <div class="theorem-box">
-                                        <strong>Continuous Function Types</strong>
-                                        <p>• <strong>Polynomial functions:</strong> Continuous everywhere</p>
-                                        <p>• <strong>Rational functions:</strong> Continuous on their domain (where denominator ≠ 0)</p>
-                                        <p>• <strong>Root functions:</strong> $$\sqrt[n]{x}$$ continuous where defined</p>
-                                    </div>
-
-                                    <div class="example-box">
-                                        <strong>Example:</strong> $$f(x) = \frac{x^2 + 1}{x - 2}$$ is continuous on $$(-\infty, 2) \cup (2, \infty)$$
-                                    </div>
-
-                                    <div class="key-point">
-                                        <strong>🔑 Composition:</strong> If g is continuous at b and f is continuous at g(b), then $$(f \circ g)$$ is continuous at b.
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (20) →</button>
-                            </div>
-                        </div>
-
-                        <!-- Lesson 3.3 -->
-                        <div class="lesson-card" id="lesson-3-3">
-                            <div class="lesson-header">
-                                <h4>Lesson 3.3: Types of Discontinuity</h4>
-                                <span class="lesson-time">⏱️ 50 min</span>
-                            </div>
-                            <div class="lesson-body">
-                                <div class="learning-objectives">
-                                    <strong>Learning Objectives:</strong>
-                                    <ul>
-                                        <li>Identify removable discontinuities</li>
-                                        <li>Identify essential discontinuities</li>
-                                        <li>Classify jump discontinuities</li>
-                                        <li>Classify infinite discontinuities</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="theory-content">
-                                    <div class="definition-box">
-                                        <strong>Removable Discontinuity</strong>
-                                        <p>At point b, a discontinuity is removable if:</p>
-                                        <ol>
-                                            <li>$$\lim_{x \to b} f(x)$$ exists</li>
-                                            <li>Either f(b) is undefined OR $$f(b) \neq \lim_{x \to b} f(x)$$</li>
-                                        </ol>
-                                        <p><strong>Can be "fixed"</strong> by redefining f(b) = limit value</p>
-                                    </div>
-                                    
-                                    <div class="definition-box">
-                                        <strong>Essential Discontinuity</strong>
-                                        <p>At point b, a discontinuity is essential if:</p>
-                                        <p>$$\lim_{x \to b} f(x)$$ does not exist</p>
-                                        <p><strong>Cannot be fixed</strong> by redefining the function</p>
-                                    </div>
-
-                                    <div class="example-box">
-                                        <strong>Types of Essential Discontinuities:</strong>
-                                        <p>• <strong>Jump:</strong> One-sided limits exist but are different</p>
-                                        <p>• <strong>Infinite:</strong> At least one one-sided limit is ±∞</p>
-                                    </div>
-
-                                    <div class="key-point">
-                                        <strong>⚠️ Classification Strategy:</strong><br>
-                                        1. Check if limit exists<br>
-                                        2. If yes → removable<br>
-                                        3. If no → essential (check jump vs infinite)
-                                    </div>
-                                </div>
-
-                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (20) →</button>
-                            </div>
-                        </div>
-                    </div>
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label>Module Filter</label>
+                    <select id="module-filter" onchange="applyFilters()">
+                        <option value="all">All Modules</option>
+                        <option value="1">Module 1: Functions</option>
+                        <option value="2">Module 2: Limits</option>
+                        <option value="3">Module 3: Continuity</option>
+                    </select>
                 </div>
-            </section>
-
-            <!-- Problems Section -->
-            <section id="problems-section" class="content-section">
-                <h2>Practice Problems (250+)</h2>
-                
-                <div class="filter-controls">
-                    <div class="filter-group">
-                        <label>Module:</label>
-                        <select id="module-filter">
-                            <option value="all">All Modules</option>
-                            <option value="1">Module 1: Functions</option>
-                            <option value="2">Module 2: Limits</option>
-                            <option value="3">Module 3: Continuity</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label>Difficulty:</label>
-                        <select id="difficulty-filter">
-                            <option value="all">All Levels</option>
-                            <option value="A">Section A (Easy)</option>
-                            <option value="B">Section B (Intermediate)</option>
-                            <option value="C">Section C (Advanced)</option>
-                            <option value="D">Section D (Proof)</option>
-                            <option value="E">Section E (Traps)</option>
-                        </select>
-                    </div>
-                    <button class="btn-secondary" onclick="applyFilters()">Apply Filters</button>
-                    <button class="btn-secondary" onclick="clearFilters()">Clear</button>
+                <div class="filter-group">
+                    <label>Difficulty Filter</label>
+                    <select id="difficulty-filter" onchange="applyFilters()">
+                        <option value="all">All Levels</option>
+                        <option value="A">Section A - Easy</option>
+                        <option value="B">Section B - Medium</option>
+                        <option value="C">Section C - Hard</option>
+                        <option value="D">Section D - Proof</option>
+                        <option value="E">Section E - Trap</option>
+                    </select>
                 </div>
+                <button class="btn-tectonic" onclick="clearFilters()" style="align-self: flex-end;">Clear Filters</button>
+            </div>
 
-                <div id="problems-container">
-                    <!-- Problems will be dynamically loaded here -->
-                    <p class="loading-text">Loading problems...</p>
-                </div>
-            </section>
+            <div id="problems-container"></div>
+        </section>
 
-            <!-- Mastery Test Section -->
-            <section id="mastery-section" class="content-section">
+        <!-- Mastery Test Section -->
+        <section id="mastery-section" class="content-section">
+            <div class="section-header">
                 <h2>Mastery Examination</h2>
-                
-                <div class="mastery-intro">
-                    <p><strong>25 comprehensive questions</strong> covering all modules</p>
-                    <p>⏱️ Recommended time: 90 minutes</p>
-                    <p>📊 Passing score: 18/25 (72%)</p>
-                </div>
-
-                <div class="mastery-warning">
-                    <strong>⚠️ Important:</strong> This examination should be taken only after completing all practice problems.
-                </div>
-
-                <button class="btn-primary btn-large" id="start-mastery-btn">
-                    Begin Mastery Examination
-                </button>
-
-                <div id="mastery-test-content" class="hidden">
-                    <!-- Mastery test questions will be loaded here -->
-                </div>
-            </section>
-
-            <!-- Progress Section -->
-            <section id="progress-section" class="content-section">
-                <h2>Your Progress Dashboard</h2>
-                
-                <div class="progress-grid">
-                    <div class="progress-card">
-                        <h3>Overall Progress</h3>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" id="overall-progress" style="width: 0%"></div>
-                        </div>
-                        <p class="progress-text"><span id="completed-count">0</span> / 250 problems completed</p>
-                    </div>
-
-                    <div class="progress-card">
-                        <h3>Module Completion</h3>
-                        <div class="module-progress">
-                            <div class="module-prog-item">
-                                <span>Module 1: Functions</span>
-                                <div class="mini-progress-bar">
-                                    <div class="mini-progress" id="module-1-progress" style="width: 0%"></div>
-                                </div>
-                                <span class="prog-percentage">0%</span>
-                            </div>
-                            <div class="module-prog-item">
-                                <span>Module 2: Limits</span>
-                                <div class="mini-progress-bar">
-                                    <div class="mini-progress" id="module-2-progress" style="width: 0%"></div>
-                                </div>
-                                <span class="prog-percentage">0%</span>
-                            </div>
-                            <div class="module-prog-item">
-                                <span>Module 3: Continuity</span>
-                                <div class="mini-progress-bar">
-                                    <div class="mini-progress" id="module-3-progress" style="width: 0%"></div>
-                                </div>
-                                <span class="prog-percentage">0%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="progress-card">
-                        <h3>Recent Activity</h3>
-                        <div id="activity-log">
-                            <p class="no-activity">No activity yet. Start practicing!</p>
-                        </div>
-                    </div>
-
-                    <div class="progress-card">
-                        <h3>Mastery Test Status</h3>
-                        <div id="mastery-status">
-                            <p class="status-text">Not yet attempted</p>
-                            <p class="recommendation">Complete at least 200 problems before attempting</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Formula Sheet Modal -->
-    <div id="formula-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>Quick Reference Formula Sheet</h2>
-            
-            <div class="formula-section">
-                <h3>Limit Laws</h3>
-                <div class="formula-list">
-                    <p>$$\lim_{x \to b} c = c$$</p>
-                    <p>$$\lim_{x \to b} x = b$$</p>
-                    <p>$$\lim_{x \to b} [f(x) \pm g(x)] = \lim_{x \to b} f(x) \pm \lim_{x \to b} g(x)$$</p>
-                    <p>$$\lim_{x \to b} [f(x) \cdot g(x)] = \lim_{x \to b} f(x) \cdot \lim_{x \to b} g(x)$$</p>
-                    <p>$$\lim_{x \to b} \frac{f(x)}{g(x)} = \frac{\lim_{x \to b} f(x)}{\lim_{x \to b} g(x)}$$ if $\lim_{x \to b} g(x) \neq 0$</p>
-                </div>
+                <p class="section-intro">Comprehensive 25-question assessment covering all three modules.</p>
             </div>
 
-            <div class="formula-section">
-                <h3>Epsilon-Delta Definition</h3>
-                <p>$$\lim_{x \to b} f(x) = L \iff \forall \epsilon > 0, \exists \delta > 0: 0 < |x - b| < \delta \implies |f(x) - L| < \epsilon$$</p>
+            <div class="dash-card" style="margin-bottom: 2rem;">
+                <p style="margin-bottom: 1rem;"><strong>Instructions:</strong> This examination tests your complete understanding of functions, limits, and continuity.</p>
+                <p style="margin-bottom: 1rem;"><strong>Time Limit:</strong> 90 minutes recommended</p>
+                <p><strong>Passing Score:</strong> 18/25 (72%)</p>
             </div>
 
-            <div class="formula-section">
-                <h3>Continuity</h3>
-                <p>f is continuous at b if and only if:</p>
-                <ol>
-                    <li>f(b) exists</li>
-                    <li>$\lim_{x \to b} f(x)$ exists</li>
-                    <li>$\lim_{x \to b} f(x) = f(b)$</li>
-                </ol>
+            <div style="background: rgba(243, 156, 18, 0.1); border-left: 4px solid #f39c12; padding: 1.5rem; margin-bottom: 2rem;">
+                <strong style="color: #f39c12;">Note:</strong> Complete all module lessons before attempting this examination.
+            </div>
+
+            <button class="btn-tectonic btn-large" id="start-mastery-btn">Begin Mastery Examination</button>
+            <div id="mastery-test-content" class="hidden" style="margin-top: 2rem;"></div>
+        </section>
+
+        <!-- Progress Dashboard -->
+        <section id="progress-section" class="content-section">
+            <div class="section-header">
+                <h2>Progress Dashboard</h2>
+                <p class="section-intro">Track your mastery across all modules with real-time analytics.</p>
+            </div>
+
+            <div class="dash-grid">
+                <div class="dash-card">
+                    <h3>Overall Progress</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="overall-progress" style="width: 0%;">0%</div>
+                    </div>
+                    <p class="progress-text"><span id="completed-count">0</span> / 250 Problems Completed</p>
+                </div>
+
+                <div class="dash-card">
+                    <h3>Module Breakdown</h3>
+                    <div class="module-prog-item">
+                        <span style="font-family: 'JetBrains Mono'; font-size: 0.85rem;">Module 1: Functions</span>
+                        <div class="mini-progress-bar">
+                            <div class="mini-progress" id="module-1-progress" style="width: 0%;"></div>
+                        </div>
+                        <span class="prog-percentage">0%</span>
+                    </div>
+                    <div class="module-prog-item">
+                        <span style="font-family: 'JetBrains Mono'; font-size: 0.85rem;">Module 2: Limits</span>
+                        <div class="mini-progress-bar">
+                            <div class="mini-progress" id="module-2-progress" style="width: 0%;"></div>
+                        </div>
+                        <span class="prog-percentage">0%</span>
+                    </div>
+                    <div class="module-prog-item">
+                        <span style="font-family: 'JetBrains Mono'; font-size: 0.85rem;">Module 3: Continuity</span>
+                        <div class="mini-progress-bar">
+                            <div class="mini-progress" id="module-3-progress" style="width: 0%;"></div>
+                        </div>
+                        <span class="prog-percentage">0%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- Floating Formula Tool -->
+<div class="formula-float" id="formula-float-btn" title="Quick Formula Sheet">
+    <span style="font-family: 'JetBrains Mono';">∑</span>
+</div>
+
+<!-- Formula Sheet Modal -->
+<div id="formula-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 style="color: var(--cyan-accent); margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 0.1rem;">Formula Reference</h2>
+        
+        <div class="formula-section">
+            <h3>Limit Laws</h3>
+            <div class="math-block">
+                $$\lim_{x \to c} [f(x) \pm g(x)] = \lim_{x \to c} f(x) \pm \lim_{x \to c} g(x)$$
+                $$\lim_{x \to c} [f(x) \cdot g(x)] = \lim_{x \to c} f(x) \cdot \lim_{x \to c} g(x)$$
+                $$\lim_{x \to c} \frac{f(x)}{g(x)} = \frac{\lim_{x \to c} f(x)}{\lim_{x \to c} g(x)}$$
+            </div>
+        </div>
+
+        <div class="formula-section">
+            <h3>Epsilon-Delta Definition</h3>
+            <div class="math-block">
+                $$\lim_{x \to c} f(x) = L \iff \forall \epsilon > 0, \exists \delta > 0 : 0 < |x - c| < \delta \implies |f(x) - L| < \epsilon$$
+            </div>
+        </div>
+
+        <div class="formula-section">
+            <h3>Continuity Definition</h3>
+            <div class="math-block">
+                $$f \text{ is continuous at } c \iff \lim_{x \to c} f(x) = f(c)$$
             </div>
         </div>
     </div>
+</div>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

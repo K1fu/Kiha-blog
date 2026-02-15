@@ -14,13 +14,28 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeModals();
     loadProgress();
     updateProgressDisplay();
+    updateHeaderStats();
+    
+    // Add event listeners for sidebar lesson links
+    const lessonLinks = document.querySelectorAll('.lesson-link');
+    lessonLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Get the hash from href (e.g., #lesson-1-1)
+            const href = this.getAttribute('href');
+            // Remove the # to get the ID
+            const targetId = href.substring(1);
+            
+            navigateTo('modules', targetId);
+        });
+    });
 });
 
 // === NAVIGATION FUNCTIONS ===
 function initializeNavigation() {
-    const navButtons = document.querySelectorAll('.nav-btn');
-    navButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
+    const navSlabs = document.querySelectorAll('.nav-slab');
+    navSlabs.forEach(slab => {
+        slab.addEventListener('click', function() {
             const section = this.getAttribute('data-section');
             showSection(section);
         });
@@ -28,11 +43,11 @@ function initializeNavigation() {
 }
 
 function showSection(sectionName) {
-    // Update navigation buttons
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('data-section') === sectionName) {
-            btn.classList.add('active');
+    // Update navigation slabs
+    document.querySelectorAll('.nav-slab').forEach(slab => {
+        slab.classList.remove('active');
+        if (slab.getAttribute('data-section') === sectionName) {
+            slab.classList.add('active');
         }
     });
     
@@ -49,12 +64,6 @@ function showSection(sectionName) {
         // Load section-specific content
         if (sectionName === 'problems') {
             loadProblems();
-            // Trigger MathJax after loading
-            if (window.MathJax) {
-                setTimeout(() => {
-                    MathJax.typesetPromise([targetSection]);
-                }, 100);
-            }
         }
         
         // Trigger MathJax for all sections
@@ -66,9 +75,47 @@ function showSection(sectionName) {
     }
 }
 
+// === UTILITY FUNCTIONS ===
+function navigateTo(section, subsection) {
+    showSection(section);
+    
+    if (subsection) {
+        // Wait for the section animation to trigger/DOM to be visible
+        setTimeout(() => {
+            const element = document.getElementById(subsection);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Optional: Flash the element to indicate selection
+                element.style.borderColor = 'var(--cyan-accent)';
+                setTimeout(() => {
+                    element.style.borderColor = ''; // Revert to CSS default
+                }, 1500);
+            }
+        }, 400); // 400ms matches the CSS transition/animation time roughly
+    }
+}
+
+// === UPDATE HEADER STATS ===
+function updateHeaderStats() {
+    const totalProblems = 250;
+    const completed = completedProblems.size;
+    const percentage = Math.round((completed / totalProblems) * 100);
+    
+    const headerProgress = document.getElementById('header-progress');
+    const headerCompleted = document.getElementById('header-completed');
+    
+    if (headerProgress) {
+        headerProgress.textContent = `${percentage}%`;
+    }
+    
+    if (headerCompleted) {
+        headerCompleted.textContent = completed;
+    }
+}
+
 // === SIDEBAR FUNCTIONS ===
 function initializeSidebar() {
-    const moduleHeaders = document.querySelectorAll('.module-header');
+    const moduleHeaders = document.querySelectorAll('.module-slab'); // Changed from .module-header to .module-slab based on Calc.html class
     moduleHeaders.forEach(header => {
         header.addEventListener('click', function(e) {
             e.preventDefault();
@@ -80,7 +127,7 @@ function initializeSidebar() {
                 const isExpanded = this.classList.contains('expanded');
                 
                 // Close all other modules
-                document.querySelectorAll('.module-header').forEach(h => {
+                document.querySelectorAll('.module-slab').forEach(h => {
                     h.classList.remove('expanded');
                 });
                 document.querySelectorAll('.lesson-list').forEach(l => {
@@ -98,7 +145,7 @@ function initializeSidebar() {
     
     // Expand Module 1 by default
     setTimeout(() => {
-        const firstModule = document.querySelector('.module-header[data-module="1"]');
+        const firstModule = document.querySelector('.module-slab[data-module="1"]');
         if (firstModule) {
             firstModule.click();
         }
@@ -108,11 +155,18 @@ function initializeSidebar() {
 // === MODAL FUNCTIONS ===
 function initializeModals() {
     const formulaBtn = document.getElementById('formula-sheet-btn');
+    const formulaFloat = document.getElementById('formula-float-btn');
     const formulaModal = document.getElementById('formula-modal');
     const closeBtn = document.querySelector('.close-modal');
     
     if (formulaBtn) {
         formulaBtn.addEventListener('click', function() {
+            formulaModal.classList.add('active');
+        });
+    }
+    
+    if (formulaFloat) {
+        formulaFloat.addEventListener('click', function() {
             formulaModal.classList.add('active');
         });
     }
@@ -135,8 +189,10 @@ function loadProblems() {
     const container = document.getElementById('problems-container');
     if (!container) return;
     
-    // Load actual problems
-    container.innerHTML = generateAllProblems();
+    // Only generate if empty (prevents duplicates on multiple clicks)
+    if (container.children.length === 0) {
+        container.innerHTML = generateAllProblems();
+    }
 }
 
 function generateAllProblems() {
@@ -257,7 +313,7 @@ function generateModuleProblems(moduleNum, moduleName, problems) {
                 </div>
                 <div class="problem-meta">
                     <span class="badge badge-${problem.difficulty.toLowerCase()}">${problem.section} - ${problem.difficulty}</span>
-                    <span class="time-badge">${problem.time}</span>
+                    <span class="time-badge" style="background:var(--slate-700); padding:0.25rem 0.5rem; border-radius:4px; font-size:0.75rem;">${problem.time}</span>
                 </div>
             </div>
             <div class="problem-body">
@@ -389,11 +445,17 @@ function updateProgressDisplay() {
     updateModuleProgress(1, 50);  // Module 1: 50 problems
     updateModuleProgress(2, 135); // Module 2: 135 problems
     updateModuleProgress(3, 65);  // Module 3: 65 problems
+    
+    // Update header stats
+    updateHeaderStats();
 }
 
 function updateModuleProgress(moduleNum, totalProblems) {
-    const progressBar = document.getElementById(`module-${moduleNum}-progress`);
-    if (!progressBar) return;
+    // There are now multiple progress bars (header mini bars and progress dashboard bars)
+    // We update the one in the sidebar and the dashboard
+    
+    const sidebarMini = document.getElementById(`mod${moduleNum}-mini`);
+    const dashboardBar = document.getElementById(`module-${moduleNum}-progress`);
     
     // Calculate problems completed for this module
     const moduleCompleted = [...completedProblems].filter(id => 
@@ -401,11 +463,19 @@ function updateModuleProgress(moduleNum, totalProblems) {
     ).length;
     
     const percentage = Math.round((moduleCompleted / totalProblems) * 100);
-    progressBar.style.width = `${percentage}%`;
     
-    const percentageText = progressBar.parentElement.nextElementSibling;
-    if (percentageText) {
-        percentageText.textContent = `${percentage}%`;
+    // Update sidebar mini progress bar
+    if (sidebarMini) {
+        sidebarMini.style.width = `${percentage}%`;
+    }
+    
+    // Update dashboard progress bar
+    if (dashboardBar) {
+        dashboardBar.style.width = `${percentage}%`;
+        const percentageText = dashboardBar.parentElement.nextElementSibling;
+        if (percentageText) {
+            percentageText.textContent = `${percentage}%`;
+        }
     }
 }
 
@@ -549,28 +619,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
-// === UTILITY FUNCTIONS ===
-function navigateTo(section, subsection) {
-    showSection(section);
-    
-    if (subsection) {
-        setTimeout(() => {
-            const element = document.getElementById(subsection);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
-        }, 300);
-    }
-}
-
-// === FORMULA SHEET ===
-function showFormulaSheet() {
-    const modal = document.getElementById('formula-modal');
-    if (modal) {
-        modal.classList.add('active');
-    }
-}
 
 // === EXPORT FUNCTIONS FOR INLINE USE ===
 window.showSection = showSection;
