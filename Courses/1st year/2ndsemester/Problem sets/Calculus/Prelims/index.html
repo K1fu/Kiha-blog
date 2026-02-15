@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculus Mastery System - Limits & Continuity</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234cc9f0' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Cpath d='M7 9h10M7 13h10M7 17h6'/%3E%3Ccircle cx='18' cy='7' r='1' fill='%234cc9f0'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="styles.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -219,13 +215,6 @@
                                         <strong>🔑 Key Difference:</strong> In a function, no two ordered pairs have the same first component.
                                     </div>
 
-                                    <div class="example-box">
-                                        <strong>Example 1:</strong>
-                                        <p>Which of the following are functions?</p>
-                                        <p>a) \( \{(1,2), (3,4), (1,5)\} \) — NOT a function (1 maps to both 2 and 5)</p>
-                                        <p>b) \( \{(1,2), (3,2), (5,2)\} \) — IS a function (each input maps to exactly one output)</p>
-                                    </div>
-
                                     <div class="theorem-box">
                                         <strong>Vertical Line Test</strong>
                                         <p>A graph represents a function if and only if no vertical line intersects the graph more than once.</p>
@@ -238,15 +227,614 @@
                             </div>
                         </div>
 
-                        <!-- Additional lessons would follow similar structure -->
-                        <!-- For brevity, showing structure for one lesson -->
+                        <!-- Lesson 1.2 -->
+                        <div class="lesson-card" id="lesson-1-2">
+                            <div class="lesson-header">
+                                <h4>Lesson 1.2: Function Operations</h4>
+                                <span class="lesson-time">⏱️ 40 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Add, subtract, multiply, and divide functions</li>
+                                        <li>Compose functions correctly</li>
+                                        <li>Find domains of combined functions</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <div class="definition-box">
+                                        <strong>Function Composition</strong>
+                                        <p>$$(f \circ g)(x) = f(g(x))$$</p>
+                                        <p>Apply g first, then f to the result.</p>
+                                    </div>
+                                    
+                                    <div class="key-point">
+                                        <strong>⚠️ Warning:</strong> Composition is NOT commutative: $$(f \circ g)(x) \neq (g \circ f)(x)$$ in general.
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems', 'lesson-1-2')">
+                                    Practice Problems (12) →
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Lesson 1.3 -->
+                        <div class="lesson-card" id="lesson-1-3">
+                            <div class="lesson-header">
+                                <h4>Lesson 1.3: Domain and Range</h4>
+                                <span class="lesson-time">⏱️ 35 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Express domains and ranges using interval notation</li>
+                                        <li>Express domains and ranges using set notation</li>
+                                        <li>Identify domain restrictions for different function types</li>
+                                        <li>Determine range from function behavior</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <h5>Key Concepts</h5>
+                                    
+                                    <div class="definition-box">
+                                        <strong>Domain</strong>
+                                        <p>The domain of a function f is the set of all permissible input values (x-values).</p>
+                                        <p><strong>Notation:</strong></p>
+                                        <p>• Interval: $$[a, b]$$ means $$a \leq x \leq b$$</p>
+                                        <p>• Set: $$D_f = \{x \in \mathbb{R} : x \geq 0\}$$</p>
+                                    </div>
+                                    
+                                    <div class="definition-box">
+                                        <strong>Range</strong>
+                                        <p>The range of a function f is the set of all possible output values (y-values).</p>
+                                    </div>
+
+                                    <div class="theorem-box">
+                                        <strong>Common Domain Restrictions</strong>
+                                        <ul>
+                                            <li><strong>Rational Functions:</strong> Denominator ≠ 0</li>
+                                            <li><strong>Square Root:</strong> Expression under root ≥ 0</li>
+                                            <li><strong>Logarithms:</strong> Argument > 0</li>
+                                            <li><strong>Polynomials:</strong> All real numbers</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="example-box">
+                                        <strong>Example:</strong> Find domain of $$f(x) = \frac{1}{x-3}$$
+                                        <p>Need $$x - 3 \neq 0$$, so $$x \neq 3$$</p>
+                                        <p>Domain: $$(-\infty, 3) \cup (3, \infty)$$</p>
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (10) →</button>
+                            </div>
+                        </div>
+
+                        <!-- Lesson 1.4 -->
+                        <div class="lesson-card" id="lesson-1-4">
+                            <div class="lesson-header">
+                                <h4>Lesson 1.4: Types of Functions</h4>
+                                <span class="lesson-time">⏱️ 35 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Identify different types of functions</li>
+                                        <li>Understand polynomial degree classification</li>
+                                        <li>Work with piecewise-defined functions</li>
+                                        <li>Recognize transcendental functions</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <h5>Function Types</h5>
+                                    
+                                    <div class="definition-box">
+                                        <strong>Linear Functions</strong>
+                                        <p>$$f(x) = mx + b$$ where $$m, b \in \mathbb{R}$$</p>
+                                        <p>Domain: All real numbers</p>
+                                        <p>Graph: Straight line with slope m</p>
+                                    </div>
+                                    
+                                    <div class="definition-box">
+                                        <strong>Polynomial Functions</strong>
+                                        <p>$$f(x) = a_n x^n + a_{n-1}x^{n-1} + \cdots + a_1 x + a_0$$</p>
+                                        <p>Degree: Highest power of x</p>
+                                        <p>Domain: All real numbers</p>
+                                    </div>
+
+                                    <div class="definition-box">
+                                        <strong>Rational Functions</strong>
+                                        <p>$$f(x) = \frac{p(x)}{q(x)}$$ where p, q are polynomials</p>
+                                        <p>Domain: All x where $$q(x) \neq 0$$</p>
+                                    </div>
+
+                                    <div class="definition-box">
+                                        <strong>Piecewise Functions</strong>
+                                        <p>Defined by different formulas on different intervals</p>
+                                        <p>Example: $$f(x) = \begin{cases} x^2 & x < 0 \\ 2x & x \geq 0 \end{cases}$$</p>
+                                    </div>
+
+                                    <div class="key-point">
+                                        <strong>🔑 Greatest Integer Function:</strong> $$f(x) = \lfloor x \rfloor$$ gives the largest integer ≤ x
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (10) →</button>
+                            </div>
+                        </div>
+
+                        <!-- Lesson 1.5 -->
+                        <div class="lesson-card" id="lesson-1-5">
+                            <div class="lesson-header">
+                                <h4>Lesson 1.5: Inverse Functions</h4>
+                                <span class="lesson-time">⏱️ 30 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Determine if a function is one-to-one</li>
+                                        <li>Apply the horizontal line test</li>
+                                        <li>Find inverse functions algebraically</li>
+                                        <li>Verify inverse relationships</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <h5>Key Concepts</h5>
+                                    
+                                    <div class="definition-box">
+                                        <strong>One-to-One Function</strong>
+                                        <p>A function f is one-to-one if different inputs produce different outputs:</p>
+                                        <p>$$x_1 \neq x_2 \implies f(x_1) \neq f(x_2)$$</p>
+                                    </div>
+                                    
+                                    <div class="theorem-box">
+                                        <strong>Horizontal Line Test</strong>
+                                        <p>A function is one-to-one if and only if no horizontal line intersects its graph more than once.</p>
+                                    </div>
+
+                                    <div class="definition-box">
+                                        <strong>Inverse Function</strong>
+                                        <p>If f is one-to-one, its inverse $$f^{-1}$$ satisfies:</p>
+                                        <p>$$f^{-1}(f(x)) = x$$ and $$f(f^{-1}(x)) = x$$</p>
+                                    </div>
+
+                                    <div class="example-box">
+                                        <strong>Finding an Inverse:</strong>
+                                        <ol>
+                                            <li>Replace f(x) with y</li>
+                                            <li>Swap x and y</li>
+                                            <li>Solve for y</li>
+                                            <li>Replace y with $$f^{-1}(x)$$</li>
+                                        </ol>
+                                        <p><strong>Example:</strong> If $$f(x) = 2x - 3$$</p>
+                                        <p>Then $$f^{-1}(x) = \frac{x + 3}{2}$$</p>
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (8) →</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Placeholder indicators for other modules -->
-                <div class="module-indicator">
-                    <p>📘 <strong>Module 2: Limits</strong> - 7 Lessons with comprehensive epsilon-delta coverage</p>
-                    <p>📗 <strong>Module 3: Continuity</strong> - 3 Lessons connecting limits to function behavior</p>
+                <!-- Module 2: Limits -->
+                <div class="module-content" id="module-2-content" style="margin-top: 3rem;">
+                    <div class="module-title-bar">
+                        <h3>∞ Module 2: Limits (Core Concepts)</h3>
+                        <span class="module-stats">7 Lessons • 135 Problems • ~12 hours</span>
+                    </div>
+
+                    <div class="lessons-container">
+                        <!-- Lesson 2.1 -->
+                        <div class="lesson-card" id="lesson-2-1">
+                            <div class="lesson-header">
+                                <h4>Lesson 2.1: Introduction to Limits</h4>
+                                <span class="lesson-time">⏱️ 45 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Understand the intuitive concept of a limit</li>
+                                        <li>Evaluate limits graphically and numerically</li>
+                                        <li>Use basic factoring techniques</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <div class="definition-box">
+                                        <strong>Intuitive Definition</strong>
+                                        <p>We write $$\lim_{x \to b} f(x) = L$$ if f(x) gets arbitrarily close to L as x approaches b.</p>
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems')">
+                                    Practice Problems (20) →
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Lesson 2.2 -->
+                        <div class="lesson-card" id="lesson-2-2">
+                            <div class="lesson-header">
+                                <h4>Lesson 2.2: Epsilon-Delta Definition</h4>
+                                <span class="lesson-time">⏱️ 90 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Understand the formal definition of a limit</li>
+                                        <li>Construct epsilon-delta proofs</li>
+                                        <li>Find appropriate delta values</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <div class="theorem-box">
+                                        <strong>Formal Definition</strong>
+                                        <p>$$\lim_{x \to b} f(x) = L$$ means:</p>
+                                        <p>For all ε > 0, there exists δ > 0 such that</p>
+                                        <p>$$0 < |x - b| < \delta \implies |f(x) - L| < \epsilon$$</p>
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems')">
+                                    Practice Problems (20 with proofs) →
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Lesson 2.3 -->
+                        <div class="lesson-card" id="lesson-2-3">
+                            <div class="lesson-header">
+                                <h4>Lesson 2.3: Basic Limit Theorems</h4>
+                                <span class="lesson-time">⏱️ 40 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Apply the limit of a constant</li>
+                                        <li>Apply the identity limit</li>
+                                        <li>Evaluate polynomial limits</li>
+                                        <li>Use the constant multiple rule</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <div class="theorem-box">
+                                        <strong>Basic Limit Laws</strong>
+                                        <p>1. $$\lim_{x \to b} c = c$$ (constant)</p>
+                                        <p>2. $$\lim_{x \to b} x = b$$ (identity)</p>
+                                        <p>3. $$\lim_{x \to b} [cf(x)] = c \cdot \lim_{x \to b} f(x)$$</p>
+                                        <p>4. $$\lim_{x \to b} f(x) = f(b)$$ (for polynomials)</p>
+                                    </div>
+                                    
+                                    <div class="example-box">
+                                        <strong>Example:</strong> $$\lim_{x \to 2} (3x^2 - 5) = 3(4) - 5 = 7$$
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (15) →</button>
+                            </div>
+                        </div>
+
+                        <!-- Lesson 2.4 -->
+                        <div class="lesson-card" id="lesson-2-4">
+                            <div class="lesson-header">
+                                <h4>Lesson 2.4: Algebraic Limit Theorems</h4>
+                                <span class="lesson-time">⏱️ 50 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Apply sum and difference rules</li>
+                                        <li>Apply product and quotient rules</li>
+                                        <li>Use power and root rules</li>
+                                        <li>Combine multiple limit laws</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <div class="theorem-box">
+                                        <strong>Algebraic Limit Laws</strong>
+                                        <p>If $$\lim_{x \to b} f(x) = L$$ and $$\lim_{x \to b} g(x) = M$$:</p>
+                                        <p>1. $$\lim_{x \to b} [f(x) \pm g(x)] = L \pm M$$</p>
+                                        <p>2. $$\lim_{x \to b} [f(x) \cdot g(x)] = L \cdot M$$</p>
+                                        <p>3. $$\lim_{x \to b} \frac{f(x)}{g(x)} = \frac{L}{M}$$ if $$M \neq 0$$</p>
+                                        <p>4. $$\lim_{x \to b} [f(x)]^n = L^n$$</p>
+                                        <p>5. $$\lim_{x \to b} \sqrt[n]{f(x)} = \sqrt[n]{L}$$</p>
+                                    </div>
+                                    
+                                    <div class="key-point">
+                                        <strong>⚠️ Important:</strong> Quotient rule requires denominator limit ≠ 0
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (20) →</button>
+                            </div>
+                        </div>
+
+                        <!-- Lesson 2.5 -->
+                        <div class="lesson-card" id="lesson-2-5">
+                            <div class="lesson-header">
+                                <h4>Lesson 2.5: One-Sided Limits</h4>
+                                <span class="lesson-time">⏱️ 45 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Evaluate right-hand limits</li>
+                                        <li>Evaluate left-hand limits</li>
+                                        <li>Relate one-sided limits to two-sided limits</li>
+                                        <li>Handle piecewise function limits</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <div class="definition-box">
+                                        <strong>Right-Hand Limit</strong>
+                                        <p>$$\lim_{x \to b^+} f(x) = L$$ means f(x) approaches L as x approaches b from the right</p>
+                                    </div>
+                                    
+                                    <div class="definition-box">
+                                        <strong>Left-Hand Limit</strong>
+                                        <p>$$\lim_{x \to b^-} f(x) = L$$ means f(x) approaches L as x approaches b from the left</p>
+                                    </div>
+
+                                    <div class="theorem-box">
+                                        <strong>Two-Sided Limit Theorem</strong>
+                                        <p>$$\lim_{x \to b} f(x) = L$$ exists if and only if:</p>
+                                        <p>$$\lim_{x \to b^-} f(x) = L$$ and $$\lim_{x \to b^+} f(x) = L$$</p>
+                                        <p>Both one-sided limits must exist and be equal.</p>
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (20) →</button>
+                            </div>
+                        </div>
+
+                        <!-- Lesson 2.6 -->
+                        <div class="lesson-card" id="lesson-2-6">
+                            <div class="lesson-header">
+                                <h4>Lesson 2.6: Infinite Limits</h4>
+                                <span class="lesson-time">⏱️ 50 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Identify vertical asymptotes</li>
+                                        <li>Evaluate infinite limits</li>
+                                        <li>Perform sign analysis</li>
+                                        <li>Recognize indeterminate forms</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <div class="definition-box">
+                                        <strong>Infinite Limit</strong>
+                                        <p>$$\lim_{x \to a} f(x) = +\infty$$ means f(x) increases without bound as x approaches a</p>
+                                        <p>$$\lim_{x \to a} f(x) = -\infty$$ means f(x) decreases without bound as x approaches a</p>
+                                    </div>
+                                    
+                                    <div class="theorem-box">
+                                        <strong>Vertical Asymptote</strong>
+                                        <p>The line $$x = a$$ is a vertical asymptote if at least one of these holds:</p>
+                                        <p>$$\lim_{x \to a^+} f(x) = \pm\infty$$ or $$\lim_{x \to a^-} f(x) = \pm\infty$$</p>
+                                    </div>
+
+                                    <div class="key-point">
+                                        <strong>🔑 Sign Analysis:</strong> For $$\frac{c}{0^+}$$ where c > 0: result is $$+\infty$$<br>
+                                        For $$\frac{c}{0^-}$$ where c > 0: result is $$-\infty$$
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (20) →</button>
+                            </div>
+                        </div>
+
+                        <!-- Lesson 2.7 -->
+                        <div class="lesson-card" id="lesson-2-7">
+                            <div class="lesson-header">
+                                <h4>Lesson 2.7: Limits at Infinity</h4>
+                                <span class="lesson-time">⏱️ 45 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Evaluate limits as x → ∞</li>
+                                        <li>Identify horizontal asymptotes</li>
+                                        <li>Use degree comparison method</li>
+                                        <li>Analyze end behavior of functions</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <div class="definition-box">
+                                        <strong>Limit at Infinity</strong>
+                                        <p>$$\lim_{x \to \infty} f(x) = L$$ means f(x) approaches L as x grows without bound</p>
+                                    </div>
+                                    
+                                    <div class="theorem-box">
+                                        <strong>Horizontal Asymptote</strong>
+                                        <p>The line $$y = L$$ is a horizontal asymptote if:</p>
+                                        <p>$$\lim_{x \to \infty} f(x) = L$$ or $$\lim_{x \to -\infty} f(x) = L$$</p>
+                                    </div>
+
+                                    <div class="theorem-box">
+                                        <strong>Degree Comparison for $$\frac{p(x)}{q(x)}$$</strong>
+                                        <p>Let n = degree of numerator, m = degree of denominator:</p>
+                                        <p>• If n < m: $$\lim_{x \to \infty} = 0$$</p>
+                                        <p>• If n = m: $$\lim_{x \to \infty} = \frac{a_n}{b_m}$$ (ratio of leading coefficients)</p>
+                                        <p>• If n > m: $$\lim_{x \to \infty} = \pm\infty$$</p>
+                                    </div>
+
+                                    <div class="key-point">
+                                        <strong>🔑 Key Rule:</strong> $$\lim_{x \to \infty} \frac{1}{x^r} = 0$$ for any positive r
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (20) →</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 3: Continuity -->
+                <div class="module-content" id="module-3-content" style="margin-top: 3rem;">
+                    <div class="module-title-bar">
+                        <h3>〰️ Module 3: Continuity</h3>
+                        <span class="module-stats">3 Lessons • 65 Problems • ~6 hours</span>
+                    </div>
+
+                    <div class="lessons-container">
+                        <!-- Lesson 3.1 -->
+                        <div class="lesson-card" id="lesson-3-1">
+                            <div class="lesson-header">
+                                <h4>Lesson 3.1: Continuity at a Point</h4>
+                                <span class="lesson-time">⏱️ 60 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Test functions for continuity</li>
+                                        <li>Apply the three-condition definition</li>
+                                        <li>Identify points of discontinuity</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <div class="definition-box">
+                                        <strong>Definition: Continuous at b</strong>
+                                        <p>f is continuous at b if:</p>
+                                        <ol>
+                                            <li>f(b) exists</li>
+                                            <li>$$\lim_{x \to b} f(x)$$ exists</li>
+                                            <li>$$\lim_{x \to b} f(x) = f(b)$$</li>
+                                        </ol>
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems')">
+                                    Practice Problems (25) →
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Lesson 3.2 -->
+                        <div class="lesson-card" id="lesson-3-2">
+                            <div class="lesson-header">
+                                <h4>Lesson 3.2: Continuity Theorems</h4>
+                                <span class="lesson-time">⏱️ 45 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Apply continuity preservation theorems</li>
+                                        <li>Identify continuous function types</li>
+                                        <li>Use composition to determine continuity</li>
+                                        <li>Apply theorems to complex functions</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <div class="theorem-box">
+                                        <strong>Continuity Preservation</strong>
+                                        <p>If f and g are continuous at b, then:</p>
+                                        <p>1. $$f \pm g$$ is continuous at b</p>
+                                        <p>2. $$f \cdot g$$ is continuous at b</p>
+                                        <p>3. $$\frac{f}{g}$$ is continuous at b (if $$g(b) \neq 0$$)</p>
+                                    </div>
+                                    
+                                    <div class="theorem-box">
+                                        <strong>Continuous Function Types</strong>
+                                        <p>• <strong>Polynomial functions:</strong> Continuous everywhere</p>
+                                        <p>• <strong>Rational functions:</strong> Continuous on their domain (where denominator ≠ 0)</p>
+                                        <p>• <strong>Root functions:</strong> $$\sqrt[n]{x}$$ continuous where defined</p>
+                                    </div>
+
+                                    <div class="example-box">
+                                        <strong>Example:</strong> $$f(x) = \frac{x^2 + 1}{x - 2}$$ is continuous on $$(-\infty, 2) \cup (2, \infty)$$
+                                    </div>
+
+                                    <div class="key-point">
+                                        <strong>🔑 Composition:</strong> If g is continuous at b and f is continuous at g(b), then $$(f \circ g)$$ is continuous at b.
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (20) →</button>
+                            </div>
+                        </div>
+
+                        <!-- Lesson 3.3 -->
+                        <div class="lesson-card" id="lesson-3-3">
+                            <div class="lesson-header">
+                                <h4>Lesson 3.3: Types of Discontinuity</h4>
+                                <span class="lesson-time">⏱️ 50 min</span>
+                            </div>
+                            <div class="lesson-body">
+                                <div class="learning-objectives">
+                                    <strong>Learning Objectives:</strong>
+                                    <ul>
+                                        <li>Identify removable discontinuities</li>
+                                        <li>Identify essential discontinuities</li>
+                                        <li>Classify jump discontinuities</li>
+                                        <li>Classify infinite discontinuities</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="theory-content">
+                                    <div class="definition-box">
+                                        <strong>Removable Discontinuity</strong>
+                                        <p>At point b, a discontinuity is removable if:</p>
+                                        <ol>
+                                            <li>$$\lim_{x \to b} f(x)$$ exists</li>
+                                            <li>Either f(b) is undefined OR $$f(b) \neq \lim_{x \to b} f(x)$$</li>
+                                        </ol>
+                                        <p><strong>Can be "fixed"</strong> by redefining f(b) = limit value</p>
+                                    </div>
+                                    
+                                    <div class="definition-box">
+                                        <strong>Essential Discontinuity</strong>
+                                        <p>At point b, a discontinuity is essential if:</p>
+                                        <p>$$\lim_{x \to b} f(x)$$ does not exist</p>
+                                        <p><strong>Cannot be fixed</strong> by redefining the function</p>
+                                    </div>
+
+                                    <div class="example-box">
+                                        <strong>Types of Essential Discontinuities:</strong>
+                                        <p>• <strong>Jump:</strong> One-sided limits exist but are different</p>
+                                        <p>• <strong>Infinite:</strong> At least one one-sided limit is ±∞</p>
+                                    </div>
+
+                                    <div class="key-point">
+                                        <strong>⚠️ Classification Strategy:</strong><br>
+                                        1. Check if limit exists<br>
+                                        2. If yes → removable<br>
+                                        3. If no → essential (check jump vs infinite)
+                                    </div>
+                                </div>
+
+                                <button class="btn-secondary" onclick="navigateTo('problems')">Practice Problems (20) →</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
