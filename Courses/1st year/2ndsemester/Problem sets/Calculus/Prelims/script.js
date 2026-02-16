@@ -1,35 +1,239 @@
 // ============================================
-// CALCULUS MASTERY SYSTEM - MAIN JAVASCRIPT
+// TECTONIC LEARNING SYSTEM - MODULAR CORE
 // ============================================
 
 // === GLOBAL STATE ===
 let currentSection = 'overview';
 let completedProblems = new Set();
 let masteryTestStarted = false;
+let curriculum = null; // Will be loaded from curriculum file
 
 // === PAGE INITIALIZATION ===
 document.addEventListener('DOMContentLoaded', function() {
+    // Wait for curriculum to be defined
+    if (typeof CURRICULUM === 'undefined') {
+        console.error('No curriculum file loaded! Please include a curriculum-*.js file before script.js');
+        document.getElementById('overview-subtitle').textContent = 'Error: No curriculum loaded. Please include a curriculum file.';
+        return;
+    }
+    
+    curriculum = CURRICULUM;
+    
+    // Initialize the application
+    initializePage();
     initializeNavigation();
     initializeSidebar();
     initializeModals();
     loadProgress();
     updateProgressDisplay();
     updateHeaderStats();
+});
+
+// === INITIALIZE PAGE WITH CURRICULUM ===
+function initializePage() {
+    // Set page title
+    document.title = `${curriculum.name} | Tectonic System`;
+    document.getElementById('page-title').textContent = `${curriculum.name} | Tectonic System`;
     
-    // Add event listeners for sidebar lesson links
+    // Set subject name in header
+    document.getElementById('subject-name').textContent = curriculum.name;
+    
+    // Set overview content
+    document.getElementById('overview-title').textContent = `Welcome to ${curriculum.name}`;
+    document.getElementById('overview-subtitle').textContent = curriculum.description;
+    
+    // Generate overview statistics
+    generateOverviewContent();
+    
+    // Generate sidebar modules
+    generateSidebarModules();
+    
+    // Generate module content
+    generateModulesContent();
+    
+    // Populate module filter
+    populateModuleFilter();
+    
+    // Set mastery intro
+    const masteryTest = curriculum.masteryTest;
+    document.getElementById('mastery-intro').textContent = masteryTest.description;
+    
+    // Set mastery instructions
+    const instructionsHTML = `
+        <p style="margin-bottom: 1rem;"><strong>Instructions:</strong> ${masteryTest.instructions}</p>
+        <p style="margin-bottom: 1rem;"><strong>Time Limit:</strong> ${masteryTest.timeLimit} minutes recommended</p>
+        <p><strong>Passing Score:</strong> ${masteryTest.passingScore}/${masteryTest.totalQuestions} (${Math.round((masteryTest.passingScore/masteryTest.totalQuestions)*100)}%)</p>
+    `;
+    document.getElementById('mastery-instructions').innerHTML = instructionsHTML;
+    
+    // Generate formula sheet
+    generateFormulaSheet();
+    
+    // Update total problems count
+    const totalProblems = curriculum.modules.reduce((sum, mod) => 
+        sum + mod.lessons.reduce((lsum, lesson) => lsum + lesson.problems.length, 0), 0
+    );
+    document.getElementById('total-problems').textContent = totalProblems;
+}
+
+// === GENERATE OVERVIEW CONTENT ===
+function generateOverviewContent() {
+    const totalModules = curriculum.modules.length;
+    const totalLessons = curriculum.modules.reduce((sum, mod) => sum + mod.lessons.length, 0);
+    const totalProblems = curriculum.modules.reduce((sum, mod) => 
+        sum + mod.lessons.reduce((lsum, lesson) => lsum + lesson.problems.length, 0), 0
+    );
+    
+    const html = `
+        <div class="dash-grid">
+            <div class="dash-card">
+                <h3>Course Structure</h3>
+                <p style="margin-bottom: 1rem;">${curriculum.overview || 'Master the fundamentals through structured learning.'}</p>
+                <div style="display: grid; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;">
+                    <div>📚 ${totalModules} Modules</div>
+                    <div>📖 ${totalLessons} Lessons</div>
+                    <div>🎯 ${totalProblems} Practice Problems</div>
+                    <div>⚡ ${curriculum.masteryTest.totalQuestions} Mastery Questions</div>
+                </div>
+            </div>
+            
+            <div class="dash-card">
+                <h3>Getting Started</h3>
+                <ol style="line-height: 2; margin-left: 1.5rem;">
+                    <li>Navigate through modules sequentially</li>
+                    <li>Complete practice problems for each lesson</li>
+                    <li>Track your progress in the dashboard</li>
+                    <li>Take the mastery test when ready</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div style="margin-top: 3rem;">
+            <h3 style="color: var(--cyan-accent); margin-bottom: 1.5rem;">Module Overview</h3>
+            <div class="dash-grid">
+                ${curriculum.modules.map((module, idx) => {
+                    const lessonCount = module.lessons.length;
+                    const problemCount = module.lessons.reduce((sum, lesson) => sum + lesson.problems.length, 0);
+                    return `
+                        <div class="dash-card">
+                            <h4 style="color: var(--cyan-accent); margin-bottom: 1rem;">${module.icon} ${module.name}</h4>
+                            <p style="color: var(--text-muted); margin-bottom: 1rem;">${module.description}</p>
+                            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-muted);">
+                                ${lessonCount} Lessons • ${problemCount} Problems
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('overview-content').innerHTML = html;
+}
+
+// === GENERATE SIDEBAR MODULES ===
+function generateSidebarModules() {
+    const html = curriculum.modules.map((module, moduleIdx) => {
+        const moduleNum = moduleIdx + 1;
+        const problemCount = module.lessons.reduce((sum, lesson) => sum + lesson.problems.length, 0);
+        
+        const lessonsHTML = module.lessons.map((lesson, lessonIdx) => {
+            const lessonNum = lessonIdx + 1;
+            const lessonId = `lesson-${moduleNum}-${lessonNum}`;
+            return `<a href="#${lessonId}" class="lesson-link">${lesson.name}</a>`;
+        }).join('');
+        
+        return `
+            <div class="module-slab" data-module="${moduleNum}">
+                <h4>${module.icon} Module ${moduleNum}</h4>
+                <div class="module-meta">${module.lessons.length} Lessons • ${problemCount} Problems</div>
+                <div class="mini-progress-bar">
+                    <div class="mini-progress" id="mod${moduleNum}-mini" style="width: 0%;"></div>
+                </div>
+            </div>
+            <div class="lesson-list" id="module-${moduleNum}-lessons">
+                ${lessonsHTML}
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById('sidebar-modules').innerHTML += html;
+    
+    // Add event listeners for lesson links
     const lessonLinks = document.querySelectorAll('.lesson-link');
     lessonLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            // Get the hash from href (e.g., #lesson-1-1)
             const href = this.getAttribute('href');
-            // Remove the # to get the ID
             const targetId = href.substring(1);
-            
             navigateTo('modules', targetId);
         });
     });
-});
+}
+
+// === GENERATE MODULES CONTENT ===
+function generateModulesContent() {
+    const html = curriculum.modules.map((module, moduleIdx) => {
+        const moduleNum = moduleIdx + 1;
+        const problemCount = module.lessons.reduce((sum, lesson) => sum + lesson.problems.length, 0);
+        
+        const lessonsHTML = module.lessons.map((lesson, lessonIdx) => {
+            const lessonNum = lessonIdx + 1;
+            const lessonId = `lesson-${moduleNum}-${lessonNum}`;
+            
+            return `
+                <div class="lesson-slab" id="${lessonId}">
+                    <span class="lesson-tag">${lesson.tags.join(' • ')}</span>
+                    <h3>${moduleNum}.${lessonNum} ${lesson.name}</h3>
+                    ${lesson.content}
+                    <button class="btn-tectonic" onclick="navigateTo('problems')">
+                        Practice Problems (${lesson.problems.length})
+                    </button>
+                </div>
+            `;
+        }).join('');
+        
+        return `
+            <div class="module-title-bar" style="${moduleIdx > 0 ? 'margin-top: 4rem;' : ''}">
+                <h3>${module.icon} Module ${moduleNum}: ${module.name}</h3>
+                <span class="module-stats">${module.lessons.length} Lessons • ${problemCount} Problems</span>
+            </div>
+            <div class="lesson-grid">
+                ${lessonsHTML}
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById('modules-content').innerHTML = html;
+}
+
+// === POPULATE MODULE FILTER ===
+function populateModuleFilter() {
+    const select = document.getElementById('module-filter');
+    const options = curriculum.modules.map((module, idx) => 
+        `<option value="${idx + 1}">Module ${idx + 1}: ${module.name}</option>`
+    ).join('');
+    select.innerHTML = '<option value="all">All Modules</option>' + options;
+}
+
+// === GENERATE FORMULA SHEET ===
+function generateFormulaSheet() {
+    if (!curriculum.formulaSheet || curriculum.formulaSheet.length === 0) {
+        document.getElementById('formula-content').innerHTML = '<p>No formula sheet available for this curriculum.</p>';
+        return;
+    }
+    
+    const html = curriculum.formulaSheet.map(section => `
+        <div class="formula-section">
+            <h3>${section.title}</h3>
+            <div class="math-block">
+                ${section.formulas.join('<br><br>')}
+            </div>
+        </div>
+    `).join('');
+    
+    document.getElementById('formula-content').innerHTML = html;
+}
 
 // === NAVIGATION FUNCTIONS ===
 function initializeNavigation() {
@@ -66,7 +270,7 @@ function showSection(sectionName) {
             loadProblems();
         }
         
-        // Trigger MathJax for all sections
+        // Trigger MathJax
         if (window.MathJax) {
             setTimeout(() => {
                 MathJax.typesetPromise([targetSection]);
@@ -75,29 +279,28 @@ function showSection(sectionName) {
     }
 }
 
-// === UTILITY FUNCTIONS ===
 function navigateTo(section, subsection) {
     showSection(section);
     
     if (subsection) {
-        // Wait for the section animation to trigger/DOM to be visible
         setTimeout(() => {
             const element = document.getElementById(subsection);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                // Optional: Flash the element to indicate selection
                 element.style.borderColor = 'var(--cyan-accent)';
                 setTimeout(() => {
-                    element.style.borderColor = ''; // Revert to CSS default
+                    element.style.borderColor = '';
                 }, 1500);
             }
-        }, 400); // 400ms matches the CSS transition/animation time roughly
+        }, 400);
     }
 }
 
 // === UPDATE HEADER STATS ===
 function updateHeaderStats() {
-    const totalProblems = 250;
+    const totalProblems = curriculum.modules.reduce((sum, mod) => 
+        sum + mod.lessons.reduce((lsum, lesson) => lsum + lesson.problems.length, 0), 0
+    );
     const completed = completedProblems.size;
     const percentage = Math.round((completed / totalProblems) * 100);
     
@@ -115,7 +318,7 @@ function updateHeaderStats() {
 
 // === SIDEBAR FUNCTIONS ===
 function initializeSidebar() {
-    const moduleHeaders = document.querySelectorAll('.module-slab'); // Changed from .module-header to .module-slab based on Calc.html class
+    const moduleHeaders = document.querySelectorAll('.module-slab');
     moduleHeaders.forEach(header => {
         header.addEventListener('click', function(e) {
             e.preventDefault();
@@ -123,7 +326,6 @@ function initializeSidebar() {
             const lessonList = document.getElementById(`module-${moduleNum}-lessons`);
             
             if (lessonList) {
-                // Toggle this module
                 const isExpanded = this.classList.contains('expanded');
                 
                 // Close all other modules
@@ -154,20 +356,19 @@ function initializeSidebar() {
 
 // === MODAL FUNCTIONS ===
 function initializeModals() {
-    const formulaBtn = document.getElementById('formula-sheet-btn');
     const formulaFloat = document.getElementById('formula-float-btn');
     const formulaModal = document.getElementById('formula-modal');
     const closeBtn = document.querySelector('.close-modal');
     
-    if (formulaBtn) {
-        formulaBtn.addEventListener('click', function() {
-            formulaModal.classList.add('active');
-        });
-    }
-    
     if (formulaFloat) {
         formulaFloat.addEventListener('click', function() {
             formulaModal.classList.add('active');
+            // Trigger MathJax rendering for formulas
+            if (window.MathJax) {
+                setTimeout(() => {
+                    MathJax.typesetPromise([formulaModal]);
+                }, 100);
+            }
         });
     }
     
@@ -189,229 +390,111 @@ function loadProblems() {
     const container = document.getElementById('problems-container');
     if (!container) return;
     
-    // Only generate if empty (prevents duplicates on multiple clicks)
     if (container.children.length === 0) {
         container.innerHTML = generateAllProblems();
+        
+        // Trigger MathJax
+        if (window.MathJax) {
+            setTimeout(() => {
+                MathJax.typesetPromise([container]);
+            }, 100);
+        }
     }
 }
 
 function generateAllProblems() {
     let html = '';
     
-    // Module 1 Problems
-    html += generateModuleProblems(1, 'Functions', [
-        {id: 'M1-1-A1', title: 'Determine if Relation is a Function', 
-         statement: 'Determine whether the following relation is a function: $$R = \\{(1, 2), (3, 4), (5, 6), (7, 8)\\}$$',
-         answer: 'Yes, R is a function.',
-         solution: 'Step 1: Check if any x-value is repeated. x-values: 1, 3, 5, 7 (all different)<br><br>Step 2: Apply function definition. Since no x-value appears more than once, each input maps to exactly one output.<br><br>Step 3: R is a function because it satisfies the definition.',
-         difficulty: 'Easy', section: 'A', time: '2 min'},
+    curriculum.modules.forEach((module, moduleIdx) => {
+        const moduleNum = moduleIdx + 1;
         
-        {id: 'M1-1-A2', title: 'Not a Function Example',
-         statement: 'Determine whether the following relation is a function: $$S = \\{(2, 5), (2, 7), (3, 9)\\}$$',
-         answer: 'No, S is not a function.',
-         solution: 'The x-value 2 appears twice: (2, 5) and (2, 7). For x = 2, there are two different y-values. This violates the function definition. S is NOT a function.',
-         difficulty: 'Easy', section: 'A', time: '2 min'},
-        
-        {id: 'M1-1-B1', title: 'Count Functions Between Sets',
-         statement: 'Let $$A = \\{1, 2, 3\\}$$ and $$B = \\{4, 5, 6\\}$$. How many different functions can be defined from A to B?',
-         answer: '27 functions',
-         solution: 'For each element in A, we can choose any of the 3 elements in B.<br>Element 1: 3 choices<br>Element 2: 3 choices<br>Element 3: 3 choices<br>Total: $$3 \\times 3 \\times 3 = 27$$ functions',
-         difficulty: 'Medium', section: 'B', time: '4 min'},
-        
-        {id: 'M1-2-A1', title: 'Function Addition',
-         statement: 'Given $$f(x) = 2x + 3$$ and $$g(x) = x - 1$$, find $$(f + g)(x)$$.', 
-         answer: '$(f + g)(x) = 3x + 2$',
-         solution: '$$(f + g)(x) = f(x) + g(x) = (2x + 3) + (x - 1) = 3x + 2$$',
-         difficulty: 'Easy', section: 'A', time: '3 min'},
-        
-        {id: 'M1-2-B1', title: 'Function Composition',
-         statement: 'Let $$f(x) = x^2 - 4$$ and $$g(x) = x + 2$$. Find $$(f \\circ g)(x)$$ and simplify.',
-         answer: '$(f \\circ g)(x) = x^2 + 4x$',
-         solution: '$$(f \\circ g)(x) = f(g(x)) = f(x+2) = (x+2)^2 - 4 = x^2 + 4x + 4 - 4 = x^2 + 4x$$',
-         difficulty: 'Medium', section: 'B', time: '5 min'},
-    ]);
-    
-    // Module 2 Problems - Limits
-    html += generateModuleProblems(2, 'Limits', [
-        {id: 'M2-1-A1', title: 'Direct Substitution',
-         statement: 'Evaluate $$\\lim_{x \\to 2} (3x + 1)$$ by direct substitution.',
-         answer: '7',
-         solution: 'Since $$f(x) = 3x + 1$$ is a polynomial, it\'s continuous everywhere.<br>$$\\lim_{x \\to 2} (3x + 1) = 3(2) + 1 = 7$$',
-         difficulty: 'Easy', section: 'A', time: '3 min'},
-        
-        {id: 'M2-1-B1', title: 'Factoring to Evaluate Limit',
-         statement: 'Evaluate $$\\lim_{x \\to 3} \\frac{x^2 - 9}{x - 3}$$.',
-         answer: '6',
-         solution: 'Direct substitution gives 0/0 (indeterminate).<br>Factor: $$\\frac{(x-3)(x+3)}{x-3} = x + 3$$ (for $$x \\neq 3$$)<br>$$\\lim_{x \\to 3} (x + 3) = 6$$',
-         difficulty: 'Medium', section: 'B', time: '5 min'},
-        
-        {id: 'M2-1-C1', title: 'Conjugate Method',
-         statement: 'Evaluate $$\\lim_{x \\to 0} \\frac{\\sqrt{1+x} - 1}{x}$$.',
-         answer: '$\\frac{1}{2}$',
-         solution: 'Multiply by conjugate:<br>$$\\frac{\\sqrt{1+x} - 1}{x} \\cdot \\frac{\\sqrt{1+x} + 1}{\\sqrt{1+x} + 1} = \\frac{x}{x(\\sqrt{1+x} + 1)} = \\frac{1}{\\sqrt{1+x} + 1}$$<br>$$\\lim_{x \\to 0} \\frac{1}{\\sqrt{1+x} + 1} = \\frac{1}{2}$$',
-         difficulty: 'Hard', section: 'C', time: '8 min'},
-        
-        {id: 'M2-5-A1', title: 'One-Sided Limit',
-         statement: 'For $$f(x) = \\begin{cases} x + 2 & x < 0 \\\\ x^2 & x \\geq 0 \\end{cases}$$, find $$\\lim_{x \\to 0^-} f(x)$$.',
-         answer: '2',
-         solution: 'Approaching from the left means $$x < 0$$, so use $$f(x) = x + 2$$.<br>$$\\lim_{x \\to 0^-} (x + 2) = 2$$',
-         difficulty: 'Easy', section: 'A', time: '3 min'},
-        
-        {id: 'M2-6-A1', title: 'Infinite Limit',
-         statement: 'Evaluate $$\\lim_{x \\to 0^+} \\frac{1}{x}$$.',
-         answer: '$+\\infty$',
-         solution: 'As $$x \\to 0^+$$, x is small and positive. $$\\frac{1}{x}$$ becomes large and positive. Therefore $$\\lim_{x \\to 0^+} \\frac{1}{x} = +\\infty$$',
-         difficulty: 'Easy', section: 'A', time: '3 min'},
-        
-        {id: 'M2-7-A1', title: 'Limit at Infinity',
-         statement: 'Evaluate $$\\lim_{x \\to \\infty} \\frac{1}{x}$$.',
-         answer: '0',
-         solution: 'As $$x \\to \\infty$$, the denominator grows without bound while numerator is constant. Therefore $$\\lim_{x \\to \\infty} \\frac{1}{x} = 0$$',
-         difficulty: 'Easy', section: 'A', time: '3 min'},
-        
-        {id: 'M2-7-B1', title: 'Rational Function Limit',
-         statement: 'Evaluate $$\\lim_{x \\to \\infty} \\frac{3x + 2}{2x - 1}$$.',
-         answer: '$\\frac{3}{2}$',
-         solution: 'Divide by highest power:<br>$$\\frac{3 + \\frac{2}{x}}{2 - \\frac{1}{x}} \\to \\frac{3 + 0}{2 - 0} = \\frac{3}{2}$$<br>Or use degree rule: degrees equal, so limit is ratio of leading coefficients.',
-         difficulty: 'Medium', section: 'B', time: '5 min'},
-    ]);
-    
-    // Module 3 Problems - Continuity
-    html += generateModuleProblems(3, 'Continuity', [
-        {id: 'M3-1-A1', title: 'Test Continuity',
-         statement: 'Determine if $$f(x) = x^2 + 2x + 1$$ is continuous at $$x = 2$$.',
-         answer: 'Yes, continuous at x = 2',
-         solution: '✓ $$f(2) = 9$$ exists<br>✓ $$\\lim_{x \\to 2} f(x) = 9$$ exists<br>✓ $$\\lim_{x \\to 2} f(x) = f(2) = 9$$<br>All three conditions satisfied.',
-         difficulty: 'Easy', section: 'A', time: '4 min'},
-        
-        {id: 'M3-1-B1', title: 'Discontinuous Piecewise',
-         statement: 'Is $$f(x) = \\begin{cases} x^2 & x < 1 \\\\ 3 & x = 1 \\\\ 2x & x > 1 \\end{cases}$$ continuous at $$x = 1$$?',
-         answer: 'No, not continuous',
-         solution: '$$f(1) = 3$$ ✓<br>$$\\lim_{x \\to 1^-} x^2 = 1$$<br>$$\\lim_{x \\to 1^+} 2x = 2$$<br>One-sided limits differ ($$1 \\neq 2$$), so limit doesn\'t exist. Not continuous.',
-         difficulty: 'Medium', section: 'B', time: '6 min'},
-        
-        {id: 'M3-3-A1', title: 'Classify Discontinuity',
-         statement: 'Classify the discontinuity of $$f(x) = \\frac{x^2 - 4}{x - 2}$$ at $$x = 2$$.',
-         answer: 'Removable discontinuity',
-         solution: '$$f(2)$$ is undefined (0/0)<br>But $$\\lim_{x \\to 2} \\frac{(x-2)(x+2)}{x-2} = \\lim_{x \\to 2} (x+2) = 4$$ exists.<br>Since limit exists but function undefined, this is <strong>removable discontinuity</strong>.',
-         difficulty: 'Easy', section: 'A', time: '5 min'},
-    ]);
-    
-    return html;
-}
-
-function generateModuleProblems(moduleNum, moduleName, problems) {
-    let html = `<div class="module-problems" data-module="${moduleNum}">
-        <h3>Module ${moduleNum}: ${moduleName} (${problems.length} problems shown)</h3>`;
-    
-    problems.forEach(problem => {
-        html += `
-        <div class="problem-card" data-module="${moduleNum}" data-section="${problem.section}" data-difficulty="${problem.difficulty}">
-            <div class="problem-header">
-                <div>
-                    <strong>Problem ${problem.id}:</strong> ${problem.title}
-                </div>
-                <div class="problem-meta">
-                    <span class="badge badge-${problem.difficulty.toLowerCase()}">${problem.section} - ${problem.difficulty}</span>
-                    <span class="time-badge" style="background:var(--slate-700); padding:0.25rem 0.5rem; border-radius:4px; font-size:0.75rem;">${problem.time}</span>
-                </div>
-            </div>
-            <div class="problem-body">
-                <div class="problem-statement">
-                    ${problem.statement}
-                </div>
-                <button class="solution-toggle" id="toggle-${problem.id}" onclick="toggleSolution('${problem.id}')">
-                    Show Solution
-                </button>
-                <div class="solution-content" id="solution-${problem.id}">
-                    <div class="answer-box">
-                        <strong>Answer:</strong> ${problem.answer}
+        module.lessons.forEach((lesson, lessonIdx) => {
+            lesson.problems.forEach((problem, problemIdx) => {
+                const problemId = `M${moduleNum}-${lessonIdx + 1}-${problem.difficulty}${problemIdx + 1}`;
+                const isCompleted = completedProblems.has(problemId);
+                
+                html += `
+                    <div class="problem-card" data-module="${moduleNum}" data-difficulty="${problem.difficulty}">
+                        <div class="problem-header">
+                            <span class="problem-id">${problemId}</span>
+                            <span class="problem-difficulty difficulty-${problem.difficulty}">Level ${problem.difficulty}</span>
+                        </div>
+                        <h3>${problem.title}</h3>
+                        <div class="problem-statement">${problem.statement}</div>
+                        <button class="btn-tectonic" onclick="toggleSolution('${problemId}')">
+                            ${isCompleted ? '✓ View Solution' : 'Show Solution'}
+                        </button>
+                        <div id="solution-${problemId}" class="solution-container hidden">
+                            <strong>Solution:</strong>
+                            <div style="margin-top: 1rem;">${problem.solution}</div>
+                        </div>
                     </div>
-                    <div class="solution-steps">
-                        <strong>Solution:</strong><br>
-                        ${problem.solution}
-                    </div>
-                </div>
-            </div>
-        </div>`;
+                `;
+            });
+        });
     });
     
-    html += '</div>';
     return html;
 }
 
-// === FILTER FUNCTIONS ===
+function toggleSolution(problemId) {
+    const solutionDiv = document.getElementById(`solution-${problemId}`);
+    const button = event.target;
+    
+    if (solutionDiv.classList.contains('hidden')) {
+        solutionDiv.classList.remove('hidden');
+        button.textContent = '✓ Hide Solution';
+        
+        // Mark as completed
+        if (!completedProblems.has(problemId)) {
+            completedProblems.add(problemId);
+            saveProgress();
+            updateProgressDisplay();
+            updateHeaderStats();
+        }
+        
+        // Trigger MathJax
+        if (window.MathJax) {
+            MathJax.typesetPromise([solutionDiv]);
+        }
+    } else {
+        solutionDiv.classList.add('hidden');
+        button.textContent = '✓ View Solution';
+    }
+}
+
+// === FILTERING ===
 function applyFilters() {
     const moduleFilter = document.getElementById('module-filter').value;
     const difficultyFilter = document.getElementById('difficulty-filter').value;
     
-    const allProblems = document.querySelectorAll('.problem-card');
+    const problems = document.querySelectorAll('.problem-card');
     
-    allProblems.forEach(card => {
-        const problemModule = card.getAttribute('data-module');
-        const problemDifficulty = card.getAttribute('data-difficulty');
-        const problemSection = card.getAttribute('data-section');
+    problems.forEach(problem => {
+        const problemModule = problem.getAttribute('data-module');
+        const problemDifficulty = problem.getAttribute('data-difficulty');
         
-        let showCard = true;
+        let show = true;
         
-        // Filter by module
         if (moduleFilter !== 'all' && problemModule !== moduleFilter) {
-            showCard = false;
+            show = false;
         }
         
-        // Filter by difficulty
-        if (difficultyFilter !== 'all') {
-            if (difficultyFilter === 'A' && problemSection !== 'A') showCard = false;
-            if (difficultyFilter === 'B' && problemSection !== 'B') showCard = false;
-            if (difficultyFilter === 'C' && problemSection !== 'C') showCard = false;
-            if (difficultyFilter === 'D' && problemSection !== 'D') showCard = false;
-            if (difficultyFilter === 'E' && problemSection !== 'E') showCard = false;
+        if (difficultyFilter !== 'all' && problemDifficulty !== difficultyFilter) {
+            show = false;
         }
         
-        // Show or hide card
-        if (showCard) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
+        problem.style.display = show ? 'block' : 'none';
     });
 }
 
 function clearFilters() {
     document.getElementById('module-filter').value = 'all';
     document.getElementById('difficulty-filter').value = 'all';
-    
-    // Show all problems
-    const allProblems = document.querySelectorAll('.problem-card');
-    allProblems.forEach(card => {
-        card.style.display = 'block';
-    });
-}
-
-// === SOLUTION TOGGLE ===
-function toggleSolution(problemId) {
-    const solutionContent = document.getElementById(`solution-${problemId}`);
-    const toggleBtn = document.getElementById(`toggle-${problemId}`);
-    
-    if (solutionContent && toggleBtn) {
-        solutionContent.classList.toggle('visible');
-        
-        if (solutionContent.classList.contains('visible')) {
-            toggleBtn.textContent = 'Hide Solution';
-            markProblemComplete(problemId);
-        } else {
-            toggleBtn.textContent = 'Show Solution';
-        }
-    }
+    applyFilters();
 }
 
 // === PROGRESS TRACKING ===
-function markProblemComplete(problemId) {
-    completedProblems.add(problemId);
-    saveProgress();
-    updateProgressDisplay();
-}
-
 function saveProgress() {
     localStorage.setItem('completedProblems', JSON.stringify([...completedProblems]));
 }
@@ -424,7 +507,9 @@ function loadProgress() {
 }
 
 function updateProgressDisplay() {
-    const totalProblems = 250;
+    const totalProblems = curriculum.modules.reduce((sum, mod) => 
+        sum + mod.lessons.reduce((lsum, lesson) => lsum + lesson.problems.length, 0), 0
+    );
     const completed = completedProblems.size;
     const percentage = Math.round((completed / totalProblems) * 100);
     
@@ -441,42 +526,40 @@ function updateProgressDisplay() {
         completedCount.textContent = completed;
     }
     
-    // Update module progress (simplified)
-    updateModuleProgress(1, 50);  // Module 1: 50 problems
-    updateModuleProgress(2, 135); // Module 2: 135 problems
-    updateModuleProgress(3, 65);  // Module 3: 65 problems
+    // Update module progress
+    updateModuleProgressDisplay();
     
     // Update header stats
     updateHeaderStats();
 }
 
-function updateModuleProgress(moduleNum, totalProblems) {
-    // There are now multiple progress bars (header mini bars and progress dashboard bars)
-    // We update the one in the sidebar and the dashboard
-    
-    const sidebarMini = document.getElementById(`mod${moduleNum}-mini`);
-    const dashboardBar = document.getElementById(`module-${moduleNum}-progress`);
-    
-    // Calculate problems completed for this module
-    const moduleCompleted = [...completedProblems].filter(id => 
-        id.startsWith(`M${moduleNum}`)
-    ).length;
-    
-    const percentage = Math.round((moduleCompleted / totalProblems) * 100);
-    
-    // Update sidebar mini progress bar
-    if (sidebarMini) {
-        sidebarMini.style.width = `${percentage}%`;
-    }
-    
-    // Update dashboard progress bar
-    if (dashboardBar) {
-        dashboardBar.style.width = `${percentage}%`;
-        const percentageText = dashboardBar.parentElement.nextElementSibling;
-        if (percentageText) {
-            percentageText.textContent = `${percentage}%`;
+function updateModuleProgressDisplay() {
+    const breakdownHTML = curriculum.modules.map((module, moduleIdx) => {
+        const moduleNum = moduleIdx + 1;
+        const totalProblems = module.lessons.reduce((sum, lesson) => sum + lesson.problems.length, 0);
+        const moduleCompleted = [...completedProblems].filter(id => 
+            id.startsWith(`M${moduleNum}-`)
+        ).length;
+        const percentage = Math.round((moduleCompleted / totalProblems) * 100);
+        
+        // Update sidebar mini progress
+        const sidebarMini = document.getElementById(`mod${moduleNum}-mini`);
+        if (sidebarMini) {
+            sidebarMini.style.width = `${percentage}%`;
         }
-    }
+        
+        return `
+            <div class="module-prog-item">
+                <span style="font-family: 'JetBrains Mono'; font-size: 0.85rem;">Module ${moduleNum}: ${module.name}</span>
+                <div class="mini-progress-bar">
+                    <div class="mini-progress" style="width: ${percentage}%;"></div>
+                </div>
+                <span class="prog-percentage">${percentage}%</span>
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById('module-progress-breakdown').innerHTML = breakdownHTML;
 }
 
 // === MASTERY TEST ===
@@ -488,12 +571,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function startMasteryTest() {
-    if (completedProblems.size < 200) {
-        alert('We recommend completing at least 200 practice problems before attempting the mastery test.');
+    const totalProblems = curriculum.modules.reduce((sum, mod) => 
+        sum + mod.lessons.reduce((lsum, lesson) => lsum + lesson.problems.length, 0), 0
+    );
+    const recommendedCompletion = Math.floor(totalProblems * 0.8);
+    
+    if (completedProblems.size < recommendedCompletion) {
+        alert(`We recommend completing at least ${recommendedCompletion} practice problems before attempting the mastery test.`);
         return;
     }
     
-    const confirmed = confirm('This will start the 25-question mastery examination. Are you ready?');
+    const confirmed = confirm(`This will start the ${curriculum.masteryTest.totalQuestions}-question mastery examination. Are you ready?`);
     if (confirmed) {
         masteryTestStarted = true;
         loadMasteryTest();
@@ -504,121 +592,40 @@ function loadMasteryTest() {
     const masteryContent = document.getElementById('mastery-test-content');
     if (masteryContent) {
         masteryContent.classList.remove('hidden');
+        
+        const questionsHTML = curriculum.masteryTest.questions.map((q, idx) => `
+            <div class="test-question">
+                <h4>Question ${idx + 1} [${q.points} points]</h4>
+                ${q.question}
+            </div>
+        `).join('');
+        
+        const answersHTML = curriculum.masteryTest.questions.map((q, idx) => 
+            `<p><strong>Q${idx + 1}:</strong> ${q.answer}</p>`
+        ).join('');
+        
         masteryContent.innerHTML = `
             <div class="mastery-test-container">
-                <h3>Mastery Examination - 25 Questions</h3>
-                <p><strong>Instructions:</strong> Answer all questions. Show your work. Time limit: 90 minutes.</p>
+                <h3>Mastery Examination - ${curriculum.masteryTest.totalQuestions} Questions</h3>
+                <p><strong>Instructions:</strong> ${curriculum.masteryTest.instructions}</p>
                 
-                <div class="test-question">
-                    <h4>Question 1 [4 points]</h4>
-                    <p>Given $$f(x) = 2x - 3$$ and $$g(x) = x^2 + 1$$, find:</p>
-                    <p>a) $$(f \\circ g)(2)$$</p>
-                    <p>b) $$(g \\circ f)(x)$$ in simplified form</p>
-                    <p>c) The domain of $$\\frac{f}{g}(x)$$</p>
-                </div>
-                
-                <div class="test-question">
-                    <h4>Question 2 [4 points]</h4>
-                    <p>Determine whether each relation is a function:</p>
-                    <p>a) $$\\{(1,2), (3,4), (1,5)\\}$$</p>
-                    <p>b) $$y = \\sqrt{x - 4}$$</p>
-                    <p>c) $$x^2 + y^2 = 16$$</p>
-                </div>
-                
-                <div class="test-question">
-                    <h4>Question 3 [3 points]</h4>
-                    <p>Find the inverse of $$f(x) = \\frac{2x + 1}{x - 3}$$ and verify your answer.</p>
-                </div>
-                
-                <div class="test-question">
-                    <h4>Question 4 [4 points]</h4>
-                    <p>Find the domain of:</p>
-                    <p>a) $$f(x) = \\frac{x + 2}{x^2 - 5x + 6}$$</p>
-                    <p>b) $$g(x) = \\sqrt{9 - x^2}$$</p>
-                </div>
-                
-                <div class="test-question">
-                    <h4>Question 5 [3 points]</h4>
-                    <p>Find k such that $$h(x) = \\begin{cases} x^2 - 1 & x \\leq 1 \\\\ 2x + k & x > 1 \\end{cases}$$ is continuous at $$x = 1$$.</p>
-                </div>
-                
-                <div class="test-question">
-                    <h4>Question 6 [3 points]</h4>
-                    <p>Evaluate:</p>
-                    <p>a) $$\\lim_{x \\to 4} (3x^2 - 2x + 1)$$</p>
-                    <p>b) $$\\lim_{x \\to 2} \\frac{x^2 - 4}{x - 2}$$</p>
-                </div>
-                
-                <div class="test-question">
-                    <h4>Question 7 [5 points]</h4>
-                    <p>Use the epsilon-delta definition to prove that $$\\lim_{x \\to 1} (3x + 2) = 5$$.</p>
-                </div>
-                
-                <div class="test-question">
-                    <h4>Question 8 [4 points]</h4>
-                    <p>Evaluate:</p>
-                    <p>a) $$\\lim_{x \\to 3^+} \\frac{2x - 1}{x - 3}$$</p>
-                    <p>b) $$\\lim_{x \\to 3^-} \\frac{2x - 1}{x - 3}$$</p>
-                    <p>c) Does $$\\lim_{x \\to 3} \\frac{2x - 1}{x - 3}$$ exist?</p>
-                </div>
-                
-                <div class="test-question">
-                    <h4>Question 9 [4 points]</h4>
-                    <p>Evaluate $$\\lim_{h \\to 0} \\frac{(3+h)^2 - 9}{h}$$.</p>
-                </div>
-                
-                <div class="test-question">
-                    <h4>Question 10 [4 points]</h4>
-                    <p>Evaluate:</p>
-                    <p>a) $$\\lim_{x \\to \\infty} \\frac{2x^2 + 3x - 1}{5x^2 - 7}$$</p>
-                    <p>b) $$\\lim_{x \\to \\infty} \\frac{3x + 5}{x^2 - 1}$$</p>
-                </div>
-                
-                <div style="margin-top: 2rem; padding: 1rem; background: #e8f4f8; border-radius: 6px;">
-                    <p><strong>Note:</strong> This is a sample of 10 questions. The complete 25-question test with full solutions is available in the MASTERY_TEST.md document.</p>
-                    <p>Questions 11-25 cover: limits at infinity, vertical asymptotes, continuity testing, discontinuity classification, and epsilon-delta proofs.</p>
-                </div>
+                ${questionsHTML}
                 
                 <div style="margin-top: 2rem;">
-                    <h4>Answer Key (First 10 Questions)</h4>
+                    <h4>Answer Key</h4>
                     <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px;">
-                        <p><strong>Q1:</strong> a) 7, b) 4x² - 12x + 10, c) All real numbers</p>
-                        <p><strong>Q2:</strong> a) Not a function, b) Is a function, c) Not a function</p>
-                        <p><strong>Q3:</strong> f⁻¹(x) = (3x + 1)/(x - 2)</p>
-                        <p><strong>Q4:</strong> a) (-∞,2)∪(2,3)∪(3,∞), b) [-3,3]</p>
-                        <p><strong>Q5:</strong> k = -2</p>
-                        <p><strong>Q6:</strong> a) 41, b) 4</p>
-                        <p><strong>Q7:</strong> Choose δ = ε/3 (see full proof in document)</p>
-                        <p><strong>Q8:</strong> a) +∞, b) -∞, c) No</p>
-                        <p><strong>Q9:</strong> 6</p>
-                        <p><strong>Q10:</strong> a) 2/5, b) 0</p>
+                        ${answersHTML}
                     </div>
                 </div>
             </div>
         `;
         
-        // Trigger MathJax rendering
+        // Trigger MathJax
         if (window.MathJax) {
             MathJax.typesetPromise([masteryContent]);
         }
     }
 }
-
-// === RESET PROGRESS ===
-document.addEventListener('DOMContentLoaded', function() {
-    const resetBtn = document.getElementById('reset-progress-btn');
-    if (resetBtn) {
-        resetBtn.addEventListener('click', function() {
-            const confirmed = confirm('Are you sure you want to reset all progress? This cannot be undone.');
-            if (confirmed) {
-                completedProblems.clear();
-                saveProgress();
-                updateProgressDisplay();
-                alert('Progress has been reset.');
-            }
-        });
-    }
-});
 
 // === EXPORT FUNCTIONS FOR INLINE USE ===
 window.showSection = showSection;
@@ -626,4 +633,3 @@ window.navigateTo = navigateTo;
 window.toggleSolution = toggleSolution;
 window.applyFilters = applyFilters;
 window.clearFilters = clearFilters;
-window.showFormulaSheet = showFormulaSheet;
