@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Player (๑•̀ㅂ•́)و✧</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&family=Exo+2:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f0ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+    <style>
+        :root {
+            --neon-blue: #00f0ff;
+            --neon-pink: #ff006e;
+            --neon-purple: #b537f2;
+            --neon-green: #39ff14;
+            --cyber-dark: #0a0a0f;
+            --cyber-darker: #050508;
+            --glow-blue: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3), 0 0 30px rgba(0, 240, 255, 0.2);
+            --glow-pink: 0 0 10px rgba(255, 0, 110, 0.5), 0 0 20px rgba(255, 0, 110, 0.3);
+            --glow-purple: 0 0 10px rgba(181, 55, 242, 0.5), 0 0 20px rgba(181, 55, 242, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--cyber-dark);
+            color: var(--neon-blue);
+            font-family: 'Exo 2', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            position: relative;
+        }
+
+        /* ─── CYBERPUNK CIRCUIT BACKGROUND ─── */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 50h20M30 50h20M60 50h20M80 50h20M50 0v20M50 30v20M50 60v20M50 80v20' stroke='%2300f0ff' stroke-width='0.5' opacity='0.1'/%3E%3Ccircle cx='50' cy='50' r='2' fill='%2300f0ff' opacity='0.2'/%3E%3C/svg%3E"),
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 110, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(0, 240, 255, 0.15) 0%, transparent 50%);
+            background-size: 100px 100px, 100% 100%, 100% 100%;
+            pointer-events: none;
+            z-index: 1;
+            animation: circuitFlow 20s linear infinite;
+        }
+
+        @keyframes circuitFlow {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 100px 100px, 0 0, 0 0; }
+        }
+
+        /* ─── NEON GRID OVERLAY ─── */
+        .cyber-grid {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        /* ─── GLITCH SCANLINES ─── */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 240, 255, 0.02) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 2;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+
+        /* ─── HEADER ─── */
+        .header {
+            max-width: 1000px;
+            width: 100%;
+            padding: 40px 20px;
+            position: relative;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(181, 55, 242, 0.1));
+            border: 2px solid rgba(0, 240, 255, 0.4);
+            color: var(--neon-blue);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        .back-btn:hover {
+            border-color: var(--neon-purple);
+            background: linear-gradient(135deg, rgba(181, 55, 242, 0.25), rgba(0, 240, 255, 0.15));
+            transform: translateY(-3px);
+            box-shadow: var(--glow-purple), 0 5px 20px rgba(181, 55, 242, 0.3);
+            color: #fff;
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.5));
+            margin-bottom: 10px;
+        }
+
+        .file-info {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            color: rgba(0, 240, 255, 0.7);
+            margin-top: 15px;
+        }
+
+        /* ─── PLAYER CONTAINER ─── */
+        .player-container {
+            max-width: 900px;
+            width: 95%;
+            background: linear-gradient(135deg, rgba(10, 50, 80, 0.3), rgba(20, 60, 100, 0.3));
+            border: 2px solid rgba(0, 240, 255, 0.3);
+            border-radius: 0;
+            clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+            padding: 40px;
+            margin: 20px auto;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--glow-blue), 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .player-content {
+            display: none;
+        }
+
+        .player-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ─── AUDIO PLAYER ─── */
+        .audio-player {
+            width: 100%;
+            border-radius: 0;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+            background: rgba(0, 0, 0, 0.3);
+            filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.3));
+        }
+
+        /* ─── VIDEO PLAYER ─── */
+        .video-player {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border-radius: 0;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+            background: #000;
+            filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.3));
+        }
+
+        /* ─── PDF VIEWER ─── */
+        .pdf-viewer {
+            width: 100%;
+            height: 800px;
+            border-radius: 0;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+            background: #fff;
+            border: 2px solid rgba(0, 240, 255, 0.3);
+        }
+
+        /* ─── DOCUMENT VIEWER ─── */
+        .document-viewer {
+            width: 100%;
+            height: 800px;
+            border-radius: 0;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+            background: #fff;
+            border: 2px solid rgba(0, 240, 255, 0.3);
+        }
+
+        /* ─── YOUTUBE EMBED ─── */
+        .youtube-embed {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 0;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+        }
+
+        .youtube-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.3));
+        }
+
+        /* ─── ERROR MESSAGE ─── */
+        .error-message {
+            text-align: center;
+            padding: 60px 40px;
+            color: var(--neon-pink);
+            text-shadow: var(--glow-pink);
+            font-size: 1.1rem;
+        }
+
+        .error-message h2 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .error-message p {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* ─── DOWNLOAD LINK ─── */
+        .download-section {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, rgba(57, 255, 20, 0.2), rgba(0, 240, 255, 0.2));
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+            text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+        }
+
+        .download-btn:hover {
+            border-color: #fff;
+            background: linear-gradient(135deg, rgba(57, 255, 20, 0.3), rgba(0, 240, 255, 0.3));
+            transform: translateY(-3px);
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.5), 0 5px 20px rgba(57, 255, 20, 0.2);
+            color: #fff;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .player-container {
+                padding: 20px;
+            }
+
+            .pdf-viewer,
+            .document-viewer {
+                height: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-grid"></div>
+
+    <div class="header">
+        <a href="cyberpunk.html" class="back-btn">← Back</a>
+        <h1>Media <span id="playerTitle">Player</span></h1>
+        <div class="file-info">
+            <p id="fileName">Loading...</p>
+        </div>
+    </div>
+
+    <div class="player-container">
+        <!-- Audio Player -->
+        <div id="audioPlayer" class="player-content">
+            <audio class="audio-player" controls>
+                Your browser does not support the audio element.
+            </audio>
+            <div class="download-section">
+                <a id="downloadAudio" href="#" class="download-btn" download>Download Audio</a>
+            </div>
+        </div>
+
+        <!-- Video Player -->
+        <div id="videoPlayer" class="player-content">
+            <video class="video-player" controls>
+                Your browser does not support the video element.
+            </video>
+            <div class="download-section">
+                <a id="downloadVideo" href="#" class="download-btn" download>Download Video</a>
+            </div>
+        </div>
+
+        <!-- YouTube Embed -->
+        <div id="youtubePlayer" class="player-content">
+            <div class="youtube-embed">
+                <iframe id="youtubeFrame" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <!-- PDF Viewer -->
+        <div id="pdfPlayer" class="player-content">
+            <iframe id="pdfFrame" class="pdf-viewer" src=""></iframe>
+            <div class="download-section">
+                <a id="downloadPdf" href="#" class="download-btn" download>Download PDF</a>
+            </div>
+        </div>
+
+        <!-- Document Viewer (Word, etc.) -->
+        <div id="documentPlayer" class="player-content">
+            <iframe id="documentFrame" class="document-viewer" src=""></iframe>
+            <div class="download-section">
+                <a id="downloadDocument" href="#" class="download-btn" download>Download Document</a>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorPlayer" class="player-content">
+            <div class="error-message">
+                <h2>(╯°□°)╯彡 ┻━┻</h2>
+                <p id="errorMessage">File type not supported or file not found.</p>
+                <div class="download-section">
+                    <a id="downloadFallback" href="#" class="download-btn" download>Download File</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get file URL from query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileUrl = urlParams.get('file');
+        const fileName = urlParams.get('name') || 'Media File';
+
+        // Update file info
+        document.getElementById('fileName').textContent = `// ${fileName.toUpperCase()}`;
+
+        if (!fileUrl) {
+            showError('No file specified. Please use ?file=path&name=filename');
+        } else {
+            loadFile(fileUrl, fileName);
+        }
+
+        function loadFile(url, name) {
+            // Check if it's a YouTube link - redirect to YouTube instead
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                // Redirect to YouTube
+                window.location.href = url;
+                return;
+            }
+
+            // Determine file type by extension
+            const fileExtension = url.split('.').pop().toLowerCase();
+            
+            // Update title
+            document.getElementById('playerTitle').textContent = getFileTypeLabel(fileExtension);
+
+            switch (fileExtension) {
+                // Audio files
+                case 'm4a':
+                case 'mp3':
+                case 'wav':
+                case 'flac':
+                    loadAudio(url, name);
+                    break;
+
+                // Video files (webm and ogg can be audio or video, but treat as video for player compatibility)
+                case 'mp4':
+                case 'webm':
+                case 'ogg':
+                case 'avi':
+                case 'mov':
+                    loadVideo(url, name);
+                    break;
+
+                // PDF files
+                case 'pdf':
+                    loadPdf(url, name);
+                    break;
+
+                // Word documents
+                case 'docx':
+                case 'doc':
+                    loadDocument(url, name);
+                    break;
+
+                default:
+                    showError(`File type ".${fileExtension}" is not supported.`);
+            }
+        }
+
+        function loadAudio(url, name) {
+            const audioElement = document.querySelector('#audioPlayer audio');
+            audioElement.src = url;
+            document.getElementById('audioPlayer').classList.add('active');
+            document.getElementById('downloadAudio').href = url;
+            document.getElementById('downloadAudio').download = name;
+        }
+
+        function loadVideo(url, name) {
+            const videoElement = document.querySelector('#videoPlayer video');
+            videoElement.src = url;
+            document.getElementById('videoPlayer').classList.add('active');
+            document.getElementById('downloadVideo').href = url;
+            document.getElementById('downloadVideo').download = name;
+        }
+
+        function loadYoutube(url) {
+            let embedUrl = '';
+            
+            // If it's already an embed link, use it as-is (preserves query parameters like ?si=...)
+            if (url.includes('youtube.com/embed/')) {
+                embedUrl = url;
+            } else if (url.includes('youtube.com/watch?v=')) {
+                // Extract video ID from watch link
+                const videoId = url.split('v=')[1].split('&')[0];
+                embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            } else if (url.includes('youtu.be/')) {
+                // Extract video ID from shortlink
+                const videoId = url.split('youtu.be/')[1].split('?')[0];
+                embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            } else {
+                // Assume it's just the video ID
+                embedUrl = `https://www.youtube.com/embed/${url}`;
+            }
+
+            document.getElementById('youtubeFrame').src = embedUrl;
+            document.getElementById('youtubePlayer').classList.add('active');
+        }
+
+        function loadPdf(url, name) {
+            document.getElementById('pdfFrame').src = url;
+            document.getElementById('pdfPlayer').classList.add('active');
+            document.getElementById('downloadPdf').href = url;
+            document.getElementById('downloadPdf').download = name;
+        }
+
+        function loadDocument(url, name) {
+            // Use Microsoft Office Online for viewing
+            const officeViewerUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+            document.getElementById('documentFrame').src = officeViewerUrl;
+            document.getElementById('documentPlayer').classList.add('active');
+            document.getElementById('downloadDocument').href = url;
+            document.getElementById('downloadDocument').download = name;
+        }
+
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorPlayer').classList.add('active');
+            
+            // Show fallback download if file URL exists
+            if (fileUrl) {
+                document.getElementById('downloadFallback').href = fileUrl;
+                document.getElementById('downloadFallback').download = fileName;
+            }
+        }
+
+        function getFileTypeLabel(ext) {
+            const labels = {
+                'm4a': 'Audio',
+                'mp3': 'Audio',
+                'wav': 'Audio',
+                'ogg': 'Audio',
+                'flac': 'Audio',
+                'mp4': 'Video',
+                'webm': 'Video',
+                'avi': 'Video',
+                'mov': 'Video',
+                'pdf': 'PDF',
+                'doc': 'Document',
+                'docx': 'Document'
+            };
+            return labels[ext] || 'Player';
+        }
+
+        // Parallax effect
+        document.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+            document.querySelector('.cyber-grid').style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+    </script>
+</body>
+</html>
