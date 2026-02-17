@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Let's all pass! (๑•̀ㅂ•́)و✧</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&family=Exo+2:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f0ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+    <style>
+        :root {
+            --neon-blue: #00f0ff;
+            --neon-pink: #ff006e;
+            --neon-purple: #b537f2;
+            --neon-green: #39ff14;
+            --cyber-dark: #0a0a0f;
+            --cyber-darker: #050508;
+            --cyber-card: rgba(20, 20, 35, 0.8);
+            --glow-blue: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3), 0 0 30px rgba(0, 240, 255, 0.2);
+            --glow-pink: 0 0 10px rgba(255, 0, 110, 0.5), 0 0 20px rgba(255, 0, 110, 0.3);
+            --glow-purple: 0 0 10px rgba(181, 55, 242, 0.5), 0 0 20px rgba(181, 55, 242, 0.3);
+            --glow-green: 0 0 10px rgba(57, 255, 20, 0.5), 0 0 20px rgba(57, 255, 20, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--cyber-dark);
+            color: var(--neon-blue);
+            font-family: 'Exo 2', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            position: relative;
+        }
+
+        /* ─── CYBERPUNK CIRCUIT BACKGROUND ─── */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 50h20M30 50h20M60 50h20M80 50h20M50 0v20M50 30v20M50 60v20M50 80v20' stroke='%2300f0ff' stroke-width='0.5' opacity='0.1'/%3E%3Ccircle cx='50' cy='50' r='2' fill='%2300f0ff' opacity='0.2'/%3E%3C/svg%3E"),
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 110, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(0, 240, 255, 0.15) 0%, transparent 50%);
+            background-size: 100px 100px, 100% 100%, 100% 100%;
+            pointer-events: none;
+            z-index: 1;
+            animation: circuitFlow 20s linear infinite;
+        }
+
+        @keyframes circuitFlow {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 100px 100px, 0 0, 0 0; }
+        }
+
+        /* ─── NEON GRID OVERLAY ─── */
+        .cyber-grid {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        /* ─── GLITCH SCANLINES ─── */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 240, 255, 0.02) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 2;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+
+        /* ─── FLOATING PARTICLES ─── */
+        .particles {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            box-shadow: var(--glow-blue);
+            animation: float 15s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* ─── HEADER SECTION ─── */
+        .header {
+            max-width: 1000px;
+            width: 100%;
+            margin-bottom: 40px;
+            margin-top: 60px;
+            padding: 0 20px;
+            position: relative;
+            text-align: center;
+            animation: glitchIn 1s ease-out;
+            z-index: 10;
+        }
+
+        @keyframes glitchIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+                filter: blur(10px);
+            }
+            20% {
+                transform: translateX(-5px);
+            }
+            40% {
+                transform: translateX(5px);
+            }
+            60% {
+                transform: translateX(-3px);
+            }
+            80% {
+                transform: translateX(3px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) translateX(0);
+                filter: blur(0);
+            }
+        }
+
+        .header-meta {
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.5em;
+            color: var(--neon-pink);
+            margin-bottom: 15px;
+            display: block;
+            text-shadow: var(--glow-pink);
+            animation: flicker 3s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            line-height: 1;
+            text-transform: uppercase;
+            position: relative;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.5))
+                    drop-shadow(0 0 40px rgba(181, 55, 242, 0.3));
+            animation: neonPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes neonPulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.5))
+                        drop-shadow(0 0 40px rgba(181, 55, 242, 0.3));
+            }
+            50% {
+                filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.8))
+                        drop-shadow(0 0 60px rgba(181, 55, 242, 0.5));
+            }
+        }
+
+        .header h1::before {
+            content: '(◕‿◕✿)';
+            position: absolute;
+            left: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.4em;
+            color: var(--neon-pink);
+            text-shadow: var(--glow-pink);
+            animation: kawaiiBounce 2s ease-in-out infinite;
+        }
+
+        .header h1::after {
+            content: '(｡◕‿◕｡)';
+            position: absolute;
+            right: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.4em;
+            color: var(--neon-green);
+            text-shadow: var(--glow-green);
+            animation: kawaiiBounce 2s ease-in-out infinite 0.5s;
+        }
+
+        @keyframes kawaiiBounce {
+            0%, 100% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-60%) scale(1.1); }
+        }
+
+        .header h1 span {
+            position: relative;
+            display: inline-block;
+            animation: glitchText 5s infinite;
+        }
+
+        @keyframes glitchText {
+            0%, 90%, 100% {
+                transform: translate(0, 0);
+                text-shadow: none;
+            }
+            92% {
+                transform: translate(-2px, 2px);
+                text-shadow: 2px -2px var(--neon-pink), -2px 2px var(--neon-blue);
+            }
+            94% {
+                transform: translate(2px, -2px);
+                text-shadow: -2px 2px var(--neon-green), 2px -2px var(--neon-purple);
+            }
+        }
+
+        .header-desc {
+            max-width: 600px;
+            margin: 30px auto 0;
+            font-weight: 300;
+            font-size: 1rem;
+            color: rgba(0, 240, 255, 0.7);
+            border-top: 2px solid rgba(0, 240, 255, 0.3);
+            padding-top: 20px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+            line-height: 1.6;
+        }
+
+        /* ─── CONTENT WRAPPER ─── */
+        .content-wrapper {
+            flex: 1;
+            width: 100%;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+
+        /* ─── NAVBAR ─── */
+        .navbar {
+            width: 100%;
+            max-width: 1100px;
+            background: rgba(20, 20, 35, 0.6);
+            border: 2px solid rgba(0, 240, 255, 0.3);
+            border-radius: 15px;
+            padding: 20px 28px;
+            margin: 30px 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            backdrop-filter: blur(10px) saturate(180%);
+            position: relative;
+            box-shadow: 
+                var(--glow-blue),
+                inset 0 0 30px rgba(0, 240, 255, 0.05);
+            z-index: 10;
+        }
+
+        .navbar::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple), var(--neon-pink), var(--neon-green));
+            border-radius: 15px;
+            z-index: -1;
+            opacity: 0.3;
+            filter: blur(10px);
+            animation: borderGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .navbar::after {
+            content: '｡◕‿◕｡';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: var(--neon-pink);
+            text-shadow: var(--glow-pink);
+            animation: kawaiiFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes kawaiiFloat {
+            0%, 100% { transform: translateY(-50%); }
+            50% { transform: translateY(-60%); }
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(181, 55, 242, 0.1));
+            border: 2px solid rgba(0, 240, 255, 0.4);
+            border-radius: 10px;
+            color: var(--neon-blue);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--neon-pink);
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.2), rgba(181, 55, 242, 0.2));
+            transform: translateY(-3px);
+            box-shadow: 
+                var(--glow-pink),
+                0 5px 20px rgba(255, 0, 110, 0.3);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.3), rgba(181, 55, 242, 0.3));
+            border-color: var(--neon-blue);
+            box-shadow: var(--glow-blue);
+            color: #fff;
+        }
+
+        .nav-btn.active::after {
+            content: ' ✧';
+            color: var(--neon-pink);
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 300px;
+            position: relative;
+        }
+
+        .search-container::before {
+            content: '🔍';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            z-index: 1;
+            filter: grayscale(1) brightness(2);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(0, 240, 255, 0.3);
+            border-radius: 10px;
+            color: var(--neon-blue);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: rgba(0, 240, 255, 0.4);
+        }
+
+        .search-input:focus {
+            border-color: var(--neon-pink);
+            box-shadow: var(--glow-pink);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        /* ─── COMING SOON SECTION ─── */
+        .coming-soon-container {
+            display: none;
+            text-align: center;
+            padding: 100px 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .coming-soon-container.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .coming-soon-icon {
+            font-size: 6rem;
+            margin-bottom: 20px;
+            animation: kawaiiSpin 3s ease-in-out infinite;
+        }
+
+        @keyframes kawaiiSpin {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-10deg) scale(1.1); }
+            75% { transform: rotate(10deg) scale(1.1); }
+        }
+
+        .coming-soon-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--neon-purple);
+            text-shadow: var(--glow-purple);
+            margin-bottom: 15px;
+            letter-spacing: 0.1em;
+        }
+
+        .coming-soon-tag {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.2), rgba(181, 55, 242, 0.2));
+            border: 2px solid var(--neon-pink);
+            border-radius: 20px;
+            color: var(--neon-pink);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 700;
+            box-shadow: var(--glow-pink);
+            margin-bottom: 20px;
+        }
+
+        .coming-soon-desc {
+            color: rgba(0, 240, 255, 0.7);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* ─── EXAM GRID ─── */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        /* ─── HOLOGRAPHIC CARDS ─── */
+        .blueprint-card {
+            background: linear-gradient(135deg, rgba(20, 20, 35, 0.8), rgba(30, 30, 50, 0.8));
+            border: 2px solid rgba(0, 240, 255, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-decoration: none;
+            color: inherit;
+            min-height: 320px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .blueprint-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            border-radius: 20px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            filter: blur(15px);
+        }
+
+        .blueprint-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(0, 240, 255, 0.1) 50%,
+                transparent 70%
+            );
+            transform: rotate(45deg);
+            animation: holographicShine 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes holographicShine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .blueprint-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--neon-pink);
+            box-shadow: 
+                var(--glow-pink),
+                0 20px 60px rgba(255, 0, 110, 0.4),
+                inset 0 0 30px rgba(0, 240, 255, 0.1);
+        }
+
+        .blueprint-card:hover::before {
+            opacity: 0.6;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(181, 55, 242, 0.2));
+            border: 2px solid rgba(0, 240, 255, 0.4);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: var(--glow-blue);
+            transition: all 0.3s ease;
+        }
+
+        .blueprint-card:hover .card-icon {
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.3), rgba(181, 55, 242, 0.3));
+            border-color: var(--neon-pink);
+            box-shadow: var(--glow-pink);
+            transform: rotateY(180deg) scale(1.1);
+        }
+
+        .card-icon svg {
+            color: var(--neon-blue);
+            filter: drop-shadow(0 0 5px rgba(0, 240, 255, 0.6));
+        }
+
+        .blueprint-card:hover .card-icon svg {
+            color: var(--neon-pink);
+            filter: drop-shadow(0 0 5px rgba(255, 0, 110, 0.6));
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 1.5px solid;
+        }
+
+        .tag-period {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(0, 240, 255, 0.1));
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+        }
+
+        .tag-subject {
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.2), rgba(255, 0, 110, 0.1));
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+            text-shadow: 0 0 5px rgba(255, 0, 110, 0.5);
+        }
+
+        .card-tagline {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--neon-purple);
+            text-shadow: 0 0 5px rgba(181, 55, 242, 0.5);
+            margin-bottom: 12px;
+            letter-spacing: 0.2em;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            text-shadow: 
+                0 0 10px rgba(0, 240, 255, 0.5),
+                0 0 20px rgba(0, 240, 255, 0.3);
+            position: relative;
+        }
+
+        .blueprint-card:hover .card-title {
+            color: var(--neon-pink);
+            text-shadow: 
+                0 0 10px rgba(255, 0, 110, 0.7),
+                0 0 20px rgba(255, 0, 110, 0.5);
+        }
+
+        .card-action {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 20px;
+            margin-top: auto;
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+            color: var(--neon-blue);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .card-action::before {
+            content: '(｡◕‿◕｡) ';
+            color: var(--neon-green);
+            text-shadow: var(--glow-green);
+            font-size: 1.2rem;
+            margin-right: 5px;
+        }
+
+        .blueprint-card:hover .card-action {
+            color: var(--neon-pink);
+            text-shadow: 0 0 5px rgba(255, 0, 110, 0.7);
+        }
+
+        .card-action svg {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 0 3px currentColor);
+        }
+
+        .blueprint-card:hover .card-action svg {
+            transform: translateX(5px);
+        }
+
+        /* ─── FOOTER ─── */
+        .footer {
+            width: 100%;
+            padding: 30px 20px;
+            text-align: center;
+            background: linear-gradient(to top, rgba(10, 10, 15, 0.9), transparent);
+            border-top: 2px solid rgba(0, 240, 255, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer p {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: rgba(0, 240, 255, 0.6);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .footer::before {
+            content: '✧･ﾟ: *✧･ﾟ:*';
+            display: block;
+            color: var(--neon-pink);
+            text-shadow: var(--glow-pink);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* ─── GLITCH EFFECT ─── */
+        @keyframes glitch {
+            0%, 100% {
+                transform: translate(0);
+            }
+            20% {
+                transform: translate(-2px, 2px);
+            }
+            40% {
+                transform: translate(-2px, -2px);
+            }
+            60% {
+                transform: translate(2px, 2px);
+            }
+            80% {
+                transform: translate(2px, -2px);
+            }
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .header h1::before,
+            .header h1::after {
+                display: none;
+            }
+
+            .navbar::after {
+                display: none;
+            }
+
+            .exam-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-container {
+                max-width: 100%;
+            }
+        }
+
+        /* ─── LENS FLARE ─── */
+        .lens-flare {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.3), transparent 70%);
+            pointer-events: none;
+            z-index: 5;
+            mix-blend-mode: screen;
+            opacity: 0.4;
+            animation: lensMove 10s ease-in-out infinite;
+        }
+
+        @keyframes lensMove {
+            0%, 100% {
+                top: 20%;
+                left: 20%;
+            }
+            50% {
+                top: 60%;
+                left: 70%;
+            }
+        }
+
+        .lens-flare:nth-child(2) {
+            background: radial-gradient(circle, rgba(255, 0, 110, 0.2), transparent 70%);
+            animation-delay: -5s;
+            animation-duration: 15s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cyberpunk Grid -->
+    <div class="cyber-grid"></div>
+
+    <!-- Floating Particles -->
+    <div class="particles">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: 2.5s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: 4.5s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: 1.5s;"></div>
+    </div>
+
+    <!-- Lens Flares -->
+    <div class="lens-flare"></div>
+    <div class="lens-flare"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <span class="header-meta">◆ CYBER STUDY ZONE ◆</span>
+        <h1>Let's All <span>Pass!</span></h1>
+        <p class="header-desc">
+            Navigate through the neon-lit corridors of knowledge ✧ Your cyberpunk study companion
+        </p>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="nav-buttons">
+                <button class="nav-btn active" data-period="prelims">Prelims ^_^</button>
+                <button class="nav-btn" data-period="midterms">Midterms (◕‿◕✿)</button>
+                <button class="nav-btn" data-period="finals">Finals (≧▽≦)</button>
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search subjects... (•‿•)">
+            </div>
+        </nav>
+
+        <!-- Coming Soon Section -->
+        <div class="coming-soon-container">
+            <div class="coming-soon-icon">(｡◕‿◕｡)</div>
+            <h2 class="coming-soon-title">COMING SOON</h2>
+            <span class="coming-soon-tag" id="coming-soon-tag">MIDTERMS</span>
+            <p class="coming-soon-desc">
+                This section is currently under construction ✧ Stay tuned for updates!
+            </p>
+        </div>
+
+        <!-- Exam Cards Grid -->
+        <main class="exam-grid">
+            <!-- Card 1: Fundamentals of Programming -->
+            <a href="Quiz-CS.html?mode=FP" class="blueprint-card" data-period="prelims" data-subject-code="FP">
+                <div>
+                    <div class="card-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    </div>
+                    <div class="card-tags">
+                        <span class="tag tag-period">PRELIMS</span>
+                        <span class="tag tag-subject">FP</span>
+                    </div>
+                    <div class="card-tagline">// PROG.INIT</div>
+                    <h3 class="card-title">Fundamentals<br>of Programming</h3>
+                    <p style="font-size: 0.85rem; opacity: 0.7; line-height: 1.5; color: rgba(0, 240, 255, 0.8);">Master the core concepts of programming logic and problem-solving ✧</p>
+                </div>
+                <div class="card-action">
+                    Begin Assessment
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <!-- Card 2: Computer Programming -->
+            <a href="Quiz-CS.html?mode=ComProg" class="blueprint-card" data-period="prelims" data-subject-code="ComProg">
+                <div>
+                    <div class="card-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                    </div>
+                    <div class="card-tags">
+                        <span class="tag tag-period">PRELIMS</span>
+                        <span class="tag tag-subject">ComProg</span>
+                    </div>
+                    <div class="card-tagline">// CODE.SYS</div>
+                    <h3 class="card-title">Computer<br>Programming</h3>
+                    <p style="font-size: 0.85rem; opacity: 0.7; line-height: 1.5; color: rgba(0, 240, 255, 0.8);">Dive deeper into programming with advanced concepts and techniques (•‿•)</p>
+                </div>
+                <div class="card-action">
+                    Begin Assessment
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <!-- Card 3: Programming Fundamentals -->
+            <a href="Quiz-CS.html?mode=ProgFund" class="blueprint-card" data-period="prelims" data-subject-code="ProgFund">
+                <div>
+                    <div class="card-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                    </div>
+                    <div class="card-tags">
+                        <span class="tag tag-period">PRELIMS</span>
+                        <span class="tag tag-subject">ProgFund</span>
+                    </div>
+                    <div class="card-tagline">// CORE.EXE</div>
+                    <h3 class="card-title">Programming<br>Fundamentals</h3>
+                    <p style="font-size: 0.85rem; opacity: 0.7; line-height: 1.5; color: rgba(0, 240, 255, 0.8);">Build a solid foundation in programming principles and methodologies ✧</p>
+                </div>
+                <div class="card-action">
+                    Begin Assessment
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <!-- Card 4: Discrete Mathematics -->
+            <a href="Quiz-Math.html?mode=Discrete" class="blueprint-card" data-period="prelims" data-subject-code="Discrete">
+                <div>
+                    <div class="card-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+                    </div>
+                    <div class="card-tags">
+                        <span class="tag tag-period">PRELIMS</span>
+                        <span class="tag tag-subject">Discrete</span>
+                    </div>
+                    <div class="card-tagline">// DISCRETE.MATH</div>
+                    <h3 class="card-title">Discrete<br>Mathematics</h3>
+                    <p style="font-size: 0.85rem; opacity: 0.7; line-height: 1.5; color: rgba(0, 240, 255, 0.8);">Exploring the mathematical foundations of computer science (≧▽≦)</p>
+                </div>
+                <div class="card-action">
+                    Begin Assessment
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <!-- Card 5: Mathematics in the Modern World -->
+            <a href="Quiz-Math.html?mode=MMW" class="blueprint-card" data-period="prelims" data-subject-code="MMW">
+                <div>
+                    <div class="card-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M12 3v18M6 6l12 12M18 6L6 18"/><circle cx="12" cy="12" r="9"/></svg>
+                    </div>
+                    <div class="card-tags">
+                        <span class="tag tag-period">PRELIMS</span>
+                        <span class="tag tag-subject">MMW</span>
+                    </div>
+                    <div class="card-tagline">// MMW</div>
+                    <h3 class="card-title">Mathematics<br>in the Modern World</h3>
+                    <p style="font-size: 0.85rem; opacity: 0.7; line-height: 1.5; color: rgba(0, 240, 255, 0.8);">Exploring practical applications of mathematics in society (◕‿◕✿)</p>
+                </div>
+                <div class="card-action">
+                    Begin Assessment
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <!-- Card 6: Calculus -->
+            <a href="Quiz-Math.html?mode=Calculus" class="blueprint-card" data-period="prelims" data-subject-code="Calculus">
+                <div>
+                    <div class="card-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M12 3v15M6 9c0-2 2-3 3-3s3 1 3 3-1 4-3 4-3-2-3-4M15 15c0-2 2-3 3-3s3 1 3 3-1 4-3 4-3-2-3-4"/></svg>
+                    </div>
+                    <div class="card-tags">
+                        <span class="tag tag-period">PRELIMS</span>
+                        <span class="tag tag-subject">Calculus</span>
+                    </div>
+                    <div class="card-tagline">// CALCULUS</div>
+                    <h3 class="card-title">Calculus</h3>
+                    <p style="font-size: 0.85rem; opacity: 0.7; line-height: 1.5; color: rgba(0, 240, 255, 0.8);">Master the fundamental concepts of differential calculus ^_^</p>
+                </div>
+                <div class="card-action">
+                    Begin Assessment
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+
+            <!-- Card 7: Calculus Problem Set -->
+            <a href="Courses/1st year/2ndsemester/Problem sets/Calculus/Prelims/index.html" class="blueprint-card" data-period="prelims" data-subject-code="Calculus">
+                <div>
+                    <div class="card-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M12 3v15M6 9c0-2 2-3 3-3s3 1 3 3-1 4-3 4-3-2-3-4M15 15c0-2 2-3 3-3s3 1 3 3-1 4-3 4-3-2-3-4"/></svg>
+                    </div>
+                    <div class="card-tags">
+                        <span class="tag tag-period">PROBLEM SET</span>
+                        <span class="tag tag-subject">Calculus</span>
+                    </div>
+                    <div class="card-tagline">// CALCULUS</div>
+                    <h3 class="card-title">Calculus<br>Problem Set</h3>
+                    <p style="font-size: 0.85rem; opacity: 0.7; line-height: 1.5; color: rgba(0, 240, 255, 0.8);">Practice problems for differential and integral calculus (•‿•)</p>
+                </div>
+                <div class="card-action">
+                    Begin Assessment
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+            </a>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>This website is for educational and review purposes only. The developer shall not be held liable for any forms of cheating done by the user. ✧･ﾟ</p>
+    </footer>
+
+    <script>
+        // Subtle Mouse parallax effect for the cyber grid
+        document.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.015;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.015;
+            document.querySelector('.cyber-grid').style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+
+        // Glitch effect on load
+        window.addEventListener('load', () => {
+            const header = document.querySelector('.header h1');
+            setTimeout(() => {
+                header.style.animation = 'glitchText 5s infinite';
+            }, 1000);
+        });
+
+        // ─── NAVBAR FUNCTIONALITY ───
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const searchInput = document.querySelector('.search-input');
+        const examCards = document.querySelectorAll('.blueprint-card');
+        const examGrid = document.querySelector('.exam-grid');
+        const comingSoonContainer = document.querySelector('.coming-soon-container');
+        const comingSoonTag = document.getElementById('coming-soon-tag');
+
+        // Handle period button clicks
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                navButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const period = this.dataset.period;
+                
+                // Show coming soon for non-prelims periods
+                if (period !== 'prelims') {
+                    examGrid.style.display = 'none';
+                    comingSoonContainer.classList.add('show');
+                    const periodName = this.textContent.trim().toUpperCase();
+                    comingSoonTag.textContent = periodName;
+                    searchInput.value = '';
+                } else {
+                    examGrid.style.display = '';
+                    comingSoonContainer.classList.remove('show');
+                    filterCards('prelims', searchInput.value);
+                }
+            });
+        });
+
+        // Handle search input
+        searchInput.addEventListener('input', function() {
+            const activePeriod = document.querySelector('.nav-btn.active').dataset.period;
+            if (activePeriod === 'prelims') {
+                filterCards('prelims', this.value.toLowerCase());
+            }
+        });
+
+        // Filter cards based on search by subject code or name
+        function filterCards(period, searchTerm) {
+            let visibleCount = 0;
+            
+            examCards.forEach(card => {
+                const cardPeriod = card.dataset.period;
+                const subjectCode = card.dataset.subjectCode.toLowerCase();
+                const cardText = card.textContent.toLowerCase();
+                
+                // Check if card matches the period
+                const matchesPeriod = cardPeriod === period;
+                
+                // Check if search term matches subject code or any text in card
+                const matchesSearch = searchTerm === '' || 
+                                     subjectCode.includes(searchTerm) || 
+                                     cardText.includes(searchTerm);
+                
+                if (matchesPeriod && matchesSearch) {
+                    card.style.display = '';
+                    card.style.opacity = '1';
+                    card.style.pointerEvents = 'auto';
+                    visibleCount++;
+                } else if (matchesPeriod) {
+                    card.style.display = 'none';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Add random glitch effect to cards
+        setInterval(() => {
+            const cards = document.querySelectorAll('.blueprint-card');
+            const randomCard = cards[Math.floor(Math.random() * cards.length)];
+            if (randomCard) {
+                randomCard.style.animation = 'glitch 0.3s';
+                setTimeout(() => {
+                    randomCard.style.animation = '';
+                }, 300);
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

@@ -112,6 +112,12 @@
             padding-top: 20px;
         }
 
+        .easter-egg-trigger {
+            cursor: text;
+            transition: color 0.3s ease;
+        }
+
+
         /* ─── CONTENT WRAPPER ─── */
         .content-wrapper {
             flex: 1;
@@ -501,8 +507,8 @@
     <div class="content-wrapper">
         <header class="header">
             <span class="header-meta">Academic Assessment v4.02</span>
-            <h1>Mock <span>Exams</span></h1>
-            <p class="header-desc">Quizzes designed to aid you in your studies. Do your best, user. Sincerely, from the developer.</p>
+            <h1><span>Mock</span> Exams</h1>
+            <p class="header-desc">Quizzes designed to aid you in your studies. Do your best, user. Sincerely, from the <span class="easter-egg-trigger">developer</span>.</p>
         </header>
 
         <!-- NAVBAR -->
@@ -677,7 +683,7 @@
     </div>
 
     <footer class="footer">
-        <p>This website is for educational and review purposes only. The developer shall not be held liable for any forms of cheating done by the user.</p>
+        <p>This website is for educational and review purposes only. The developer shall not be held liable for any forms of cheating done by the user. You can do this, user. I believe you can pass without cheating :></p>
     </footer>
 
     <script>
@@ -765,6 +771,29 @@
                 }
             });
         }
+
+        // ─── EASTER EGG: Developer Click Counter ───
+        let developerClickCount = 0;
+        const easterEggTrigger = document.querySelector('.easter-egg-trigger');
+
+        easterEggTrigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            developerClickCount++;
+
+            // Add a subtle visual feedback
+            this.style.color = 'var(--highlight)';
+            setTimeout(() => {
+                this.style.color = '';
+            }, 200);
+
+            // Check if 7 clicks reached
+            if (developerClickCount === 7) {
+                // Redirect to cyberpunk.html
+                window.location.href = 'cyberpunk.html';
+                developerClickCount = 0; // Reset counter
+            }
+        });
     </script>
+
 </body>
 </html>
