@@ -181,7 +181,185 @@ const QUESTIONS = (window.QUESTIONS && window.QUESTIONS.length)
         q: "Which ethical principle involves obtaining 'informed consent from participants'?",
         o: ["Social Responsibility", "Honesty and Integrity", "Respect for People", "Accountability"],
         a: 2
-      },
+      }, 
+      {
+        type: "mc",
+        q: "Who was the pioneering Filipino food technologist and chemist known for developing banana ketchup?", 
+        o: ["Aisa Mijeno", "Maria Orosa", "Lourdes Cruz", "Abelardo Aguilar"], 
+        a: 1 
+      }, 
+      { type: "mc", 
+        q: "According to the sources, why did Maria Orosa invent banana ketchup during World War II?", 
+        o: ["Bananas were expensive", "Tomatoes were scarce", "Vinegar was unavailable", "Sugar was rationed"], 
+        a: 1 
+      }, 
+      { 
+        type: "mc", q: "Which scientist is credited with the discovery of erythromycin from the bacterium Streptomyces erythraeus?", 
+        o: ["Gregorio Zara", "Raul Destura", "Abelardo Aguilar", "Maria Orosa"], 
+        a: 2 
+      }, 
+      { 
+        type: "mc", q: "Abelardo Aguilar's development of erythromycin provided a critical alternative for patients with an allergy to what?", 
+        o: ["Aspirin", "Insulin", "Penicillin", "Sulfa drugs"], 
+        a: 2 
+      }, 
+      { 
+        type: "mc", 
+        q: "Who is recognized as the 'Father of Videoconferencing'?", 
+        o: ["Raul Destura", "Gregorio Zara", "Abelardo Aguilar", "Aisa Mijeno"], 
+        a: 1 
+      }, 
+      { 
+        type: "mc", 
+        q: "In what year did Dr. Gregorio Zara invent the first two-way video telephone (videophone)?", 
+        o: ["1945", "1955", "1965", "1975"], 
+        a: 1 
+      }, 
+      { 
+        type: "mc", 
+        q: "Dr. Lourdes Cruz is a biochemist recognized for her research on the toxic properties of which organism?", 
+        o: ["Streptomyces erythraeus", "Conus marine snails", "Dengue virus", "Tilapia"], 
+        a: 1 
+      }, 
+      { 
+        type: "mc", 
+        q: "The findings of Dr. Lourdes Cruz regarding Conotoxins have significant implications for which medical field?", 
+        o: ["Nutrition", "Pain management", "Volcanology", "Aquaculture"], 
+        a: 1 
+      }, 
+      { 
+        type: "mc", 
+        q: "Which molecular biologist developed the 'Biotek-M Dengue Detection Kit'?", 
+        o: ["Raul Destura", "Gregorio Zara", "Maria Orosa", "Lourdes Cruz"], 
+        a: 0 
+      }, 
+      { 
+    type: "mc", 
+    q: "With which institution did Dr. Raul Destura collaborate to develop the dengue diagnostic test?", 
+    o: ["Philippine Nuclear Research Institute", "National Academy of Science and Technology", "University of the Philippines Manila", "Philippine Institute of Volcanology"], 
+    a: 2 
+  },
+  { 
+      type: "mc", 
+      q: "Engr. Aisa Mijeno is the inventor of which sustainable lighting technology?", 
+      o: ["Incandescent bulb", "Kerosene lamp", "SALt lamp", "Solar panel"], 
+      a: 2 
+  },
+  { 
+      type: "mc", 
+      q: "What is the primary power source for the Sustainable Alternative Lighting (SALt) lamp?", 
+      o: ["Solar energy", "Saltwater", "Biofuel", "Nuclear power"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "Which ethical principle emphasizes the need to 'avoid falsifying or manipulating results'?", 
+      o: ["Social Responsibility", "Respect for People", "Honesty and Integrity in Research", "Sustainability"], 
+      a: 2 
+  },
+  { 
+      type: "mc", 
+      q: "Under the principle of 'Respect for People,' what must researchers obtain from participants, especially in human research?", 
+      o: ["Financial compensation", "Informed consent", "Legal waivers", "Publicity rights"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "Which principle directs innovators to 'develop technologies that improve lives' and 'address societal needs'?", 
+      o: ["Accountability", "Social Responsibility", "Honesty", "Sustainability"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "The principle of 'Sustainability and Environmental Care' requires researchers to consider what aspect of their innovations?", 
+      o: ["Immediate profit", "Long-term impact on the environment", "Aesthetic appeal", "Speed of production"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "Which ethical step involves taking responsibility for 'any negative consequences of research or technology'?", 
+      o: ["Accountability and Fair Access", "Honesty and Integrity", "Respect for People", "Transparency"], 
+      a: 0 
+  },
+  { 
+      type: "mc", 
+      q: "Ensuring 'equitable access to advancements' is a core component of which ethical principle?", 
+      o: ["Social Responsibility", "Sustainability", "Accountability and Fair Access", "Informed Consent"], 
+      a: 2 
+  },
+  { 
+      type: "mc", 
+      q: "According to the source, 'Ethics in science and technology' is essential to ensure advancements benefit society while doing what?", 
+      o: ["Maximizing revenue", "Reducing harm", "Increasing speed", "Promoting fame"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "Maria Orosa's work in the American Colonial period was supplemented by the introduction of which methods?", 
+      o: ["Drying and salting", "Refrigeration and canning", "Fermentation", "Open-air smoking"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "Dr. Gregorio Zara made significant contributions to aeronautics, electrical engineering, and which other field?", 
+      o: ["Biochemistry", "Telecommunications", "Microbiology", "Food Technology"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "The 'Biotek-M' kit is described as what type of test for the dengue virus?", 
+      o: ["Year-long study", "Rapid diagnostic test", "Surgical procedure", "Vaccination"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "In addition to pain management, Lourdes Cruz’s research has implications for which of the following?", 
+      o: ["Banana ketchup production", "Epilepsy research", "Shipbuilding", "Nuclear fission"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "What does the source state researchers should ensure regarding 'personal information'?", 
+      o: ["It is published openly", "It is used for marketing", "It is protected for privacy", "It is sold to third parties"], 
+      a: 2 
+  },
+  { 
+      type: "mc", 
+      q: "Sustainability in technology should aim to 'minimize harm and promote' what?", 
+      o: ["Consumption", "Conservation", "Urbanization", "Competition"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "Which Filipino scientist was a medical researcher who 'got shafted' for his discovery according to the reference titles?", 
+      o: ["Gregorio Zara", "Abelardo Aguilar", "Raul Destura", "Aisa Mijeno"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "The principle of 'Accountability and Fair Access' aims specifically to reduce what?", 
+      o: ["Scientific research", "Social inequalities", "Technological costs", "Environmental conservation"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "Maria Orosa is described as a pioneering Filipino food technologist and what?", 
+      o: ["Physicist", "Chemist", "Engineer", "Geologist"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "In the context of ethics, 'Proper acknowledgment of sources' is part of which principle?", 
+      o: ["Sustainability", "Honesty and Integrity in Research", "Accountability", "Respect for People"], 
+      a: 1 
+  },
+  { 
+      type: "mc", 
+      q: "Dr. Raul Destura is identified as a microbiologist and what other type of biologist?", 
+      o: ["Marine biologist", "Molecular biologist", "Astrobiologist", "Evolutionary biologist"], 
+      a: 1 
+  },
+        
 
       // ===== Identification (30) =====
       {
