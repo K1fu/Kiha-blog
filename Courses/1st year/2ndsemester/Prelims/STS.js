@@ -364,6 +364,106 @@ const QUESTIONS = (window.QUESTIONS && window.QUESTIONS.length)
       // ===== Identification (30) =====
       {
         type: "id",
+        q: "The Islamic scholar whose work c. 8th–14th century CE helped establish the foundation for modern algebra.",
+        a: "Al-Khwarizmi"
+      },
+      {
+        type: "id",
+        q: "The German inventor who developed the printing press c. 1440 CE, revolutionizing communication.",
+        a: "Johannes Gutenberg"
+      },
+      {
+        type: "id",
+        q: "The thinker who introduced a systematic approach to discovery focused on observation and experimentation (1561–1626 CE).",
+        a: "Francis Bacon"
+      },
+      {
+        type: "id",
+        q: "The scientist who transformed astronomy with discoveries like the moons of Jupiter using a telescope.",
+        a: "Galileo Galilei"
+      },
+      {
+        type: "id",
+        q: "The scientist who laid the foundation for classical physics with his Laws of Motion.",
+        a: "Isaac Newton"
+      },
+      {
+        type: "id",
+        q: "The innovator who transformed industries by driving mechanized production with the Steam Engine c. 1765 CE.",
+        a: "James Watt"
+      },
+      {
+        type: "id",
+        q: "The inventor of the incandescent light bulb in 1879 CE.",
+        a: "Thomas Edison"
+      },
+      {
+        type: "id",
+        q: "The two individuals credited with streamlining manufacturing processes through the assembly line c. 1901–1913 CE.",
+        a: "Ransom Olds and Henry Ford"
+      },
+      {
+        type: "id",
+        q: "The duo who pioneered powered flight in 1903 CE with the Wright Flyer.",
+        a: "Wright Brothers"
+      },
+      {
+        type: "id",
+        q: "The scientist who discovered penicillin in 1928 CE, providing the first effective antibiotic.",
+        a: "Alexander Fleming"
+      },
+      {
+        type: "id",
+        q: "The two scientists who discovered the double-helix structure of DNA in 1953 CE.",
+        a: "James Watson and Francis Crick"
+      },
+      {
+        type: "id",
+        q: "The two scientists who developed the CRISPR-Cas9 gene-editing technology in 2012.",
+        a: "Jennifer Doudna and Emmanuelle Charpentier"
+      },
+      {
+        type: "id",
+        q: "The indigenous group responsible for the engineering marvel known as the Banaue Rice Terraces.",
+        a: "Ifugao"
+      },
+      {
+        type: "id",
+        q: "The pioneering Filipino food technologist and chemist who invented banana ketchup during World War II.",
+        a: "Maria Orosa"
+      },
+      {
+        type: "id",
+        q: "The Filipino medical researcher who made significant contributions to the development of the antibiotic erythromycin.",
+        a: "Abelardo Aguilar"
+      },
+      {
+        type: "id",
+        q: "The Filipino engineer and physicist known as the 'Father of Videoconferencing'.",
+        a: "Gregorio Zara"
+      },
+      {
+        type: "id",
+        q: "The Filipino biochemist recognized for her research on the toxic properties of Conus marine snails (Conotoxins).",
+        a: "Lourdes Cruz"
+      },
+      {
+        type: "id",
+        q: "The molecular biologist who led the team that developed the Biotek-M Dengue Detection Kit.",
+        a: "Raul Destura"
+      },
+      {
+        type: "id",
+        q: "The Filipino engineer and inventor who developed the Sustainable Alternative Lighting (SALt) lamp in 2014.",
+        a: "Aisa Mijeno"
+      },
+      {
+        type: "id",
+        q: "The individual who pioneered the systematic method of scientific discovery known as the Scientific Method.",
+        a: "Francis Bacon"
+      },
+      {
+        type: "id",
         q: "The systematic study of the natural world through observation and experimentation.",
         a: "Science"
       },
