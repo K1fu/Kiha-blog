@@ -342,6 +342,53 @@ body::after {
   text-transform: uppercase;
   font-size: 0.9rem;
   letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.randomize-btn-small {
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  background: rgba(76, 201, 240, 0.2);
+  border: 1px solid rgba(76, 201, 240, 0.4);
+  color: var(--highlight);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.randomize-btn-small:hover {
+  background: rgba(76, 201, 240, 0.4);
+  border-color: var(--highlight);
+}
+
+.randomize-all-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--etch-line);
+  position: relative;
+  z-index: 1;
+}
+
+.randomize-btn-large {
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  background: linear-gradient(135deg, rgba(76, 201, 240, 0.2), rgba(212, 175, 55, 0.2));
+  border: 1.5px solid var(--highlight);
+  color: var(--highlight);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .checkbox-label-desc {
@@ -1258,7 +1305,68 @@ let QUESTIONS_FILTERED = [];
 
 function initializeConfig() {
   TOTAL = QUESTIONS.length;
-  QUESTIONS_FILTERED = QUESTIONS;
+  QUESTIONS_FILTERED = JSON.parse(JSON.stringify(QUESTIONS)); // Deep copy
+  populateDynamicModal();
+  randomizeChoices();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RANDOMIZE CHOICES - Shuffle answer options for each question
+   ══════════════════════════════════════════════════════════════ */
+function randomizeChoices() {
+  QUESTIONS_FILTERED.forEach(q => {
+    if (q.type === 'mc' && q.o && q.o.length) {
+      // Create array of {text, index} pairs
+      const paired = q.o.map((text, idx) => ({ text, originalIdx: idx }));
+      // Shuffle
+      for (let i = paired.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [paired[i], paired[j]] = [paired[j], paired[i]];
+      }
+      // Update q.a to point to new position and update q.o
+      const correctOriginalIdx = q.a;
+      const newIdx = paired.findIndex(p => p.originalIdx === correctOriginalIdx);
+      q.a = newIdx;
+      q.o = paired.map(p => p.text);
+    }
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   POPULATE DYNAMIC MODAL - Check which question types exist
+   ══════════════════════════════════════════════════════════════ */
+function populateDynamicModal() {
+  const availableTypes = new Set();
+  QUESTIONS.forEach(q => availableTypes.add(q.type));
+  
+  const checkboxGroup = document.querySelector('.checkbox-group');
+  checkboxGroup.innerHTML = '';
+  
+  const types = ['mc', 'id', 'tf', 'fitb'];
+  types.forEach(type => {
+    if (availableTypes.has(type)) {
+      const count = QUESTIONS.filter(q => q.type === type).length;
+      const label = document.createElement('label');
+      label.className = `checkbox-item ${type}`;
+      label.innerHTML = `
+        <input type="checkbox" class="type-filter" value="${type}" checked>
+        <div class="checkbox-label">
+          <div class="checkbox-label-title">
+            ${TYPE_LABELS[type]}
+            <button type="button" class="randomize-btn-small" onclick="randomizeByType('${type}'); event.stopPropagation();">🔀 Randomize</button>
+          </div>
+          <div class="checkbox-label-desc">${count} question${count !== 1 ? 's' : ''}</div>
+        </div>
+      `;
+      checkboxGroup.appendChild(label);
+    }
+  });
+  
+  // Add global randomize button
+  const randomizeSection = document.createElement('div');
+  randomizeSection.className = 'randomize-all-section';
+  randomizeSection.innerHTML = '<button type="button" class="randomize-btn-large" onclick="randomizeAll()">🔀 Randomize All Questions</button>';
+  checkboxGroup.parentElement.appendChild(randomizeSection);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1278,6 +1386,12 @@ function applyFilter() {
   // Filter questions based on selected types
   QUESTIONS_FILTERED = QUESTIONS.filter(q => selectedTypes.includes(q.type));
   
+  // Deep copy to avoid modifying original
+  QUESTIONS_FILTERED = JSON.parse(JSON.stringify(QUESTIONS_FILTERED));
+  
+  // Randomize choices and update counts
+  randomizeChoices();
+  
   // Update TOTAL and reset progress
   TOTAL = QUESTIONS_FILTERED.length;
   current = 0;
@@ -1286,6 +1400,43 @@ function applyFilter() {
   
   // Hide modal and start quiz
   document.getElementById('filterModal').classList.remove('show');
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RANDOMIZE FUNCTIONS
+   ══════════════════════════════════════════════════════════════ */
+function randomizeByType(type) {
+  const filtered = QUESTIONS_FILTERED.filter(q => q.type === type);
+  const notFiltered = QUESTIONS_FILTERED.filter(q => q.type !== type);
+  
+  // Shuffle filtered questions
+  for (let i = filtered.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+  }
+  
+  QUESTIONS_FILTERED = [...notFiltered, ...filtered];
+  current = 0;
+  score = 0;
+  wrongs = [];
+  deleteQuizCookie();
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function randomizeAll() {
+  // Shuffle all questions regardless of type
+  for (let i = QUESTIONS_FILTERED.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [QUESTIONS_FILTERED[i], QUESTIONS_FILTERED[j]] = [QUESTIONS_FILTERED[j], QUESTIONS_FILTERED[i]];
+  }
+  
+  current = 0;
+  score = 0;
+  wrongs = [];
+  deleteQuizCookie();
   render();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
