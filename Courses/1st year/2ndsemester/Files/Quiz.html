@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title id="pageTitle">Quiz</title>
+
+<!-- SECURITY NOTE: This file performs client-side string matching only.
+     No user-submitted code is executed (no eval). For a production deployment
+     with real code execution, use a server-side sandbox (e.g. Judge0, Piston,
+     or a container-isolated evaluator). Cookie storage is compact JSON; for
+     larger datasets consider server-side storage or localForage. -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234cc9f0' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Cpath d='M7 9h10M7 13h10M7 17h6'/%3E%3Ccircle cx='18' cy='7' r='1' fill='%234cc9f0'/%3E%3C/svg%3E">
+
+<!-- Prism.js syntax highlighting (client-side, no execution) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+<style>
+/* ─── CYANOTYPE THEME VARIABLES ─────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --prussian-blue: #002b4d;
+  --cobalt-deep: #001a30;
+  --cyanotype-white: #e6f3f8;
+  --etch-line: rgba(230, 243, 248, 0.2);
+  --highlight: #4cc9f0;
+  --oxide: #d4af37;
+  --sage: #5a9a6a;
+  --sage-bg: rgba(90, 154, 106, 0.15);
+  --red: #ff6b6b;
+  --red-bg: rgba(255, 107, 107, 0.12);
+  --blue: #4cc9f0;
+  --blue-bg: rgba(76, 201, 240, 0.1);
+  --plum: #d4af37;
+  --plum-bg: rgba(212, 175, 55, 0.1);
+  /* New type colours */
+  --violet: #a78bfa;
+  --violet-bg: rgba(167, 139, 250, 0.12);
+  --teal: #2dd4bf;
+  --teal-bg: rgba(45, 212, 191, 0.1);
+  --amber: #fb923c;
+  --amber-bg: rgba(251, 146, 60, 0.12);
+  --transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+  --r: 8px;
+  --tr: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:'Inter',sans-serif;
+  background-color:var(--cobalt-deep);
+  color:var(--cyanotype-white);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.6;
+  overflow-x:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ─── CYANOTYPE TEXTURE OVERLAY ─────────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image:
+    url("https://www.transparenttextures.com/patterns/carbon-fibre.png"),
+    radial-gradient(circle at 50% 50%, transparent 0%, rgba(0,0,0,0.4) 100%);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── BLUEPRINT GRID ────────────────────────────────── */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--etch-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--etch-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 0;
+  mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  pointer-events: none;
+}
+
+/* ─── HEADER ───────────────────────────────────────── */
+.header{
+  background: linear-gradient(135deg, var(--cobalt-deep) 0%, var(--prussian-blue) 100%);
+  padding: 36px 20px 30px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--etch-line);
+  z-index: 2;
+}
+
+.header::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 15% 85%, rgba(76,201,240,0.08) 0%, transparent 65%),
+              radial-gradient(ellipse 55% 50% at 82% 18%, rgba(76,201,240,0.05) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.header h1{
+  font-family:'Inter',sans-serif;
+  font-size: clamp(1.7rem,4.5vw,2.4rem);
+  font-weight: 900;
+  color: var(--cyanotype-white);
+  position: relative;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.header h1 em{ color:var(--highlight); font-style:normal; -webkit-text-stroke:1px var(--highlight) }
+
+.header p{
+  color: rgba(230,243,248,0.6);
+  font-size: 0.85rem;
+  font-family:'JetBrains Mono',monospace;
+  margin-top: 8px;
+  position: relative;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+
+/* ─── PROGRESS BAR ─────────────────────────────────── */
+.progress-wrap{
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(0,26,48,0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--etch-line);
+  padding: 14px 0 12px;
+}
+
+.progress-inner{
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.p-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--cyanotype-white);
+  white-space: nowrap;
+  min-width: 52px;
+  opacity: 0.7;
+}
+
+.p-bar{
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(230,243,248,0.1);
+  overflow: hidden;
+  border: 1px solid var(--etch-line);
+}
+
+.p-fill{
+  height: 100%;
+  width: 0%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--highlight), var(--oxide));
+  transition: width 0.45s ease;
+  box-shadow: 0 0 10px rgba(76,201,240,0.5);
+}
+
+.p-pct{
+  font-family:'JetBrains Mono',monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--highlight);
+  min-width: 42px;
+  text-align: right;
+}
+
+/* ─── PHASE TAGS ───────────────────────────────────── */
+.phase-tag{
+  display: inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 5px 16px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  border: 1px solid;
+}
+
+.phase-tag.mc    {background:rgba(230,243,248,0.08); color:var(--cyanotype-white); border-color:var(--etch-line)}
+.phase-tag.id    {background:rgba(255,107,107,0.1); color:var(--red); border-color:rgba(255,107,107,0.3)}
+.phase-tag.tf    {background:rgba(76,201,240,0.1); color:var(--highlight); border-color:rgba(76,201,240,0.3)}
+.phase-tag.fitb  {background:rgba(212,175,55,0.1); color:var(--oxide); border-color:rgba(212,175,55,0.3)}
+.phase-tag.output{background:var(--violet-bg); color:var(--violet); border-color:rgba(167,139,250,0.3)}
+.phase-tag.order {background:var(--teal-bg); color:var(--teal); border-color:rgba(45,212,191,0.3)}
+.phase-tag.debug,.phase-tag.debug-line{background:var(--amber-bg); color:var(--amber); border-color:rgba(251,146,60,0.3)}
+.phase-tag.best  {background:rgba(212,175,55,0.1); color:var(--oxide); border-color:rgba(212,175,55,0.3)}
+
+/* ─── QUESTION TYPE FILTER MODAL ────────────────────── */
+.modal-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.modal-overlay.show{opacity:1;visibility:visible}
+
+.modal-content{
+  background: linear-gradient(135deg, rgba(0,43,77,0.95) 0%, rgba(0,26,48,0.95) 100%);
+  border: 1px solid var(--etch-line);
+  border-radius: 12px;
+  padding: 40px;
+  max-width: 500px;
+  width: 90%;
+  backdrop-filter: blur(10px);
+  position: relative;
+  animation: slideDown 0.4s cubic-bezier(0.2,1,0.3,1) both;
+  margin: auto;
+}
+
+@keyframes slideDown{
+  from{opacity:0;transform:translateY(-30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.modal-content::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at 20% 50%, rgba(76,201,240,0.1) 0%, transparent 60%);
+  pointer-events:none;
+  border-radius:12px;
+}
+
+.modal-header{margin-bottom:28px;position:relative;z-index:1}
+.modal-header h2{font-size:1.8rem;font-weight:900;color:var(--cyanotype-white);text-transform:uppercase;letter-spacing:-0.02em;margin-bottom:8px}
+.modal-header h2 em{color:var(--highlight);font-style:normal;-webkit-text-stroke:1px var(--highlight)}
+.modal-header p{color:rgba(230,243,248,0.6);font-size:0.9rem;font-family:'JetBrains Mono',monospace;letter-spacing:0.05em}
+
+.modal-body{margin-bottom:28px;position:relative;z-index:1}
+
+.checkbox-group{display:flex;flex-direction:column;gap:14px}
+
+.checkbox-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 16px;
+  background:rgba(230,243,248,0.04);
+  border:1.5px solid var(--etch-line);
+  border-radius:8px;
+  cursor:pointer;
+  transition:all 0.3s ease;
+}
+
+.checkbox-item:hover{background:rgba(230,243,248,0.08);border-color:var(--highlight)}
+
+.checkbox-item input[type="checkbox"]{width:20px;height:20px;cursor:pointer;accent-color:var(--highlight)}
+
+.checkbox-label{flex:1;display:flex;flex-direction:column;gap:4px}
+.checkbox-label-title{font-weight:600;color:var(--cyanotype-white);text-transform:uppercase;font-size:0.9rem;letter-spacing:0.05em}
+.checkbox-label-desc{font-size:0.75rem;color:rgba(230,243,248,0.5);font-family:'JetBrains Mono',monospace}
+
+.checkbox-item.mc     {border-left:3px solid rgba(230,243,248,0.3)}
+.checkbox-item.id     {border-left:3px solid var(--red)}
+.checkbox-item.tf     {border-left:3px solid var(--highlight)}
+.checkbox-item.fitb   {border-left:3px solid var(--oxide)}
+.checkbox-item.output {border-left:3px solid var(--violet)}
+.checkbox-item.order  {border-left:3px solid var(--teal)}
+.checkbox-item.debug  {border-left:3px solid var(--amber)}
+.checkbox-item.best   {border-left:3px solid var(--oxide)}
+
+.checkbox-item input:checked + .checkbox-label .checkbox-label-title{color:var(--highlight)}
+
+.modal-footer{display:flex;gap:12px;position:relative;z-index:1}
+
+.modal-btn{
+  flex:1;
+  padding:14px 24px;
+  font-size:0.95rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  font-family:'JetBrains Mono',monospace;
+}
+
+.modal-btn-submit{background:linear-gradient(135deg,var(--highlight),var(--oxide));color:var(--cobalt-deep)}
+.modal-btn-submit:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(76,201,240,0.4)}
+.modal-btn-submit:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+/* ─── CARD ─────────────────────────────────────────── */
+.stage{
+  max-width:680px;
+  margin:40px auto 60px;
+  padding:0 20px;
+  min-height:420px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  position:relative;
+  z-index:2;
+}
+
+.card{
+  width:100%;
+  background:rgba(0,43,77,0.4);
+  border:1px solid var(--etch-line);
+  border-radius:var(--r);
+  padding:38px 34px 34px;
+  position:relative;
+  animation:slideUp 0.38s var(--tr) both;
+  backdrop-filter:blur(5px);
+}
+
+.card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(to right,var(--cyanotype-white) 12px,transparent 12px) 0 0,
+    linear-gradient(to bottom,var(--cyanotype-white) 12px,transparent 12px) 0 0,
+    linear-gradient(to left,var(--cyanotype-white) 12px,transparent 12px) 100% 100%,
+    linear-gradient(to top,var(--cyanotype-white) 12px,transparent 12px) 100% 100%;
+  background-repeat:no-repeat;
+  background-size:16px 16px;
+  opacity:0.15;
+  pointer-events:none;
+  border-radius:var(--r);
+}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+.q-badge{
+  position:absolute;
+  top:-14px;
+  left:30px;
+  background:var(--prussian-blue);
+  color:var(--cyanotype-white);
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.68rem;
+  font-weight:700;
+  letter-spacing:0.15em;
+  padding:5px 16px;
+  border-radius:20px;
+  text-transform:uppercase;
+  border:1px solid var(--etch-line);
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+}
+
+.card.badge-rust  .q-badge{background:var(--red);border-color:rgba(255,107,107,0.4)}
+.card.badge-blue  .q-badge{background:var(--highlight);border-color:rgba(76,201,240,0.4);color:var(--cobalt-deep)}
+.card.badge-plum  .q-badge{background:var(--oxide);border-color:rgba(212,175,55,0.4);color:var(--cobalt-deep)}
+.card.badge-violet.q-badge,.card.badge-violet .q-badge{background:var(--violet);border-color:rgba(167,139,250,0.4);color:var(--cobalt-deep)}
+.card.badge-teal  .q-badge{background:var(--teal);border-color:rgba(45,212,191,0.4);color:var(--cobalt-deep)}
+.card.badge-amber .q-badge{background:var(--amber);border-color:rgba(251,146,60,0.4);color:var(--cobalt-deep)}
+
+.q-text{
+  font-size:1.08rem;
+  font-weight:500;
+  color:var(--cyanotype-white);
+  margin-top:8px;
+  margin-bottom:22px;
+  line-height:1.65;
+}
+
+/* ─── MC OPTIONS ───────────────────────────────────── */
+.options{display:flex;flex-direction:column;gap:10px}
+
+.opt{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  border:1.8px solid var(--etch-line);
+  border-radius:10px;
+  padding:14px 18px;
+  cursor:pointer;
+  transition:border-color var(--tr),background var(--tr),transform 0.15s ease;
+  user-select:none;
+  position:relative;
+  overflow:hidden;
+  background:rgba(0,43,77,0.2);
+}
+
+.opt::before{content:'';position:absolute;inset:0;background:var(--highlight);opacity:0;transition:opacity 0.25s}
+.opt:hover{border-color:var(--highlight);transform:translateX(5px);background:rgba(76,201,240,0.05)}
+.opt:hover::before{opacity:0.08}
+
+.opt .marker{
+  width:28px;height:28px;min-width:28px;
+  border-radius:50%;
+  border:2px solid var(--etch-line);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.75rem;font-weight:700;
+  color:var(--cyanotype-white);
+  transition:all var(--tr);
+  position:relative;z-index:1;
+  background:rgba(0,26,48,0.6);
+}
+
+.opt .lbl{font-size:0.96rem;color:var(--cyanotype-white);position:relative;z-index:1}
+.opt .icon{margin-left:auto;font-size:1.1rem;position:relative;z-index:1;opacity:0;transition:opacity 0.2s}
+
+.opt.correct{border-color:var(--sage);background:var(--sage-bg)}
+.opt.correct .marker{border-color:var(--sage);background:var(--sage);color:#fff}
+.opt.correct .icon{opacity:1}
+
+.opt.wrong{border-color:var(--red);background:var(--red-bg)}
+.opt.wrong .marker{border-color:var(--red);background:var(--red);color:#fff}
+.opt.wrong .icon{opacity:1}
+
+.opt.reveal-correct{border-color:var(--sage);background:var(--sage-bg)}
+.opt.reveal-correct .marker{border-color:var(--sage);background:var(--sage);color:#fff}
+.opt.reveal-correct .icon{opacity:1}
+
+.opt.locked{cursor:default;pointer-events:none;transform:none !important}
+.opt.locked:hover{border-color:var(--etch-line) !important;transform:none !important}
+.opt.locked:hover::before{opacity:0 !important}
+
+/* ─── TRUE / FALSE TOGGLE ──────────────────────────── */
+.tf-row{display:flex;gap:12px}
+
+.tf-btn{
+  flex:1;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  border:1.8px solid var(--etch-line);
+  border-radius:10px;
+  padding:18px 10px;
+  cursor:pointer;
+  transition:border-color var(--tr),background var(--tr),transform 0.15s;
+  user-select:none;
+  background:rgba(0,43,77,0.2);
+}
+
+.tf-btn:hover{border-color:var(--highlight);transform:translateY(-3px);background:rgba(76,201,240,0.08)}
+.tf-btn .tf-icon{font-size:1.5rem}
+.tf-btn .tf-lbl{font-size:1rem;font-weight:600;color:var(--cyanotype-white);font-family:'JetBrains Mono',monospace;letter-spacing:0.05em}
+
+.tf-btn.correct{border-color:var(--sage);background:var(--sage-bg)}
+.tf-btn.correct .tf-lbl{color:var(--sage)}
+.tf-btn.wrong{border-color:var(--red);background:var(--red-bg)}
+.tf-btn.wrong .tf-lbl{color:var(--red)}
+.tf-btn.reveal-correct{border-color:var(--sage);background:var(--sage-bg)}
+.tf-btn.reveal-correct .tf-lbl{color:var(--sage)}
+.tf-btn.locked{cursor:default;pointer-events:none;transform:none !important}
+.tf-btn.locked:hover{border-color:var(--etch-line) !important;transform:none !important}
+
+/* ─── TEXT INPUT (shared by ID + FITB + OUTPUT) ───── */
+.input-row{display:flex;gap:10px;align-items:stretch}
+
+.text-input{
+  flex:1;
+  padding:13px 18px;
+  border:1.8px solid var(--etch-line);
+  border-radius:10px;
+  font-family:'Inter',sans-serif;
+  font-size:0.97rem;
+  color:var(--cyanotype-white);
+  background:rgba(0,26,48,0.6);
+  outline:none;
+  transition:border-color var(--tr),box-shadow var(--tr);
+}
+
+.text-input::placeholder{color:rgba(230,243,248,0.4)}
+.text-input:focus{border-color:var(--highlight);box-shadow:0 0 0 3px rgba(76,201,240,0.2);background:rgba(0,26,48,0.8)}
+.text-input:disabled{opacity:0.7;cursor:not-allowed}
+.text-input.correct{border-color:var(--sage);background:var(--sage-bg)}
+.text-input.wrong{border-color:var(--red);background:var(--red-bg)}
+
+.go-btn{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.8rem;font-weight:700;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  background:var(--highlight);
+  color:var(--cobalt-deep);
+  border:none;
+  padding:0 24px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:background var(--tr),transform 0.15s;
+  white-space:nowrap;
+}
+
+.go-btn:hover{background:var(--oxide);transform:translateY(-2px);box-shadow:0 4px 12px rgba(76,201,240,0.3)}
+.go-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+/* ─── FITB SENTENCE ────────────────────────────────── */
+.fitb-sentence{
+  font-size:1.02rem;
+  color:var(--cyanotype-white);
+  line-height:2;
+  margin-bottom:18px;
+  background:rgba(212,175,55,0.08);
+  padding:16px 20px;
+  border-radius:8px;
+  border:1.5px dashed rgba(212,175,55,0.3);
+}
+
+.fitb-blank{
+  display:inline-block;
+  border-bottom:2.5px solid var(--oxide);
+  min-width:140px;width:140px;
+  margin:0 6px;
+  text-align:center;
+  font-weight:600;
+  color:var(--oxide);
+  font-style:italic;
+  vertical-align:bottom;
+  line-height:1.8;
+}
+
+/* ─── CODE BLOCK ───────────────────────────────────── */
+.code-wrap{
+  position:relative;
+  margin-bottom:18px;
+  border-radius:8px;
+  overflow:hidden;
+  border:1px solid rgba(167,139,250,0.25);
+}
+
+.code-lang-label{
+  position:absolute;
+  top:0;right:0;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.65rem;
+  font-weight:700;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  background:rgba(167,139,250,0.25);
+  color:var(--violet);
+  padding:4px 10px;
+  border-bottom-left-radius:6px;
+  z-index:1;
+}
+
+.code-wrap pre[class*="language-"]{
+  margin:0 !important;
+  border-radius:0 !important;
+  font-size:0.88rem !important;
+  padding:1.2em 1.2em 1.2em 1.2em !important;
+  background:#1a1a2e !important;
+  max-height:320px;
+  overflow-y:auto;
+}
+
+/* ─── ORDER (Code Ordering) ────────────────────────── */
+.order-list{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-bottom:14px;
+}
+
+.order-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:rgba(0,26,48,0.6);
+  border:1.5px solid var(--etch-line);
+  border-radius:8px;
+  padding:8px 10px;
+  transition:border-color 0.2s, background 0.2s;
+}
+
+.order-item.selected-line{border-color:var(--teal);background:var(--teal-bg)}
+
+.order-idx{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.72rem;
+  font-weight:700;
+  color:var(--teal);
+  min-width:22px;
+  text-align:center;
+}
+
+.order-code{
+  flex:1;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.85rem;
+  color:var(--cyanotype-white);
+  white-space:pre;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.order-btns{display:flex;gap:4px}
+
+.order-arrow{
+  background:rgba(45,212,191,0.15);
+  border:1px solid rgba(45,212,191,0.3);
+  color:var(--teal);
+  border-radius:5px;
+  width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  font-size:0.9rem;
+  transition:background 0.15s, transform 0.1s;
+  user-select:none;
+}
+
+.order-arrow:hover{background:rgba(45,212,191,0.3);transform:scale(1.1)}
+.order-arrow:disabled,.order-arrow[disabled]{opacity:0.25;cursor:not-allowed;pointer-events:none}
+
+.order-submit{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.8rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  background:var(--teal);color:var(--cobalt-deep);
+  border:none;padding:11px 22px;border-radius:8px;
+  cursor:pointer;
+  transition:background var(--tr),transform 0.15s;
+  width:100%;margin-top:6px;
+}
+
+.order-submit:hover{background:var(--highlight);transform:translateY(-2px)}
+.order-submit:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+.order-item.line-correct{border-color:var(--sage);background:var(--sage-bg)}
+.order-item.line-wrong  {border-color:var(--red);background:var(--red-bg)}
+
+/* ─── DEBUG-LINE line selector ─────────────────────── */
+.debug-lines{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  margin-bottom:14px;
+  font-family:'JetBrains Mono',monospace;
+}
+
+.debug-line-row{
+  display:flex;
+  align-items:center;
+  gap:0;
+  border-radius:6px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:background 0.15s;
+  border:1.5px solid transparent;
+}
+
+.debug-line-row:hover{border-color:var(--amber)}
+
+.debug-line-num{
+  min-width:36px;
+  padding:6px 8px;
+  background:rgba(251,146,60,0.12);
+  color:var(--amber);
+  font-size:0.78rem;
+  font-weight:700;
+  text-align:right;
+  user-select:none;
+}
+
+.debug-line-code{
+  flex:1;
+  padding:6px 10px;
+  font-size:0.85rem;
+  color:var(--cyanotype-white);
+  background:rgba(0,26,48,0.5);
+  white-space:pre;
+}
+
+.debug-line-row.dl-selected{border-color:var(--amber);background:var(--amber-bg)}
+.debug-line-row.dl-selected .debug-line-num{background:var(--amber);color:var(--cobalt-deep)}
+.debug-line-row.dl-correct{border-color:var(--sage) !important;background:var(--sage-bg) !important}
+.debug-line-row.dl-correct .debug-line-num{background:var(--sage);color:#fff}
+.debug-line-row.dl-wrong{border-color:var(--red) !important;background:var(--red-bg) !important}
+.debug-line-row.dl-wrong .debug-line-num{background:var(--red);color:#fff}
+
+.debug-submit{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.8rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  background:var(--amber);color:var(--cobalt-deep);
+  border:none;padding:11px 22px;border-radius:8px;
+  cursor:pointer;
+  transition:background var(--tr),transform 0.15s;
+  width:100%;margin-top:6px;
+}
+
+.debug-submit:hover{background:var(--oxide);transform:translateY(-2px)}
+.debug-submit:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+/* ─── HINT SYSTEM ──────────────────────────────────── */
+.hint-area{
+  margin-top:14px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.hint-btn{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.75rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  background:transparent;
+  border:1.5px solid rgba(212,175,55,0.35);
+  color:var(--oxide);
+  padding:8px 18px;border-radius:8px;
+  cursor:pointer;
+  transition:all 0.2s;
+  align-self:flex-start;
+}
+
+.hint-btn:hover{background:rgba(212,175,55,0.1);border-color:var(--oxide)}
+.hint-btn:disabled{opacity:0.35;cursor:not-allowed}
+
+.hint-box{
+  padding:10px 14px;
+  background:rgba(212,175,55,0.08);
+  border:1px dashed rgba(212,175,55,0.3);
+  border-radius:6px;
+  font-size:0.85rem;
+  color:rgba(212,175,55,0.9);
+  font-family:'JetBrains Mono',monospace;
+  line-height:1.55;
+  display:none;
+}
+
+.hint-box.show{display:block}
+.hint-box.solution-box{border-color:rgba(76,201,240,0.3);background:rgba(76,201,240,0.07);color:var(--highlight)}
+
+/* ─── FEEDBACK BAR ─────────────────────────────────── */
+.feedback{
+  margin-top:16px;
+  padding:12px 18px;
+  border-radius:8px;
+  font-size:0.88rem;
+  font-weight:500;
+  display:none;
+  align-items:center;
+  gap:10px;
+  border:1px solid;
+}
+
+.feedback.show{display:flex}
+.feedback.correct{background:var(--sage-bg);color:var(--sage);border-color:rgba(90,154,106,0.3)}
+.feedback.wrong  {background:var(--red-bg);color:var(--red);border-color:rgba(255,107,107,0.3)}
+.feedback .ans-label{font-weight:700}
+
+/* ─── NAV BUTTON ───────────────────────────────────── */
+.nav-btn{
+  margin-top:24px;
+  width:100%;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.85rem;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  background:var(--highlight);color:var(--cobalt-deep);
+  border:none;padding:16px 20px;border-radius:8px;
+  cursor:pointer;
+  transition:all var(--tr);
+  display:none;
+}
+
+.nav-btn.show{display:block;animation:fadeIn 0.28s ease both}
+.nav-btn:hover{background:var(--oxide);transform:translateY(-3px);box-shadow:0 6px 20px rgba(76,201,240,0.4)}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── RESULTS SCREEN ───────────────────────────────── */
+.results{display:none;width:100%;animation:slideUp 0.4s var(--tr) both}
+.results.show{display:block}
+
+.res-hero{
+  background:rgba(0,43,77,0.5);
+  border:1px solid var(--etch-line);
+  border-radius:var(--r);
+  padding:50px 40px;
+  text-align:center;
+  position:relative;
+  backdrop-filter:blur(5px);
+  margin-bottom:30px;
+  color:var(--cyanotype-white);
+}
+
+.res-hero::after{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to right,var(--cyanotype-white) 15px,transparent 15px) 0 0,
+    linear-gradient(to bottom,var(--cyanotype-white) 15px,transparent 15px) 0 0,
+    linear-gradient(to left,var(--cyanotype-white) 15px,transparent 15px) 100% 100%,
+    linear-gradient(to top,var(--cyanotype-white) 15px,transparent 15px) 100% 100%;
+  background-repeat:no-repeat;
+  background-size:20px 20px;
+  opacity:0.2;
+  pointer-events:none;
+  border-radius:var(--r);
+}
+
+.res-hero h2{
+  font-family:'Inter',sans-serif;
+  font-size:1.65rem;font-weight:900;
+  text-transform:uppercase;letter-spacing:-0.02em;
+  color:var(--cyanotype-white);
+  margin-bottom:20px;position:relative;z-index:1;
+}
+
+.res-score{
+  font-family:'JetBrains Mono',monospace;
+  font-size:4.2rem;font-weight:900;
+  color:var(--highlight);
+  line-height:1.1;position:relative;z-index:1;
+}
+
+.res-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.78rem;
+  color:rgba(230,243,248,0.55);
+  letter-spacing:0.1em;text-transform:uppercase;
+  margin-top:4px;position:relative;z-index:1;
+}
+
+.res-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
+  gap:10px;
+  margin-top:30px;position:relative;z-index:1;
+}
+
+.res-box{
+  background:rgba(0,26,48,0.6);
+  border:1px solid var(--etch-line);
+  border-radius:8px;
+  padding:14px 10px;
+  text-align:center;
+}
+
+.res-box .v{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.4rem;font-weight:700;
+  line-height:1;margin-bottom:6px;
+}
+
+.res-box .v.gold{color:var(--highlight)}
+.res-box .v.g{color:var(--sage)}
+.res-box .v.r{color:var(--red)}
+
+.res-box .l{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.65rem;
+  color:rgba(230,243,248,0.5);
+  letter-spacing:0.08em;text-transform:uppercase;
+  margin-top:3px;
+}
+
+/* ─── BREAKDOWN ────────────────────────────────────── */
+.bd-title{
+  font-family:'Inter',sans-serif;
+  font-size:1rem;font-weight:700;
+  color:var(--cyanotype-white);
+  margin:24px 0 10px;
+  text-transform:uppercase;letter-spacing:0.05em;
+}
+
+.bd-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:12px 0;
+  border-bottom:1px solid var(--etch-line);
+  font-size:0.87rem;
+  flex-wrap:wrap;
+}
+
+.bd-item .bd-icon{font-size:1rem;margin-top:1px}
+.bd-item .bd-num{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--highlight);min-width:24px}
+.bd-item .bd-q{color:rgba(230,243,248,0.8);flex:1;min-width:120px}
+.bd-item .bd-a{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.78rem;color:var(--sage);font-weight:600;
+  white-space:pre-wrap;word-break:break-word;
+  margin-left:8px;
+}
+.bd-item .bd-extra{
+  width:100%;
+  margin-top:5px;margin-left:34px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.75rem;
+  color:rgba(230,243,248,0.5);
+  background:rgba(0,26,48,0.4);
+  border:1px solid var(--etch-line);
+  border-radius:4px;
+  padding:6px 10px;
+  white-space:pre-wrap;
+}
+
+.perfect{
+  text-align:center;padding:18px;
+  font-family:'Inter',sans-serif;font-size:1.15rem;
+  color:var(--sage);
+  background:rgba(90,154,106,0.15);
+  border:1px solid rgba(90,154,106,0.3);
+  border-radius:8px;
+}
+
+/* ─── RESULT BUTTONS ───────────────────────────────── */
+.res-btn-row{
+  display:flex;justify-content:center;gap:12px;
+  margin-top:30px;flex-wrap:wrap;
+}
+
+.btn{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.86rem;font-weight:700;
+  letter-spacing:0.07em;text-transform:uppercase;
+  padding:13px 30px;border:none;border-radius:8px;
+  cursor:pointer;
+  transition:transform 0.18s,box-shadow 0.18s;
+}
+
+.btn-primary{
+  background:var(--highlight);color:var(--cobalt-deep);
+  box-shadow:0 3px 16px rgba(76,201,240,0.33);
+}
+
+.btn-primary:hover{
+  background:var(--oxide);transform:translateY(-2px);
+  box-shadow:0 5px 22px rgba(76,201,240,0.4);
+}
+
+/* ─── RESPONSIVE ───────────────────────────────────── */
+@media(max-width:520px){
+  .card{padding:32px 20px 26px}
+  .res-grid{grid-template-columns:repeat(2,1fr)}
+  .stage{margin-top:28px}
+  .tf-row{flex-direction:column}
+}
+
+/* ─── FOOTER ───────────────────────────────────── */
+.footer{
+  margin-top:auto;
+  padding:40px 20px;
+  background:rgba(0,43,77,0.3);
+  border-top:1px solid var(--etch-line);
+  text-align:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.75rem;
+  color:rgba(230,243,248,0.6);
+  letter-spacing:0.05em;
+  line-height:1.8;
+  position:relative;z-index:2;
+}
+
+.footer::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 0%,var(--etch-line) 50%,transparent 100%);
+}
+
+.footer p{margin:0;max-width:700px;margin-left:auto;margin-right:auto}
+</style>
+</head>
+<body>
+
+<!-- QUESTION TYPE FILTER MODAL -->
+<div class="modal-overlay show" id="filterModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Question <em>Filter</em></h2>
+      <p>Select which question types you want to receive:</p>
+    </div>
+
+    <div class="modal-body">
+      <div class="checkbox-group">
+        <label class="checkbox-item mc">
+          <input type="checkbox" class="type-filter" value="mc" checked>
+          <div class="checkbox-label">
+            <div class="checkbox-label-title">Multiple Choice</div>
+            <div class="checkbox-label-desc">Pick the correct option</div>
+          </div>
+        </label>
+
+        <label class="checkbox-item id">
+          <input type="checkbox" class="type-filter" value="id" checked>
+          <div class="checkbox-label">
+            <div class="checkbox-label-title">Identification</div>
+            <div class="checkbox-label-desc">Type the answer</div>
+          </div>
+        </label>
+
+        <label class="checkbox-item tf">
+          <input type="checkbox" class="type-filter" value="tf" checked>
+          <div class="checkbox-label">
+            <div class="checkbox-label-title">True or False</div>
+            <div class="checkbox-label-desc">Choose true or false</div>
+          </div>
+        </label>
+
+        <label class="checkbox-item fitb">
+          <input type="checkbox" class="type-filter" value="fitb" checked>
+          <div class="checkbox-label">
+            <div class="checkbox-label-title">Fill in the Blank</div>
+            <div class="checkbox-label-desc">Complete the sentence</div>
+          </div>
+        </label>
+
+        <label class="checkbox-item output">
+          <input type="checkbox" class="type-filter" value="output" checked>
+          <div class="checkbox-label">
+            <div class="checkbox-label-title">Code Output</div>
+            <div class="checkbox-label-desc">Predict what the code prints</div>
+          </div>
+        </label>
+
+        <label class="checkbox-item order">
+          <input type="checkbox" class="type-filter" value="order" checked>
+          <div class="checkbox-label">
+            <div class="checkbox-label-title">Code Ordering</div>
+            <div class="checkbox-label-desc">Arrange lines into correct order</div>
+          </div>
+        </label>
+
+        <label class="checkbox-item debug">
+          <input type="checkbox" class="type-filter" value="debug" checked>
+          <div class="checkbox-label">
+            <div class="checkbox-label-title">Debug (Error Type)</div>
+            <div class="checkbox-label-desc">Identify the type of error</div>
+          </div>
+        </label>
+
+        <label class="checkbox-item debug">
+          <input type="checkbox" class="type-filter" value="debug-line" checked>
+          <div class="checkbox-label">
+            <div class="checkbox-label-title">Debug (Error Line)</div>
+            <div class="checkbox-label-desc">Click the line that causes the error</div>
+          </div>
+        </label>
+
+        <label class="checkbox-item best">
+          <input type="checkbox" class="type-filter" value="best" checked>
+          <div class="checkbox-label">
+            <div class="checkbox-label-title">Best Solution</div>
+            <div class="checkbox-label-desc">Choose the superior approach</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-submit" onclick="applyFilter()">Start Quiz</button>
+    </div>
+  </div>
+</div>
+
+<!-- progress -->
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <span class="p-label" id="pLabel">1 / …</span>
+    <div class="p-bar"><div class="p-fill" id="pFill"></div></div>
+    <span class="p-pct" id="pPct">0%</span>
+  </div>
+</div>
+
+<!-- header -->
+<div class="header">
+  <h1><em id="headerTitle">Code</em> Quiz</h1>
+  <p id="headerSubtitle">Answer each question — the correct answer is revealed right away</p>
+</div>
+
+<!-- stage -->
+<div class="stage">
+  <div id="cardWrap"></div>
+  <div class="results" id="results"></div>
+</div>
+
+<script>
+/* ── LOADER: URL ?mode= param → mapped JS file, else faux-questions.js ── */
+const params = new URLSearchParams(window.location.search);
+const mode   = params.get('mode');
+
+const modeMap = {
+  'Comprog':   'Comprog.js',
+};
+
+const titleMap = {
+  'Comprog':   'Computer Programming',
+};
+
+function afterLoad() {
+  if (mode && titleMap[mode]) {
+    const t = titleMap[mode];
+    document.getElementById('pageTitle').textContent  = t + ' Quiz';
+    document.getElementById('headerTitle').textContent = t;
+  }
+  initializeConfig();
+  if (loadProgress()) { /* resumed */ }
+  render();
+}
+
+const scriptSrc = (mode && modeMap[mode]) ? modeMap[mode] : 'faux-questions.js';
+(function loadScript(src) {
+  const s = document.createElement('script');
+  s.src = src;
+  s.onload  = afterLoad;
+  s.onerror = function() {
+    if (src !== 'faux-questions.js') {
+      console.warn('Primary script failed, falling back to faux-questions.js');
+      loadScript('faux-questions.js');
+    } else {
+      console.error('Could not load faux-questions.js either.');
+    }
+  };
+  document.head.appendChild(s);
+})(scriptSrc);
+
+/* ══════════════════════════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════════════════════════ */
+let current = 0, score = 0, wrongs = [];
+let answerSubmitted = false;
+let currentHintLevel = 0;   // 0=none, 1=hint1, 2=hint2, 3=solution
+let orderState = [];         // mutable line order for 'order' questions
+let selectedDebugLine = -1;  // selected line index for 'debug-line'
+
+/* ══════════════════════════════════════════════════════════════
+   COOKIES - Save/Load Progress
+   ══════════════════════════════════════════════════════════════ */
+function setCookie(name, value, days=7) {
+  const d = new Date();
+  d.setTime(d.getTime() + days*86400000);
+  document.cookie = name + '=' + encodeURIComponent(JSON.stringify(value)) + ';expires=' + d.toUTCString() + ';path=/';
+}
+
+function getCookie(name) {
+  const eq = name + '=';
+  for (let c of document.cookie.split(';')) {
+    c = c.trim();
+    if (c.indexOf(eq) === 0) {
+      try { return JSON.parse(decodeURIComponent(c.substring(eq.length))); }
+      catch(e) { return null; }
+    }
+  }
+  return null;
+}
+
+function deleteQuizCookie() {
+  document.cookie = 'quizProgress=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;';
+}
+
+function saveProgress() {
+  setCookie('quizProgress', { mode, current, score, wrongs, ts: Date.now() });
+}
+
+function loadProgress() {
+  const s = getCookie('quizProgress');
+  if (s && s.mode === mode) {
+    current = s.current || 0;
+    score   = s.score   || 0;
+    wrongs  = s.wrongs  || [];
+    return true;
+  }
+  return false;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CONFIG
+   ══════════════════════════════════════════════════════════════ */
+let TOTAL;
+const LABELS     = ['A','B','C','D','E','F','G','H'];
+const TYPE_LABELS = {
+  mc:'MC', id:'ID', tf:'T/F', fitb:'FITB',
+  output:'Output', order:'Order', debug:'Debug', 'debug-line':'Debug-Line', best:'Best'
+};
+const BADGE = {
+  mc:'', id:'badge-rust', tf:'badge-blue', fitb:'badge-plum',
+  output:'badge-violet', order:'badge-teal', debug:'badge-amber', 'debug-line':'badge-amber', best:'badge-plum'
+};
+const PHASE = {
+  mc:'Multiple Choice', id:'Identification', tf:'True or False', fitb:'Fill in the Blank',
+  output:'Code Output', order:'Code Ordering', debug:'Debug — Error Type', 'debug-line':'Debug — Error Line', best:'Best Solution'
+};
+
+let QUESTIONS_FILTERED = [];
+
+function initializeConfig() {
+  TOTAL = QUESTIONS.length;
+  QUESTIONS_FILTERED = QUESTIONS;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FILTER MODAL
+   ══════════════════════════════════════════════════════════════ */
+function applyFilter() {
+  const checked = document.querySelectorAll('.type-filter:checked');
+  const sel = Array.from(checked).map(cb => cb.value);
+  if (!sel.length) { alert('Please select at least one question type!'); return; }
+
+  QUESTIONS_FILTERED = QUESTIONS.filter(q => sel.includes(q.type));
+  TOTAL = QUESTIONS_FILTERED.length;
+  current = 0; score = 0; wrongs = [];
+  answerSubmitted = false;
+
+  document.getElementById('filterModal').classList.remove('show');
+  render();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RENDER – master dispatcher
+   ══════════════════════════════════════════════════════════════ */
+function render() {
+  const wrap = document.getElementById('cardWrap');
+  wrap.innerHTML = '';
+  document.getElementById('results').classList.remove('show');
+  if (current >= TOTAL) { showResults(); return; }
+  updateProgress();
+
+  answerSubmitted   = false;
+  currentHintLevel  = 0;
+  orderState        = [];
+  selectedDebugLine = -1;
+
+  const item = QUESTIONS_FILTERED[current];
+  const num  = current + 1;
+
+  let html =
+    `<div class="card ${BADGE[item.type] || ''}" id="qCard">
+       <div class="q-badge">Question ${num} of ${TOTAL}</div>
+       <div class="phase-tag ${item.type}">${PHASE[item.type] || item.type}</div>`;
+
+  switch (item.type) {
+
+    /* ── Multiple Choice ── */
+    case 'mc':
+      html += `<div class="q-text">${item.q}</div>
+               <div class="options" id="options">` +
+        item.o.map((o,i) =>
+          `<div class="opt" id="opt-${i}" onclick="pickMC(${i})">
+             <div class="marker">${LABELS[i]}</div>
+             <span class="lbl">${o}</span>
+             <span class="icon"></span>
+           </div>`
+        ).join('') + '</div>';
+      break;
+
+    /* ── Identification ── */
+    case 'id':
+      html += `<div class="q-text">${item.q}</div>
+               <div class="input-row">
+                 <input class="text-input" id="textInput" type="text" placeholder="Type your answer…"
+                        onkeydown="if(event.key==='Enter')submitText()">
+                 <button class="go-btn" id="goBtn" onclick="submitText()">Go</button>
+               </div>`;
+      break;
+
+    /* ── True / False ── */
+    case 'tf':
+      html += `<div class="q-text">${item.q}</div>
+               <div class="tf-row">
+                 <div class="tf-btn" id="tf-true"  onclick="pickTF(true)">
+                   <span class="tf-icon">✓</span><span class="tf-lbl">True</span>
+                 </div>
+                 <div class="tf-btn" id="tf-false" onclick="pickTF(false)">
+                   <span class="tf-icon">✕</span><span class="tf-lbl">False</span>
+                 </div>
+               </div>`;
+      break;
+
+    /* ── Fill in the Blank ── */
+    case 'fitb':
+      html += `<div class="fitb-sentence">
+                 ${item.before} <span class="fitb-blank" id="fitbPreview">___</span> ${item.after}
+               </div>
+               <div class="input-row">
+                 <input class="text-input" id="textInput" type="text" placeholder="Fill in the blank…"
+                        onkeydown="if(event.key==='Enter')submitText()"
+                        oninput="document.getElementById('fitbPreview').textContent=this.value||'___'">
+                 <button class="go-btn" id="goBtn" onclick="submitText()">Go</button>
+               </div>`;
+      break;
+
+    /* ── Code Output ── */
+    case 'output':
+      html += `<div class="q-text">${item.q}</div>
+               ${buildCodeBlock(item.code, item.lang || 'java')}
+               ${buildHintArea(item)}
+               <div class="input-row" style="margin-top:10px">
+                 <input class="text-input" id="textInput" type="text"
+                        placeholder="Type the program output exactly (trimmed)"
+                        onkeydown="if(event.key==='Enter')submitOutput()">
+                 <button class="go-btn" id="goBtn" onclick="submitOutput()">Go</button>
+               </div>`;
+      break;
+
+    /* ── Code Ordering ── */
+    case 'order': {
+      // Shuffle the lines for the user (seed from question index for consistency)
+      orderState = shuffleLines(item.lines);
+      html += `<div class="q-text">${item.q}</div>
+               <div class="order-list" id="orderList">
+                 ${renderOrderList(orderState, item.lines)}
+               </div>
+               <button class="order-submit" id="orderSubmit" onclick="submitOrder()">Check Order</button>`;
+      break;
+    }
+
+    /* ── Debug (error type) ── */
+    case 'debug':
+      html += `<div class="q-text">${item.q}</div>
+               ${buildCodeBlock(item.code, item.lang || 'java')}
+               ${buildHintArea(item)}
+               <div class="options" id="options">` +
+        item.o.map((o,i) =>
+          `<div class="opt" id="opt-${i}" onclick="pickMC(${i})">
+             <div class="marker">${LABELS[i]}</div>
+             <span class="lbl">${o}</span>
+             <span class="icon"></span>
+           </div>`
+        ).join('') + '</div>';
+      break;
+
+    /* ── Debug (error line) ── */
+    case 'debug-line':
+      html += `<div class="q-text">${item.q}</div>
+               <div class="debug-lines" id="debugLines">
+                 ${item.lines.map((l,i) =>
+                   `<div class="debug-line-row" id="dline-${i}" onclick="selectDebugLine(${i})">
+                      <span class="debug-line-num">${i}</span>
+                      <span class="debug-line-code">${escHtml(l)}</span>
+                    </div>`
+                 ).join('')}
+               </div>
+               <button class="debug-submit" id="debugSubmit" onclick="submitDebugLine()">Submit Line</button>`;
+      break;
+
+    /* ── Best Solution ── */
+    case 'best':
+      html += `<div class="q-text">${item.q}</div>
+               <div class="options" id="options">` +
+        item.o.map((o,i) =>
+          `<div class="opt" id="opt-${i}" onclick="pickMC(${i})">
+             <div class="marker">${LABELS[i]}</div>
+             <span class="lbl">${o}</span>
+             <span class="icon"></span>
+           </div>`
+        ).join('') + '</div>';
+      break;
+
+    default:
+      current++;
+      if (current < TOTAL) render(); else showResults();
+      return;
+  }
+
+  html += `<div class="feedback" id="feedback"></div>
+           <button class="nav-btn" id="navBtn" onclick="advance()">
+             ${current < TOTAL-1 ? 'Next Question →' : 'See Results'}
+           </button>
+         </div>`;
+
+  wrap.innerHTML = html;
+
+  // Re-init order list event listeners (buttons rendered via innerHTML)
+  if (item.type === 'order') rebindOrderButtons();
+
+  // Highlight code with Prism
+  if (window.Prism) Prism.highlightAll();
+
+  const inp = document.getElementById('textInput');
+  if (inp) inp.focus();
+}
+
+/* ── Helpers for render ── */
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function buildCodeBlock(code, lang) {
+  return `<div class="code-wrap">
+    <span class="code-lang-label">${escHtml(lang)}</span>
+    <pre class="language-${escHtml(lang)}"><code class="language-${escHtml(lang)}">${escHtml(code)}</code></pre>
+  </div>`;
+}
+
+function buildHintArea(item) {
+  const h1 = item.hint1 || '', h2 = item.hint2 || '', sol = item.solution || '';
+  if (!h1 && !h2 && !sol) return '';
+  return `<div class="hint-area" id="hintArea">
+    <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Show Hint</button>
+    <div class="hint-box" id="hint1Box">${escHtml(h1)}</div>
+    <div class="hint-box" id="hint2Box">${escHtml(h2)}</div>
+    <div class="hint-box solution-box" id="solutionBox">${escHtml(sol)}</div>
+  </div>`;
+}
+
+function shuffleLines(lines) {
+  // Return array of original indices shuffled
+  const idxs = lines.map((_,i) => i);
+  // Fisher-Yates with a deterministic seed based on question text length
+  // so each render gives the same shuffle
+  const seed = (lines.join('').length * 31 + current * 17) % 997;
+  let s = seed;
+  for (let i = idxs.length-1; i > 0; i--) {
+    s = (s * 1664525 + 1013904223) & 0x7fffffff;
+    const j = s % (i+1);
+    [idxs[i], idxs[j]] = [idxs[j], idxs[i]];
+  }
+  return idxs;
+}
+
+function renderOrderList(state, lines) {
+  return state.map((origIdx, pos) =>
+    `<div class="order-item" id="oi-${pos}">
+       <span class="order-idx">${pos+1}</span>
+       <span class="order-code">${escHtml(lines[origIdx])}</span>
+       <div class="order-btns">
+         <button class="order-arrow" id="up-${pos}" title="Move up" onclick="moveOrderItem(${pos},-1)">▲</button>
+         <button class="order-arrow" id="dn-${pos}" title="Move down" onclick="moveOrderItem(${pos},1)">▼</button>
+       </div>
+     </div>`
+  ).join('');
+}
+
+function rebindOrderButtons() {
+  // Disable first up and last down
+  const item = QUESTIONS_FILTERED[current];
+  const n = orderState.length;
+  for (let i=0; i<n; i++) {
+    const up = document.getElementById('up-'+i);
+    const dn = document.getElementById('dn-'+i);
+    if (up) up.disabled = (i === 0);
+    if (dn) dn.disabled = (i === n-1);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HANDLERS
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Multiple Choice / Debug-type / Best ── */
+function pickMC(chosen) {
+  if (answerSubmitted) return;
+  answerSubmitted = true;
+
+  document.querySelectorAll('.opt').forEach(o => o.classList.add('locked'));
+  const item    = QUESTIONS_FILTERED[current];
+  const correct = item.a;
+  const isRight = chosen === correct;
+
+  if (isRight) { score++; playCorrectSound(); }
+  else {
+    wrongs.push({ num:current+1, q:item.q, ans:item.o[correct], qtype:item.type });
+    playIncorrectSound();
+  }
+
+  document.getElementById('opt-'+chosen).classList.add(isRight ? 'correct' : 'wrong');
+  document.getElementById('opt-'+chosen).querySelector('.icon').textContent = isRight ? '✓' : '✗';
+
+  if (!isRight) {
+    document.getElementById('opt-'+correct).classList.add('reveal-correct');
+    document.getElementById('opt-'+correct).querySelector('.icon').textContent = '✓';
+  }
+
+  showFeedback(isRight, item.o[correct]);
+  saveProgress();
+  revealNav();
+}
+
+/* ── True / False ── */
+function pickTF(chosen) {
+  if (answerSubmitted) return;
+  answerSubmitted = true;
+
+  document.getElementById('tf-true').classList.add('locked');
+  document.getElementById('tf-false').classList.add('locked');
+
+  const item    = QUESTIONS_FILTERED[current];
+  const isRight = chosen === item.a;
+  const correctId = item.a ? 'tf-true' : 'tf-false';
+  const chosenId  = chosen ? 'tf-true' : 'tf-false';
+
+  if (isRight) { score++; playCorrectSound(); }
+  else {
+    wrongs.push({ num:current+1, q:item.q, ans:item.a ? 'True' : 'False', qtype:'tf' });
+    playIncorrectSound();
+  }
+
+  document.getElementById(chosenId).classList.add(isRight ? 'correct' : 'wrong');
+  if (!isRight) document.getElementById(correctId).classList.add('reveal-correct');
+
+  showFeedback(isRight, item.a ? 'True' : 'False');
+  saveProgress();
+  revealNav();
+}
+
+/* ── Identification + Fill-in-the-Blank ── */
+function submitText() {
+  if (answerSubmitted) return;
+  answerSubmitted = true;
+
+  const inp   = document.getElementById('textInput');
+  const goBtn = document.getElementById('goBtn');
+  const val   = inp.value.trim();
+  if (!val) { answerSubmitted = false; return; }
+
+  inp.disabled   = true;
+  goBtn.disabled = true;
+
+  const item    = QUESTIONS_FILTERED[current];
+  const isRight = norm(val) === norm(item.a);
+
+  if (isRight) { score++; playCorrectSound(); }
+  else { playIncorrectSound(); }
+
+  wrongs.push({ num:current+1, q: item.type==='fitb' ? (item.before+' ___ '+item.after) : item.q, ans:item.a, qtype:item.type });
+
+  inp.classList.add(isRight ? 'correct' : 'wrong');
+
+  if (item.type === 'fitb') {
+    const prev = document.getElementById('fitbPreview');
+    if (prev) { prev.textContent = item.a; prev.style.color = 'var(--sage)'; }
+  }
+
+  showFeedback(isRight, item.a);
+  saveProgress();
+  revealNav();
+}
+
+/* ── Code Output ── */
+function submitOutput() {
+  if (answerSubmitted) return;
+  answerSubmitted = true;
+
+  const inp   = document.getElementById('textInput');
+  const goBtn = document.getElementById('goBtn');
+  const val   = inp ? inp.value : '';
+  if (!val.trim()) { answerSubmitted = false; return; }
+
+  inp.disabled   = true;
+  goBtn.disabled = true;
+
+  const item = QUESTIONS_FILTERED[current];
+  // NOTE: This is string matching only. No user code is executed (no eval).
+  // For real evaluation, send to a server-side sandboxed executor.
+  const isRight = normOutput(val) === normOutput(item.a);
+
+  if (isRight) { score++; playCorrectSound(); }
+  else { playIncorrectSound(); }
+
+  wrongs.push({ num:current+1, q:item.q, ans:item.a, qtype:'output',
+                extra:'Expected output:\n' + item.a });
+
+  inp.classList.add(isRight ? 'correct' : 'wrong');
+  showFeedback(isRight, item.a);
+  saveProgress();
+  revealNav();
+}
+
+/* ── Code Ordering ── */
+function moveOrderItem(pos, dir) {
+  if (answerSubmitted) return;
+  const newPos = pos + dir;
+  if (newPos < 0 || newPos >= orderState.length) return;
+  [orderState[pos], orderState[newPos]] = [orderState[newPos], orderState[pos]];
+
+  const item = QUESTIONS_FILTERED[current];
+  document.getElementById('orderList').innerHTML = renderOrderList(orderState, item.lines);
+  rebindOrderButtons();
+}
+
+function submitOrder() {
+  if (answerSubmitted) return;
+  answerSubmitted = true;
+
+  const item    = QUESTIONS_FILTERED[current];
+  const correct = item.a; // correct ordering as array of original indices
+  const isRight = orderState.every((v,i) => v === correct[i]);
+
+  // Colour-code each row
+  orderState.forEach((origIdx, pos) => {
+    const el = document.getElementById('oi-'+pos);
+    if (el) el.classList.add(origIdx === correct[pos] ? 'line-correct' : 'line-wrong');
+    const up = document.getElementById('up-'+pos);
+    const dn = document.getElementById('dn-'+pos);
+    if (up) up.disabled = true;
+    if (dn) dn.disabled = true;
+  });
+
+  document.getElementById('orderSubmit').disabled = true;
+
+  if (isRight) { score++; playCorrectSound(); }
+  else { playIncorrectSound(); }
+
+  const correctLabels = correct.map(i => item.lines[i]).join(' → ');
+  wrongs.push({ num:current+1, q:item.q, ans:correctLabels, qtype:'order',
+                extra:'Correct order:\n' + correct.map((i,p) => (p+1)+'. '+item.lines[i]).join('\n') });
+
+  showFeedback(isRight, correctLabels);
+  saveProgress();
+  revealNav();
+}
+
+/* ── Debug — Error Line ── */
+function selectDebugLine(idx) {
+  if (answerSubmitted) return;
+  // Deselect previous
+  if (selectedDebugLine >= 0) {
+    const prev = document.getElementById('dline-'+selectedDebugLine);
+    if (prev) prev.classList.remove('dl-selected');
+  }
+  selectedDebugLine = idx;
+  const el = document.getElementById('dline-'+idx);
+  if (el) el.classList.add('dl-selected');
+}
+
+function submitDebugLine() {
+  if (answerSubmitted) return;
+  if (selectedDebugLine < 0) { alert('Click a line first!'); return; }
+  answerSubmitted = true;
+
+  const item    = QUESTIONS_FILTERED[current];
+  const correct = item.a; // zero-based correct line index
+  const isRight = selectedDebugLine === correct;
+
+  document.getElementById('debugSubmit').disabled = true;
+
+  // lock all rows
+  item.lines.forEach((_,i) => {
+    const el = document.getElementById('dline-'+i);
+    if (!el) return;
+    if (i === correct) el.classList.add('dl-correct');
+    else if (i === selectedDebugLine && !isRight) el.classList.add('dl-wrong');
+  });
+
+  if (isRight) { score++; playCorrectSound(); }
+  else { playIncorrectSound(); }
+
+  const correctLine = `Line ${correct}: ${item.lines[correct]}`;
+  wrongs.push({ num:current+1, q:item.q, ans:correctLine, qtype:'debug-line',
+                extra:'Error on line '+correct+':\n'+item.lines[correct] });
+
+  showFeedback(isRight, correctLine);
+  saveProgress();
+  revealNav();
+}
+
+/* ── Hint system ── */
+function showHint() {
+  const item = QUESTIONS_FILTERED[current];
+  const hints = [item.hint1||'', item.hint2||'', item.solution||''];
+  currentHintLevel++;
+
+  if (currentHintLevel >= 1 && hints[0]) {
+    const b = document.getElementById('hint1Box');
+    if (b) b.classList.add('show');
+  }
+  if (currentHintLevel >= 2 && hints[1]) {
+    const b = document.getElementById('hint2Box');
+    if (b) b.classList.add('show');
+  }
+  if (currentHintLevel >= 3 && hints[2]) {
+    const b = document.getElementById('solutionBox');
+    if (b) b.classList.add('show');
+  }
+
+  const btn = document.getElementById('hintBtn');
+  if (btn) {
+    if (currentHintLevel >= 3 || (currentHintLevel >= 1 && !hints[currentHintLevel])) {
+      btn.disabled = true;
+      btn.textContent = '💡 All Hints Shown';
+    } else {
+      btn.textContent = currentHintLevel === 1 ? '💡 More Hint' : '💡 Show Solution';
+    }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SHARED UI HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx    = new AudioContext();
+
+function playCorrectSound() {
+  const g = audioCtx.createGain();
+  g.connect(audioCtx.destination);
+  function note(f,t,d,w='square'){
+    const o=audioCtx.createOscillator(), ng=audioCtx.createGain();
+    o.type=w; o.frequency.setValueAtTime(f,t);
+    o.connect(ng); ng.connect(g);
+    ng.gain.setValueAtTime(0.3,t);
+    ng.gain.exponentialRampToValueAtTime(0.001,t+d);
+    o.start(t); o.stop(t+d);
+  }
+  const n=audioCtx.currentTime;
+  note(880,n,0.15); note(1046,n+0.12,0.15); note(1318,n+0.24,0.2);
+}
+
+function playIncorrectSound() {
+  const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+  o.connect(g); g.connect(audioCtx.destination);
+  o.type='sawtooth';
+  o.frequency.setValueAtTime(450,audioCtx.currentTime);
+  o.frequency.exponentialRampToValueAtTime(150,audioCtx.currentTime+0.4);
+  g.gain.setValueAtTime(0.2,audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.4);
+  o.start(); o.stop(audioCtx.currentTime+0.4);
+}
+
+function showFeedback(isRight, correctAns) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback show ' + (isRight ? 'correct' : 'wrong');
+  fb.innerHTML = isRight
+    ? '<span>✓</span> <span class="ans-label">Correct!</span> Great job.'
+    : '<span>✗</span> The correct answer is: <span class="ans-label">' + escHtml(String(correctAns)) + '</span>';
+}
+
+function revealNav() {
+  const btn = document.getElementById('navBtn');
+  btn.classList.add('show');
+  btn.textContent = current < TOTAL-1 ? 'Next Question →' : 'See Results';
+}
+
+function advance() {
+  current++;
+  answerSubmitted = false;
+  saveProgress();
+  render();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PROGRESS BAR
+   ══════════════════════════════════════════════════════════════ */
+function updateProgress() {
+  const pct = Math.round((current / TOTAL) * 100);
+  document.getElementById('pLabel').textContent = (current+1) + ' / ' + TOTAL;
+  document.getElementById('pFill').style.width  = pct + '%';
+  document.getElementById('pPct').textContent   = pct + '%';
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESULTS SCREEN
+   ══════════════════════════════════════════════════════════════ */
+function showResults() {
+  document.getElementById('cardWrap').innerHTML = '';
+  document.getElementById('pLabel').textContent = TOTAL + ' / ' + TOTAL;
+  document.getElementById('pFill').style.width  = '100%';
+  document.getElementById('pPct').textContent   = '100%';
+
+  const pct = Math.round((score / TOTAL) * 100);
+
+  // Per-type stats — iterate over all types present in filtered set
+  const allTypes = ['mc','id','tf','fitb','output','order','debug','debug-line','best'];
+  let statBoxes = `<div class="res-box"><div class="v gold">${pct}%</div><div class="l">Score</div></div>`;
+
+  allTypes.forEach(t => {
+    const total = QUESTIONS_FILTERED.filter(q => q.type === t).length;
+    if (!total) return;
+    const missed  = wrongs.filter(w => w.qtype === t).length;
+    const correct = total - missed;
+    statBoxes += `<div class="res-box">
+      <div class="v g">${correct}/${total}</div>
+      <div class="l">${TYPE_LABELS[t]}</div>
+    </div>`;
+  });
+
+  statBoxes += `<div class="res-box"><div class="v r">${wrongs.length}</div><div class="l">Missed</div></div>`;
+
+  // Missed items breakdown
+  let bdHtml = '';
+  if (wrongs.length) {
+    bdHtml += '<div class="bd-title">Items Missed</div>';
+    // Deduplicate wrongs — only show the *last* attempt for each question number
+    // (submitText always pushes even on correct; filter to isRight=false entries)
+    // Actually all wrongs entries are only pushed on wrong answers now, so no dedup needed
+    wrongs.forEach(w => {
+      const extraHtml = w.extra
+        ? `<div class="bd-extra">${escHtml(w.extra)}</div>`
+        : '';
+      bdHtml +=
+        `<div class="bd-item">
+           <span class="bd-icon">❌</span>
+           <span class="bd-num">#${w.num}</span>
+           <span class="bd-q">${escHtml(w.q)}</span>
+           <span class="bd-a">${escHtml(String(w.ans))}</span>
+           ${extraHtml}
+         </div>`;
+    });
+  } else {
+    bdHtml = '<div class="perfect">🎉 Perfect score — outstanding work!</div>';
+  }
+
+  document.getElementById('results').innerHTML =
+    `<div class="res-hero">
+       <h2>Quiz Complete</h2>
+       <div class="res-score">${score} / ${TOTAL}</div>
+       <div class="res-sub">Total Score</div>
+       <div class="res-grid">${statBoxes}</div>
+     </div>
+     ${bdHtml}
+     <div class="res-btn-row">
+       <button class="btn btn-primary" onclick="restart()">Retake Quiz</button>
+     </div>`;
+
+  document.getElementById('results').classList.add('show');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESTART | UTIL
+   ══════════════════════════════════════════════════════════════ */
+function restart() {
+  current = 0; score = 0; wrongs = [];
+  answerSubmitted = false;
+  orderState = []; selectedDebugLine = -1; currentHintLevel = 0;
+  deleteQuizCookie();
+  render();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/** Normalise for ID/FITB: lowercase, alphanumeric only */
+function norm(s) { return String(s).toLowerCase().replace(/[^a-z0-9]/g,''); }
+
+/** Normalise for output comparison: trim, normalise line endings, collapse trailing whitespace per line */
+function normOutput(s) {
+  return String(s)
+    .replace(/\r\n/g,'\n')
+    .replace(/\r/g,'\n')
+    .split('\n')
+    .map(l => l.trimEnd())
+    .join('\n')
+    .trim();
+}
+</script>
+
+<footer class="footer">
+  <p>This website is for educational and review purposes only. The developer shall not be held liable for any forms of cheating done by the user.</p>
+</footer>
+</body>
+</html>

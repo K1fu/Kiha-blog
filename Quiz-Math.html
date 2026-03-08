@@ -1191,16 +1191,22 @@ console.log("Parsed mode parameter:", mode);
 
 // Map of modes to their respective JS file paths
 const modeMap = {
-  "MMW": "Courses/1st year/2ndsemester/Prelims/MMW.js",
-  "Calculus": "Courses/1st year/2ndsemester/Prelims/Calculus.js",
-  "Discrete": "Courses/1st year/2ndsemester/Prelims/Discrete.js"
+  "PRELIMS-MMW": "Courses/1st year/2ndsemester/Prelims/MMW.js",
+  "PRELIMS-Calculus": "Courses/1st year/2ndsemester/Prelims/Calculus.js",
+  "PRELIMS-Discrete": "Courses/1st year/2ndsemester/Prelims/Discrete.js",
+  "MIDTERMS-MMW": "Courses/1st year/2ndsemester/Midterms/MMW.js",
+  "MIDTERMS-Calculus": "Courses/1st year/2ndsemester/Midterms/Calculus.js",
+  "MIDTERMS-Discrete": "Courses/1st year/2ndsemester/Midterms/Discrete.js"
 };
 
 // Map of modes to their display titles
 const titleMap = {
-  "MMW": "Mathematics in the Modern World",
-  "Calculus": "Calculus",
-  "Discrete": "Discrete Mathematics"
+  "PRELIMS-MMW": "Mathematics in the Modern World",
+  "PRELIMS-Calculus": "Calculus",
+  "PRELIMS-Discrete": "Discrete Mathematics",
+  "MIDTERMS-MMW": "Mathematics in the Modern World",
+  "MIDTERMS-Calculus": "Calculus",
+  "MIDTERMS-Discrete": "Discrete Mathematics",
 };
 
 console.log("Available modes:", Object.keys(modeMap));
@@ -1293,6 +1299,7 @@ if (mode && modeMap[mode]) {
 let current = 0;
 let score   = 0;
 let wrongs  = [];
+let answerSubmitted = false; // Flag to prevent double-clicking
 
 /* ══════════════════════════════════════════════════════════════
    CONFIG  (will be initialized after QUESTIONS loads)
@@ -1397,6 +1404,7 @@ function applyFilter() {
   current = 0;
   score = 0;
   wrongs = [];
+  answerSubmitted = false; // Reset flag when starting new quiz
   
   // Hide modal and start quiz
   document.getElementById('filterModal').classList.remove('show');
@@ -1561,6 +1569,9 @@ function render(){
 
 /* ── Multiple Choice ── */
 function pickMC(chosen){
+  if(answerSubmitted) return; // Prevent double-clicking
+  answerSubmitted = true;
+  
   document.querySelectorAll('.opt').forEach(o => o.classList.add('locked'));
   const item    = QUESTIONS_FILTERED[current];
   const correct = item.a;
@@ -1589,6 +1600,9 @@ function pickMC(chosen){
 
 /* ── True / False ── */
 function pickTF(chosen){
+  if(answerSubmitted) return; // Prevent double-clicking
+  answerSubmitted = true;
+  
   document.getElementById('tf-true').classList.add('locked');
   document.getElementById('tf-false').classList.add('locked');
 
@@ -1617,10 +1631,16 @@ function pickTF(chosen){
 
 /* ── Identification + Fill-in-the-Blank (shared) ── */
 function submitText(){
+  if(answerSubmitted) return; // Prevent double-clicking
+  answerSubmitted = true;
+  
   const inp   = document.getElementById('textInput');
   const goBtn = document.getElementById('goBtn');
   const val   = inp.value.trim();
-  if(!val) return;
+  if(!val) {
+    answerSubmitted = false; // Reset flag if input is empty
+    return;
+  }
 
   inp.disabled   = true;
   goBtn.disabled = true;
@@ -1733,6 +1753,7 @@ function revealNav(){
 
 function advance(){
   current++;
+  answerSubmitted = false; // Reset flag for next question
   saveProgress();
   render();
   window.scrollTo({ top:0, behavior:'smooth' });
@@ -1817,6 +1838,7 @@ function restart(){
   current=0; 
   score=0; 
   wrongs=[]; 
+  answerSubmitted=false; // Reset flag when restarting
   deleteQuizCookie();
   render(); 
   window.scrollTo({top:0,behavior:'smooth'}); 

@@ -1046,16 +1046,24 @@ const mode = params.get("mode");
 
 // Map of modes to their respective JS file paths
 const modeMap = {
-  "ArtApp": "Courses/1st year/2ndsemester/Prelims/ArtApp.js",
-  "ComProg": "Courses/1st year/2ndsemester/Prelims/ComProg.js",
-  "STS": "Courses/1st year/2ndsemester/Prelims/STS.js"
+  "Prelims-ArtApp": "Courses/1st year/2ndsemester/Prelims/ArtApp.js",
+  "Prelims-ComProg": "Courses/1st year/2ndsemester/Prelims/ComProg.js",
+  "Prelims-STS": "Courses/1st year/2ndsemester/Prelims/STS.js",
+  "MIDTERMS-ArtApp": "Courses/1st year/2ndsemester/Midterms/ArtApp.js",
+  "MIDTERMS-ComProg": "Courses/1st year/2ndsemester/Midterms/ComProg.js",
+  "MIDTERMS-STS": "Courses/1st year/2ndsemester/Midterms/STS.js",
+  "MIDTERMS-NSTP": "Courses/1st year/2ndsemester/Midterms/NSTP.js"
 };
 
 // Map of modes to their display titles
 const titleMap = {
-  "ArtApp": "Art Appreciation",
-  "ComProg": "Computer Programming",
-  "STS": "Science, Technology, and Society"
+  "Prelims-ArtApp": "Art Appreciation",
+  "Prelims-ComProg": "Computer Programming",
+  "Prelims-STS": "Science, Technology, and Society",
+  "MIDTERMS-ArtApp": "Art Appreciation",
+  "MIDTERMS-ComProg": "Computer Programming",
+  "MIDTERMS-STS": "Science, Technology, and Society",
+  "MIDTERMS-NSTP": "National Service Training Program"
 };
 
 // Set page title and header based on mode
@@ -1115,6 +1123,7 @@ if (mode && modeMap[mode]) {
    STATE
    ══════════════════════════════════════════════════════════════ */
 let current = 0, score = 0, wrongs = [];
+let answerSubmitted = false; // Flag to prevent double-clicking
 
 /* ══════════════════════════════════════════════════════════════
    COOKIES - Save/Load Progress
@@ -1208,6 +1217,7 @@ function applyFilter() {
   current = 0;
   score = 0;
   wrongs = [];
+  answerSubmitted = false; // Reset flag when starting new quiz
   
   // Hide modal and start quiz
   document.getElementById('filterModal').classList.remove('show');
@@ -1309,6 +1319,9 @@ function render(){
 
 /* ── Multiple Choice ── */
 function pickMC(chosen){
+  if(answerSubmitted) return; // Prevent double-clicking
+  answerSubmitted = true;
+  
   document.querySelectorAll('.opt').forEach(o => o.classList.add('locked'));
   const item    = QUESTIONS_FILTERED[current];
   const correct = item.a;
@@ -1337,6 +1350,9 @@ function pickMC(chosen){
 
 /* ── True / False ── */
 function pickTF(chosen){
+  if(answerSubmitted) return; // Prevent double-clicking
+  answerSubmitted = true;
+  
   document.getElementById('tf-true').classList.add('locked');
   document.getElementById('tf-false').classList.add('locked');
 
@@ -1365,10 +1381,16 @@ function pickTF(chosen){
 
 /* ── Identification + Fill-in-the-Blank (shared) ── */
 function submitText(){
+  if(answerSubmitted) return; // Prevent double-clicking
+  answerSubmitted = true;
+  
   const inp   = document.getElementById('textInput');
   const goBtn = document.getElementById('goBtn');
   const val   = inp.value.trim();
-  if(!val) return;
+  if(!val) {
+    answerSubmitted = false; // Reset flag if input is empty
+    return;
+  }
 
   inp.disabled   = true;
   goBtn.disabled = true;
@@ -1471,6 +1493,7 @@ function revealNav(){
 }
 function advance(){
   current++;
+  answerSubmitted = false; // Reset flag for next question
   saveProgress();
   render();
   window.scrollTo({ top:0, behavior:'smooth' });
@@ -1551,6 +1574,7 @@ function restart(){
   current=0; 
   score=0; 
   wrongs=[]; 
+  answerSubmitted=false; // Reset flag when restarting
   deleteQuizCookie();
   render(); 
   window.scrollTo({top:0,behavior:'smooth'}); 
