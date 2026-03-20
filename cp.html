@@ -1,0 +1,3001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CP - ComProg, not Cheese Pizza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,900;1,900&family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/*
+ * ============================================================
+ *  ZZZ FRAMEWORK — v1.0.0
+ *  A neo-brutalist CSS utility framework inspired by
+ *  the visual language of Zenless Zone Zero.
+ *  Class-based · CSS-variable-driven · No dependencies
+ * ============================================================
+ */
+
+/* ============================================================
+   1. CSS RESET
+   ============================================================ */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  cursor: crosshair; /* ZZZ signature: crosshair cursor on everything */
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  line-height: var(--line-height-base);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img, video, svg {
+  display: block;
+  max-width: 100%;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: var(--line-height-tight);
+}
+
+p {
+  line-height: var(--line-height-base);
+}
+
+/* ============================================================
+   2. ROOT DESIGN TOKENS (ZZZ Default — Dark)
+   ============================================================
+   The ZZZ aesthetic is dark-first. The page background is #121212
+   with a white dot-grid pattern and white text, exactly as in the
+   source file. Use .theme-light for an inverted light variant.
+   ============================================================ */
+
+:root {
+  /* — Brand Colors — */
+  --color-primary:        #ffef00;  /* ZZZ Yellow */
+  --color-primary-dark:   #d4c700;
+  --color-primary-text:   #0a0a0a;  /* text ON primary bg */
+
+  --color-secondary:      #00f0ff;  /* ZZZ Cyan */
+  --color-secondary-dark: #00c4d1;
+  --color-secondary-text: #0a0a0a;
+
+  --color-danger:         #ff3e3e;
+  --color-danger-dark:    #d42c2c;
+  --color-danger-text:    #ffffff;
+
+  --color-success:        #00e676;
+  --color-success-dark:   #00c45d;
+  --color-success-text:   #0a0a0a;
+
+  --color-warning:        #ff9100;
+  --color-warning-dark:   #c77000;
+  --color-warning-text:   #0a0a0a;
+
+  --color-info:           #00f0ff;
+  --color-info-dark:      #00c4d1;
+  --color-info-text:      #0a0a0a;
+
+  /* — Neutral Scale — */
+  --color-black:          #0a0a0a;
+  --color-white:          #ffffff;
+  --color-gray-100:       #f5f5f5;
+  --color-gray-200:       #e0e0e0;
+  --color-gray-300:       #bdbdbd;
+  --color-gray-400:       #9e9e9e;
+  --color-gray-500:       #757575;
+  --color-gray-600:       #555555;
+  --color-gray-700:       #333333;
+  --color-gray-800:       #1e1e1e;
+  --color-gray-900:       #121212;
+
+  /* — Semantic Tokens (Dark — ZZZ Default) — */
+  --color-bg:             #121212;   /* original --zzz-bg */
+  --color-bg-surface:     #1e1e1e;
+  --color-bg-raised:      #2a2a2a;
+  --color-text:           #ffffff;
+  --color-text-muted:     #888888;
+  --color-text-inverse:   #0a0a0a;
+  --color-border:         #ffffff;
+  --color-border-muted:   #444444;
+  --color-link:           var(--color-primary);
+
+  /* — Card-specific tokens (cards are always white-on-dark) — */
+  --card-bg:              #ffffff;   /* cards are paper-white against the dark page */
+  --card-text:            #0a0a0a;
+  --card-border:          #0a0a0a;
+  --card-text-muted:      #666666;
+  --card-text-dim:        #333333;
+  --card-footer-border:   #cccccc;
+  --card-serial-color:    #999999;
+
+  /* — Typography — */
+  --font-display:         'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-body:            'Inter', system-ui, sans-serif;
+  --font-mono:            'JetBrains Mono', 'Courier New', monospace;
+
+  --font-size-xs:         0.625rem;   /* 10px */
+  --font-size-sm:         0.75rem;    /* 12px */
+  --font-size-base:       1rem;       /* 16px */
+  --font-size-md:         1.125rem;   /* 18px */
+  --font-size-lg:         1.25rem;    /* 20px */
+  --font-size-xl:         1.5rem;     /* 24px */
+  --font-size-2xl:        2rem;       /* 32px */
+  --font-size-3xl:        2.5rem;     /* 40px */
+  --font-size-4xl:        3.5rem;     /* 56px */
+  --font-size-5xl:        5rem;       /* 80px */
+
+  --line-height-tight:    0.9;
+  --line-height-snug:     1.2;
+  --line-height-base:     1.5;
+  --line-height-relaxed:  1.75;
+
+  --letter-spacing-tight: -2px;
+  --letter-spacing-wide:  4px;
+  --letter-spacing-wider: 8px;
+
+  /* — Spacing Scale — */
+  --space-0:  0;
+  --space-1:  0.25rem;   /* 4px  */
+  --space-2:  0.5rem;    /* 8px  */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+  --space-24: 6rem;      /* 96px */
+
+  /* — Border — */
+  --border-width-sm:   2px;
+  --border-width-base: 3px;
+  --border-width-lg:   4px;
+  --border-width-xl:   6px;
+  --border-style:      solid;
+  --border-base:       var(--border-width-base) var(--border-style) var(--color-border);
+
+  /* — Border Radius — */
+  --radius-none: 0;
+  --radius-sm:   2px;
+  --radius-base: 4px;
+  --radius-md:   6px;
+  --radius-lg:   8px;
+  --radius-xl:   12px;
+  --radius-full: 9999px;
+
+  /* — Shadows (dark default: primary-colored offset shadows) — */
+  --shadow-sm:   3px 3px 0 var(--color-primary);
+  --shadow-base: 5px 5px 0 var(--color-primary);
+  --shadow-md:   8px 8px 0 var(--color-primary);
+  --shadow-lg:   10px 10px 0 var(--color-secondary);
+  --shadow-xl:   14px 14px 0 var(--color-secondary);
+
+  --shadow-primary:   5px 5px 0 var(--color-primary);
+  --shadow-secondary: 5px 5px 0 var(--color-secondary);
+  --shadow-danger:    5px 5px 0 var(--color-danger);
+  --shadow-success:   5px 5px 0 var(--color-success);
+
+  /* — Transitions — */
+  --transition-fast:   0.15s cubic-bezier(0.23, 1, 0.32, 1);
+  --transition-base:   0.2s  cubic-bezier(0.23, 1, 0.32, 1);
+  --transition-bounce: 0.3s  cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* — Z-index Scale — */
+  --z-below:   -1;
+  --z-base:    0;
+  --z-raised:  10;
+  --z-overlay: 100;
+  --z-modal:   200;
+  --z-top:     999;
+
+  /* — Container Width — */
+  --container-sm:  540px;
+  --container-md:  720px;
+  --container-lg:  960px;
+  --container-xl:  1200px;
+  --container-2xl: 1400px;
+  --container-padding: var(--space-8);
+}
+
+/* ============================================================
+   3. BODY DEFAULT + THEME SYSTEM
+   ============================================================ */
+
+/* Body picks up the dark defaults from :root */
+body {
+  background-color: var(--color-bg);
+  /* Faithful to original: white dot-grid pattern on dark page */
+  background-image: radial-gradient(
+    circle at 2px 2px,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 0
+  );
+  background-size: 32px 32px;
+  color: var(--color-text);
+}
+
+/* Scanline CRT overlay — applied to body automatically
+   (can be suppressed with .no-scanlines on body) */
+body:not(.no-scanlines)::after {
+  content: " ";
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+    linear-gradient(90deg,
+      rgba(255, 0, 0, 0.03),
+      rgba(0, 255, 0, 0.01),
+      rgba(0, 0, 255, 0.03)
+    );
+  background-size: 100% 4px, 3px 100%;
+  z-index: var(--z-top);
+  pointer-events: none;
+}
+
+/* .theme-dark — explicit dark (same as root defaults, for toggling) */
+.theme-dark {
+  --color-bg:           #121212;
+  --color-bg-surface:   #1e1e1e;
+  --color-bg-raised:    #2a2a2a;
+  --color-text:         #ffffff;
+  --color-text-muted:   #888888;
+  --color-text-inverse: #0a0a0a;
+  --color-border:       #ffffff;
+  --color-border-muted: #444444;
+  --color-link:         var(--color-primary);
+  --shadow-sm:   3px 3px 0 var(--color-primary);
+  --shadow-base: 5px 5px 0 var(--color-primary);
+  --shadow-md:   8px 8px 0 var(--color-primary);
+  --shadow-lg:   10px 10px 0 var(--color-secondary);
+  --shadow-xl:   14px 14px 0 var(--color-secondary);
+}
+
+.theme-dark {
+  background-color: var(--color-bg);
+  background-image: radial-gradient(
+    circle at 2px 2px,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 0
+  );
+  background-size: 32px 32px;
+  color: var(--color-text);
+}
+
+/* .theme-light — inverted: white page, dark text, black shadows */
+.theme-light {
+  --color-bg:             #ffffff;
+  --color-bg-surface:     #f5f5f5;
+  --color-bg-raised:      #ffffff;
+  --color-text:           #0a0a0a;
+  --color-text-muted:     #757575;
+  --color-text-inverse:   #ffffff;
+  --color-border:         #0a0a0a;
+  --color-border-muted:   #bdbdbd;
+  --color-link:           #0a0a0a;
+  --shadow-sm:   3px 3px 0 #0a0a0a;
+  --shadow-base: 5px 5px 0 #0a0a0a;
+  --shadow-md:   8px 8px 0 #0a0a0a;
+  --shadow-lg:   10px 10px 0 #0a0a0a;
+  --shadow-xl:   14px 14px 0 #0a0a0a;
+}
+
+.theme-light {
+  background-color: var(--color-bg);
+  background-image: radial-gradient(
+    circle at 2px 2px,
+    rgba(0, 0, 0, 0.06) 1px,
+    transparent 0
+  );
+  background-size: 32px 32px;
+  color: var(--color-text);
+}
+
+/* ============================================================
+   4. BASE STYLES
+   ============================================================ */
+
+hr {
+  border: none;
+  border-top: var(--border-width-base) var(--border-style) var(--color-border);
+  margin: var(--space-6) 0;
+}
+
+code, kbd, samp {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-bg-surface);
+  border: var(--border-width-sm) var(--border-style) var(--color-border);
+  padding: 0.1em 0.4em;
+}
+
+pre {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  background: var(--color-bg-surface);
+  border: var(--border-width-base) var(--border-style) var(--color-border);
+  padding: var(--space-4);
+  overflow-x: auto;
+}
+
+blockquote {
+  border-left: var(--border-width-xl) var(--border-style) var(--color-primary);
+  padding-left: var(--space-4);
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+/* ============================================================
+   5. TYPOGRAPHY
+   ============================================================ */
+
+.display-1 { font-family: var(--font-display); font-size: var(--font-size-5xl); font-weight: 900; font-style: italic; letter-spacing: var(--letter-spacing-tight); text-transform: uppercase; line-height: var(--line-height-tight); }
+.display-2 { font-family: var(--font-display); font-size: var(--font-size-4xl); font-weight: 900; font-style: italic; letter-spacing: var(--letter-spacing-tight); text-transform: uppercase; line-height: var(--line-height-tight); }
+.display-3 { font-family: var(--font-display); font-size: var(--font-size-3xl); font-weight: 900; text-transform: uppercase; line-height: var(--line-height-snug); }
+
+.h1 { font-family: var(--font-display); font-size: var(--font-size-2xl); font-weight: 900; text-transform: uppercase; }
+.h2 { font-family: var(--font-display); font-size: var(--font-size-xl);  font-weight: 900; text-transform: uppercase; }
+.h3 { font-family: var(--font-display); font-size: var(--font-size-lg);  font-weight: 700; text-transform: uppercase; }
+.h4 { font-family: var(--font-body);    font-size: var(--font-size-md);  font-weight: 700; }
+.h5 { font-family: var(--font-body);    font-size: var(--font-size-base); font-weight: 700; }
+.h6 { font-family: var(--font-body);    font-size: var(--font-size-sm);  font-weight: 700; text-transform: uppercase; letter-spacing: var(--letter-spacing-wide); }
+
+.text-xs    { font-size: var(--font-size-xs); }
+.text-sm    { font-size: var(--font-size-sm); }
+.text-base  { font-size: var(--font-size-base); }
+.text-md    { font-size: var(--font-size-md); }
+.text-lg    { font-size: var(--font-size-lg); }
+.text-xl    { font-size: var(--font-size-xl); }
+.text-2xl   { font-size: var(--font-size-2xl); }
+.text-3xl   { font-size: var(--font-size-3xl); }
+
+.font-body    { font-family: var(--font-body); }
+.font-display { font-family: var(--font-display); }
+.font-mono    { font-family: var(--font-mono); }
+
+.font-normal  { font-weight: 400; }
+.font-bold    { font-weight: 700; }
+.font-black   { font-weight: 900; }
+.italic       { font-style: italic; }
+
+.text-left    { text-align: left; }
+.text-center  { text-align: center; }
+.text-right   { text-align: right; }
+
+.uppercase    { text-transform: uppercase; }
+.lowercase    { text-transform: lowercase; }
+.capitalize   { text-transform: capitalize; }
+
+.tracking-tight  { letter-spacing: var(--letter-spacing-tight); }
+.tracking-wide   { letter-spacing: var(--letter-spacing-wide); }
+.tracking-wider  { letter-spacing: var(--letter-spacing-wider); }
+
+.leading-tight   { line-height: var(--line-height-tight); }
+.leading-snug    { line-height: var(--line-height-snug); }
+.leading-base    { line-height: var(--line-height-base); }
+.leading-relaxed { line-height: var(--line-height-relaxed); }
+
+.text-truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-secondary);
+  margin-bottom: var(--space-1);
+}
+
+.label-dark {
+  color: var(--color-text-muted);
+}
+
+/* ============================================================
+   6. COLOR UTILITIES
+   ============================================================ */
+
+/* Text colors */
+.text-primary   { color: var(--color-primary); }
+.text-secondary { color: var(--color-secondary); }
+.text-danger    { color: var(--color-danger); }
+.text-success   { color: var(--color-success); }
+.text-warning   { color: var(--color-warning); }
+.text-info      { color: var(--color-info); }
+.text-muted     { color: var(--color-text-muted); }
+.text-black     { color: var(--color-black); }
+.text-white     { color: var(--color-white); }
+
+/* Background colors */
+.bg-primary   { background-color: var(--color-primary); }
+.bg-secondary { background-color: var(--color-secondary); }
+.bg-danger    { background-color: var(--color-danger); }
+.bg-success   { background-color: var(--color-success); }
+.bg-warning   { background-color: var(--color-warning); }
+.bg-info      { background-color: var(--color-info); }
+.bg-black     { background-color: var(--color-black); }
+.bg-white     { background-color: var(--color-white); }
+.bg-surface   { background-color: var(--color-bg-surface); }
+.bg-raised    { background-color: var(--color-bg-raised); }
+.bg-transparent { background-color: transparent; }
+
+/* Border colors */
+.border-primary   { border-color: var(--color-primary); }
+.border-secondary { border-color: var(--color-secondary); }
+.border-danger    { border-color: var(--color-danger); }
+.border-muted     { border-color: var(--color-border-muted); }
+
+/* ============================================================
+   7. CONTAINER
+   ============================================================ */
+
+.container {
+  width: 100%;
+  max-width: var(--container-xl);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+
+.container-sm  { max-width: var(--container-sm);  margin-inline: auto; padding-inline: var(--container-padding); width: 100%; }
+.container-md  { max-width: var(--container-md);  margin-inline: auto; padding-inline: var(--container-padding); width: 100%; }
+.container-lg  { max-width: var(--container-lg);  margin-inline: auto; padding-inline: var(--container-padding); width: 100%; }
+.container-xl  { max-width: var(--container-xl);  margin-inline: auto; padding-inline: var(--container-padding); width: 100%; }
+.container-2xl { max-width: var(--container-2xl); margin-inline: auto; padding-inline: var(--container-padding); width: 100%; }
+.container-fluid { width: 100%; padding-inline: var(--container-padding); }
+
+/* ============================================================
+   8. GRID SYSTEM (flex-based)
+   ============================================================ */
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-inline: calc(var(--space-4) * -1);
+}
+
+.row > * {
+  padding-inline: var(--space-4);
+}
+
+/* Columns: 1–12 */
+.col    { flex: 1 1 0%; min-width: 0; padding-inline: var(--space-4); }
+.col-1  { flex: 0 0 8.333333%;  max-width: 8.333333%;  padding-inline: var(--space-4); }
+.col-2  { flex: 0 0 16.666667%; max-width: 16.666667%; padding-inline: var(--space-4); }
+.col-3  { flex: 0 0 25%;        max-width: 25%;        padding-inline: var(--space-4); }
+.col-4  { flex: 0 0 33.333333%; max-width: 33.333333%; padding-inline: var(--space-4); }
+.col-5  { flex: 0 0 41.666667%; max-width: 41.666667%; padding-inline: var(--space-4); }
+.col-6  { flex: 0 0 50%;        max-width: 50%;        padding-inline: var(--space-4); }
+.col-7  { flex: 0 0 58.333333%; max-width: 58.333333%; padding-inline: var(--space-4); }
+.col-8  { flex: 0 0 66.666667%; max-width: 66.666667%; padding-inline: var(--space-4); }
+.col-9  { flex: 0 0 75%;        max-width: 75%;        padding-inline: var(--space-4); }
+.col-10 { flex: 0 0 83.333333%; max-width: 83.333333%; padding-inline: var(--space-4); }
+.col-11 { flex: 0 0 91.666667%; max-width: 91.666667%; padding-inline: var(--space-4); }
+.col-12 { flex: 0 0 100%;       max-width: 100%;       padding-inline: var(--space-4); }
+
+.col-auto { flex: 0 0 auto; max-width: none; padding-inline: var(--space-4); }
+
+/* Row gap modifiers */
+.row-gap-0 { row-gap: 0; }
+.row-gap-2 { row-gap: var(--space-2); }
+.row-gap-4 { row-gap: var(--space-4); }
+.row-gap-6 { row-gap: var(--space-6); }
+.row-gap-8 { row-gap: var(--space-8); }
+
+/* Gutter modifiers */
+.gutter-0 { --row-gutter: 0; }
+.gutter-0 > * { padding-inline: 0; }
+.gutter-0 { margin-inline: 0; }
+
+/* Responsive breakpoints */
+@media (max-width: 576px) {
+  .col-sm-12 { flex: 0 0 100%; max-width: 100%; }
+}
+
+@media (min-width: 576px) {
+  .col-sm-1  { flex: 0 0 8.333333%;  max-width: 8.333333%; }
+  .col-sm-2  { flex: 0 0 16.666667%; max-width: 16.666667%; }
+  .col-sm-3  { flex: 0 0 25%;        max-width: 25%; }
+  .col-sm-4  { flex: 0 0 33.333333%; max-width: 33.333333%; }
+  .col-sm-6  { flex: 0 0 50%;        max-width: 50%; }
+  .col-sm-12 { flex: 0 0 100%;       max-width: 100%; }
+}
+
+@media (min-width: 768px) {
+  .col-md-1  { flex: 0 0 8.333333%;  max-width: 8.333333%; }
+  .col-md-2  { flex: 0 0 16.666667%; max-width: 16.666667%; }
+  .col-md-3  { flex: 0 0 25%;        max-width: 25%; }
+  .col-md-4  { flex: 0 0 33.333333%; max-width: 33.333333%; }
+  .col-md-6  { flex: 0 0 50%;        max-width: 50%; }
+  .col-md-8  { flex: 0 0 66.666667%; max-width: 66.666667%; }
+  .col-md-12 { flex: 0 0 100%;       max-width: 100%; }
+}
+
+@media (min-width: 992px) {
+  .col-lg-1  { flex: 0 0 8.333333%;  max-width: 8.333333%; }
+  .col-lg-2  { flex: 0 0 16.666667%; max-width: 16.666667%; }
+  .col-lg-3  { flex: 0 0 25%;        max-width: 25%; }
+  .col-lg-4  { flex: 0 0 33.333333%; max-width: 33.333333%; }
+  .col-lg-6  { flex: 0 0 50%;        max-width: 50%; }
+  .col-lg-8  { flex: 0 0 66.666667%; max-width: 66.666667%; }
+  .col-lg-12 { flex: 0 0 100%;       max-width: 100%; }
+}
+
+/* ============================================================
+   9. BUTTONS
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-display);
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1;
+  border: var(--border-width-lg) var(--border-style) var(--color-black);
+  background-color: var(--color-white);
+  color: var(--color-black);
+  cursor: pointer;
+  position: relative;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), background-color var(--transition-base);
+  box-shadow: var(--shadow-base);
+  white-space: nowrap;
+  user-select: none;
+  text-decoration: none;
+  -webkit-appearance: none;
+}
+
+.btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Variants */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-primary-text);
+  border-color: var(--color-black);
+  box-shadow: var(--shadow-base);
+}
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: var(--color-secondary-text);
+  border-color: var(--color-black);
+}
+.btn-secondary:hover {
+  background-color: var(--color-secondary-dark);
+  box-shadow: 8px 8px 0 var(--color-black);
+}
+
+.btn-danger {
+  background-color: var(--color-danger);
+  color: var(--color-danger-text);
+  border-color: var(--color-black);
+  box-shadow: var(--shadow-base);
+}
+.btn-danger:hover {
+  background-color: var(--color-danger-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-success {
+  background-color: var(--color-success);
+  color: var(--color-success-text);
+  border-color: var(--color-black);
+}
+.btn-success:hover {
+  background-color: var(--color-success-dark);
+}
+
+.btn-warning {
+  background-color: var(--color-warning);
+  color: var(--color-warning-text);
+  border-color: var(--color-black);
+}
+.btn-warning:hover {
+  background-color: var(--color-warning-dark);
+}
+
+.btn-black {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border-color: var(--color-black);
+  box-shadow: 5px 5px 0 var(--color-primary);
+}
+.btn-black:hover {
+  box-shadow: 8px 8px 0 var(--color-primary);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border);
+  box-shadow: none;
+}
+.btn-ghost:hover {
+  background-color: var(--color-bg-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-link {
+  background-color: transparent;
+  color: var(--color-primary);
+  border-color: transparent;
+  box-shadow: none;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  padding-inline: 0;
+}
+.btn-link:hover {
+  box-shadow: none;
+  transform: none;
+  color: var(--color-primary-dark);
+}
+
+/* Outline variants */
+.btn-outline-primary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  box-shadow: 5px 5px 0 var(--color-primary);
+}
+.btn-outline-primary:hover {
+  background-color: var(--color-primary);
+  color: var(--color-primary-text);
+}
+
+.btn-outline-secondary {
+  background-color: transparent;
+  color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  box-shadow: 5px 5px 0 var(--color-secondary);
+}
+.btn-outline-secondary:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-secondary-text);
+}
+
+.btn-outline-danger {
+  background-color: transparent;
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+  box-shadow: 5px 5px 0 var(--color-danger);
+}
+.btn-outline-danger:hover {
+  background-color: var(--color-danger);
+  color: var(--color-danger-text);
+}
+
+/* Sizes */
+.btn-sm {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+}
+
+.btn-lg {
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--font-size-xl);
+}
+
+.btn-xl {
+  padding: var(--space-5) var(--space-10);
+  font-size: var(--font-size-2xl);
+}
+
+.btn-block {
+  display: flex;
+  width: 100%;
+}
+
+/* Icon button */
+.btn-icon {
+  padding: var(--space-3);
+  aspect-ratio: 1;
+  line-height: 1;
+}
+
+/* Angular clip (ZZZ aesthetic) */
+.btn-angular {
+  clip-path: polygon(12% 0, 100% 0, 88% 100%, 0 100%);
+  border: none;
+  box-shadow: none;
+}
+.btn-angular:hover {
+  transform: translateY(-4px);
+  box-shadow: none;
+}
+
+/* ============================================================
+   10. FORMS
+   ============================================================ */
+
+/* Form group wrapper */
+.form-group {
+  margin-bottom: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Label */
+.form-label {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.theme-dark .form-label {
+  color: var(--color-secondary);
+}
+
+/* Base input styles */
+.form-control {
+  display: block;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background-color: var(--color-bg-surface);
+  border: var(--border-width-base) var(--border-style) var(--color-border);
+  border-radius: var(--radius-none);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  line-height: var(--line-height-base);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-control:focus {
+  border-color: var(--color-primary);
+  box-shadow: 4px 4px 0 var(--color-primary);
+}
+
+.form-control::placeholder {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.form-control:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Textarea */
+textarea.form-control {
+  resize: vertical;
+  min-height: 6rem;
+}
+
+/* Select */
+select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230a0a0a' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  padding-right: var(--space-8);
+  cursor: pointer;
+}
+
+.theme-dark select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ffffff' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+}
+
+/* File input */
+input[type="file"].form-control {
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-primary);
+  color: var(--color-black);
+  border: var(--border-width-sm) solid var(--color-black);
+  cursor: pointer;
+  margin-right: var(--space-3);
+}
+
+/* Range input */
+input[type="range"].form-control {
+  padding: 0;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+input[type="range"]::-webkit-slider-track {
+  height: 4px;
+  background: var(--color-border-muted);
+  border: 2px solid var(--color-border);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--color-primary);
+  border: 3px solid var(--color-black);
+  margin-top: -10px;
+  cursor: pointer;
+}
+
+/* Color input */
+input[type="color"].form-control {
+  padding: var(--space-1);
+  height: 3rem;
+  cursor: pointer;
+}
+
+/* Checkbox and Radio */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+}
+
+.form-check-input {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: var(--border-width-base) solid var(--color-border);
+  background-color: var(--color-bg);
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-check-input[type="radio"] {
+  border-radius: var(--radius-full);
+}
+
+.form-check-input:checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-black);
+}
+
+.form-check-input:checked::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-check-input[type="checkbox"]:checked::after {
+  content: '✓';
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.form-check-input[type="radio"]:checked::after {
+  content: '';
+  background: var(--color-black);
+  border-radius: var(--radius-full);
+  width: 40%;
+  height: 40%;
+  margin: auto;
+}
+
+.form-check-label {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+}
+
+.form-check-input:focus {
+  box-shadow: var(--shadow-primary);
+}
+
+/* Switch toggle */
+.form-switch {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+}
+
+.form-switch-input {
+  width: 3rem;
+  height: 1.5rem;
+  border: var(--border-width-base) solid var(--color-border);
+  border-radius: var(--radius-none);
+  background-color: var(--color-gray-300);
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  transition: background-color var(--transition-base);
+}
+
+.form-switch-input::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(1.5rem - 10px);
+  height: calc(1.5rem - 10px);
+  background: var(--color-black);
+  transition: transform var(--transition-base);
+}
+
+.form-switch-input:checked {
+  background-color: var(--color-primary);
+}
+
+.form-switch-input:checked::after {
+  transform: translateX(1.4rem);
+}
+
+/* Error / valid states */
+.form-control.is-invalid {
+  border-color: var(--color-danger);
+  box-shadow: 4px 4px 0 var(--color-danger);
+}
+
+.form-control.is-valid {
+  border-color: var(--color-success);
+  box-shadow: 4px 4px 0 var(--color-success);
+}
+
+.form-error {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-danger);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.form-hint {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* Input group */
+.input-group {
+  display: flex;
+  align-items: stretch;
+}
+
+.input-group .form-control {
+  flex: 1;
+  min-width: 0;
+  border-right: none;
+}
+
+.input-group .btn {
+  border-left: none;
+  box-shadow: none;
+  flex-shrink: 0;
+}
+
+.input-group-text {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  background: var(--color-black);
+  color: var(--color-white);
+  border: var(--border-width-base) solid var(--color-border);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   11. CARDS
+   ============================================================
+   Cards are intentionally WHITE on the dark page — the high
+   contrast is core to the ZZZ aesthetic. Card text is black.
+   ============================================================ */
+
+/* Entrance animation — faithful to original cardEntrance */
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(30px) rotate(2deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+}
+
+.card {
+  /* White paper card on dark background — exact original behaviour */
+  background: var(--card-bg);               /* #ffffff always */
+  color: var(--card-text);                  /* #0a0a0a always */
+  padding: 0;
+  position: relative;
+  border: 4px solid var(--card-border);     /* original: 4px solid #0a0a0a */
+  display: flex;
+  flex-direction: column;
+  /* Original easing: cubic-bezier(0.175, 0.885, 0.32, 1.275) — bouncy */
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: cardEntrance 0.5s ease backwards;
+}
+
+/* Tape / sticker pseudo-element on card top — exact original */
+.card::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  width: 60px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transform: rotate(-2deg);
+  z-index: 2;
+}
+
+/* Hover: scale + rotate + cyan offset shadow — exact original */
+.card:hover {
+  transform: scale(1.02) rotate(-1deg);
+  box-shadow: 10px 10px 0 var(--color-secondary); /* 10px 10px 0 cyan */
+}
+
+/* Card header — black bar at top */
+.card-header {
+  padding: 1.5rem;                          /* original: 1.5rem */
+  background: var(--color-black);
+  color: var(--color-white);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Card category badge inside the header — yellow chip */
+.card-cat {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;                        /* original: 0.7rem */
+  background: var(--color-primary);         /* yellow */
+  color: var(--color-black);
+  padding: 2px 6px;                         /* original: 2px 6px */
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Card body */
+.card-body {
+  padding: 1.5rem;                          /* original: 1.5rem */
+  flex-grow: 1;
+}
+
+/* Card name — large display heading, dark on white */
+.card-name {
+  font-family: var(--font-display);
+  font-size: 2.2rem;                        /* original: 2.2rem */
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.9;                         /* original: 0.9 */
+  color: var(--card-text);
+  margin-bottom: 0.5rem;
+}
+
+/* Card function label — mono, muted */
+.card-func {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;                        /* original: 0.8rem */
+  color: var(--card-text-muted);            /* #666 */
+  margin-bottom: 1rem;
+  display: block;
+}
+
+/* Card description */
+.card-desc {
+  font-size: 0.9rem;                        /* original: 0.9rem */
+  line-height: 1.4;
+  color: var(--card-text-dim);              /* #333 */
+  margin-bottom: 1.5rem;
+}
+
+/* Card subtitle — alias for card-func in generic usage */
+.card-subtitle {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--card-text-muted);
+  margin-bottom: var(--space-4);
+  display: block;
+}
+
+/* Generic card text — for custom body content */
+.card-text {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--card-text-dim);
+}
+
+/* Card footer — dashed top border */
+.card-footer {
+  padding: 1rem 1.5rem;                     /* original: 1rem 1.5rem */
+  border-top: 2px dashed var(--card-footer-border); /* original: 2px dashed #ccc */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Serial number text in footer */
+.serial-no {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;                       /* original: 0.65rem */
+  color: var(--card-serial-color);          /* #999 */
+}
+
+/* Card action link — cyan chip with right clip, yellow on hover */
+.card-link {
+  font-family: var(--font-display);
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--color-black);
+  background: var(--color-secondary);       /* cyan */
+  padding: 0.5rem 1rem;                     /* original */
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  /* Original clip: right side angled inward */
+  clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+  display: inline-block;
+  transition: background var(--transition-fast);
+}
+
+.card-link:hover {
+  background: var(--color-primary);         /* yellow on hover */
+}
+
+/* Card image */
+.card-img {
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  border-bottom: 4px solid var(--card-border);
+}
+
+/* — Card variants (border/shadow accent color only, body stays white) — */
+
+.card-primary {
+  border-color: var(--color-primary);
+}
+.card-primary:hover {
+  box-shadow: 10px 10px 0 var(--color-primary);
+}
+
+.card-secondary {
+  border-color: var(--color-secondary);
+}
+.card-secondary:hover {
+  box-shadow: 10px 10px 0 var(--color-secondary);
+}
+
+.card-danger {
+  border-color: var(--color-danger);
+}
+.card-danger:hover {
+  box-shadow: 10px 10px 0 var(--color-danger);
+}
+
+/* Flat: no animation, no hover lift */
+.card-flat {
+  animation: none;
+  transition: none;
+}
+.card-flat:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Staggered entrance helper — set animation-delay via inline style or these classes */
+.card-delay-1 { animation-delay: 0.05s; }
+.card-delay-2 { animation-delay: 0.10s; }
+.card-delay-3 { animation-delay: 0.15s; }
+.card-delay-4 { animation-delay: 0.20s; }
+.card-delay-5 { animation-delay: 0.25s; }
+
+/* ============================================================
+   12. ALERTS
+   ============================================================ */
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border: var(--border-width-base) var(--border-style) var(--color-border);
+  border-left-width: var(--border-width-xl);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  position: relative;
+}
+
+.alert-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--font-size-md);
+  text-transform: uppercase;
+  margin-bottom: var(--space-1);
+  display: block;
+}
+
+.alert-icon {
+  font-family: var(--font-mono);
+  font-weight: 900;
+  font-size: var(--font-size-lg);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.alert-primary {
+  background-color: #fffacd;
+  border-color: var(--color-primary);
+  color: var(--color-black);
+}
+
+.alert-secondary {
+  background-color: #e0fdff;
+  border-color: var(--color-secondary);
+  color: var(--color-black);
+}
+
+.alert-danger {
+  background-color: #ffe5e5;
+  border-color: var(--color-danger);
+  color: var(--color-black);
+}
+
+.alert-success {
+  background-color: #e6fff3;
+  border-color: var(--color-success);
+  color: var(--color-black);
+}
+
+.alert-warning {
+  background-color: #fff3e0;
+  border-color: var(--color-warning);
+  color: var(--color-black);
+}
+
+.alert-info {
+  background-color: #e0fdff;
+  border-color: var(--color-info);
+  color: var(--color-black);
+}
+
+/* Dark mode alert overrides */
+.theme-dark .alert-primary   { background-color: #2a2600; color: var(--color-white); }
+.theme-dark .alert-secondary { background-color: #002f33; color: var(--color-white); }
+.theme-dark .alert-danger    { background-color: #330000; color: var(--color-white); }
+.theme-dark .alert-success   { background-color: #002a14; color: var(--color-white); }
+.theme-dark .alert-warning   { background-color: #2a1800; color: var(--color-white); }
+.theme-dark .alert-info      { background-color: #002f33; color: var(--color-white); }
+
+/* Dismiss button */
+.alert-dismiss {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-weight: 900;
+  font-size: var(--font-size-lg);
+  color: inherit;
+  line-height: 1;
+  opacity: 0.6;
+  padding: 0;
+}
+.alert-dismiss:hover { opacity: 1; }
+
+/* ============================================================
+   13. TABLES
+   ============================================================ */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: var(--border-width-base) solid var(--color-border);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-base);
+}
+
+.table th {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-black);
+  color: var(--color-white);
+  text-align: left;
+  border-bottom: var(--border-width-base) solid var(--color-border);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: var(--border-width-sm) solid var(--color-border-muted);
+  font-size: var(--font-size-sm);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Striped */
+.table-striped tbody tr:nth-child(even) {
+  background-color: var(--color-bg-surface);
+}
+
+/* Hover rows */
+.table-hover tbody tr {
+  transition: background-color var(--transition-fast);
+}
+.table-hover tbody tr:hover {
+  background-color: rgba(255, 239, 0, 0.08);
+}
+
+/* Bordered */
+.table-bordered td,
+.table-bordered th {
+  border: var(--border-width-sm) solid var(--color-border-muted);
+}
+
+/* Dense */
+.table-sm th,
+.table-sm td {
+  padding: var(--space-2) var(--space-3);
+}
+
+/* ============================================================
+   14. BADGES
+   ============================================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15em 0.55em;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.4;
+  border: var(--border-width-sm) solid var(--color-black);
+  border-radius: var(--radius-none);
+  white-space: nowrap;
+}
+
+.badge-primary   { background-color: var(--color-primary);   color: var(--color-primary-text); }
+.badge-secondary { background-color: var(--color-secondary); color: var(--color-secondary-text); }
+.badge-danger    { background-color: var(--color-danger);    color: var(--color-danger-text); }
+.badge-success   { background-color: var(--color-success);   color: var(--color-success-text); }
+.badge-warning   { background-color: var(--color-warning);   color: var(--color-warning-text); }
+.badge-info      { background-color: var(--color-info);      color: var(--color-info-text); }
+.badge-black     { background-color: var(--color-black);     color: var(--color-white); border-color: var(--color-white); }
+.badge-white     { background-color: var(--color-white);     color: var(--color-black); }
+.badge-muted     { background-color: var(--color-gray-200);  color: var(--color-gray-700); }
+
+/* Pill badge */
+.badge-pill {
+  border-radius: var(--radius-full);
+}
+
+/* Dot badge */
+.badge-dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  padding: 0;
+  border-radius: var(--radius-full);
+  border: var(--border-width-sm) solid var(--color-black);
+}
+
+/* ============================================================
+   15. PROGRESS BARS
+   ============================================================ */
+
+.progress {
+  width: 100%;
+  height: 1.25rem;
+  background-color: var(--color-bg-surface);
+  border: var(--border-width-base) solid var(--color-border);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--color-primary-text);
+  transition: width 0.6s ease;
+  white-space: nowrap;
+  position: relative;
+}
+
+/* Striped progress */
+.progress-bar-striped {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.15) 0,
+    rgba(0, 0, 0, 0.15) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
+
+/* Animated stripes */
+.progress-bar-animated {
+  animation: progress-stripe 1s linear infinite;
+}
+
+@keyframes progress-stripe {
+  from { background-position: 1rem 0; }
+  to   { background-position: 0 0; }
+}
+
+/* Color variants */
+.progress-bar-secondary { background-color: var(--color-secondary); color: var(--color-secondary-text); }
+.progress-bar-danger    { background-color: var(--color-danger);    color: var(--color-danger-text); }
+.progress-bar-success   { background-color: var(--color-success);   color: var(--color-success-text); }
+.progress-bar-warning   { background-color: var(--color-warning);   color: var(--color-warning-text); }
+
+/* Sizes */
+.progress-sm { height: 0.5rem; }
+.progress-lg { height: 2rem; }
+
+/* Stacked progress */
+.progress-stacked .progress-bar + .progress-bar {
+  border-left: var(--border-width-sm) solid var(--color-black);
+}
+
+/* ============================================================
+   16. SPINNERS
+   ============================================================ */
+
+.spinner {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  border: var(--border-width-lg) solid var(--color-border-muted);
+  border-top-color: var(--color-primary);
+  border-radius: var(--radius-full);
+  animation: spinner-rotate 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spinner-rotate {
+  to { transform: rotate(360deg); }
+}
+
+.spinner-sm { width: 1rem;  height: 1rem;  border-width: var(--border-width-sm); }
+.spinner-lg { width: 3rem;  height: 3rem;  border-width: 5px; }
+.spinner-xl { width: 4.5rem; height: 4.5rem; border-width: 6px; }
+
+/* Color variants */
+.spinner-primary   { border-top-color: var(--color-primary); }
+.spinner-secondary { border-top-color: var(--color-secondary); }
+.spinner-danger    { border-top-color: var(--color-danger); }
+.spinner-success   { border-top-color: var(--color-success); }
+.spinner-white     { border-color: rgba(255,255,255,0.3); border-top-color: var(--color-white); }
+
+/* Square spinner (ZZZ aesthetic) */
+.spinner-square {
+  border-radius: var(--radius-none);
+  border: var(--border-width-lg) solid var(--color-primary);
+  border-bottom-color: transparent;
+  animation: spinner-rotate 0.6s linear infinite;
+}
+
+/* Pulse spinner */
+.spinner-pulse {
+  border: none;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-full);
+  animation: spinner-pulse 1s ease-in-out infinite;
+}
+
+@keyframes spinner-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(0.5); opacity: 0.4; }
+}
+
+/* ============================================================
+   17. UTILITY CLASSES
+   ============================================================ */
+
+/* — Display — */
+.d-none         { display: none; }
+.d-block        { display: block; }
+.d-inline       { display: inline; }
+.d-inline-block { display: inline-block; }
+.d-flex         { display: flex; }
+.d-inline-flex  { display: inline-flex; }
+.d-grid         { display: grid; }
+.d-table        { display: table; }
+
+/* — Flex utilities — */
+.flex-row       { flex-direction: row; }
+.flex-col       { flex-direction: column; }
+.flex-wrap      { flex-wrap: wrap; }
+.flex-nowrap    { flex-wrap: nowrap; }
+.flex-1         { flex: 1; }
+.flex-auto      { flex: 1 1 auto; }
+.flex-none      { flex: none; }
+.flex-shrink-0  { flex-shrink: 0; }
+
+.items-start    { align-items: flex-start; }
+.items-center   { align-items: center; }
+.items-end      { align-items: flex-end; }
+.items-stretch  { align-items: stretch; }
+.items-baseline { align-items: baseline; }
+
+.justify-start    { justify-content: flex-start; }
+.justify-center   { justify-content: center; }
+.justify-end      { justify-content: flex-end; }
+.justify-between  { justify-content: space-between; }
+.justify-around   { justify-content: space-around; }
+.justify-evenly   { justify-content: space-evenly; }
+
+.self-start   { align-self: flex-start; }
+.self-center  { align-self: center; }
+.self-end     { align-self: flex-end; }
+.self-stretch { align-self: stretch; }
+
+/* — Gap — */
+.gap-0  { gap: var(--space-0); }
+.gap-1  { gap: var(--space-1); }
+.gap-2  { gap: var(--space-2); }
+.gap-3  { gap: var(--space-3); }
+.gap-4  { gap: var(--space-4); }
+.gap-6  { gap: var(--space-6); }
+.gap-8  { gap: var(--space-8); }
+.gap-10 { gap: var(--space-10); }
+.gap-12 { gap: var(--space-12); }
+
+/* — Spacing: Margin — */
+.m-0  { margin: var(--space-0); }
+.m-1  { margin: var(--space-1); }
+.m-2  { margin: var(--space-2); }
+.m-3  { margin: var(--space-3); }
+.m-4  { margin: var(--space-4); }
+.m-6  { margin: var(--space-6); }
+.m-8  { margin: var(--space-8); }
+.m-auto { margin: auto; }
+
+.mx-0    { margin-inline: var(--space-0); }
+.mx-1    { margin-inline: var(--space-1); }
+.mx-2    { margin-inline: var(--space-2); }
+.mx-4    { margin-inline: var(--space-4); }
+.mx-6    { margin-inline: var(--space-6); }
+.mx-8    { margin-inline: var(--space-8); }
+.mx-auto { margin-inline: auto; }
+
+.my-0 { margin-block: var(--space-0); }
+.my-1 { margin-block: var(--space-1); }
+.my-2 { margin-block: var(--space-2); }
+.my-4 { margin-block: var(--space-4); }
+.my-6 { margin-block: var(--space-6); }
+.my-8 { margin-block: var(--space-8); }
+
+.mt-0  { margin-top: var(--space-0); }
+.mt-1  { margin-top: var(--space-1); }
+.mt-2  { margin-top: var(--space-2); }
+.mt-3  { margin-top: var(--space-3); }
+.mt-4  { margin-top: var(--space-4); }
+.mt-6  { margin-top: var(--space-6); }
+.mt-8  { margin-top: var(--space-8); }
+.mt-12 { margin-top: var(--space-12); }
+.mt-auto { margin-top: auto; }
+
+.mb-0  { margin-bottom: var(--space-0); }
+.mb-1  { margin-bottom: var(--space-1); }
+.mb-2  { margin-bottom: var(--space-2); }
+.mb-3  { margin-bottom: var(--space-3); }
+.mb-4  { margin-bottom: var(--space-4); }
+.mb-6  { margin-bottom: var(--space-6); }
+.mb-8  { margin-bottom: var(--space-8); }
+.mb-12 { margin-bottom: var(--space-12); }
+.mb-auto { margin-bottom: auto; }
+
+.ml-0    { margin-left: var(--space-0); }
+.ml-1    { margin-left: var(--space-1); }
+.ml-2    { margin-left: var(--space-2); }
+.ml-4    { margin-left: var(--space-4); }
+.ml-auto { margin-left: auto; }
+
+.mr-0    { margin-right: var(--space-0); }
+.mr-1    { margin-right: var(--space-1); }
+.mr-2    { margin-right: var(--space-2); }
+.mr-4    { margin-right: var(--space-4); }
+.mr-auto { margin-right: auto; }
+
+/* — Spacing: Padding — */
+.p-0  { padding: var(--space-0); }
+.p-1  { padding: var(--space-1); }
+.p-2  { padding: var(--space-2); }
+.p-3  { padding: var(--space-3); }
+.p-4  { padding: var(--space-4); }
+.p-5  { padding: var(--space-5); }
+.p-6  { padding: var(--space-6); }
+.p-8  { padding: var(--space-8); }
+.p-10 { padding: var(--space-10); }
+.p-12 { padding: var(--space-12); }
+
+.px-0  { padding-inline: var(--space-0); }
+.px-1  { padding-inline: var(--space-1); }
+.px-2  { padding-inline: var(--space-2); }
+.px-3  { padding-inline: var(--space-3); }
+.px-4  { padding-inline: var(--space-4); }
+.px-6  { padding-inline: var(--space-6); }
+.px-8  { padding-inline: var(--space-8); }
+.px-10 { padding-inline: var(--space-10); }
+
+.py-0  { padding-block: var(--space-0); }
+.py-1  { padding-block: var(--space-1); }
+.py-2  { padding-block: var(--space-2); }
+.py-3  { padding-block: var(--space-3); }
+.py-4  { padding-block: var(--space-4); }
+.py-6  { padding-block: var(--space-6); }
+.py-8  { padding-block: var(--space-8); }
+.py-10 { padding-block: var(--space-10); }
+.py-12 { padding-block: var(--space-12); }
+
+.pt-0  { padding-top: var(--space-0); }
+.pt-4  { padding-top: var(--space-4); }
+.pt-8  { padding-top: var(--space-8); }
+
+.pb-0  { padding-bottom: var(--space-0); }
+.pb-4  { padding-bottom: var(--space-4); }
+.pb-8  { padding-bottom: var(--space-8); }
+
+.pl-4  { padding-left: var(--space-4); }
+.pr-4  { padding-right: var(--space-4); }
+
+/* — Width / Height — */
+.w-auto  { width: auto; }
+.w-full  { width: 100%; }
+.w-half  { width: 50%; }
+.w-third { width: 33.333%; }
+
+.h-auto  { height: auto; }
+.h-full  { height: 100%; }
+.h-vh    { height: 100vh; }
+.h-screen { height: 100vh; }
+
+.min-h-screen { min-height: 100vh; }
+
+/* — Position — */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed    { position: fixed; }
+.sticky   { position: sticky; top: 0; }
+
+.inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+
+/* — Overflow — */
+.overflow-hidden { overflow: hidden; }
+.overflow-auto   { overflow: auto; }
+.overflow-x-auto { overflow-x: auto; }
+.overflow-y-auto { overflow-y: auto; }
+
+/* — Visibility — */
+.visible   { visibility: visible; }
+.invisible { visibility: hidden; }
+.opacity-0 { opacity: 0; }
+.opacity-50 { opacity: 0.5; }
+.opacity-100 { opacity: 1; }
+
+/* — Pointer events — */
+.pointer-events-none { pointer-events: none; }
+.cursor-pointer { cursor: pointer; }
+.cursor-crosshair { cursor: crosshair; }
+
+/* — Z-index — */
+.z-below   { z-index: var(--z-below); }
+.z-base    { z-index: var(--z-base); }
+.z-raised  { z-index: var(--z-raised); }
+.z-overlay { z-index: var(--z-overlay); }
+.z-modal   { z-index: var(--z-modal); }
+.z-top     { z-index: var(--z-top); }
+
+/* — Border radius — */
+.rounded-none { border-radius: var(--radius-none); }
+.rounded-sm   { border-radius: var(--radius-sm); }
+.rounded      { border-radius: var(--radius-base); }
+.rounded-md   { border-radius: var(--radius-md); }
+.rounded-lg   { border-radius: var(--radius-lg); }
+.rounded-xl   { border-radius: var(--radius-xl); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* — Border — */
+.border      { border: var(--border-width-base) solid var(--color-border); }
+.border-sm   { border: var(--border-width-sm) solid var(--color-border); }
+.border-lg   { border: var(--border-width-lg) solid var(--color-border); }
+.border-xl   { border: var(--border-width-xl) solid var(--color-border); }
+.border-none { border: none; }
+
+.border-t { border-top: var(--border-width-base) solid var(--color-border); }
+.border-b { border-bottom: var(--border-width-base) solid var(--color-border); }
+.border-l { border-left: var(--border-width-base) solid var(--color-border); }
+.border-r { border-right: var(--border-width-base) solid var(--color-border); }
+
+.border-l-primary   { border-left: var(--border-width-xl) solid var(--color-primary); }
+.border-l-secondary { border-left: var(--border-width-xl) solid var(--color-secondary); }
+.border-l-danger    { border-left: var(--border-width-xl) solid var(--color-danger); }
+
+.border-dashed { border-style: dashed; }
+
+/* — Shadows — */
+.shadow-none { box-shadow: none; }
+.shadow-sm   { box-shadow: var(--shadow-sm); }
+.shadow      { box-shadow: var(--shadow-base); }
+.shadow-md   { box-shadow: var(--shadow-md); }
+.shadow-lg   { box-shadow: var(--shadow-lg); }
+.shadow-xl   { box-shadow: var(--shadow-xl); }
+
+.shadow-primary   { box-shadow: var(--shadow-primary); }
+.shadow-secondary { box-shadow: var(--shadow-secondary); }
+.shadow-danger    { box-shadow: var(--shadow-danger); }
+.shadow-success   { box-shadow: var(--shadow-success); }
+
+/* — Whitespace — */
+.whitespace-nowrap { white-space: nowrap; }
+.whitespace-pre    { white-space: pre; }
+.break-words       { word-break: break-word; }
+
+/* — User select — */
+.select-none { user-select: none; }
+.select-all  { user-select: all; }
+
+/* — List styles — */
+.list-none { list-style: none; }
+
+/* — Hazard stripe (ZZZ signature) — */
+.hazard-stripe {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-black),
+    var(--color-black) 10px,
+    var(--color-primary) 10px,
+    var(--color-primary) 20px
+  );
+}
+
+.hazard-stripe-sm {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-black),
+    var(--color-black) 6px,
+    var(--color-primary) 6px,
+    var(--color-primary) 12px
+  );
+}
+
+/* — Dot grid background — */
+.bg-dot-grid {
+  background-image: radial-gradient(circle, rgba(0,0,0,0.15) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.theme-dark .bg-dot-grid {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0);
+  background-size: 32px 32px;
+}
+
+/* — Scanline overlay (ZZZ aesthetic) — */
+.scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.08) 50%),
+    linear-gradient(90deg, rgba(255,0,0,0.02), rgba(0,255,0,0.01), rgba(0,0,255,0.02));
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none;
+  z-index: var(--z-top);
+}
+
+/* — Clip shapes (ZZZ signature cuts) — */
+.clip-left  { clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%); }
+.clip-right { clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%); }
+.clip-both  { clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); }
+.clip-skew  { clip-path: polygon(0 0, 100% 0, 100% 85%, 95% 100%, 0 100%); }
+
+/* ============================================================
+   18. RESPONSIVE UTILITIES
+   ============================================================ */
+
+@media (max-width: 576px) {
+  .d-sm-none  { display: none; }
+  .d-sm-block { display: block; }
+  .d-sm-flex  { display: flex; }
+  .text-sm-center { text-align: center; }
+  .flex-sm-col { flex-direction: column; }
+}
+
+@media (min-width: 768px) {
+  .d-md-none  { display: none; }
+  .d-md-block { display: block; }
+  .d-md-flex  { display: flex; }
+}
+
+@media (min-width: 992px) {
+  .d-lg-none  { display: none; }
+  .d-lg-block { display: block; }
+  .d-lg-flex  { display: flex; }
+}
+
+/* ============================================================
+   19. ANIMATIONS
+   ============================================================ */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glitch {
+  0%   { transform: translate(0); }
+  20%  { transform: translate(-2px, 2px); }
+  40%  { transform: translate(2px, -2px); }
+  60%  { transform: translate(-2px, 0); }
+  80%  { transform: translate(2px, 0); }
+  100% { transform: translate(0); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(-100%); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.animate-fade-in  { animation: fade-in  0.4s ease forwards; }
+.animate-slide-up { animation: slide-up 0.4s ease forwards; }
+.animate-glitch   { animation: glitch   0.3s steps(1) infinite; }
+.animate-blink    { animation: blink    1s step-end infinite; }
+.animate-marquee  { animation: marquee  20s linear infinite; display: inline-block; white-space: nowrap; }
+
+.transition { transition: all var(--transition-base); }
+.transition-fast { transition: all var(--transition-fast); }
+.transition-bounce { transition: all var(--transition-bounce); }
+.transition-none { transition: none; }
+
+/* ============================================================
+   20. ZZZ SOURCE-FAITHFUL COMPONENTS
+   ============================================================
+   These classes are taken directly from the original ZZZ HTML
+   source and documented here as first-class framework citizens.
+   ============================================================ */
+
+/* — Search area (left cyan accent bar, dark bg) — */
+.search-area {
+  position: relative;
+  background: #1e1e1e;
+  padding: 10px;
+  border-left: 5px solid var(--color-secondary); /* cyan left border */
+}
+
+.search-area input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--color-white);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-lg);
+  outline: none;
+  padding: var(--space-2);
+}
+
+.search-area input::placeholder {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+/* Search label — uppercase cyan mono label above input */
+.search-label {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* — Filter button — angular left-cut tab (exact original clip-path) — */
+.filter-btn {
+  background: #2a2a2a;
+  border: none;
+  color: #888888;
+  padding: 1rem 2rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  text-transform: uppercase;
+  /* Original: left side indented, right side flush */
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: crosshair;
+}
+
+.filter-btn:hover {
+  color: var(--color-white);
+  background: #3a3a3a;
+}
+
+.filter-btn.active {
+  background: var(--color-white);
+  color: var(--color-black);
+  transform: translateY(-5px);
+}
+
+/* — Stats badge — rotated mono tag with cyan shadow — */
+.stats-badge {
+  display: inline-block;
+  background: var(--color-black);
+  color: var(--color-white);
+  padding: 1rem 2rem;
+  font-family: var(--font-mono);
+  font-weight: bold;
+  transform: rotate(-2deg);
+  box-shadow: 5px 5px 0 var(--color-secondary); /* cyan shadow */
+}
+
+/* — Glitch bar — fixed bottom status bar — */
+.glitch-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: var(--color-black);
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: #444444;
+  z-index: var(--z-overlay);
+  overflow: hidden;
+}
+
+/* — No results state — */
+.no-results {
+  text-align: center;
+  padding: 100px var(--space-8);
+  background: #1a1a1a;
+  border: 2px dashed #333333;
+  color: #555555;
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  text-transform: uppercase;
+}
+
+/* — Card title alias (card-name is the canonical ZZZ name) — */
+.card-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.9;
+  color: var(--card-text);
+  margin-bottom: 0.5rem;
+}
+
+/* — Header section component (yellow diagonal clip-path banner) — */
+.page-banner {
+  position: relative;
+  padding: 4rem 2rem 2rem;
+  background: var(--color-primary);
+  color: var(--color-black);
+  /* Original diagonal clip on bottom-right */
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 98% 100%, 0 100%);
+  margin-bottom: 2rem;
+  border-bottom: 8px solid var(--color-black);
+  overflow: hidden;
+}
+
+/* Hazard strip inside page-banner (sits at the very top) */
+.page-banner .hazard-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: repeating-linear-gradient(
+    45deg,
+    #000,
+    #000 10px,
+    var(--color-primary) 10px,
+    var(--color-primary) 20px
+  );
+}
+
+/* ============================================================
+   END OF ZZZ FRAMEWORK v1.0.0
+   ============================================================ */
+
+/* ── STUDY APP CUSTOM STYLES (on top of ZZZ framework) ── */
+
+/* choices — answer buttons */
+.choice-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--space-3) var(--space-5);
+  margin: var(--space-2) 0;
+  border: 3px solid var(--card-border);
+  background: #f8f8f8;
+  color: var(--card-text);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.45;
+  cursor: crosshair;
+  transition: all 0.15s;
+  font-weight: 400;
+}
+.choice-btn:hover:not(:disabled) {
+  background: #fffacd;
+  border-color: var(--color-primary);
+  transform: translateX(4px);
+}
+.choice-btn.correct {
+  background: #e6fff3 !important;
+  border-color: var(--color-success) !important;
+  border-left-width: 6px;
+  font-weight: 700;
+  color: #004d2a;
+}
+.choice-btn.wrong {
+  background: #ffe5e5 !important;
+  border-color: var(--color-danger) !important;
+  border-left-width: 6px;
+  color: #8b0000;
+  text-decoration: line-through;
+}
+.choice-btn:disabled { cursor: not-allowed; }
+
+/* FIB inline inputs */
+.fib-wrap {
+  background: #f4f4f8;
+  border: 3px solid var(--card-border);
+  border-left: 5px solid var(--color-secondary);
+  padding: 16px 20px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 2.2;
+  overflow-x: auto;
+  margin: 12px 0;
+  white-space: pre-wrap;
+  color: var(--card-text);
+}
+.fib-inp {
+  display: inline-block;
+  border: 2px solid var(--color-primary);
+  background: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 1px 6px;
+  color: #0a0a0a;
+  vertical-align: middle;
+  outline: none;
+  cursor: text;
+}
+.fib-inp.ok  { border-color: var(--color-success); background: #e6fff3; }
+.fib-inp.bad { border-color: var(--color-danger);  background: #ffe5e5; }
+
+/* ID text input override */
+.id-input {
+  background: #f8f8f8;
+  color: var(--card-text);
+  border: 3px solid var(--card-border);
+  font-family: var(--font-mono);
+  border-radius: 0;
+}
+.id-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 4px 4px 0 var(--color-primary);
+  outline: none;
+}
+
+/* Section grid */
+.section-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  padding-top: 18px;
+}
+@media (max-width: 600px) { .section-grid { grid-template-columns: 1fr; } }
+
+/* Section card state borders */
+.sec-card-done   { border-color: var(--color-success) !important; }
+.sec-card-active { border-color: var(--color-primary) !important; }
+
+/* Concept content inside a white card body */
+.concept-body h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--card-text);
+  margin: 16px 0 6px;
+  padding-left: 8px;
+  border-left: 4px solid var(--color-primary);
+}
+.concept-body p   { margin: 6px 0; font-size: 0.9rem; color: var(--card-text-dim); line-height: 1.6; }
+.concept-body ul, .concept-body ol { padding-left: 20px; margin: 6px 0; }
+.concept-body li  { margin: 4px 0; font-size: 0.9rem; color: var(--card-text-dim); }
+.concept-body li::marker { color: var(--color-primary); font-weight: 900; }
+.concept-body strong { color: var(--card-text); font-weight: 700; }
+.concept-body code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 1px 5px;
+  color: #6C47FF;
+}
+.concept-body pre {
+  background: #f4f4f8;
+  border: 3px solid #0a0a0a;
+  border-left: 6px solid var(--color-secondary);
+  padding: 14px 16px;
+  overflow-x: auto;
+  margin: 10px 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.8;
+  white-space: pre;
+  color: #0a0a0a;
+}
+.concept-body table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.85rem; }
+.concept-body th { background: var(--color-black); color: #fff; padding: 7px 10px; text-align: left; font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; }
+.concept-body td { padding: 7px 10px; border-bottom: 1px solid #ddd; color: var(--card-text-dim); }
+.concept-body tr:nth-child(even) td { background: #f8f8f8; }
+
+/* Syntax highlight colors */
+.kw { color: #0000CC; font-weight: bold; }
+.ty { color: #267F99; }
+.st { color: #007700; }
+.cm { color: #888; font-style: italic; }
+.nu { color: #C04000; }
+.me { color: #795E26; }
+
+/* Result score ring */
+.score-ring {
+  width: 130px; height: 130px;
+  border: 6px solid var(--color-black);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  font-family: var(--font-display);
+  position: relative;
+}
+.score-ring.good   { border-color: var(--color-success); box-shadow: 8px 8px 0 var(--color-success); }
+.score-ring.ok     { border-color: var(--color-warning); box-shadow: 8px 8px 0 var(--color-warning); }
+.score-ring.bad    { border-color: var(--color-danger);  box-shadow: 8px 8px 0 var(--color-danger); }
+
+/* Slide in animation */
+@keyframes zSlide {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.z-slide { animation: zSlide 0.22s ease forwards; }
+
+/* Glitch bar at bottom */
+.glitch-bar span { margin-right: 24px; }
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+
+const KW=new Set(['abstract','assert','boolean','break','byte','case','catch','char','class','const','continue','default','do','double','else','enum','extends','final','finally','float','for','goto','if','implements','import','instanceof','int','interface','long','native','new','null','package','private','protected','public','return','short','static','strictfp','super','switch','synchronized','this','throw','throws','transient','try','void','volatile','while','true','false']);
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function hlLine(line){
+  let r='',i=0;
+  while(i<line.length){
+    if(line[i]==='/'&&line[i+1]==='/'){r+=`<span class="cm">${esc(line.slice(i))}</span>`;break}
+    if(line[i]==='"'){let j=i+1;while(j<line.length&&!(line[j]==='"'&&line[j-1]!=='\\\\'))j++;j++;r+=`<span class="st">${esc(line.slice(i,j))}</span>`;i=j;continue}
+    if(/[0-9]/.test(line[i])&&(i===0||!/[a-zA-Z_]/.test(line[i-1]))){let j=i;while(j<line.length&&/[0-9.]/.test(line[j]))j++;r+=`<span class="nu">${esc(line.slice(i,j))}</span>`;i=j;continue}
+    if(/[a-zA-Z_$]/.test(line[i])){let j=i;while(j<line.length&&/[a-zA-Z0-9_$]/.test(line[j]))j++;const w=line.slice(i,j),isM=line[j]==='(';
+      if(KW.has(w))r+=`<span class="kw">${esc(w)}</span>`;
+      else if(isM)r+=`<span class="me">${esc(w)}</span>`;
+      else if(/^[A-Z]/.test(w))r+=`<span class="ty">${esc(w)}</span>`;
+      else r+=esc(w);i=j;continue}
+    r+=esc(line[i]);i++;
+  }
+  return r||esc(line);
+}
+function codeHtml(code){return`<pre>${code.split('\\n').map(hlLine).join('\\n')}</pre>`}
+
+
+const SECTIONS=[
+{id:'debugging',title:'Debugging Concepts & Techniques',emoji:'🐛',cat:'MODULE 03',
+terms:[
+  {name:'Debugging',body:`<p>ok so <strong>debugging</strong> is literally just finding the glitches in ur code's lore before ur prof does. it's the most <strong>sigma</strong> part of coding because it takes the longest and hits the hardest.</p>
+<p><strong>the three-step arc of every debugging era:</strong></p>
+<ul>
+<li><strong>examine the symptoms</strong> — ur code is tweaking. crashes, red text, wrong output. LOOK at what's cooked.</li>
+<li><strong>identify the cause</strong> — trace back the lore. find the exact line that said 'nah' and went rogue.</li>
+<li><strong>fix the error</strong> — patch that bad boy up so it's finally giving what it's supposed to give.</li>
+</ul>`,
+   q:{type:'mc',q:'Which of the following BEST describes debugging?',choices:['A. Compiling a program into bytecode','B. Identifying and fixing errors that cause unexpected behavior','C. Writing pseudocode before coding','D. Converting source code to machine language'],answer:'B',exp:'Debugging is the process of identifying and rectifying errors in a program that lead to unexpected behavior — the most time-intensive phase of coding.'}},
+  {name:'Backtracking (Backward Debugging)',body:`<p><strong>Backtracking</strong> (aka <strong>backward debugging</strong>) — start from where it flopped and trace back. <strong>big brain move</strong> for complex bugs. u don't go forward, u rewind. think of it as watching ur code's trauma in reverse.</p><p>this technique is the go-to when an issue is too complex to trace from the beginning. S-tier technique no cap.</p>`,
+   q:{type:'mc',q:'Which technique starts from the error point and traces backward?',choices:['A. Rubber Ducking','B. Binary Search','C. Backtracking','D. Log Analysis'],answer:'C',exp:'Backtracking (backward debugging) starts from where the problem occurred and works backward to find how and why it happened.'}},
+  {name:'Breakpoints and Stepping',body:`<p>a <strong>breakpoint</strong> is literally hitting pause on ur program mid-execution like hitting pause on a video. execution stops right there so u can inspect every variable, every data structure, every piece of the mess.</p><p><strong>stepping</strong> is then manually going through each line one at a time, watching ur variables either vibe correctly or start flopping. S-tier technique for finding exactly where things went sideways.</p>`,
+   q:{type:'id',q:"What is the term for a point in code where execution is temporarily stopped to inspect program state?",answer:'breakpoint',accept:['breakpoint','break point'],exp:'A breakpoint temporarily stops execution so you can inspect variables and data structures at that point.'}},
+  {name:'Binary Search (Debugging)',body:`<p><strong>binary search</strong> debugging — split ur code in half, eliminate the innocent half, repeat. it's giving divide-and-conquer energy. narrow the bug down systematically instead of hunting it randomly like a lost NPC.</p><p>practical moves: comment out code, use print statements, isolate components. each round cuts the search space in half. actually lowkey the most efficient thing ever.</p>`,
+   q:{type:'mc',q:"Which technique divides code in half to narrow down a bug's location?",choices:['A. Clustering Bugs','B. Log Analysis','C. Backtracking','D. Binary Search'],answer:'D',exp:'Binary Search divides code into halves and systematically narrows the bug location.'}},
+  {name:'Rubber Ducking',body:`<p><strong>rubber ducking</strong> — explain ur code out loud to a rubber duck (or ur pet, or the wall, or the ceiling). saying it out loud unlocks braincells that silent debugging doesn't. when u have to articulate the problem, ur brain suddenly finds what it missed.</p><p>it's not cringe. it's actually a real technique that works. ur rubber duck has never judged anyone and it never will.</p>`,
+   q:{type:'id',q:'What technique involves explaining your code aloud to an inanimate object to identify issues?',answer:'rubber ducking',accept:['rubber ducking','rubber duck','rubber duck debugging'],exp:'Rubber Ducking forces critical thinking by making you articulate the problem. Doing so often reveals the solution.'}},
+  {name:'Clustering Bugs',body:`<p><strong>clustering bugs</strong> — group the same-vibe bugs together. fix one = fix the whole squad. bugs in the same class usually have the same root cause, so they're basically a group project where fixing the leader fixes the rest.</p><p>instead of treating every bug as its own main character, zoom out and find the pattern. lowkey the most efficient debugging glow-up.</p>`,
+   q:{type:'mc',q:'What does the Clustering Bugs technique involve?',choices:['A. Removing all compiler warnings','B. Grouping related errors that share common causes','C. Placing log statements in all loops','D. Running automated tests on every function'],answer:'B',exp:'Clustering Bugs groups related error reports into classes. Fixing one bug in a class frequently resolves others in the same cluster.'}},
+  {name:'Log Analysis',body:`<p><strong>log analysis</strong> — sprinkle <code>System.out.println()</code> everywhere like confetti and read the chaos. place them in strategic spots to reveal ur code's execution flow and catch variables in the act of being wrong.</p><p>ur logs are ur code's diary. read the entries, find where it started lying to u, fix that line. A-tier technique, very reliable, no setup needed.</p>`,
+   q:{type:'mc',q:'What is the purpose of placing log statements in strategic areas of code?',choices:['A. To pause execution at a specific point','B. To reveal execution flow and variable values for debugging','C. To group related bugs together','D. To convert the program to binary'],answer:'B',exp:'Log Analysis uses log statements to reveal the execution flow and variable values, helping identify the root cause.'}},
+  {name:'Debugging Tools',body:`<p>use the tech, bestie. <strong>debugging tools</strong> are software that lets u inspect ur code's variables, memory usage, and execution flow in real time instead of guessing in the dark.</p><ul><li><strong>Chrome DevTools</strong> — built into Chrome, for web debugging</li><li><strong>Testsigma</strong> — automated testing and debugging platform</li><li><strong>dbForge</strong> — database debugging tool</li></ul><p>tools don't make u a bad programmer. they make u a smart one.</p>`,
+   q:{type:'mc',q:'Which of the following are examples of debugging TOOLS?',choices:['A. Backtracking, Stepping, Clustering','B. Chrome DevTools, Testsigma, dbForge','C. try, catch, finally','D. Binary Search, Rubber Ducking, Log Analysis'],answer:'B',exp:'Chrome DevTools, Testsigma, and dbForge are debugging tools that give insights into code behavior.'}},
+  {name:'Take Breaks & Take Notes',body:`<p><strong>take breaks</strong> — touching grass actually works. debugging is mentally taxing and ur brain gets tunnel vision after hours of staring at the same code. stepping away clears the mind and a fresh pair of eyes goes hard. most "eureka" moments happen in the shower.</p><p><strong>take notes</strong> — document ur debugging journey. future-you will be so grateful. what did u try? what worked? what didn't? ur notes are basically a lore bible for fixing future bugs faster.</p>`,
+   q:{type:'mc',q:'Why is "taking notes" recommended as a debugging technique?',choices:['A. Notes help the compiler detect errors','B. Documented solutions serve as a resource for future debugging','C. Notes automatically fix bugs','D. It satisfies a Java requirement'],answer:'B',exp:'Documenting solutions is important — it becomes a valuable reference for future debugging challenges.'}},
+],
+quiz:[
+  {type:'mc',q:'What are the three steps of the debugging process in correct order?',choices:['A. Fix → Identify → Examine','B. Examine → Fix → Identify','C. Examine → Identify → Fix','D. Identify → Examine → Fix'],answer:'C'},
+  {type:'mc',q:'A developer traces backward from a program crash to find the cause. Which technique?',choices:['A. Binary Search','B. Rubber Ducking','C. Log Analysis','D. Backtracking'],answer:'D'},
+  {type:'mc',q:'A temporary stop in code execution to inspect variable values is called a:',choices:['A. Stack trace','B. Breakpoint','C. Log statement','D. Cluster'],answer:'B'},
+  {type:'mc',q:'Grouping related errors that share common causes describes which technique?',choices:['A. Log Analysis','B. Backtracking','C. Clustering Bugs','D. Take Breaks'],answer:'C'},
+  {type:'mc',q:'Chrome DevTools, Testsigma, and dbForge are examples of:',choices:['A. Breakpoints','B. Debugging Tools','C. Log Analyzers','D. Binary Search utilities'],answer:'B'},
+]},
+
+{id:'exceptions',title:'Basic Exception Handling',emoji:'💥',cat:'MODULE 03',
+terms:[
+  {name:'Exception',body:`<p>an <strong>exception</strong> is basically ur program going 'bestie I cannot' mid-run. it's NOT always bad tho — it's just an unusual thing that happened that the program wasn't built to handle in silence.</p>
+<p><strong>situations that spawn exceptions (real ones fr):</strong></p>
+<ul>
+<li>program tries to read a file... file said 'I don't exist bestie'</li>
+<li>program tries to write to disk... disk said 'I'm full, not today'</li>
+<li>program asks for an int... user typed 'hello' like a troll</li>
+<li>program tries to divide by 0... math said absolutely not</li>
+<li>program accesses array[999] in an array of size 5... indexing is NOT that deep</li>
+</ul>`,
+   q:{type:'id',q:'What is the term for an unexpected or error condition encountered during programming?',answer:'exception',accept:['exception'],exp:'An exception is an unexpected or error condition encountered in programming — not necessarily "bad," just an unusual occurrence.'}},
+  {name:'Runtime Error vs Syntax Error',body:`<p><strong>runtime error</strong> — happens while the program is RUNNING. ur code compiled fine but then flopped at the most inconvenient time. java said 'ok we're good' and then immediately wasn't.</p><p><strong>syntax error</strong> — caught at COMPILE time. java read ur code and said 'huh??' before even running it. at least it caught it early bestie.</p>`,
+   q:{type:'mc',q:'An error discovered during program COMPILATION is called a:',choices:['A. Runtime error','B. Logic error','C. Syntax error','D. Semantic error'],answer:'C',exp:'A syntax error is discovered during compilation. A runtime error occurs during execution.'}},
+  {name:'Error Class vs Exception Class',body:`<p>java has two basic classes of errors and they are NOT the same vibe:</p><table><tr><th>Error Class</th><th>Exception Class</th></tr><tr><td><strong>unrecoverable era.</strong> program is done. cannot self-fix. (e.g. out of memory)</td><td><strong>recoverable drama.</strong> program can keep going after handling it. (e.g. invalid array subscript)</td></tr></table><p>Error = RIP program. Exception = "ok we got this, catch it and move on."</p>`,
+   q:{type:'mc',q:'Which class represents conditions a program usually CANNOT recover from?',choices:['A. Exception','B. RuntimeException','C. IOException','D. Error'],answer:'D',exp:'The Error class represents serious unrecoverable conditions like insufficient memory.'}},
+  {name:'Throwable Hierarchy',body:`<p>the java exception hierarchy — <strong>the family tree of drama</strong>. both <code>Error</code> and <code>Exception</code> come from <strong>Throwable</strong> — THE GOAT. parent of all chaos. and Throwable itself comes from <code>Object</code>.</p>${codeHtml('java.lang.Object\n  +-- java.lang.Throwable       // THE GOAT. parent of all chaos\n        +-- java.lang.Exception  // recoverable drama\n        |     +-- IOException\n        |     +-- RuntimeException\n        |           +-- ArithmeticException    // divide by 0 moment\n        |           +-- IndexOutOfBoundsException  // u went too far\n        |                 +-- ArrayIndexOutOfBoundsException\n        |           +-- NoSuchElementException  // it\'s not there babe\n        |                 +-- InputMismatchException  // wrong type bestie\n        +-- java.lang.Error      // unrecoverable. RIP program\n              +-- VirtualMachineError\n                    +-- OutOfMemoryError   // heap said no\n                    +-- InternalError      // JVM is cooked')}`,
+   q:{type:'mc',q:'Which class is the superclass of BOTH Error and Exception in Java?',choices:['A. Object','B. RuntimeException','C. Throwable','D. Exception'],answer:'C',exp:'Both Error and Exception descend from Throwable, which originates from Object. Throwable is the superclass for all errors and exceptions in Java.'}},
+  {name:'ArithmeticException & InputMismatchException',body:`<p><strong>ArithmeticException</strong> — bad math. usually divide by zero. ur program tried to divide by 0 and math said absolutely not. classic villain moment at runtime.</p><p><strong>InputMismatchException</strong> — Scanner expected int, user typed 'three'. classic villain. when the user doesn't give the proper type of input, or the input is out of range, this gets thrown. also a runtime-only thing.</p>`,
+   q:{type:'mc',q:'A user types "three" where an int is expected via Scanner. Which exception?',choices:['A. ArithmeticException','B. ArrayIndexOutOfBoundsException','C. InputMismatchException','D. NoSuchElementException'],answer:'C',exp:'InputMismatchException occurs when the user provides the wrong data type or out-of-range input.'}},
+  {name:'ArrayIndexOutOfBoundsException & NoSuchElementException',body:`<p><strong>ArrayIndexOutOfBoundsException</strong> — u used an index that's negative or >= array.length. indexing is NOT that deep. u asked for array[999] in an array of size 5 and java said 'bestie what.'</p><p><strong>NoSuchElementException</strong> — it's not there babe. <code>Scanner.next()</code> called but nothing left to scan. u asked for an element that straight up doesn't exist in the collection.</p>`,
+   q:{type:'mc',q:'A program accesses index 10 of a 5-element array. Which exception is MOST specifically thrown?',choices:['A. IndexOutOfBoundsException','B. ArrayIndexOutOfBoundsException','C. NoSuchElementException','D. ArithmeticException'],answer:'B',exp:'ArrayIndexOutOfBoundsException specifically handles illegal array index access. It is a subclass of IndexOutOfBoundsException.'}},
+  {name:'OutOfMemoryError & InternalError',body:`<p><strong>VirtualMachineError</strong> — indicates the JVM is broken or has run out of resources. the JVM itself is having a crisis.</p><p><strong>OutOfMemoryError</strong> — heap said no. thrown when there is insufficient space to allocate an object. ur program asked for memory and java said 'I literally don't have it.'</p><p><strong>InternalError</strong> — the JVM itself is cooked. rare but devastating. an unexpected internal error occurred in the Java Virtual Machine. all three are <code>Error</code> subclasses — <strong>unrecoverable. RIP program.</strong></p>`,
+   q:{type:'mc',q:'Which error is thrown when the JVM runs out of heap memory?',choices:['A. InternalError','B. VirtualMachineError','C. OutOfMemoryError','D. RuntimeException'],answer:'C',exp:'OutOfMemoryError is thrown when there is insufficient space to allocate an object. It is a subclass of VirtualMachineError.'}},
+  {name:'Stack Trace',body:`<p>that big block of red text when ur program crashes? that's the <strong>stack trace</strong> (aka stack trace history list). it shows every method that was called before things went sideways. read it bottom-up to find where it started flopping.</p><p>it's not there to bully u. it's ur program's last words before it died — and those words have all the receipts. learn to read a stack trace and debugging becomes way less of a boss fight.</p>`,
+   q:{type:'id',q:'What is the list of method calls printed to the console when an uncaught exception occurs?',answer:'stack trace',accept:['stack trace','stack trace history list','stack trace history'],exp:'The stack trace shows every method called before the exception occurred, helping trace how and where the crash happened.'}},
+],
+quiz:[
+  {type:'mc',q:'An unplanned exception occurring while a program is RUNNING is called a:',choices:['A. Syntax error','B. Compile error','C. Logic error','D. Runtime error'],answer:'D'},
+  {type:'mc',q:'ArithmeticException is a direct subclass of:',choices:['A. Exception','B. Error','C. RuntimeException','D. Throwable'],answer:'C'},
+  {type:'mc',q:'Which is the base class for exceptions thrown while accessing files, directories, and streams?',choices:['A. RuntimeException','B. IOException','C. FileException','D. StreamException'],answer:'B'},
+  {type:'mc',q:'The Exception class represents errors from which:',choices:['A. The program can never recover','B. Only the JVM can handle','C. The program CAN recover','D. Only a system restart can fix'],answer:'C'},
+  {type:'mc',q:'A program divides 10 by 0. Which exception is thrown?',choices:['A. InputMismatchException','B. IndexOutOfBoundsException','C. ArithmeticException','D. IOException'],answer:'C'},
+]},
+
+{id:'trycatch',title:'try / catch / finally',emoji:'🎯',cat:'MODULE 03',
+terms:[
+  {name:'try Block',body:`<p>the <strong>try block</strong> is where u put ur risky code. the code that might throw an exception. it's giving 'i'll try but no promises'. ur program <em>attempts</em> the code inside knowing things could go sideways.</p>${codeHtml('try {\n    // sus code goes here — might throw an exception\n    result = numerator / denominator; // what if denominator is 0? 💀\n}')}`,
+   q:{type:'mc',q:'What is the purpose of a try block?',choices:['A. To declare variables that might be null','B. To contain code that might throw an exception','C. To handle all errors automatically','D. To replace the main() method'],answer:'B',exp:"A try block contains code the programmer attempts to execute while acknowledging that an exception might occur. It doesn't handle exceptions — that's catch's job."}},
+  {name:'catch Block',body:`<p>the <strong>catch block</strong> — if something flops inside try, execution jumps here. it catches the exception object and lets u handle it gracefully instead of just crashing out. it's the goalie of ur program.</p><ul><li>one or more catch blocks can follow try — each catches a diff exception type</li><li>if <em>no exception</em> occurs, catch is <strong>skipped entirely</strong>. it doesn't run for fun.</li><li>it's NOT a real method — no return type, cannot be called directly. it just shows up when needed.</li></ul>${codeHtml('catch (ArithmeticException e) {\n    System.out.println("bro tried to divide by zero fr");\n}')}`,
+   q:{type:'mc',q:'When does a catch block execute?',choices:['A. Always, after try completes','B. Only when no exception is thrown','C. Only when a matching exception is thrown in try','D. Before the try block runs'],answer:'C',exp:"A catch block only executes when an exception matching its declared type is thrown. If no exception occurs, catch is skipped."}},
+  {name:'throw Statement',body:`<p>a <strong>throw statement</strong> manually yeets an Exception out of a method so something else can catch it. it's like passing the problem to ur manager. ur code goes 'not my problem anymore' and sends the exception up the chain.</p>${codeHtml('throw new ArithmeticException("bestie u literally divided by zero");')}`,
+   q:{type:'id',q:'What is the name of the statement that manually sends an Exception object out of a block or method?',answer:'throw statement',accept:['throw statement','throw','a throw statement'],exp:'A throw statement sends an Exception object out of a block or method so it can be caught elsewhere by a catch block.'}},
+  {name:'finally Block',body:`<p>the <strong>finally block</strong> — this runs NO MATTER WHAT. exception or no exception, this block is showing up. it's the most loyal block. usually used for cleanup (like closing files) that has to happen regardless of whether things flopped or not.</p>${codeHtml('try {\n    // open file, read file\n}\ncatch (IOException e) {\n    System.out.println("File error");\n}\nfinally {\n    // close the file — runs NO MATTER WHAT\n    // it\'s the most loyal block fr\n}')}`,
+   q:{type:'mc',q:'When does a finally block execute?',choices:['A. Only when an exception is thrown','B. Only when no exception is thrown','C. Whether or not the try block threw an exception','D. Only when catch also ran'],answer:'C',exp:'The finally block ALWAYS executes — whether or not an exception occurred, before the method is abandoned.'}},
+  {name:'Full Syntax & Execution Outcomes',body:`<p>the syntax — memorize this, it's literally the whole exam. correct order: <code>try</code> → <code>catch</code> → <code>finally</code></p>${codeHtml('try {\n    result = numerator / denominator;\n    System.out.println(result);\n}\ncatch (ArithmeticException e) {\n    System.out.println("bro tried to divide by zero fr");\n}\ncatch (InputMismatchException e) {\n    // can have MULTIPLE catch blocks — each catches a diff exception\n    System.out.println("that input was NOT it bestie");\n}\nfinally {\n    // always runs. always. no exceptions (lol). use for cleanup.\n    System.out.println("this printed regardless, slay");\n}')}<p>what actually happens:</p><table><tr><th>what happened</th><th>what runs</th></tr><tr><td>no exception in try</td><td>try ✅ → catch ❌ skipped → finally ✅</td></tr><tr><td>exception thrown + caught</td><td>try 💥 stops → catch ✅ → finally ✅</td></tr><tr><td>exception thrown + NOT caught</td><td>try 💥 → catch ❌ wrong type → finally ✅ → crash</td></tr></table>`,
+   q:{type:'fib',q:'Fill in the three keywords:',code:'___1___ {\n    result = numerator / denominator;\n}\n___2___ (ArithmeticException e) {\n    System.out.println("Error!");\n}\n___3___ {\n    System.out.println("Done.");\n}',
+      blanks:[{id:1,answer:'try',accept:['try']},{id:2,answer:'catch',accept:['catch']},{id:3,answer:'finally',accept:['finally']}],
+      exp:'try (attempt risky code) → catch (handle the specific exception) → finally (cleanup, always runs).'}},
+],
+quiz:[
+  {type:'mc',q:'Can a single try block have more than one catch block?',choices:['A. No — only one is allowed','B. Yes — one or more catch blocks can follow try','C. Only with a finally block','D. Only for checked exceptions'],answer:'B'},
+  {type:'mc',q:'If no exception occurs in try, the catch block:',choices:['A. Executes with null exception','B. Is skipped entirely','C. Executes after try','D. Throws a new exception'],answer:'B'},
+  {type:'mc',q:'A throw statement sends an Exception object:',choices:['A. To the JVM for display','B. Out of a block/method to be caught elsewhere','C. Into finally automatically','D. To a system log'],answer:'B'},
+  {type:'mc',q:'The primary purpose of finally is:',choices:['A. To throw more exceptions','B. To declare variables','C. Cleanup that must happen regardless of exceptions','D. To replace catch when not needed'],answer:'C'},
+  {type:'mc',q:'If try throws an exception NOT matched by catch, does finally still run?',choices:['A. No — finally is skipped','B. Yes — finally always runs before program exits','C. finally catches it automatically','D. finally throws it again'],answer:'B'},
+]},
+
+{id:'files',title:'Computer Files',emoji:'📁',cat:'MODULE 04',
+terms:[
+  {name:'Computer File',body:`<p>a <strong>computer file</strong> is just data chilling on a nonvolatile device (hard disk, USB, CD, etc.). <strong>nonvolatile</strong> = it keeps the data even when u turn it off, unlike RAM which forgets everything like it never knew u. that's the whole definition.</p><p>every file has three things in common: <strong>size</strong> (how much disk space it eats), <strong>name</strong>, and <strong>creation time</strong>.</p>`,
+   q:{type:'id',q:'What is a collection of data stored on a nonvolatile storage device called?',answer:'computer file',accept:['computer file','file'],exp:'A computer file is a collection of data stored on a nonvolatile device. Nonvolatile means data persists when powered off — unlike RAM.'}},
+  {name:'Text Files vs Binary Files',body:`<p>two types of files based on how they store data:</p><table><tr><th>📄 TEXT FILES</th><th>⬛ BINARY FILES</th></tr><tr><td>encoded in ASCII or Unicode — readable in Notepad etc. examples: .txt, .csv, .java — data files and source code</td><td>raw 0s and 1s — looks like gibberish in Notepad. examples: .class, .mp3, .png — compiled bytecode, media files</td></tr></table>`,
+   q:{type:'mc',q:'A compiled .class file is which type of file?',choices:['A. Text file encoded in ASCII','B. Source file','C. Binary file','D. Directory'],answer:'C',exp:'Binary files contain raw binary data (0s and 1s). A compiled .class file is binary — not readable in a text editor.'}},
+  {name:'Root Directory, Folder, and Path',body:`<p><strong>root directory</strong> — the top-level folder of ur storage. everything lives inside it.</p><p><strong>folder / directory</strong> — u can nest folders inside folders like a hierarchy. very organized era. folders inside folders inside folders.</p><p><strong>path</strong> — the full address to find a file. like ur home address but for data. it's the complete list of disk drive + directory hierarchy.</p>${codeHtml('C:\\\\Java\\\\Chapter.11\\\\Data.txt   // Windows path (uses backslash \\\\)\n/home/user/Java/Data.txt       // UNIX/Solaris path (uses forward slash /)')}`,
+   q:{type:'id',q:'What is the complete list of disk drive and directory hierarchy where a file resides called?',answer:'path',accept:['path','file path','filepath'],exp:'A path is the complete list of the disk drive and hierarchy of directories where a file resides.'}},
+  {name:'Path Separators & Java Escaping',body:`<p>different OS, different separators — don't mix these up:</p><ul><li><strong>Windows</strong>: backslash <code>\\</code></li><li><strong>UNIX/Solaris</strong>: forward slash <code>/</code></li></ul><p>⚠️ in Java Strings, backslash is an <em>escape character</em> so u have to double it. write <code>\\\\</code> to get one actual <code>\\</code> in the path. yes it looks unhinged. no u cannot skip it.</p>${codeHtml('"C:\\\\\\\\Java\\\\\\\\Data.txt"  // represents C:\\\\Java\\\\Data.txt')}`,
+   q:{type:'mc',q:'Why must a backslash be written as \\\\\\\\ in a Java String?',choices:['A. Java uses forward slashes internally','B. Backslash is an escape character — doubling it gives one literal backslash','C. Required only by the Path API','D. Only applies to UNIX systems'],answer:'B',exp:'In Java, backslash is an escape character. To get one \\ in a String, write \\\\\\\\.'}},
+  {name:'Absolute vs Relative Path',body:`<p><strong>absolute path</strong> — the FULL address. doesn't need context. knows exactly where it is. king behavior.</p>${codeHtml('C:\\\\Java\\\\Chapter.11\\\\SampleFile.txt  // absolute, king')}<p><strong>relative path</strong> — depends on the current working directory. if u only give a filename, Java assumes it's in the same folder as the program. glow-up to absolute with <code>toAbsolutePath()</code> — the glow-up method.</p>${codeHtml('SampleFile.txt              // relative — assumes same folder as program\nPath full = p.toAbsolutePath(); // now it knows its whole address')}`,
+   q:{type:'mc',q:'A path containing ONLY a filename (e.g., "Data.txt") is:',choices:['A. An absolute path','B. A root path','C. A full path','D. A relative path'],answer:'D',exp:'A relative path depends on the current directory. A filename alone is relative — Java assumes it is in the same folder as the program.'}},
+],
+quiz:[
+  {type:'mc',q:'Text files differ from binary files in that text files are:',choices:['A. Stored in 0s and 1s','B. Encoded (ASCII/Unicode) and readable in a text editor','C. Compiled program files','D. Always larger in size'],answer:'B'},
+  {type:'mc',q:'In UNIX/Solaris, the path delimiter is:',choices:['A. \\\\\\\\','B. :','C. |','D. /'],answer:'D'},
+  {type:'mc',q:'The top-level directory of a storage device is called the:',choices:['A. Path','B. Root directory','C. File system','D. Binary tree'],answer:'B'},
+  {type:'mc',q:'A complete path that needs no additional context to locate a file is:',choices:['A. Relative path','B. Root path','C. Absolute path','D. Directory path'],answer:'C'},
+  {type:'mc',q:'All computer files share which characteristics?',choices:['A. Always stored in root directory','B. Always text-encoded','C. Size, name, and creation time','D. Always stored in binary format'],answer:'C'},
+]},
+
+{id:'pathfiles',title:'Path & Files Classes',emoji:'🗂️',cat:'MODULE 04',
+terms:[
+  {name:'Path vs Files Classes',body:`<p>both from <code>import java.nio.file.*;</code> — <strong>nio = New Input/Output</strong> (not ur old boring java.io).</p><table><tr><th>Path class</th><th>Files class</th></tr><tr><td>creates objects with <strong>INFO</strong> about files: location, size, creation date, exists? — it's the <strong>ID card</strong> for the file</td><td><strong>DOES OPERATIONS</strong> on files: delete, check attributes, create streams — it's the <strong>action hero</strong></td></tr></table>`,
+   q:{type:'mc',q:'Which class performs OPERATIONS on files and directories (deletion, streams)?',choices:['A. Path','B. Paths','C. FileSystems','D. Files'],answer:'D',exp:'The Files class performs operations on files and directories — deletion, attribute checking, and creating I/O streams.'}},
+  {name:'Creating a Path — FileSystem & FileSystems',body:`<p>one method uses a <code>FileSystem</code> object — the long way, more steps:</p>${codeHtml('FileSystem fs = FileSystems.getDefault(); // factory method moment\nPath filePath = fs.getPath("C:\\\\\\\\Java\\\\\\\\Data.txt");')}<p>two different classes to know — the <strong>s</strong> matters:</p><ul><li><strong>FileSystem</strong> (no s) — used to instantiate the object</li><li><strong>FileSystems</strong> (with s) — contains <strong>factory methods</strong>. a <strong>factory</strong> is an object that creates other objects. FileSystems is a factory. very sigma.</li></ul>`,
+   q:{type:'mc',q:'In OOP, what is an object that creates other objects called?',choices:['A. Singleton','B. Factory','C. Builder','D. Constructor'],answer:'B',exp:"A factory is an object that creates other objects. FileSystems (with 's') is a factory — its getDefault() method creates a FileSystem object."}},
+  {name:'Paths Helper Class',body:`<p><strong>Paths.get() is the goat.</strong> the <strong>Paths</strong> class (with s) is a helper class that eliminates the need to create a FileSystem object first. just call <code>get()</code> and ur done — way cleaner, way less steps:</p>${codeHtml('// WAY 2: the easy way — Paths.get() is the goat\nPath filePath = Paths.get("C:\\\\\\\\Java\\\\\\\\Chapter.11\\\\\\\\Data.txt");\n// Note: \\\\\\\\ in Java strings = ONE backslash in the actual path')}<p>after the Path is created, use <code>filePath</code> as the identifier to refer to and operate on the file. the OS sees the full path, ur code sees <code>filePath</code>.</p>`,
+   q:{type:'fib',q:'Create a Path using the Paths helper class:',code:'Path filePath = ___1___.___2___("C:\\\\\\\\Java\\\\\\\\Data.txt");',blanks:[{id:1,answer:'Paths',accept:['paths','Paths']},{id:2,answer:'get',accept:['get']}],exp:"Paths.get() is the recommended approach. Paths (with 's') is the helper class that skips needing a FileSystem object."}},
+  {name:'Path Methods',body:`<p>key methods on a Path object — know ALL of these:</p>${codeHtml('Path p = Paths.get("C:\\\\\\\\Java\\\\\\\\Chapter.11\\\\\\\\Data.txt");\np.toString()       // "C:\\\\Java\\\\Chapter.11\\\\Data.txt" — full path as String\np.getFileName()    // Data.txt — the last element (the actual filename)\np.getNameCount()   // 3 — how many elements in the path\np.getName(0)       // Java — index 0 = top-level (NOT C:\\\\ — root doesn\'t count)\np.getName(1)       // Chapter.11\np.getName(2)       // Data.txt — same as getFileName()\np.toAbsolutePath() // glow-up method: converts relative → absolute')}<p>⚠️ the root (C:\\\\) is NOT counted as a name element — index 0 starts after it. getName(0) in this path returns <strong>Java</strong>, not C:\\\\. don't mix this up, it's a classic exam trap.</p>`,
+   q:{type:'mc',q:'For "C:\\\\\\\\Java\\\\\\\\Chapter.11\\\\\\\\Data.txt", what does getName(0) return?',choices:['A. C:\\\\\\\\','B. Data.txt','C. Chapter.11','D. Java'],answer:'D',exp:'getName(0) returns the first element after the root drive. Index 0 = Java, 1 = Chapter.11, 2 = Data.txt.'}},
+  {name:'checkAccess() & Files.exists()',body:`<p>need this import first: <code>import static java.nio.file.AccessMode.*;</code></p><table><tr><th>argument</th><th>what it checks</th></tr><tr><td>(none)</td><td>file exists — that's it</td></tr><tr><td>READ</td><td>file exists + program can read it</td></tr><tr><td>WRITE</td><td>file exists + program can write to it</td></tr><tr><td>EXECUTE</td><td>file exists + program can run it</td></tr><tr><td>READ, EXECUTE</td><td>multiple args = checks ALL of them</td></tr></table><p>⚠️ throws <code>IOException</code> if access denied — wrap in try-catch or ur program will crash out.</p>${codeHtml('// check READ and EXECUTE permission\nfilePath.getFileSystem().provider().checkAccess(filePath, READ, EXECUTE);\n\n// alternative: just check if file exists (cleaner)\nboolean exists = Files.exists(filePath);')}`,
+   q:{type:'mc',q:'Which import is needed to use AccessMode constants (READ, WRITE, EXECUTE) directly?',choices:['A. import java.nio.file.AccessMode.*;','B. import static java.nio.file.AccessMode.*;','C. import java.io.AccessMode.*;','D. import java.nio.AccessMode.*;'],answer:'B',exp:'The STATIC import lets you use READ, WRITE, EXECUTE without qualifying them as AccessMode.READ etc.'}},
+  {name:'BasicFileAttributes & FileTime',body:`<p>reading file attributes — <strong>the metadata arc</strong>. need these imports:</p>${codeHtml('import java.nio.file.attribute.*;\n\nBasicFileAttributes attr =\n    Files.readAttributes(filePath, BasicFileAttributes.class);\n\nattr.creationTime()      // FileTime: when it was born — yyyy-mm-ddThh:mm:ss format\nattr.lastModifiedTime()  // FileTime: when it was last edited\nattr.size()              // long: size in bytes')}<p>FileTime format: <code>yyyy-mm-ddThh:mm:ss</code> — e.g. <code>2024-04-27T17:40:44.332044Z</code>. the T separates the date from the time. memorize that format.</p>`,
+   q:{type:'mc',q:'What does BasicFileAttributes.size() return?',choices:['A. File name length','B. Number of lines','C. File size in bytes','D. Number of attributes'],answer:'C',exp:'The size() method returns the file size in bytes as a long.'}},
+],
+quiz:[
+  {type:'mc',q:'The "nio" in java.nio stands for:',choices:['A. Native Input Operations','B. New Input/Output','C. Network Input/Output','D. Nested IO'],answer:'B'},
+  {type:'mc',q:'Which Path method returns the total number of name elements?',choices:['A. getFileName()','B. length()','C. getNameCount()','D. size()'],answer:'C'},
+  {type:'mc',q:'checkAccess() with NO argument checks that:',choices:['A. File can execute','B. File exists','C. File can be read','D. File can be written'],answer:'B'},
+  {type:'mc',q:'FileTime objects are represented in the format:',choices:['A. MM/DD/YYYY HH:MM:SS','B. YYYY/MM/DD','C. yyyy-mm-ddThh:mm:ss','D. Unix timestamp'],answer:'C'},
+  {type:'mc',q:'Which class is the helper that eliminates the need for a FileSystem object?',choices:['A. Path','B. Files','C. FileSystem','D. Paths'],answer:'D'},
+]},
+
+{id:'io',title:'The IO Classes',emoji:'🌊',cat:'MODULE 04',
+terms:[
+  {name:'IO Hierarchy Overview',body:`<p>java has a whole hierarchy of IO classes for reading and writing. they're all from the <code>Object</code> class. think of them as different <strong>pipelines for moving data</strong>.</p>${codeHtml('Object\n+-- InputStream                 // abstract: reads bytes IN\n|     +-- FileInputStream       // reads bytes FROM a disk file\n|     +-- FilterInputStream\n|           +-- BufferedInputStream\n+-- OutputStream                // abstract: writes bytes OUT\n|     +-- FileOutputStream      // writes bytes TO a disk file\n|     +-- FilterOutputStream\n|           +-- BufferedOutputStream\n|           +-- PrintStream    // System.out is literally this!\n+-- Reader                      // abstract: reads CHARACTERS (text)\n      +-- BufferedReader        // buffered char reading — efficient\n      +-- BufferedWriter        // buffered char writing — efficient')}`,
+   q:{type:'mc',q:'In the IO hierarchy, InputStream is a direct subclass of:',choices:['A. Reader','B. Object','C. OutputStream','D. FilterInputStream'],answer:'B',exp:'InputStream, OutputStream, and Reader are all direct subclasses of Object — they sit at the top of the IO hierarchy.'}},
+  {name:'InputStream & FileInputStream',body:`<p><strong>InputStream</strong> — abstract. base class for byte input. reads bytes IN from somewhere. can't instantiate it directly, it's just the blueprint.</p><p><strong>FileInputStream</strong> — child of InputStream. reads bytes FROM a disk file specifically. this is the one u actually use when reading file data.</p><p><strong>BufferedInputStream</strong> — child of FilterInputStream. buffers keyboard/standard input so it's not reading one byte at a time like a lost NPC.</p>`,
+   q:{type:'mc',q:'Which class provides the capability to READ BYTES FROM a disk file?',choices:['A. FileOutputStream','B. BufferedReader','C. FileInputStream','D. PrintStream'],answer:'C',exp:'FileInputStream is a child of InputStream that specifically reads bytes from disk files.'}},
+  {name:'OutputStream, FileOutputStream & PrintStream',body:`<p><strong>OutputStream</strong> — abstract. base class for byte output. writes bytes OUT somewhere. the blueprint, not the actual tool.</p><p><strong>FileOutputStream</strong> — child of OutputStream. writes bytes TO a disk file. this is the one u use when writing file data.</p><p><strong>BufferedOutputStream</strong> — child of FilterOutputStream. buffers standard output (monitor) so it's not writing one byte at a time.</p><p><strong>PrintStream</strong> — child of FilterOutputStream. <code>System.out</code> is <strong>literally a PrintStream</strong>. every time u've ever done <code>System.out.println()</code>, u were using a PrintStream and didn't even know it.</p>`,
+   q:{type:'mc',q:"Java's System.out is an instance of which class?",choices:['A. BufferedWriter','B. FileOutputStream','C. OutputStream','D. PrintStream'],answer:'D',exp:"System.out is a PrintStream object — PrintStream is a child of FilterOutputStream."}},
+  {name:'Reader, BufferedReader & BufferedWriter',body:`<p><strong>Reader</strong> — abstract. base class for reading CHARACTER streams (text, not raw bytes). the difference from InputStream is that this one works with characters, not raw binary.</p><p><strong>BufferedReader</strong> — reads text from a char stream with buffering. fast and efficient. doesn't read one character at a time like a bronze-tier program — it buffers entire lines.</p><p><strong>BufferedWriter</strong> — writes text to a char stream with buffering. also fast and efficient. the output version of BufferedReader.</p>`,
+   q:{type:'mc',q:'Which class reads text from a character-input stream with buffering?',choices:['A. BufferedOutputStream','B. FileInputStream','C. BufferedReader','D. PrintStream'],answer:'C',exp:'BufferedReader reads text from a character-input stream with buffering for efficient reading.'}},
+  {name:'OutputStream Methods',body:`<p>four methods — know ALL of them:</p>${codeHtml('void close()                           // closes the stream. free the resources bestie.\nvoid flush()                           // force-writes buffered bytes. don\'t leave data stuck.\nvoid write(byte[] b)                   // writes the whole byte array to output.\nvoid write(byte[] b, int off, int len) // writes len bytes starting at index off.')}`,
+   q:{type:'mc',q:'Which OutputStream method FORCES buffered bytes to be written to the output device?',choices:['A. close()','B. flush()','C. write()','D. push()'],answer:'B',exp:'flush() forces buffered bytes to be written. close() releases resources. write() sends bytes to the stream.'}},
+  {name:'getBytes() and the ScreenOut Pattern',body:`<p><code>getBytes()</code> converts a String into a <code>byte[]</code> array — <strong>crucial step</strong> before writing to an OutputStream. u can't just write a String directly.</p><p>the <strong>ScreenOut pattern</strong> — putting it all together:</p>${codeHtml('String s = "ABCDF";\nbyte[] data = s.getBytes();    // String → byte array. crucial step.\nOutputStream output = System.out;\ntry {\n    output.write(data);        // write the bytes\n    output.flush();            // push any remaining buffered bytes\n    output.close();            // clean up\n}\ncatch(Exception e) {\n    System.out.println("Message: " + e);\n}\n// output: ABCDF')}`,
+   q:{type:'fib',q:'Fill in the four method calls:',code:'String s = "HELLO";\nbyte[] data = s.___1___();\nOutputStream out = System.out;\nout.___2___(data);\nout.___3___();\nout.___4___();',blanks:[{id:1,answer:'getBytes',accept:['getbytes','getBytes']},{id:2,answer:'write',accept:['write']},{id:3,answer:'flush',accept:['flush']},{id:4,answer:'close',accept:['close']}],exp:'getBytes() converts String to byte[], write() sends bytes, flush() pushes buffer, close() releases resources.'}},
+],
+quiz:[
+  {type:'mc',q:'PrintStream is a child of which class?',choices:['A. OutputStream','B. FilterInputStream','C. FilterOutputStream','D. BufferedOutputStream'],answer:'C'},
+  {type:'mc',q:'Which OutputStream method closes the stream and releases system resources?',choices:['A. flush()','B. write()','C. close()','D. dispose()'],answer:'C'},
+  {type:'mc',q:'You want to WRITE CHARACTERS to a file with buffering. Which class?',choices:['A. BufferedReader','B. PrintStream','C. FileOutputStream','D. BufferedWriter'],answer:'D'},
+  {type:'mc',q:'write(byte[] b, int off, int len) writes:',choices:['A. All bytes in array','B. Only the first byte','C. len bytes from b starting at index off','D. off bytes up to index len'],answer:'C'},
+  {type:'mc',q:'Which class is shared parent of BOTH BufferedOutputStream AND PrintStream?',choices:['A. OutputStream','B. FilterOutputStream','C. FileOutputStream','D. BufferedOutputStream'],answer:'B'},
+]},
+];
+
+const MASTERY=[
+  {q:'Which debugging technique traces backward from the error point?',choices:['A. Binary Search','B. Rubber Ducking','C. Backtracking','D. Log Analysis'],answer:'C'},
+  {q:'A temporary stop in execution to inspect variables is called a:',choices:['A. Stack trace','B. Log statement','C. Breakpoint','D. Cluster'],answer:'C'},
+  {q:'Superclass of both Error and Exception in Java?',choices:['A. Object','B. Exception','C. Throwable','D. RuntimeException'],answer:'C'},
+  {q:'ArithmeticException is a direct subclass of:',choices:['A. Error','B. IOException','C. RuntimeException','D. Throwable'],answer:'C'},
+  {q:'User types "hello" where int is expected — which exception?',choices:['A. ArithmeticException','B. ArrayIndexOutOfBoundsException','C. InputMismatchException','D. IOException'],answer:'C'},
+  {q:'The Error class represents conditions the program:',choices:['A. Can easily recover from','B. Should log and continue','C. Usually cannot recover from','D. Should retry automatically'],answer:'C'},
+  {q:'finally block executes:',choices:['A. Only when exception occurs','B. Only when no exception','C. Whether or not exception occurred','D. Only when catch runs'],answer:'C'},
+  {q:'Correct order of exception blocks:',choices:['A. catch → try → finally','B. try → finally → catch','C. try → catch → finally','D. finally → try → catch'],answer:'C'},
+  {q:'throw statement sends an Exception object:',choices:['A. To the JVM log','B. Out of a block/method to be caught elsewhere','C. Into finally block','D. To system file'],answer:'B'},
+  {q:'A compiled .class file is a:',choices:['A. Text file','B. Source file','C. Binary file','D. Directory'],answer:'C'},
+  {q:'A path containing only a filename is:',choices:['A. Absolute','B. Root','C. Full','D. Relative'],answer:'D'},
+  {q:'Backslash in a Java String is written as:',choices:['A. /','B. \\\\','C. \\\\\\\\\\\\\\\\','D. \\\\\\\\'],answer:'D'},
+  {q:'Path class creates objects with what?',choices:['A. Operations on files','B. Information about files and directories','C. I/O streams','D. Database connections'],answer:'B'},
+  {q:'Files class performs what?',choices:['A. Stores file metadata only','B. Creates Path objects only','C. Operations on files (delete, streams, attributes)','D. Converts binary to text'],answer:'C'},
+  {q:'import for Path and Files classes?',choices:['A. java.io.*','B. java.nio.*','C. java.nio.file.*','D. java.file.*'],answer:'C'},
+  {q:'getName(0) on "C:\\\\\\\\Java\\\\\\\\Ch.11\\\\\\\\Data.txt" returns:',choices:['A. C:\\\\\\\\','B. Java','C. Ch.11','D. Data.txt'],answer:'B'},
+  {q:'checkAccess() with no argument checks:',choices:['A. File can execute','B. File exists','C. File can be read','D. File can be written'],answer:'B'},
+  {q:'System.out is an instance of:',choices:['A. BufferedWriter','B. FileOutputStream','C. OutputStream','D. PrintStream'],answer:'D'},
+  {q:'Which class reads text from char stream with buffering?',choices:['A. BufferedOutputStream','B. FileInputStream','C. BufferedReader','D. PrintStream'],answer:'C'},
+  {q:'flush() on OutputStream:',choices:['A. Closes the stream','B. Forces buffered bytes to be written','C. Reads from stream','D. Resets position'],answer:'B'},
+];
+
+
+// ── PERSISTENCE ──────────────────────────────────────────────────────────────
+const STORE='cp-quiz-zzz';
+function load(){try{const r=localStorage.getItem(STORE);return r?JSON.parse(r):{}}catch{return{}}}
+function saveP(){try{localStorage.setItem(STORE,JSON.stringify(prog))}catch{}}
+let prog=load();
+function sp(id){return prog[id]||{status:'not-started',quizScore:null}}
+function overallMastery(){
+  const done=SECTIONS.filter(s=>sp(s.id).status==='completed');
+  if(!done.length)return null;
+  let tc=0,tt=0;
+  done.forEach(s=>{const q=sp(s.id).quizScore;if(q){tc+=q.correct;tt+=q.total}});
+  return tt?Math.round(tc/tt*100):null;
+}
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let secIdx=0,termIdx=0,termAnswered=false;
+let quizQs=[],quizIdx=0,quizCorrect=0,quizAnswered=false,quizWrong=[];
+let mqQs=[],mqIdx=0,mqCorrect=0,mqAnswered=false;
+
+const app=document.getElementById('app');
+function R(html){app.innerHTML=html;app.classList.add('z-slide');requestAnimationFrame(()=>app.classList.remove('z-slide'))}
+
+function pct(v,m){return m?Math.round(v/m*100):0}
+function progressBar(v,m,color='progress-bar'){
+  return`<div class="progress progress-sm" style="border-radius:0;border:2px solid rgba(255,255,255,0.2);background:#1a1a1a">
+    <div class="${color} progress-bar-striped" style="width:${pct(v,m)}%;transition:width .4s ease"></div>
+  </div>`;
+}
+
+// ── HOME ─────────────────────────────────────────────────────────────────────
+function renderHome(){
+  const mastery=overallMastery();
+  const done=SECTIONS.filter(s=>sp(s.id).status==='completed').length;
+  const allDone=done===SECTIONS.length;
+  const masteryPct=mastery!==null?mastery:0;
+  R(`
+    <div class="page-banner" style="margin-bottom:0">
+      <div class="hazard-strip"></div>
+      <div style="position:relative;padding:0 8px">
+        <span class="label" style="color:rgba(0,0,0,0.5);margin-bottom:4px">// COPROG BUT MAKE IT RIZZ — no cap, full slay edition 🔥</span>
+        <h1 style="font-family:var(--font-display);font-size:clamp(2.4rem,8vw,5rem);font-weight:900;font-style:italic;line-height:0.85;text-transform:uppercase;letter-spacing:-3px;color:var(--color-black);margin-bottom:12px">STUDY<br>MODULE</h1>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <span style="background:var(--color-black);color:var(--color-primary);font-family:var(--font-mono);font-size:0.7rem;padding:3px 10px;font-weight:700">${done}/${SECTIONS.length} SECTIONS DONE</span>
+          ${mastery!==null?`<span style="background:var(--color-black);color:var(--color-secondary);font-family:var(--font-mono);font-size:0.7rem;padding:3px 10px;font-weight:700">⚡ ${mastery}% MASTERY</span>`:''}
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--color-black);padding:4px 24px 0">
+      ${progressBar(done,SECTIONS.length)}
+    </div>
+
+    <div style="padding:24px 16px 80px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <span class="label">// Select Section</span>
+        ${prog._mastery!==undefined?`<span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--color-text-muted)">LAST MASTERY: <span style="color:var(--color-primary)">${prog._mastery}%</span></span>`:''}
+      </div>
+      <div class="section-grid">
+        ${SECTIONS.map((s,i)=>{
+          const p=sp(s.id);
+          const isDone=p.status==='completed';
+          const isActive=p.status==='in-progress';
+          const sc=p.quizScore;
+          return`<div class="card ${isDone?'sec-card-done':isActive?'sec-card-active':''}" style="cursor:crosshair" onclick="startSection(${i})">
+            <div class="card-header" style="${isDone?'background:var(--color-success);color:#0a0a0a':isActive?'background:var(--color-primary);color:#0a0a0a':''}">
+              <span style="font-size:1.5rem">${s.emoji}</span>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+                <span class="badge ${isDone?'badge-black':'badge-muted'}" style="font-size:0.6rem">${s.cat}</span>
+                ${sc?`<span style="font-family:var(--font-mono);font-size:0.65rem;font-weight:700">${sc.correct}/${sc.total} QUIZ</span>`:''}
+              </div>
+            </div>
+            <div class="card-body" style="padding:14px 16px">
+              <div class="card-name" style="font-size:1.3rem;line-height:1">${s.title}</div>
+              <span class="card-func">${isDone?'✅ Completed':isActive?'🔵 In Progress':'⬜ Not started'}</span>
+              <div style="margin-top:8px">${progressBar(s.terms.filter((_,ti)=>isDone||isActive&&ti<termIdx).length,s.terms.length,'progress-bar-secondary')}</div>
+            </div>
+            <div class="card-footer">
+              <span class="serial-no">${s.terms.length} TERMS · ${s.quiz.length}Q QUIZ</span>
+              <span class="card-link" style="font-size:0.75rem;padding:4px 12px">${isDone?'RETRY':'START'} →</span>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <div style="text-align:center;margin-top:24px;display:flex;flex-direction:column;align-items:center;gap:12px">
+        <button class="btn ${allDone?'btn-primary btn-xl':'btn-ghost'}" ${!allDone?'disabled':''} onclick="startMastery()" style="${!allDone?'opacity:.4':''}">
+          🏆 ${allDone?'MASTERY QUIZ':'COMPLETE ALL SECTIONS FIRST'}
+        </button>
+        ${!allDone?`<span class="text-muted" style="font-size:0.75rem;font-family:var(--font-mono)">${SECTIONS.length-done} SECTION(S) REMAINING</span>`:''}
+      </div>
+    </div>
+
+    <div class="glitch-bar">
+      <span>COMPROG // RIZZ_MODULE_v3 🔥</span>
+      <span style="color:var(--color-primary)">SECTIONS: ${done}/${SECTIONS.length}</span>
+      <span style="color:var(--color-secondary)">MASTERY: ${mastery!==null?mastery+'%':'--'}</span>
+      <span class="animate-blink">█</span>
+    </div>
+  `);
+}
+
+// ── SECTION ENTRY ─────────────────────────────────────────────────────────────
+function startSection(i){
+  secIdx=i;termIdx=0;termAnswered=false;
+  const s=SECTIONS[i];
+  if(sp(s.id).status==='not-started'){prog[s.id]={...sp(s.id),status:'in-progress'};saveP()}
+  renderTerm();
+}
+
+// ── TERM CONCEPT ──────────────────────────────────────────────────────────────
+function renderTerm(){
+  const s=SECTIONS[secIdx];
+  const term=s.terms[termIdx];
+  const totalTerms=s.terms.length;
+  const step=termIdx*2;
+  const totalSteps=totalTerms*2;
+  R(`
+    <div style="background:var(--color-black);padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--color-primary)">
+      <button class="btn btn-ghost btn-sm" onclick="renderHome()" style="border-color:#333;color:#fff;padding:6px 12px;font-size:0.7rem">← HOME</button>
+      <div style="flex:1;min-width:0">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--color-secondary);letter-spacing:2px">${s.emoji} ${s.title.toUpperCase()}</div>
+        ${progressBar(step,totalSteps,'progress-bar-secondary')}
+      </div>
+      <span class="badge badge-secondary" style="white-space:nowrap">${termIdx+1}/${totalTerms}</span>
+    </div>
+
+    <div style="padding:16px 16px 80px">
+      <div class="hazard-stripe-sm" style="height:10px;margin-bottom:16px"></div>
+
+      <div class="card card-flat z-slide" style="animation:none;margin-bottom:16px">
+        <div class="card-header" style="background:var(--color-primary);color:#0a0a0a;gap:10px">
+          <div>
+            <span style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:2px;opacity:0.6">// TERM ${termIdx+1} OF ${totalTerms}</span>
+            <div class="card-name" style="color:#0a0a0a;font-size:clamp(1.2rem,4vw,1.8rem)">${esc(term.name)}</div>
+          </div>
+          <span class="badge badge-black" style="font-size:0.6rem;align-self:flex-start;white-space:nowrap">📖 CONCEPT</span>
+        </div>
+        <div class="card-body concept-body">${term.body}</div>
+        <div class="card-footer">
+          <span class="serial-no">${s.cat} // ${s.id.toUpperCase()}</span>
+          <span style="font-family:var(--font-mono);font-size:0.65rem;color:#999">STEP ${step+1} OF ${totalSteps}</span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-block btn-lg" onclick="startTermQ()">
+        QUIZ ME ON THIS →
+      </button>
+    </div>
+
+    <div class="glitch-bar">
+      <span>${s.emoji} ${s.title.toUpperCase()}</span>
+      <span style="color:var(--color-primary)">TERM: ${termIdx+1}/${totalTerms}</span>
+      <span class="animate-blink" style="color:var(--color-secondary)">█</span>
+    </div>
+  `);
+}
+
+// ── TERM MINI-QUIZ ────────────────────────────────────────────────────────────
+function startTermQ(){termAnswered=false;renderTermQ()}
+
+function renderTermQ(){
+  const s=SECTIONS[secIdx];
+  const term=s.terms[termIdx];
+  const q=term.q;
+  const totalTerms=s.terms.length;
+  const step=termIdx*2+1;
+  const totalSteps=totalTerms*2;
+  const types={mc:'MULTIPLE CHOICE',id:'IDENTIFICATION',fib:'FILL IN THE BLANK'};
+  const tclr={mc:'badge-primary',id:'badge-secondary',fib:'badge-success'};
+  let qBody='';
+  if(q.type==='mc'){
+    qBody=q.choices.map(c=>`<button class="choice-btn" data-l="${c[0]}" onclick="handleTermMC('${c[0]}')">${esc(c)}</button>`).join('');
+  } else if(q.type==='id'){
+    qBody=`<div class="form-group" style="margin-top:12px">
+      <label class="form-label" for="idinp">// Your Answer</label>
+      <input id="idinp" type="text" class="form-control id-input" placeholder="Type your answer..." onkeydown="if(event.key==='Enter')submitTermID()">
+    </div>
+    <button class="btn btn-primary btn-block" onclick="submitTermID()" style="margin-top:8px">SUBMIT ANSWER</button>`;
+  } else if(q.type==='fib'){
+    let code=q.code;
+    q.blanks.forEach(b=>{
+      const w=Math.max(80,b.answer.length*10+28);
+      code=code.replace(`___${b.id}___`,`<input class="fib-inp" id="fib${b.id}" placeholder="?" style="width:${w}px" onkeydown="if(event.key==='Enter')submitTermFIB()">`);
+    });
+    qBody=`<div class="fib-wrap">${code.split('\n').join('<br>')}</div>
+    <button class="btn btn-secondary btn-block" onclick="submitTermFIB()" style="margin-top:8px">CHECK BLANKS</button>`;
+  }
+
+  R(`
+    <div style="background:var(--color-black);padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--color-warning)">
+      <button class="btn btn-ghost btn-sm" onclick="renderTerm()" style="border-color:#333;color:#fff;padding:6px 12px;font-size:0.7rem">← REVIEW</button>
+      <div style="flex:1;min-width:0">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--color-warning);letter-spacing:2px">${s.emoji} ${esc(term.name).toUpperCase()}</div>
+        ${progressBar(step,totalSteps,'progress-bar-warning')}
+      </div>
+      <span class="badge badge-warning" style="white-space:nowrap;color:#0a0a0a">❓ CHECK</span>
+    </div>
+
+    <div style="padding:16px 16px 80px">
+      <div class="card card-flat z-slide" style="animation:none;margin-bottom:16px">
+        <div class="card-header" style="background:#0a0a0a">
+          <div>
+            <span class="badge ${tclr[q.type]}" style="font-size:0.6rem;margin-bottom:6px">${types[q.type]}</span>
+            <div style="font-family:var(--font-body);font-size:1rem;font-weight:700;text-transform:none;line-height:1.45;color:#fff;margin-top:6px;max-width:560px">${esc(q.q)}</div>
+          </div>
+        </div>
+        <div class="card-body" style="padding:20px">
+          ${qBody}
+        </div>
+      </div>
+      <div id="fb"></div>
+      <div id="act" style="margin-top:12px"></div>
+    </div>
+
+    <div class="glitch-bar">
+      <span>${s.emoji} ${esc(term.name).toUpperCase()}</span>
+      <span style="color:var(--color-warning)">STEP ${step} OF ${totalSteps}</span>
+      <span class="animate-blink">█</span>
+    </div>
+  `);
+  termAnswered=false;
+}
+
+function handleTermMC(l){
+  if(termAnswered)return;termAnswered=true;
+  const q=SECTIONS[secIdx].terms[termIdx].q;
+  const ok=l===q.answer;
+  document.querySelectorAll('.choice-btn').forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.l===q.answer)b.classList.add('correct');
+    else if(b.dataset.l===l&&!ok)b.classList.add('wrong');
+  });
+  showTermFB(ok,q.exp);
+}
+
+function submitTermID(){
+  if(termAnswered)return;
+  const inp=document.getElementById('idinp');
+  if(!inp||!inp.value.trim())return;
+  termAnswered=true;
+  const q=SECTIONS[secIdx].terms[termIdx].q;
+  const ok=q.accept.some(a=>a.toLowerCase()===inp.value.trim().toLowerCase());
+  inp.disabled=true;
+  inp.style.borderColor=ok?'var(--color-success)':'var(--color-danger)';
+  inp.style.background=ok?'#e6fff3':'#ffe5e5';
+  showTermFB(ok,q.exp,ok?null:`Expected: <strong>${esc(q.answer)}</strong>`);
+}
+
+function submitTermFIB(){
+  if(termAnswered)return;termAnswered=true;
+  const q=SECTIONS[secIdx].terms[termIdx].q;
+  let allOk=true;const wrongBlanks=[];
+  q.blanks.forEach(b=>{
+    const inp=document.getElementById('fib'+b.id);if(!inp)return;
+    const ok=b.accept.some(a=>a.toLowerCase()===inp.value.trim().toLowerCase());
+    inp.classList.add(ok?'ok':'bad');inp.disabled=true;
+    if(!ok){allOk=false;wrongBlanks.push(b);}
+  });
+  showTermFB(allOk,q.exp,wrongBlanks.length?wrongBlanks.map(b=>`Blank ${b.id}: <code style="background:#f0f0f0;padding:1px 4px;border:1px solid #ddd;color:#6C47FF">${b.answer}</code>`).join(' | '):null);
+}
+
+function showTermFB(ok,exp,extra){
+  const isLast=termIdx+1>=SECTIONS[secIdx].terms.length;
+  document.getElementById('fb').innerHTML=`
+    <div class="alert ${ok?'alert-success':'alert-danger'}" style="margin-top:12px">
+      <span class="alert-icon">${ok?'✅':'❌'}</span>
+      <div>
+        <span class="alert-title">${ok?'Correct!':'Not quite.'}</span>
+        ${extra?`<div style="margin:4px 0;font-size:0.875rem">${extra}</div>`:''}
+        ${exp?`<div style="font-size:0.85rem;opacity:0.85">${esc(exp)}</div>`:''}
+      </div>
+    </div>`;
+  document.getElementById('act').innerHTML=`
+    <button class="btn btn-primary btn-block btn-lg" onclick="${isLast?'startConceptQuiz()':'nextTerm()'}">
+      ${isLast?'📝 TAKE CONCEPT QUIZ →':'NEXT TERM →'}
+    </button>
+    ${!ok?`<button class="btn btn-ghost btn-block" onclick="renderTerm()" style="margin-top:8px">↩ REVIEW CONCEPT</button>`:''}
+  `;
+}
+
+function nextTerm(){termIdx++;termAnswered=false;renderTerm()}
+
+// ── CONCEPT QUIZ ──────────────────────────────────────────────────────────────
+function startConceptQuiz(){
+  quizQs=shuffle([...SECTIONS[secIdx].quiz]);
+  quizIdx=0;quizCorrect=0;quizAnswered=false;quizWrong=[];
+  renderCQ();
+}
+
+function renderCQ(){
+  const s=SECTIONS[secIdx];
+  if(quizIdx>=quizQs.length&&quizWrong.length===0){endCQ();return}
+  if(quizIdx>=quizQs.length){quizQs=[...quizWrong];quizWrong=[];quizIdx=0;}
+  const q=quizQs[quizIdx];
+  const origTotal=s.quiz.length;
+  R(`
+    <div style="background:var(--color-black);padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--color-secondary)">
+      <div style="flex:1;min-width:0">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--color-secondary);letter-spacing:2px">${s.emoji} CONCEPT QUIZ</div>
+        ${progressBar(quizIdx,quizQs.length,'progress-bar-secondary')}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+        <span class="badge badge-secondary" style="color:#0a0a0a;font-size:0.6rem">Q${quizIdx+1}/${quizQs.length}</span>
+        <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--color-success)">${quizCorrect} ✓</span>
+      </div>
+    </div>
+
+    <div style="padding:16px 16px 80px">
+      <div class="card card-flat z-slide" style="animation:none;margin-bottom:16px">
+        <div class="card-header" style="background:#0a0a0a">
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span class="badge badge-secondary" style="color:#0a0a0a;font-size:0.6rem">📝 SECTION QUIZ</span>
+              ${quizWrong.length>0?`<span class="badge badge-warning" style="color:#0a0a0a;font-size:0.6rem">↩ ${quizWrong.length} TO RETRY</span>`:''}
+            </div>
+            <div style="font-family:var(--font-body);font-size:1rem;font-weight:700;text-transform:none;line-height:1.45;color:#fff;max-width:560px">${esc(q.q)}</div>
+          </div>
+        </div>
+        <div class="card-body" style="padding:20px">
+          ${q.choices.map(c=>`<button class="choice-btn" data-l="${c[0]}" onclick="handleCQ('${c[0]}')">${esc(c)}</button>`).join('')}
+        </div>
+      </div>
+      <div id="fb"></div><div id="act" style="margin-top:12px"></div>
+    </div>
+
+    <div class="glitch-bar">
+      <span>${s.emoji} ${s.title.toUpperCase()} QUIZ</span>
+      <span style="color:var(--color-success)">${quizCorrect}/${origTotal} CORRECT</span>
+      <span class="animate-blink" style="color:var(--color-secondary)">█</span>
+    </div>
+  `);quizAnswered=false;
+}
+
+function handleCQ(l){
+  if(quizAnswered)return;quizAnswered=true;
+  const q=quizQs[quizIdx];
+  const ok=l===q.answer;
+  if(ok)quizCorrect++;else quizWrong.push(q);
+  document.querySelectorAll('.choice-btn').forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.l===q.answer)b.classList.add('correct');
+    else if(b.dataset.l===l&&!ok)b.classList.add('wrong');
+  });
+  document.getElementById('fb').innerHTML=`
+    <div class="alert ${ok?'alert-success':'alert-danger'}" style="margin-top:12px">
+      <span class="alert-icon">${ok?'✅':'❌'}</span>
+      <span class="alert-title">${ok?'Correct!':'Incorrect — will re-ask later.'}</span>
+    </div>`;
+  const isLast=quizIdx+1>=quizQs.length;
+  document.getElementById('act').innerHTML=`<button class="btn btn-primary btn-block btn-lg" onclick="nextCQ()">${isLast&&quizWrong.length===0?'SEE RESULTS 🏁':'NEXT →'}</button>`;
+}
+
+function nextCQ(){quizIdx++;quizAnswered=false;renderCQ()}
+
+function endCQ(){
+  const s=SECTIONS[secIdx];
+  const total=s.quiz.length;
+  const p=Math.round(quizCorrect/total*100);
+  prog[s.id]={status:'completed',quizScore:{correct:quizCorrect,total}};saveP();
+  const grade=p>=80?'good':p>=60?'ok':'bad';
+  const gradeColor=p>=80?'var(--color-success)':p>=60?'var(--color-warning)':'var(--color-danger)';
+  const msg=p>=80?'OUTSTANDING! 🔥':p>=60?'GOOD EFFORT — REVIEW & RETRY!':'NEEDS WORK — REVIEW THE CONCEPTS.';
+  const nextI=secIdx+1,hasNext=nextI<SECTIONS.length;
+  R(`
+    <div style="background:var(--color-black);padding:12px 16px;border-bottom:3px solid ${gradeColor}">
+      <div style="font-family:var(--font-mono);font-size:0.65rem;color:${gradeColor};letter-spacing:2px">${s.emoji} SECTION COMPLETE</div>
+    </div>
+    <div style="padding:24px 16px 80px;text-align:center">
+      <div class="hazard-stripe-sm" style="height:10px;margin-bottom:24px"></div>
+      <div class="score-ring ${grade}" style="margin-bottom:20px">
+        <div style="font-size:2.4rem;font-weight:900;line-height:1">${p}%</div>
+        <div style="font-family:var(--font-mono);font-size:0.65rem">${quizCorrect}/${total}</div>
+      </div>
+      <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:900;text-transform:uppercase;color:${gradeColor};margin-bottom:8px">${msg}</h2>
+      <p style="color:var(--color-text-muted);font-family:var(--font-mono);font-size:0.75rem;margin-bottom:28px">${s.title.toUpperCase()} · SECTION MARKED COMPLETE</p>
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:360px;margin:0 auto">
+        ${hasNext?`<button class="btn btn-primary btn-block btn-lg" onclick="startSection(${nextI})">${SECTIONS[nextI].emoji} NEXT: ${SECTIONS[nextI].title.toUpperCase()} →</button>`:''}
+        ${!hasNext?`<button class="btn btn-primary btn-block btn-xl" onclick="startMastery()">🏆 MASTERY QUIZ</button>`:''}
+        <button class="btn btn-ghost btn-block" onclick="startSection(${secIdx})">↩ RETRY SECTION</button>
+        <button class="btn btn-black btn-block" onclick="renderHome()">🏠 HOME</button>
+      </div>
+    </div>
+    <div class="glitch-bar">
+      <span>${s.emoji} ${s.title.toUpperCase()}</span>
+      <span style="color:${gradeColor}">${p}% · ${quizCorrect}/${total} CORRECT</span>
+      <span class="animate-blink">█</span>
+    </div>
+  `);
+}
+
+// ── MASTERY QUIZ ──────────────────────────────────────────────────────────────
+function startMastery(){
+  mqQs=shuffle([...MASTERY]);mqIdx=0;mqCorrect=0;mqAnswered=false;
+  renderMQ();
+}
+
+function renderMQ(){
+  if(mqIdx>=mqQs.length){endMQ();return}
+  const q=mqQs[mqIdx];
+  R(`
+    <div style="background:var(--color-black);padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--color-primary)">
+      <div style="flex:1;min-width:0">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--color-primary);letter-spacing:2px">🏆 MASTERY QUIZ</div>
+        ${progressBar(mqIdx,mqQs.length,'progress-bar-striped progress-bar-animated')}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+        <span class="badge badge-primary" style="font-size:0.6rem;color:#0a0a0a">Q${mqIdx+1}/${mqQs.length}</span>
+        <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--color-success)">${mqCorrect} ✓</span>
+      </div>
+    </div>
+
+    <div style="padding:16px 16px 80px">
+      <div class="card card-flat z-slide" style="animation:none;margin-bottom:16px">
+        <div class="card-header" style="background:#0a0a0a">
+          <div style="flex:1">
+            <span class="badge badge-primary" style="font-size:0.6rem;color:#0a0a0a;margin-bottom:8px">🏆 MASTERY</span>
+            <div style="font-family:var(--font-body);font-size:1rem;font-weight:700;text-transform:none;line-height:1.45;color:#fff;max-width:560px;margin-top:6px">${esc(q.q)}</div>
+          </div>
+        </div>
+        <div class="card-body" style="padding:20px">
+          ${q.choices.map(c=>`<button class="choice-btn" data-l="${c[0]}" onclick="handleMQ('${c[0]}')">${esc(c)}</button>`).join('')}
+        </div>
+      </div>
+      <div id="fb"></div><div id="act" style="margin-top:12px"></div>
+    </div>
+
+    <div class="glitch-bar">
+      <span>🏆 MASTERY QUIZ</span>
+      <span style="color:var(--color-primary)">${mqIdx+1}/${mqQs.length}</span>
+      <span style="color:var(--color-success)">${mqCorrect} CORRECT</span>
+      <span class="animate-blink">█</span>
+    </div>
+  `);mqAnswered=false;
+}
+
+function handleMQ(l){
+  if(mqAnswered)return;mqAnswered=true;
+  const q=mqQs[mqIdx];
+  const ok=l===q.answer;
+  if(ok)mqCorrect++;
+  document.querySelectorAll('.choice-btn').forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.l===q.answer)b.classList.add('correct');
+    else if(b.dataset.l===l&&!ok)b.classList.add('wrong');
+  });
+  document.getElementById('fb').innerHTML=`
+    <div class="alert ${ok?'alert-success':'alert-danger'}" style="margin-top:12px">
+      <span class="alert-icon">${ok?'✅':'❌'}</span>
+      <span class="alert-title">${ok?'Correct!':'Incorrect — correct answer highlighted above.'}</span>
+    </div>`;
+  document.getElementById('act').innerHTML=`<button class="btn btn-primary btn-block btn-lg" onclick="nextMQ()">${mqIdx+1>=mqQs.length?'SEE RESULTS 🏁':'NEXT →'}</button>`;
+}
+
+function nextMQ(){mqIdx++;mqAnswered=false;renderMQ()}
+
+function endMQ(){
+  const p=Math.round(mqCorrect/mqQs.length*100);
+  prog._mastery=p;saveP();
+  const grade=p>=80?'good':p>=60?'ok':'bad';
+  const gradeColor=p>=80?'var(--color-success)':p>=60?'var(--color-warning)':'var(--color-danger)';
+  const msg=p>=80?'FULL MASTERY! YOU SLAY! 🔥':p>=60?'ALMOST THERE — REVIEW WEAK SECTIONS!':'KEEP GRINDING — REVIEW AND RETRY!';
+  R(`
+    <div style="background:var(--color-black);padding:12px 16px;border-bottom:3px solid ${gradeColor}">
+      <div style="font-family:var(--font-mono);font-size:0.65rem;color:${gradeColor};letter-spacing:2px">🏆 MASTERY COMPLETE</div>
+    </div>
+    <div style="padding:24px 16px 80px;text-align:center">
+      <div class="hazard-stripe" style="height:20px;margin-bottom:28px"></div>
+      <div style="font-size:3rem;margin-bottom:8px">🏆</div>
+      <h2 style="font-family:var(--font-display);font-size:clamp(2rem,8vw,3.5rem);font-weight:900;font-style:italic;text-transform:uppercase;letter-spacing:-2px;color:${gradeColor};margin-bottom:4px">MASTERY<br>COMPLETE</h2>
+      <div class="score-ring ${grade}" style="margin:20px auto">
+        <div style="font-size:2.4rem;font-weight:900;line-height:1">${p}%</div>
+        <div style="font-family:var(--font-mono);font-size:0.65rem">${mqCorrect}/${mqQs.length}</div>
+      </div>
+      <p style="font-family:var(--font-display);font-size:1.3rem;font-weight:900;text-transform:uppercase;color:${gradeColor};margin-bottom:8px">${msg}</p>
+      <p style="color:var(--color-text-muted);font-family:var(--font-mono);font-size:0.7rem;margin-bottom:28px">COMPROG // all the syntax is still valid tho. we do NOT cap on the code.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:360px;margin:0 auto">
+        <button class="btn btn-primary btn-block btn-xl" onclick="startMastery()">↩ RETAKE MASTERY QUIZ</button>
+        <button class="btn btn-black btn-block btn-lg" onclick="renderHome()">🏠 BACK TO HOME</button>
+      </div>
+    </div>
+    <div class="glitch-bar">
+      <span>🏆 MASTERY QUIZ</span>
+      <span style="color:${gradeColor}">${p}% · ${mqCorrect}/${mqQs.length}</span>
+      <span class="animate-blink">█</span>
+    </div>
+  `);
+}
+
+renderHome();
+
+</script>
+</body>
+</html>
