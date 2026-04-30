@@ -491,6 +491,164 @@
             width: 0;
             height: 0;
         }
+
+        /* ─── FEEDBACK BUTTON & MODAL ─── */
+        .feedback-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(76, 201, 240, 0.1);
+            border: 1.5px solid rgba(76, 201, 240, 0.3);
+            color: var(--highlight);
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .feedback-btn:hover {
+            border-color: var(--highlight);
+            background: rgba(76, 201, 240, 0.15);
+            box-shadow: 0 0 15px rgba(76, 201, 240, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .feedback-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feedback-modal-content {
+            background: var(--prussian-blue);
+            border: 1px solid var(--etch-line);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            animation: slideUp 0.4s ease both;
+        }
+
+        .feedback-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid var(--etch-line);
+        }
+
+        .feedback-modal-header h2 {
+            font-size: 1.5rem;
+            color: var(--cyanotype-white);
+        }
+
+        .feedback-close {
+            background: none;
+            border: none;
+            color: var(--cyanotype-white);
+            font-size: 28px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .feedback-close:hover {
+            color: var(--highlight);
+        }
+
+        .feedback-modal-body {
+            padding: 24px;
+        }
+
+        #feedbackText {
+            width: 100%;
+            height: 150px;
+            background: rgba(0, 26, 48, 0.6);
+            border: 1.5px solid var(--etch-line);
+            border-radius: 8px;
+            color: var(--cyanotype-white);
+            padding: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            resize: none;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        #feedbackText::placeholder {
+            color: rgba(230, 243, 248, 0.4);
+        }
+
+        #feedbackText:focus {
+            border-color: var(--highlight);
+            box-shadow: 0 0 12px rgba(76, 201, 240, 0.2);
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.8rem;
+            color: rgba(230, 243, 248, 0.6);
+            margin-top: 8px;
+        }
+
+        .feedback-modal-footer {
+            display: flex;
+            gap: 12px;
+            padding: 24px;
+            border-top: 1px solid var(--etch-line);
+            justify-content: flex-end;
+        }
+
+        .feedback-btn-cancel,
+        .feedback-btn-submit {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1.5px solid;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-btn-cancel {
+            background: rgba(0, 26, 48, 0.6);
+            border-color: var(--etch-line);
+            color: var(--cyanotype-white);
+        }
+
+        .feedback-btn-cancel:hover {
+            border-color: var(--cyanotype-white);
+        }
+
+        .feedback-btn-submit {
+            background: rgba(76, 201, 240, 0.2);
+            border-color: var(--highlight);
+            color: var(--highlight);
+        }
+
+        .feedback-btn-submit:hover:not(:disabled) {
+            background: rgba(76, 201, 240, 0.3);
+            box-shadow: 0 0 12px rgba(76, 201, 240, 0.3);
+        }
+
+        .feedback-btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -813,7 +971,294 @@
             </div>
         </a>
 
+        <!--PREFINALS-->
+        <!-- Card 1: Art Appreciation (Prefinals, ArtApp) -->
+        <a href="Quiz.html?mode=Prefinals-ArtApp" class="blueprint-card" data-period="pre-finals" data-subject-code="ArtApp">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                </div>
+                <div class="card-tags">
+                    <span class="tag tag-period">PREFINALS</span>
+                    <span class="tag tag-subject">ArtApp</span>
+                </div>
+                <div class="card-tagline">// VISUAL.AESTHETICS</div>
+                <h3 class="card-title">Art<br>Appreciation</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Deconstruction of visual culture, historical movements, and the philosophy of human expression.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!-- Card 2: Science, Tech & Society (Prefinals, STS) -->
+        <a href="Quiz.html?mode=Prefinals-STS" class="blueprint-card" data-period="pre-finals" data-subject-code="STS">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/></svg>
+                </div>
+                <div class="card-tags">
+                    <span class="tag tag-period">PREFINALS</span>
+                    <span class="tag tag-subject">STS</span>
+                </div>
+                <div class="card-tagline">// SOC.TECH.STRAT</div>
+                <h3 class="card-title">Science, Tech<br>& Society</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">The symbiotic evolution of innovation and the ethical implications on global civilizations.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!-- Card 3: Computer Programming (Prefinals, ComProg) -->
+        <a href="Quiz.html?mode=Prefinals-ComProg" class="blueprint-card" data-period="pre-finals" data-subject-code="ComProg">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </div>
+                <div class="card-tags">
+                    <span class="tag tag-period">PREFINALS</span>
+                    <span class="tag tag-subject">ComProg</span>
+                </div>
+                <div class="card-tagline">// LOGIC.SYSTEMS</div>
+                <h3 class="card-title">Computer<br>Programming</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Testing algorithmic proficiency, data structure optimization, and architectural logic.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!-- Card 4: Discrete Mathematics (Prefinals, Discrete) -->
+        <a href="Quiz-Math.html?mode=PREFINALS-Discrete" class="blueprint-card" data-period="pre-finals" data-subject-code="Discrete">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+                </div>
+                <div class="card-tags">
+                    <span class="tag tag-period">PREFINALS</span>
+                    <span class="tag tag-subject">Discrete</span>
+                </div>
+                <div class="card-tagline">// DISCRETE.MATH</div>
+                <h3 class="card-title">Discrete<br>Mathematics</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Exploring the mathematical foundations of computer science and logical reasoning.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!-- Card 5: Calculus (Prefinals, Calculus) -->
+        <a href="Quiz-Math.html?mode=PREFINALS-Calculus" class="blueprint-card" data-period="pre-finals" data-subject-code="Calculus">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M12 3v15M6 9c0-2 2-3 3-3s3 1 3 3-1 4-3 4-3-2-3-4M15 15c0-2 2-3 3-3s3 1 3 3-1 4-3 4-3-2-3-4"/></svg>
+                </div>
+                <div class="card-tags">
+                    <span class="tag tag-period">PREFINALS</span>
+                    <span class="tag tag-subject">Calculus</span>
+                </div>
+                <div class="card-tagline">// CALCULUS</div>
+                <h3 class="card-title">Calculus</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Exploring the fundamental concepts of differential calculus.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!-- Card 6: Mathematics in the Modern World (Prefinals, MMW) -->
+        <a href="Quiz-Math.html?mode=PREFINALS-MMW" class="blueprint-card" data-period="pre-finals" data-subject-code="MMW">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M12 3v18M6 6l12 12M18 6L6 18"/><circle cx="12" cy="12" r="9"/></svg>
+                </div>
+                <div class="card-tags">
+                    <span class="tag tag-period">PREFINALS</span>
+                    <span class="tag tag-subject">MMW</span>
+                </div>
+                <div class="card-tagline">// MMW</div>
+                <h3 class="card-title">Mathematics<br>in the Modern World</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Exploring the practical applications of mathematics in contemporary society.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!-- Card 7: National Service Training Program (Prefinals, NSTP) -->
+        <a href="Quiz.html?mode=Prefinals-NSTP" class="blueprint-card" data-period="pre-finals" data-subject-code="NSTP">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="card-tags">
+                    <span class="tag tag-period">PREFINALS</span>
+                    <span class="tag tag-subject">NSTP</span>
+                </div>
+                <div class="card-tagline">// NSTP</div>
+                <h3 class="card-title">National Service<br>Training Program</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Understanding the principles and practices of national service training.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!--FINALS-->
+        <!-- Card 1: Art Appreciation (Finals, ArtApp) -->
+        <a href="Quiz.html?mode=Finals-ArtApp" class="blueprint-card" data-period="finals" data-subject-code="ArtApp">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                </div>
+                <div class="card-tags">
+                    <span class="tag tag-period">FINALS</span>
+                    <span class="tag tag-subject">ArtApp</span>
+                </div>
+                <div class="card-tagline">// VISUAL.AESTHETICS</div>
+                <h3 class="card-title">Art<br>Appreciation</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Deconstruction of visual culture, historical movements, and the philosophy of human expression.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!-- Card 2: Science, Tech & Society (Finals, STS) -->
+        <a href="Quiz.html?mode=Finals-STS" class="blueprint-card" data-period="finals" data-subject-code="STS">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/></svg>
+                </div>
+                <div class="card-tags">
+                    <span class="tag tag-period">FINALS</span>
+                    <span class="tag tag-subject">STS</span>
+                </div>
+                <div class="card-tagline">// SOC.TECH.STRAT</div>
+                <h3 class="card-title">Science, Tech<br>& Society</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">The symbiotic evolution of innovation and the ethical implications on global civilizations.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!-- Card 3: Computer Programming (Finals, ComProg) -->
+        <a href="Quiz.html?mode=Finals-ComProg" class="blueprint-card" data-period="finals" data-subject-code="ComProg">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </div>
+                <div class="card-tags">
+                    <span class="tag tag-period">FINALS</span>
+                    <span class="tag tag-subject">ComProg</span>
+                </div>
+                <div class="card-tagline">// LOGIC.SYSTEMS</div>
+                <h3 class="card-title">Computer<br>Programming</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Testing algorithmic proficiency, data structure optimization, and architectural logic.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!-- Card 4: Discrete Mathematics (Finals, Discrete) -->
+        <a href="Quiz-Math.html?mode=FINALS-Discrete" class="blueprint-card" data-period="finals" data-subject-code="Discrete">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+                </div>
+                <div class="card-tags">
+                    <span class="tag tag-period">FINALS</span>
+                    <span class="tag tag-subject">Discrete</span>
+                </div>
+                <div class="card-tagline">// DISCRETE.MATH</div>
+                <h3 class="card-title">Discrete<br>Mathematics</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Exploring the mathematical foundations of computer science and logical reasoning.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!-- Card 5: Calculus (Finals, Calculus) -->
+        <a href="Quiz-Math.html?mode=FINALS-Calculus" class="blueprint-card" data-period="finals" data-subject-code="Calculus">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M12 3v15M6 9c0-2 2-3 3-3s3 1 3 3-1 4-3 4-3-2-3-4M15 15c0-2 2-3 3-3s3 1 3 3-1 4-3 4-3-2-3-4"/></svg>
+                </div>
+                <div class="card-tags">
+                    <span class="tag tag-period">FINALS</span>
+                    <span class="tag tag-subject">Calculus</span>
+                </div>
+                <div class="card-tagline">// CALCULUS</div>
+                <h3 class="card-title">Calculus</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Exploring the fundamental concepts of differential calculus.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
+
+        <!-- Card 6: Mathematics in the Modern World (Finals, MMW) -->
+        <a href="Quiz-Math.html?mode=FINALS-MMW" class="blueprint-card" data-period="finals" data-subject-code="MMW">
+            <div>
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M12 3v18M6 6l12 12M18 6L6 18"/><circle cx="12" cy="12" r="9"/></svg>
+                </div>
+                <div class="card-tags">
+                    <span class="tag tag-period">FINALS</span>
+                    <span class="tag tag-subject">MMW</span>
+                </div>
+                <div class="card-tagline">// MMW</div>
+                <h3 class="card-title">Mathematics<br>in the Modern World</h3>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.5;">Exploring the practical applications of mathematics in contemporary society.</p>
+            </div>
+            <div class="card-action">
+                Begin Assessment
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+        </a>
     </main>
+    </div>
+
+    <!-- FEEDBACK BUTTON -->
+    <button class="feedback-btn" id="feedbackBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        Feedback
+    </button>
+
+    <!-- FEEDBACK MODAL -->
+    <div class="feedback-modal" id="feedbackModal">
+        <div class="feedback-modal-content">
+            <div class="feedback-modal-header">
+                <h2>Send Feedback</h2>
+                <button class="feedback-close" id="feedbackClose">&times;</button>
+            </div>
+            <div class="feedback-modal-body">
+                <textarea id="feedbackText" placeholder="Share your thoughts, suggestions, or report issues..." maxlength="500"></textarea>
+                <div class="char-count"><span id="charCount">0</span>/500</div>
+            </div>
+            <div class="feedback-modal-footer">
+                <button class="feedback-btn-cancel" id="feedbackCancel">Cancel</button>
+                <button class="feedback-btn-submit" id="feedbackSubmit">Send Feedback</button>
+            </div>
+        </div>
     </div>
 
     <footer class="footer">
@@ -919,6 +1364,82 @@
                 // Redirect to cyberpunk.html
                 window.location.href = 'cyberpunk.html';
                 developerClickCount = 0; // Reset counter
+            }
+        });
+
+        // ─── FEEDBACK MODAL FUNCTIONALITY ───
+        const SUPABASE_URL = 'https://tibrqsppottqijhzokdm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpYnJxc3Bwb3R0cWlqaHpva2RtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDM1MTcsImV4cCI6MjA5MzA3OTUxN30.eiqhOaEVdVtFcopiFd0C7mI_t4BREfIUgJtwLDQSBms';
+
+        const feedbackBtn = document.getElementById('feedbackBtn');
+        const feedbackModal = document.getElementById('feedbackModal');
+        const feedbackClose = document.getElementById('feedbackClose');
+        const feedbackCancel = document.getElementById('feedbackCancel');
+        const feedbackSubmit = document.getElementById('feedbackSubmit');
+        const feedbackText = document.getElementById('feedbackText');
+        const charCount = document.getElementById('charCount');
+
+        // Open modal
+        feedbackBtn.addEventListener('click', () => {
+            feedbackModal.classList.add('show');
+            feedbackText.focus();
+        });
+
+        // Close modal
+        function closeFeedbackModal() {
+            feedbackModal.classList.remove('show');
+            feedbackText.value = '';
+            charCount.textContent = '0';
+        }
+
+        feedbackClose.addEventListener('click', closeFeedbackModal);
+        feedbackCancel.addEventListener('click', closeFeedbackModal);
+
+        // Update character count
+        feedbackText.addEventListener('input', () => {
+            charCount.textContent = feedbackText.value.length;
+        });
+
+        // Close modal when clicking outside
+        feedbackModal.addEventListener('click', (e) => {
+            if (e.target === feedbackModal) closeFeedbackModal();
+        });
+
+        // Submit feedback
+        feedbackSubmit.addEventListener('click', async () => {
+            const message = feedbackText.value.trim();
+            
+            if (!message) {
+                alert('Please enter your feedback');
+                return;
+            }
+            
+            feedbackSubmit.disabled = true;
+            feedbackSubmit.textContent = 'Sending...';
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/feedback`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({ message })
+                });
+                
+                if (response.ok) {
+                    alert('Thank you for your feedback!');
+                    closeFeedbackModal();
+                } else {
+                    alert('Failed to send feedback. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again later.');
+            } finally {
+                feedbackSubmit.disabled = false;
+                feedbackSubmit.textContent = 'Send Feedback';
             }
         });
     </script>
