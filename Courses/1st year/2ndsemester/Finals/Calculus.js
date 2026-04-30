@@ -11,6 +11,6 @@ const QUESTIONS = (window.QUESTIONS && window.QUESTIONS.length)
       "I am the storm that is approaching",
       "I am atomic"
     ],
-    a: 3
+    a: 2
   }
 ]

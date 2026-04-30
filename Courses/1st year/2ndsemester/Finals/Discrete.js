@@ -11,6 +11,6 @@ const QUESTIONS = (window.QUESTIONS && window.QUESTIONS.length)
       "dati! kagaya parin ng dati...~",
       "vro asan na finals mock exams namin vro"
     ],
-    a: 1
+    a: 0
   }
 ]

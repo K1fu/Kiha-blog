@@ -11,6 +11,6 @@ const QUESTIONS = (window.QUESTIONS && window.QUESTIONS.length)
       "All of the above",
       "Amatsuki"
     ],
-    a: 3
+    a: 2
   }
 ]

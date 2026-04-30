@@ -11,6 +11,6 @@ const QUESTIONS = (window.QUESTIONS && window.QUESTIONS.length)
       "wotakoi: love is hard for otaku",
       "toradora"
     ],
-    a: 3
+    a: 2
   }
 ]

@@ -11,6 +11,6 @@ const QUESTIONS = (window.QUESTIONS && window.QUESTIONS.length)
       "YEAH! I'LL DO MY BEST!",
       "It's predestined. I don't even have to do anything."
     ],
-    a: 3
+    a: 2
   }
 ]

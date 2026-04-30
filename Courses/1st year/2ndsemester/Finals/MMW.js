@@ -11,6 +11,6 @@ const QUESTIONS = (window.QUESTIONS && window.QUESTIONS.length)
       "Triple baka",
       "Fukiretta"
     ],
-    a: 1
+    a: 0
   }
 ]
