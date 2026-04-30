@@ -543,7 +543,7 @@
             max-width: 500px;
             animation: slideUp 0.4s ease both;
         }
-
+        
         .feedback-modal-header {
             display: flex;
             justify-content: space-between;
@@ -572,6 +572,23 @@
 
         .feedback-modal-body {
             padding: 24px;
+        }
+
+        .feedback-modal-name {
+            padding: 24px 24px 12px;
+        }
+
+        #feedbackName {
+            width: 100%;
+            padding: 5px 16px;
+            background: rgba(0, 26, 48, 0.6);
+            border: 1.5px solid var(--etch-line);
+            border-radius: 8px;
+            color: var(--cyanotype-white);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
         }
 
         #feedbackText {
@@ -1250,6 +1267,10 @@
                 <h2>Send Feedback</h2>
                 <button class="feedback-close" id="feedbackClose">&times;</button>
             </div>
+            <div class="feedback-modal-name">
+                <textarea id="feedbackName" placeholder="Enter your name (optional)" maxlength="50"></textarea>
+                <div class="char-count"><span id="charCount">0</span>/50</div>
+            </div>
             <div class="feedback-modal-body">
                 <textarea id="feedbackText" placeholder="Share your thoughts, suggestions, or report issues..." maxlength="500"></textarea>
                 <div class="char-count"><span id="charCount">0</span>/500</div>
@@ -1377,6 +1398,7 @@
         const feedbackCancel = document.getElementById('feedbackCancel');
         const feedbackSubmit = document.getElementById('feedbackSubmit');
         const feedbackText = document.getElementById('feedbackText');
+        const feedbackName = document.getElementById('feedbackName');
         const charCount = document.getElementById('charCount');
 
         // Open modal
@@ -1408,7 +1430,8 @@
         // Submit feedback
         feedbackSubmit.addEventListener('click', async () => {
             const message = feedbackText.value.trim();
-            
+            const name = feedbackName.value.trim();
+
             if (!message) {
                 alert('Please enter your feedback');
                 return;
@@ -1425,7 +1448,7 @@
                         'apikey': SUPABASE_ANON_KEY,
                         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                     },
-                    body: JSON.stringify({ message })
+                    body: JSON.stringify({ message, name })
                 });
                 
                 if (response.ok) {

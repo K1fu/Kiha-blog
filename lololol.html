@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER_TERMINAL_V3.0_MULTITASK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-green: #6bff9f;
+            --cyber-blue: #00eaff;
+            --cyber-purple: #b26bff;
+            --alert-red: #ff3131;
+            --warn-yellow: #ffcc00;
+            --dark-bg: #060606;
+            --terminal-font: 'Fira Code', monospace;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--neon-green);
+            font-family: var(--terminal-font);
+            margin: 0;
+            overflow: hidden;
+            line-height: 1.4;
+            transition: background 0.5s ease;
+        }
+
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 9999;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .terminal-window {
+            border: 1px solid rgba(107, 255, 159, 0.3);
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .window-header {
+            background: rgba(107, 255, 159, 0.1);
+            border-bottom: 1px solid rgba(107, 255, 159, 0.2);
+            padding: 2px 8px;
+            font-size: 0.65rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .state-alert { border-color: var(--alert-red); box-shadow: 0 0 30px rgba(255, 49, 49, 0.2); }
+        .state-warn { border-color: var(--warn-yellow); box-shadow: 0 0 20px rgba(255, 204, 0, 0.1); }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.2em;
+            background: var(--neon-green);
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .virus-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 4px);
+            gap: 1px;
+            animation: jitter 0.15s infinite;
+        }
+        .pixel { width: 4px; height: 4px; background: var(--alert-red); }
+        .pixel.off { background: transparent; }
+        @keyframes jitter {
+            0% { transform: translate(0); }
+            50% { transform: translate(1px, -1px); }
+            100% { transform: translate(-1px, 0); }
+        }
+
+        .feedback-card {
+            border-left: 2px solid var(--cyber-blue);
+            background: rgba(0, 234, 255, 0.03);
+            transition: all 0.2s;
+            animation: typeIn 0.4s ease-out;
+        }
+        @keyframes typeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .status-bar {
+            background: var(--neon-green);
+            color: var(--dark-bg);
+            font-weight: bold;
+            padding: 1px 6px;
+            font-size: 0.65rem;
+        }
+        
+        .neko-mood { font-size: 0.6rem; color: var(--cyber-purple); }
+
+        .jitter-num { display: inline-block; animation: numJitter 0.3s infinite; }
+        @keyframes numJitter {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-1px); }
+        }
+
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: rgba(107, 255, 159, 0.3); }
+
+        .text-cyber-blue { color: var(--cyber-blue); }
+        .text-cyber-purple { color: var(--cyber-purple); }
+    </style>
+</head>
+<body class="p-3 md:p-4 flex flex-col h-screen overflow-hidden">
+
+    <header class="flex justify-between items-center mb-3 border-b border-green-900/30 pb-2">
+        <div class="flex items-center gap-4">
+            <h1 class="text-lg font-bold tracking-tighter text-cyber-blue">
+                STATION_OS <span class="opacity-50 text-xs font-normal">v3.0.4-LTS</span>
+            </h1>
+            <div id="sysStatusBar" class="status-bar uppercase">SECURE</div>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="text-[10px] font-mono">
+                <span class="opacity-40">MEM:</span> <span id="memVal" class="jitter-num">42</span>%
+                <span class="opacity-40 ml-2">CPU:</span> <span id="cpuVal" class="jitter-num">12</span>%
+            </div>
+            <div class="flex items-center gap-2 border border-green-900/50 p-1 px-2">
+                <span class="text-[10px] font-bold">( ^..^)</span>
+                <div class="flex flex-col">
+                    <span id="nekoText" class="text-[9px] leading-tight">"Scanning..."</span>
+                    <span id="nekoMood" class="neko-mood uppercase tracking-tighter">MOOD: CALM</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-12 grid-rows-6 gap-3 flex-1 overflow-hidden">
+        
+        <div class="col-span-12 md:col-span-7 row-span-4 md:row-span-6 terminal-window flex flex-col overflow-hidden">
+            <div class="window-header">
+                <span>COMM_DECRYPTOR_STREAM</span>
+                <span class="opacity-50">LIVE_FEED</span>
+            </div>
+            <div id="messagesList" class="flex-1 p-3 overflow-y-auto space-y-3 custom-scroll">
+                <div class="text-[10px] opacity-30 italic">Connecting to relay...</div>
+            </div>
+        </div>
+
+        <div class="col-span-12 md:col-span-5 row-span-2 terminal-window flex flex-col overflow-hidden">
+            <div class="window-header">
+                <span>QUARANTINE_CONTROL</span>
+                <span class="text-cyber-purple">THREAT_LEVEL: <span id="threatLevelDisplay">LOW</span></span>
+            </div>
+            <div id="quarantineList" class="p-3 overflow-y-auto text-[10px] space-y-2">
+                <div class="opacity-30 italic">No active infections detected.</div>
+            </div>
+        </div>
+
+        <div class="col-span-6 md:col-span-3 row-span-2 terminal-window flex flex-col overflow-hidden">
+            <div class="window-header">
+                <span>SIGNAL_GHOST</span>
+            </div>
+            <div id="signalFeed" class="p-2 text-[9px] font-mono leading-tight space-y-1">
+                <div class="opacity-30">Waiting for intercept...</div>
+            </div>
+        </div>
+
+        <div class="col-span-6 md:col-span-2 row-span-2 terminal-window flex flex-col overflow-hidden">
+            <div class="window-header">
+                <span>AUTH_LOG</span>
+            </div>
+            <div id="authLog" class="p-2 text-[8px] font-mono space-y-1 opacity-70">
+                <div>INIT_SECURE_AUTH...</div>
+            </div>
+        </div>
+
+        <div class="col-span-12 md:col-span-5 row-span-2 terminal-window flex flex-col overflow-hidden">
+            <div class="window-header">
+                <span>SYSTEM_HEURISTICS</span>
+                <span id="scanTimer" class="opacity-50">NEXT_SCAN: 30s</span>
+            </div>
+            <div class="p-3 flex gap-4 h-full">
+                <div class="flex-1 space-y-2 text-[10px]">
+                    <div class="flex justify-between border-b border-white/5 pb-1">
+                        <span class="opacity-50">UPTIME:</span> <span id="uptime">00:00:00</span>
+                    </div>
+                    <div class="flex justify-between border-b border-white/5 pb-1">
+                        <span class="opacity-50">PACKETS:</span> <span id="packetCount" class="text-cyber-blue">0</span>
+                    </div>
+                    <div id="scanStatus" class="text-cyber-purple uppercase italic pt-2">System Integrity: Nominal</div>
+                </div>
+                <div class="w-1/3 flex flex-col justify-end">
+                    <div id="progressBarContainer" class="w-full h-1 bg-green-900/30 hidden">
+                        <div id="progressBar" class="h-full bg-cyber-blue" style="width: 0%"></div>
+                    </div>
+                    <div id="progressText" class="text-[8px] text-right mt-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-3 flex justify-between items-center text-[10px] border-t border-green-900/30 pt-2">
+        <div>
+            <span class="text-cyber-blue font-bold">GUEST@TERM:</span> <span id="cmdLine" class="opacity-60">awaiting_data</span> <span class="cursor"></span>
+        </div>
+        <div class="flex gap-4 opacity-40">
+            <span>[LATENCY: 24ms]</span>
+            <span>[ZONE: 09-OMEGA]</span>
+        </div>
+    </footer>
+
+    <div id="toast" class="fixed bottom-10 left-10 border border-cyber-purple p-2 bg-black hidden z-[10000] text-[9px] uppercase tracking-widest text-cyber-purple">
+        <span id="toastMsg"></span>
+    </div>
+
+    <script type="module">
+        // ─── SUPABASE CONFIG ──────────────────────────────────────────────────────
+        // Replace these two values with your project's URL and anon key
+        const SUPABASE_URL = 'https://tibrqsppottqijhzokdm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpYnJxc3Bwb3R0cWlqaHpva2RtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDM1MTcsImV4cCI6MjA5MzA3OTUxN30.eiqhOaEVdVtFcopiFd0C7mI_t4BREfIUgJtwLDQSBms';
+
+        // The table in your Supabase database to read messages from.
+        // Expected columns: id, name, message, timestamp (bigint or timestamptz)
+        const TABLE = 'messages';
+        // ─────────────────────────────────────────────────────────────────────────
+
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const state = {
+            packets: 0,
+            threats: 0,
+            uptime: 0,
+            scanCooldown: 30,
+            isScanning: false,
+            memLeak: 42
+        };
+
+        const elements = {
+            list: document.getElementById('messagesList'),
+            uptime: document.getElementById('uptime'),
+            packets: document.getElementById('packetCount'),
+            statusBar: document.getElementById('sysStatusBar'),
+            neko: document.getElementById('nekoText'),
+            nekoMood: document.getElementById('nekoMood'),
+            scanTimer: document.getElementById('scanTimer'),
+            quarantine: document.getElementById('quarantineList'),
+            progress: document.getElementById('progressBar'),
+            progressContainer: document.getElementById('progressBarContainer'),
+            progressText: document.getElementById('progressText'),
+            cmd: document.getElementById('cmdLine'),
+            mem: document.getElementById('memVal'),
+            cpu: document.getElementById('cpuVal'),
+            signals: document.getElementById('signalFeed'),
+            auth: document.getElementById('authLog'),
+            toast: document.getElementById('toast'),
+            toastMsg: document.getElementById('toastMsg')
+        };
+
+        // ─── DATA LOADING ─────────────────────────────────────────────────────────
+
+        async function loadMessages() {
+            logCmd("fetching_initial_payload");
+
+            // 1. Fetch existing rows, newest first
+            const { data, error } = await supabase
+                .from(TABLE)
+                .select('*')
+                .order('timestamp', { ascending: false });
+
+            if (error) {
+                logCmd("fetch_error");
+                console.error('Supabase fetch error:', error);
+                return;
+            }
+
+            elements.list.innerHTML = '';
+            data.forEach((msg, index) => renderMessage(msg, index));
+            state.packets += data.length;
+            elements.packets.textContent = state.packets;
+            logCmd("buffer_synced");
+
+            // 2. Subscribe to real-time inserts, updates, deletes
+            supabase
+                .channel('messages-feed')
+                .on(
+                    'postgres_changes',
+                    { event: '*', schema: 'public', table: TABLE },
+                    (payload) => {
+                        if (payload.eventType === 'INSERT') {
+                            // Prepend the new message at the top
+                            renderMessage(payload.new, 0, true);
+                            state.packets++;
+                            elements.packets.textContent = state.packets;
+                            logCmd("new_packet_received");
+                        } else if (payload.eventType === 'DELETE') {
+                            // Remove deleted card by id
+                            const card = document.getElementById(`msg-${payload.old.id}`);
+                            if (card) card.remove();
+                        }
+                    }
+                )
+                .subscribe((status) => {
+                    if (status === 'SUBSCRIBED') logCmd("realtime_channel_open");
+                });
+        }
+
+        // prepend=true slides new live messages to the top instead of the bottom
+        function renderMessage(msg, index, prepend = false) {
+            const zones = ['SECTOR-7', 'OUTER_RIM', 'DEEP_NET', 'UNDEFINED'];
+            const zone = zones[Math.floor(Math.random() * zones.length)];
+            const isCorrupted = Math.random() > 0.9;
+
+            const card = document.createElement('div');
+            card.id = `msg-${msg.id}`;
+            card.className = 'feedback-card p-2 relative overflow-hidden';
+            if (isCorrupted) card.classList.add('border-cyber-purple', 'bg-purple-900/10');
+
+            // Support both epoch-ms integers and ISO timestamp strings
+            const ts = typeof msg.timestamp === 'number'
+                ? new Date(msg.timestamp)
+                : new Date(msg.timestamp);
+
+            card.innerHTML = `
+                <div class="flex justify-between items-center mb-1 opacity-50 text-[8px] font-mono">
+                    <span class="text-cyber-blue">[${zone}]</span>
+                    <span>${isNaN(ts) ? '??:??:??' : ts.toLocaleTimeString()}</span>
+                </div>
+                <div class="text-[10px] font-bold text-white">> ${escapeHtml(msg.name || 'ANON')}</div>
+                <p class="text-[10px] leading-tight ${isCorrupted ? 'text-cyber-purple' : 'opacity-80'}">
+                    ${isCorrupted ? '▒▒_CORRUPTED_PAYLOAD_▒▒' : escapeHtml(msg.message)}
+                </p>
+            `;
+
+            if (prepend) {
+                elements.list.prepend(card);
+            } else {
+                elements.list.appendChild(card);
+            }
+        }
+
+        // ─── SYSTEM LOOP ──────────────────────────────────────────────────────────
+
+        function updateSystems() {
+            state.uptime++;
+            const h = Math.floor(state.uptime / 3600).toString().padStart(2, '0');
+            const m = Math.floor((state.uptime % 3600) / 60).toString().padStart(2, '0');
+            const s = (state.uptime % 60).toString().padStart(2, '0');
+            elements.uptime.textContent = `${h}:${m}:${s}`;
+
+            state.memLeak = Math.min(99, state.memLeak + (Math.random() > 0.5 ? 1 : -0.5));
+            if (state.memLeak > 90) elements.mem.classList.add('text-alert-red');
+            else elements.mem.classList.remove('text-alert-red');
+            elements.mem.textContent = Math.floor(state.memLeak);
+            elements.cpu.textContent = Math.floor(Math.random() * 20 + 5);
+
+            state.scanCooldown--;
+            elements.scanTimer.textContent = `NEXT_SCAN: ${state.scanCooldown}s`;
+            if (state.scanCooldown <= 0) {
+                runScan();
+                state.scanCooldown = 30;
+            }
+
+            if (state.uptime % 5 === 0) updateSignal();
+            if (state.uptime % 8 === 0) updateAuth();
+            if (state.uptime % 60 === 0) triggerRareEvent();
+        }
+
+        function updateSignal() {
+            const sigs = ["'HEL--O?'", "'...RECV_09...'", "COORD: 45.2, -12.4", "▒▒▒▒▒▒", "'STAY_SILENT'", "ECHO_DETECTED"];
+            const div = document.createElement('div');
+            div.innerHTML = `<span class="opacity-40">>>></span> ${sigs[Math.floor(Math.random() * sigs.length)]}`;
+            elements.signals.prepend(div);
+            if (elements.signals.children.length > 8) elements.signals.lastChild.remove();
+        }
+
+        function updateAuth() {
+            const ips = ["192.168.1.1", "?.?.?.?", "USER_ROOT", "BEYOND_GATES"];
+            const div = document.createElement('div');
+            const isFail = Math.random() > 0.2;
+            div.innerHTML = `<span class="${isFail ? 'text-alert-red' : 'text-cyber-blue'}">${isFail ? 'FAIL' : 'OK'}</span> ${ips[Math.floor(Math.random() * ips.length)]}`;
+            elements.auth.prepend(div);
+            if (elements.auth.children.length > 10) elements.auth.lastChild.remove();
+        }
+
+        async function runScan() {
+            state.isScanning = true;
+            setNeko("Scanning...", "CURIOUS");
+            elements.statusBar.textContent = "SCANNING";
+            elements.statusBar.style.background = 'var(--warn-yellow)';
+            elements.progressContainer.classList.remove('hidden');
+            
+            for (let i = 0; i <= 100; i += 10) {
+                elements.progress.style.width = `${i}%`;
+                elements.progressText.textContent = `${i}%`;
+                await new Promise(r => setTimeout(r, 150));
+            }
+
+            if (Math.random() > 0.7) spawnVirus();
+            else {
+                setNeko("All clear!", "CALM");
+                elements.statusBar.textContent = "SECURE";
+                elements.statusBar.style.background = 'var(--neon-green)';
+            }
+            elements.progressContainer.classList.add('hidden');
+            state.isScanning = false;
+        }
+
+        function spawnVirus() {
+            setNeko("MEOW! THREAT!", "ALERT");
+            elements.statusBar.textContent = "THREAT";
+            elements.statusBar.style.background = 'var(--alert-red)';
+            
+            const vId = Math.random().toString(36).substring(7).toUpperCase();
+            const vDiv = document.createElement('div');
+            vDiv.className = 'border border-red-500/50 p-2 bg-red-900/10 flex items-center gap-3 animate-pulse';
+            
+            let pixels = "";
+            for (let i = 0; i < 25; i++) pixels += `<div class="pixel ${Math.random() > 0.5 ? '' : 'off'}"></div>`;
+
+            vDiv.innerHTML = `
+                <div class="virus-grid">${pixels}</div>
+                <div class="flex-1">
+                    <div class="flex justify-between font-bold text-alert-red"><span>${vId}</span> <span id="v-%-${vId}">0%</span></div>
+                    <div class="text-[7px] text-cyber-purple tracking-tighter">STRAIN: PIXEL_BUG | STABILITY: LOW</div>
+                </div>
+            `;
+            if (elements.quarantine.innerText.includes("No active")) elements.quarantine.innerHTML = '';
+            elements.quarantine.prepend(vDiv);
+
+            let p = 0;
+            const iv = setInterval(() => {
+                p += 5;
+                document.getElementById(`v-%-${vId}`).textContent = `${p}%`;
+                if (p >= 100) {
+                    clearInterval(iv);
+                    vDiv.classList.remove('animate-pulse', 'border-red-500/50');
+                    vDiv.classList.add('border-cyber-blue/30', 'grayscale');
+                    vDiv.querySelector('.virus-grid').style.animation = 'none';
+                    setNeko("Contained it.", "CALM");
+                    elements.statusBar.textContent = "SECURE";
+                    elements.statusBar.style.background = 'var(--neon-green)';
+                }
+            }, 500);
+        }
+
+        function triggerRareEvent() {
+            const events = ["ECHO_INTERCEPTED", "UNKNOWN_DEVICE_CONNECTED", "UPSTREAM_DESYNC", "ENCRYPTION_SHIFT"];
+            const ev = events[Math.floor(Math.random() * events.length)];
+            elements.toastMsg.textContent = ev;
+            elements.toast.classList.remove('hidden');
+            setTimeout(() => elements.toast.classList.add('hidden'), 3000);
+            setNeko("???", "CONFUSED");
+        }
+
+        function setNeko(txt, mood) {
+            elements.neko.textContent = `"${txt}"`;
+            elements.nekoMood.textContent = `MOOD: ${mood}`;
+            elements.nekoMood.style.color = mood === 'ALERT' ? 'var(--alert-red)' : 'var(--cyber-purple)';
+        }
+
+        function logCmd(txt) {
+            elements.cmd.textContent = txt.toLowerCase();
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // ─── BOOT ─────────────────────────────────────────────────────────────────
+        setInterval(updateSystems, 1000);
+        logCmd("kernel_v3_ready");
+        loadMessages();
+    </script>
+</body>
+</html>
