@@ -355,6 +355,50 @@ body::after {
   color: var(--highlight);
 }
 
+.randomize-btn-small {
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  background: rgba(76, 201, 240, 0.2);
+  border: 1px solid rgba(76, 201, 240, 0.4);
+  color: var(--highlight);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.randomize-btn-small:hover {
+  background: rgba(76, 201, 240, 0.4);
+  border-color: var(--highlight);
+}
+
+.randomize-all-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--etch-line);
+  position: relative;
+  z-index: 1;
+}
+
+.randomize-btn-large {
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  background: linear-gradient(135deg, rgba(76, 201, 240, 0.2), rgba(212, 175, 55, 0.2));
+  border: 1.5px solid var(--highlight);
+  color: var(--highlight);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
 .modal-footer {
   display: flex;
   gap: 12px;
@@ -963,6 +1007,35 @@ body::after {
   margin-left: auto;
   margin-right: auto;
 }
+
+/* ─── HOME BUTTON ───────────────────────────────── */
+.home-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(76, 201, 240, 0.1);
+  border: 1.5px solid rgba(76, 201, 240, 0.3);
+  color: var(--highlight);
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  z-index: 50;
+  text-decoration: none;
+}
+
+.home-btn:hover {
+  border-color: var(--highlight);
+  background: rgba(76, 201, 240, 0.15);
+  box-shadow: 0 0 12px rgba(76, 201, 240, 0.3);
+  transform: translateY(-2px);
+}
 </style>
 </head>
 <body>
@@ -1025,6 +1098,15 @@ body::after {
     <span class="p-pct" id="pPct">0%</span>
   </div>
 </div>
+
+<!-- HOME BUTTON -->
+<a href="index.html" class="home-btn">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+  </svg>
+  Home
+</a>
 
 <!-- header -->
 <div class="header">
@@ -1205,6 +1287,44 @@ let QUESTIONS_FILTERED = [];
 function initializeConfig() {
   TOTAL = QUESTIONS.length;
   QUESTIONS_FILTERED = QUESTIONS;
+  populateDynamicModal();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   POPULATE DYNAMIC MODAL - Check which question types exist
+   ══════════════════════════════════════════════════════════════ */
+function populateDynamicModal() {
+  const availableTypes = new Set();
+  QUESTIONS.forEach(q => availableTypes.add(q.type));
+  
+  const checkboxGroup = document.querySelector('.checkbox-group');
+  checkboxGroup.innerHTML = '';
+  
+  const types = ['mc', 'id', 'tf', 'fitb'];
+  types.forEach(type => {
+    if (availableTypes.has(type)) {
+      const count = QUESTIONS.filter(q => q.type === type).length;
+      const label = document.createElement('label');
+      label.className = `checkbox-item ${type}`;
+      label.innerHTML = `
+        <input type="checkbox" class="type-filter" value="${type}" checked>
+        <div class="checkbox-label">
+          <div class="checkbox-label-title">
+            ${PHASE[type]}
+            <button type="button" class="randomize-btn-small" onclick="randomizeByType('${type}'); event.stopPropagation();">Randomize</button>
+          </div>
+          <div class="checkbox-label-desc">${count} question${count !== 1 ? 's' : ''}</div>
+        </div>
+      `;
+      checkboxGroup.appendChild(label);
+    }
+  });
+  
+  // Add global randomize button
+  const randomizeSection = document.createElement('div');
+  randomizeSection.className = 'randomize-all-section';
+  randomizeSection.innerHTML = '<button type="button" class="randomize-btn-large" onclick="randomizeAll()">Randomize All Questions</button>';
+  checkboxGroup.parentElement.appendChild(randomizeSection);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1230,6 +1350,51 @@ function applyFilter() {
   score = 0;
   wrongs = [];
   answerSubmitted = false; // Reset flag when starting new quiz
+  
+  // Hide modal and start quiz
+  document.getElementById('filterModal').classList.remove('show');
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RANDOMIZE FUNCTIONS
+   ══════════════════════════════════════════════════════════════ */
+function randomizeByType(type) {
+  const filtered = QUESTIONS_FILTERED.filter(q => q.type === type);
+  const notFiltered = QUESTIONS_FILTERED.filter(q => q.type !== type);
+  
+  // Shuffle filtered questions
+  for (let i = filtered.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+  }
+  
+  QUESTIONS_FILTERED = [...notFiltered, ...filtered];
+  current = 0;
+  score = 0;
+  wrongs = [];
+  answerSubmitted = false;
+  deleteQuizCookie();
+  
+  // Hide modal and start quiz
+  document.getElementById('filterModal').classList.remove('show');
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function randomizeAll() {
+  // Shuffle all questions regardless of type
+  for (let i = QUESTIONS_FILTERED.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [QUESTIONS_FILTERED[i], QUESTIONS_FILTERED[j]] = [QUESTIONS_FILTERED[j], QUESTIONS_FILTERED[i]];
+  }
+  
+  current = 0;
+  score = 0;
+  wrongs = [];
+  answerSubmitted = false;
+  deleteQuizCookie();
   
   // Hide modal and start quiz
   document.getElementById('filterModal').classList.remove('show');
