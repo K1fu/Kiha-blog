@@ -1284,9 +1284,28 @@ const PHASE = { mc:'Multiple Choice', id:'Identification', tf:'True or False', f
 // Store filtered questions
 let QUESTIONS_FILTERED = [];
 
+// Check for Active Recall mode from URL parameters
+const urlParams = new URLSearchParams(window.location.search);
+const isActiveRecall = urlParams.get('activeRecall') === 'true';
+const limitQuestions = parseInt(urlParams.get('limit')) || null;
+
+// Fisher-Yates shuffle algorithm
+function shuffleArray(array) {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 function initializeConfig() {
   TOTAL = QUESTIONS.length;
   QUESTIONS_FILTERED = QUESTIONS;
+  
+  // DON'T apply Active Recall limit yet - let user filter/randomize first
+  // We'll apply it when they click "Start Quiz" button in applyFilter()
+  
   populateDynamicModal();
 }
 
@@ -1343,6 +1362,12 @@ function applyFilter() {
   
   // Filter questions based on selected types
   QUESTIONS_FILTERED = QUESTIONS.filter(q => selectedTypes.includes(q.type));
+  
+  // Apply Active Recall limit AFTER filtering (if enabled)
+  if (isActiveRecall && limitQuestions) {
+    QUESTIONS_FILTERED = shuffleArray(QUESTIONS_FILTERED).slice(0, limitQuestions);
+    console.log(`Active Recall Mode: ${QUESTIONS_FILTERED.length} questions selected randomly from filtered set`);
+  }
   
   // Update TOTAL and reset progress
   TOTAL = QUESTIONS_FILTERED.length;

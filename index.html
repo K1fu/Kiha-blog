@@ -295,6 +295,9 @@
             justify-content: space-between;
             min-height: 380px;
             animation: cardEntrance 0.8s cubic-bezier(0.2, 1, 0.3, 1) both;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
         }
 
         .blueprint-card:nth-child(2) { animation-delay: 0.1s; }
@@ -665,6 +668,159 @@
         .feedback-btn-submit:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        /* ─── QUIZ MODE SELECTOR MODAL ─── */
+        .quiz-mode-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .quiz-mode-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .quiz-mode-modal {
+            background: linear-gradient(135deg, rgba(0, 43, 77, 0.95) 0%, rgba(0, 26, 48, 0.95) 100%);
+            border: 1px solid var(--etch-line);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            backdrop-filter: blur(10px);
+            position: relative;
+            animation: modalSlideIn 0.4s cubic-bezier(0.2, 1, 0.3, 1) both;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .quiz-mode-modal::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 20% 50%, rgba(76, 201, 240, 0.1) 0%, transparent 60%);
+            pointer-events: none;
+            border-radius: 12px;
+        }
+
+        .quiz-mode-header {
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-mode-header h2 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--cyanotype-white);
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .quiz-mode-header h2 em {
+            color: var(--highlight);
+            font-style: normal;
+        }
+
+        .quiz-mode-header p {
+            color: rgba(230, 243, 248, 0.6);
+            font-size: 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.05em;
+        }
+
+        .quiz-mode-body {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-mode-option {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 20px;
+            background: rgba(230, 243, 248, 0.04);
+            border: 1.5px solid var(--etch-line);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-mode-option:hover {
+            background: rgba(230, 243, 248, 0.08);
+            border-color: var(--highlight);
+            transform: translateY(-2px);
+        }
+
+        .quiz-mode-option-icon {
+            font-size: 1.8rem;
+        }
+
+        .quiz-mode-option-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--cyanotype-white);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .quiz-mode-option-desc {
+            font-size: 0.85rem;
+            color: rgba(230, 243, 248, 0.6);
+            line-height: 1.5;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .quiz-mode-option.active-recall {
+            border-left: 3px solid rgba(76, 201, 240, 0.6);
+        }
+
+        .quiz-mode-option.quiz {
+            border-left: 3px solid rgba(212, 175, 55, 0.6);
+        }
+
+        .quiz-mode-option:active {
+            transform: scale(0.98);
+        }
+
+        .quiz-mode-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: rgba(230, 243, 248, 0.6);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            z-index: 2;
+        }
+
+        .quiz-mode-close:hover {
+            color: var(--cyanotype-white);
         }
     </style>
 </head>
@@ -1263,11 +1419,93 @@
         </div>
     </div>
 
+    <!-- QUIZ MODE SELECTOR MODAL -->
+    <div class="quiz-mode-overlay" id="quizModeOverlay">
+        <div class="quiz-mode-modal">
+            <button class="quiz-mode-close" id="quizModeClose">&times;</button>
+            <div class="quiz-mode-header">
+                <h2>Select <em>Mode</em></h2>
+                <p>Choose how you want to study</p>
+            </div>
+            <div class="quiz-mode-body">
+                <div class="quiz-mode-option active-recall" id="activeRecallOption">
+                    <div class="quiz-mode-option-icon">🧠</div>
+                    <div class="quiz-mode-option-title">Active Recall</div>
+                    <div class="quiz-mode-option-desc">Randomly select 15 questions from the question bank to test your knowledge</div>
+                </div>
+                <div class="quiz-mode-option quiz" id="quizOption">
+                    <div class="quiz-mode-option-icon">📋</div>
+                    <div class="quiz-mode-option-title">Quiz</div>
+                    <div class="quiz-mode-option-desc">Normal quiz execution with all questions</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <p>This website is for educational and review purposes only. The developer shall not be held liable for any forms of cheating done by the user. You can do this, user. I believe you can pass without cheating :></p>
     </footer>
 
     <script>
+        // ─── QUIZ MODE SELECTOR FUNCTIONALITY ───
+        const quizModeOverlay = document.getElementById('quizModeOverlay');
+        const quizModeClose = document.getElementById('quizModeClose');
+        const activeRecallOption = document.getElementById('activeRecallOption');
+        const quizOption = document.getElementById('quizOption');
+        const examCards = document.querySelectorAll('.blueprint-card');
+        let selectedCardUrl = '';
+
+        // Open quiz mode modal when card is clicked
+        examCards.forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Prevent default link behavior
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Get the href from the card
+                selectedCardUrl = this.getAttribute('href');
+                
+                // Show the modal
+                if (selectedCardUrl) {
+                    quizModeOverlay.classList.add('show');
+                }
+            });
+        });
+
+        // Close modal
+        function closeQuizModeModal() {
+            quizModeOverlay.classList.remove('show');
+            selectedCardUrl = '';
+        }
+
+        quizModeClose.addEventListener('click', closeQuizModeModal);
+
+        // Close modal when clicking outside
+        quizModeOverlay.addEventListener('click', (e) => {
+            if (e.target === quizModeOverlay) {
+                closeQuizModeModal();
+            }
+        });
+
+        // Handle Active Recall option
+        activeRecallOption.addEventListener('click', () => {
+            if (!selectedCardUrl) return;
+            
+            // For Active Recall, add a parameter to randomize and limit to 15 questions
+            if (selectedCardUrl.includes('?')) {
+                window.location.href = selectedCardUrl + '&activeRecall=true&limit=15';
+            } else {
+                window.location.href = selectedCardUrl + '?activeRecall=true&limit=15';
+            }
+        });
+
+        // Handle Quiz option
+        quizOption.addEventListener('click', () => {
+            if (!selectedCardUrl) return;
+            // Normal quiz - just navigate to the URL
+            window.location.href = selectedCardUrl;
+        });
+
         // Subtle Mouse parallax effect for the blueprint grid
         document.addEventListener('mousemove', (e) => {
             const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
@@ -1287,7 +1525,6 @@
         // ─── NAVBAR FUNCTIONALITY ───
         const navButtons = document.querySelectorAll('.nav-btn');
         const searchInput = document.querySelector('.search-input');
-        const examCards = document.querySelectorAll('.blueprint-card');
         const examGrid = document.querySelector('.exam-grid');
         const comingSoonContainer = document.querySelector('.coming-soon-container');
         const comingSoonTag = document.getElementById('coming-soon-tag');
