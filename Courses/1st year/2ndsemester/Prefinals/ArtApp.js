@@ -1,593 +1,235 @@
 const QUESTIONS = (window.QUESTIONS && window.QUESTIONS.length)
   ? window.QUESTIONS
   : [
-
-  // ===== Multiple Choice (50) =====
-
-  {
-    type: "mc",
-    q: "Cave art dates back to approximately how many years ago?",
-    o: ["10,000 years ago", "20,000 years ago", "40,000 years ago", "100,000 years ago"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Which cave in France is famous for paintings of animals, human figures, and abstract symbols?",
-    o: ["Altamira Cave", "Chauvet Cave", "Lascaux Cave", "El Castillo Cave"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "What natural materials did cave artists use to create paint?",
-    o: ["Berries and clay", "Ochre, charcoal, and minerals mixed with animal fats or water", "Tree sap and ash", "Mud and plant dyes"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Egyptian art flourished from approximately which time period?",
-    o: ["5000 BCE to 100 BCE", "3000 BCE to 30 BCE", "1000 BCE to 500 CE", "2000 BCE to 0 CE"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "In Egyptian art, the 'hieratic scale' refers to which convention?",
-    o: ["Figures painted in profile view", "Larger figures indicating higher status", "Use of gold paint for sacred subjects", "Symmetrical compositions in all artworks"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "In Egyptian art, the color green represented which concept?",
-    o: ["Death and mourning", "Royalty and power", "Fertility and rebirth", "War and conquest"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Imhotep is notable in Egyptian art history for designing which structure?",
-    o: ["The Great Sphinx", "The Karnak Temple", "The Pyramid of Djoser", "The Valley of the Kings"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Greek art (800 BCE to 30 BCE) was distinguished by naturalism in sculpture and the use of which technique to create lifelike figures with a sense of movement and balance?",
-    o: ["Chiaroscuro", "Contrapposto", "Sfumato", "Tenebrism"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Which Greek artist is renowned for the statue of Zeus at Olympia?",
-    o: ["Praxiteles", "Phidias", "Myron", "Polyclitus"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "The black-figure François Vase and the red-figure Panathenaic Amphora are examples of which Greek art medium?",
-    o: ["Marble sculpture", "Bronze casting", "Pottery", "Fresco painting"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Roman art (500 BCE to 500 CE) used which architectural innovations exemplified by the Pantheon and Roman aqueducts?",
-    o: ["The column and pediment", "The arch and dome", "The pyramid and obelisk", "The frieze and cornice"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Which Roman emperor promoted idealized art styles and commissioned the Ara Pacis and the Forum of Augustus?",
-    o: ["Julius Caesar", "Nero", "Augustus", "Constantine"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Medieval art (500 to 1400 CE) was primarily characterized by which influence?",
-    o: ["Greek humanism", "The Church and religious themes", "Roman imperial power", "Trade and merchant culture"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Which illuminated manuscript is mentioned as a notable example of monastic art contributions in Medieval art?",
-    o: ["The Gutenberg Bible", "The Lindisfarne Gospels", "The Book of Kells", "The Book of Hours"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Chinese painting's two main styles are:",
-    o: ["Portraiture and calligraphy", "Landscape and calligraphy", "Landscape and sculpture", "Portraiture and landscape"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Wang Wei was a notable Chinese artist from which dynasty?",
-    o: ["Han dynasty", "Ming dynasty", "Tang dynasty", "Song dynasty"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Ukiyo-e emerged in Japan during which period?",
-    o: ["Meiji period (1868–1912)", "Edo period (1603–1868)", "Heian period (794–1185)", "Kamakura period (1185–1333)"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "The term 'ukiyo' means:",
-    o: ["Floating world", "Eastern spirit", "Ancient wisdom", "Sacred land"],
-    a: 0
-  },
-  {
-    type: "mc",
-    q: "Ukiyo-e artists used which technique to create color gradients and depth?",
-    o: ["Impasto", "Sfumato", "Bokashi", "Pointillism"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Katsushika Hokusai is famous for which work?",
-    o: ["Fifty-Three Stations of the Tōkaidō", "The Great Wave off Kanagawa", "A Solitary Temple Amid Clearing Peaks", "Dynamism of a Dog on a Leash"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "The Renaissance emerged after which historical event that devastated Europe?",
-    o: ["The Hundred Years' War", "The Fall of Rome", "The Black Death (1347–1351)", "The Crusades"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Which Renaissance artist is known for the Mona Lisa and The Last Supper?",
-    o: ["Michelangelo", "Raphael", "Leonardo da Vinci", "Donatello"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Mannerism emerged in Europe around which decade?",
-    o: ["1420s", "1520s", "1620s", "1720s"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Mannerism is characterized by which stylistic features?",
-    o: ["Realistic proportions and balanced compositions", "Elongated forms, exaggerated poses, and unusual spatial relationships", "Dark backgrounds with dramatic lighting", "Simple geometric shapes and flat colors"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "The term 'Baroque' derives from the Portuguese word 'barroco', meaning:",
-    o: ["Golden era", "Irregular pearl", "Grand spectacle", "Dark shadow"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Which Baroque technique features dramatic lighting that highlights certain areas while leaving much in shadow?",
-    o: ["Sfumato", "Contrapposto", "Tenebrism", "Bokashi"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Caravaggio is celebrated for his dramatic use of light and shadow in which work?",
-    o: ["The Elevation of the Cross", "The Calling of Saint Matthew", "The School of Athens", "Madonna with the Long Neck"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Rococo art emerged in which country?",
-    o: ["Italy", "Spain", "England", "France"],
-    a: 3
-  },
-  {
-    type: "mc",
-    q: "Rococo art is known for its ornate style featuring which common motifs?",
-    o: ["Skulls, bones, and dark imagery", "Shells, flowers, and curved lines", "Geometric shapes and industrial forms", "Religious icons and gold leaf"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Neo-Classicism revived classical styles from which ancient civilizations?",
-    o: ["Egypt and Mesopotamia", "China and India", "Ancient Greece and Rome", "Persia and Babylon"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Jacques-Louis David is known for which Neo-Classical work?",
-    o: ["Liberty Leading the People", "The Death of Socrates", "The Gleaners", "The Starry Night"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Romanticism emerged as a reaction against which movement?",
-    o: ["Baroque", "Impressionism", "Neo-Classicism", "Realism"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Eugène Delacroix is renowned for which Romantic work?",
-    o: ["The Gleaners", "The Stone Breakers", "Liberty Leading the People", "La Grande Odalisque"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Realism emerged in the mid-19th century as a reaction against which two movements?",
-    o: ["Baroque and Rococo", "Romanticism and Neo-Classicism", "Impressionism and Symbolism", "Fauvism and Expressionism"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Gustave Courbet's The Stone Breakers portrays which subject?",
-    o: ["Peasant women collecting crops", "Laborers at work", "A bourgeois family at leisure", "Soldiers in battle"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "The term 'Impressionism' comes from which Claude Monet painting?",
-    o: ["Water Lilies", "Impression, Sunrise", "The Haystacks Series", "Rouen Cathedral"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Impressionist artists frequently painted 'en plein air', which means:",
-    o: ["Using a thick paint technique", "Painting in complete darkness", "Painting outdoors", "Working in a group studio"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Neo-Impressionism's most famous technique is:",
-    o: ["Chiaroscuro", "Impasto", "Pointillism", "Bokashi"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Georges Seurat pioneered Neo-Impressionism; his painting 'A Sunday Afternoon on the Island of La Grande Jatte' is a prime example of:",
-    o: ["Tenebrism", "Fauvism", "Pointillism", "Cubism"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Symbolism emerged primarily in which country?",
-    o: ["Germany", "Spain", "Italy", "France"],
-    a: 3
-  },
-  {
-    type: "mc",
-    q: "Paul Gauguin is a notable Symbolist figure known for which painting?",
-    o: ["The Scream", "Where Do We Come From? What Are We? Where Are We Going?", "The Persistence of Memory", "Campbell's Soup Cans"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Art Nouveau's name means which phrase in French?",
-    o: ["Old Masters", "New Art", "Beautiful Life", "Pure Form"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Antoni Gaudí is an Art Nouveau architect famous for which building?",
-    o: ["The Eiffel Tower", "The Louvre", "La Sagrada Família", "St. Paul's Cathedral"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "The term 'Fauvism' comes from the French word 'fauves', meaning:",
-    o: ["Bright colors", "Wild beasts", "Pure form", "Shadow play"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Expressionism emerged particularly in which country?",
-    o: ["France", "Italy", "Germany", "Russia"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Cubism is divided into two main phases. Which phase (1907–1912) emphasized deconstructing objects into geometric shapes using a muted color palette of browns and grays?",
-    o: ["Synthetic Cubism", "Analytic Cubism", "Neo-Cubism", "Abstract Cubism"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Pablo Picasso's work 'Les Demoiselles d'Avignon' is associated with which movement?",
-    o: ["Surrealism", "Futurism", "Cubism", "Fauvism"],
-    a: 2
-  },
-  {
-    type: "mc",
-    q: "Futurism began in which country?",
-    o: ["France", "Germany", "Russia", "Italy"],
-    a: 3
-  },
-  {
-    type: "mc",
-    q: "Marcel Duchamp's 'Fountain', a urinal presented as art, is associated with which movement?",
-    o: ["Surrealism", "Dadaism", "Minimalism", "Pop Art"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Salvador Dalí's 'The Persistence of Memory' is a key work of which movement?",
-    o: ["Dadaism", "Surrealism", "Expressionism", "Constructivism"],
-    a: 1
-  },
-  {
-    type: "mc",
-    q: "Andy Warhol is the most famous artist of which movement?",
-    o: ["Minimalism", "Conceptual Art", "Pop Art", "Optical Art"],
-    a: 2
-  },
-
-  // ===== Identification (20) =====
-
-  {
-    type: "id",
-    q: "This Egyptian architect designed the Pyramid of Djoser, the first large stone building.",
-    a: "Imhotep"
-  },
-  {
-    type: "id",
-    q: "This Greek sculptor is known for the Aphrodite of Knidos (Cnidus), praised for its more relatable and sensual approach.",
-    a: "Praxiteles"
-  },
-  {
-    type: "id",
-    q: "This Ukiyo-e artist is known for the landscape series 'Fifty-Three Stations of the Tōkaidō'.",
-    a: "Utagawa Hiroshige"
-  },
-  {
-    type: "id",
-    q: "This Renaissance artist is famed for the David and the Sistine Chapel ceiling.",
-    a: "Michelangelo"
-  },
-  {
-    type: "id",
-    q: "This Mannerist artist is known for 'Madonna with the Long Neck'.",
-    a: "Parmigianino"
-  },
-  {
-    type: "id",
-    q: "This Baroque artist is celebrated for 'The Elevation of the Cross' and was a master of color and movement.",
-    a: "Peter Paul Rubens"
-  },
-  {
-    type: "id",
-    q: "This Rococo artist depicted mythological subjects with sensuality, as seen in 'La Cage (The Cage)'.",
-    a: "François Boucher"
-  },
-  {
-    type: "id",
-    q: "This Neo-Classical artist is renowned for portraits and depictions of women, such as 'La Grande Odalisque'.",
-    a: "Jean-Auguste-Dominique Ingres"
-  },
-  {
-    type: "id",
-    q: "This Post-Impressionist is known for his swirling brushstrokes and vivid colors in 'The Starry Night'.",
-    a: "Vincent van Gogh"
-  },
-  {
-    type: "id",
-    q: "This Post-Impressionist emphasized structure and form by breaking objects into geometric shapes, as seen in 'The Basket of Apples'.",
-    a: "Paul Cézanne"
-  },
-  {
-    type: "id",
-    q: "This Expressionist artist's painting 'The Scream' epitomizes existential dread.",
-    a: "Edvard Munch"
-  },
-  {
-    type: "id",
-    q: "This Cubist artist developed 'Violin and Candlestick'.",
-    a: "Georges Braque"
-  },
-  {
-    type: "id",
-    q: "This Futurist painter and sculptor's work 'The City Rises' embodies Futurism's emphasis on dynamism and vitality.",
-    a: "Umberto Boccioni"
-  },
-  {
-    type: "id",
-    q: "This Constructivist artist is renowned for his 'Monument to the Third International', which combined art and architecture.",
-    a: "Vladimir Tatlin"
-  },
-  {
-    type: "id",
-    q: "This Op Art figure is known for 'Movement in Squares', an intricate pattern that creates optical illusions.",
-    a: "Bridget Riley"
-  },
-  {
-    type: "id",
-    q: "This Minimalist artist is known for box-like sculptures such as 'Untitled', highlighting form and space.",
-    a: "Donald Judd"
-  },
-  {
-    type: "id",
-    q: "This Conceptual artist is known for works emphasizing the idea behind the art, such as 'Wall Drawing #1136'.",
-    a: "Sol LeWitt"
-  },
-  {
-    type: "id",
-    q: "This Installation artist is famous for 'Infinity Mirror Rooms' and 'Obliteration Room', offering immersive experiences.",
-    a: "Yayoi Kusama"
-  },
-  {
-    type: "id",
-    q: "This Land artist is known for 'Spiral Jetty', a massive earthwork made from black basalt rocks at Rozel Point on the north arm of Great Salt Lake in Utah.",
-    a: "Robert Smithson"
-  },
-  {
-    type: "id",
-    q: "This Performance artist is known for 'Cut Piece', where viewers were invited to cut pieces of her clothing.",
-    a: "Yoko Ono"
-  },
-
-  // ===== True or False (10) =====
-
-  {
-    type: "tf",
-    q: "Cave art's individual artists are known and well-documented by historians.",
-    a: false
-  },
-  {
-    type: "tf",
-    q: "In Egyptian art, the ankh symbolizes life.",
-    a: true
-  },
-  {
-    type: "tf",
-    q: "Greek art used only marble, and bronze was never employed for sculpture.",
-    a: false
-  },
-  {
-    type: "tf",
-    q: "The Book of Kells is a notable example of an illuminated manuscript from the Medieval period.",
-    a: true
-  },
-  {
-    type: "tf",
-    q: "Ukiyo-e artists primarily used oil painting rather than woodblock printing.",
-    a: false
-  },
-  {
-    type: "tf",
-    q: "Baroque art emerged following the Renaissance, with the term derived from the Portuguese word 'barroco' meaning 'irregular pearl'.",
-    a: true
-  },
-  {
-    type: "tf",
-    q: "Romanticism arose as a reaction in support of the strict rules of Neo-Classicism.",
-    a: false
-  },
-  {
-    type: "tf",
-    q: "Surrealism emerged in the 1920s, influenced by Dadaism and Sigmund Freud's psychological theories.",
-    a: true
-  },
-  {
-    type: "tf",
-    q: "Pop Art aimed to blur the lines between high art and popular culture.",
-    a: true
-  },
-  {
-    type: "tf",
-    q: "Land art uses only man-made synthetic materials rather than natural elements found in the environment.",
-    a: false
-  },
-
-  // ===== Fill in the Blank (20) =====
-
-  {
-    type: "fitb",
-    before: "The Lascaux Cave in France features paintings of animals, human figures, and abstract symbols, suggesting that early humans used art for",
-    after: "and connection with their environment.",
-    a: "communication"
-  },
-  {
-    type: "fitb",
-    before: "Egyptian art featured conventions like the hieratic scale, where larger figures indicate",
-    after: "status.",
-    a: "higher"
-  },
-  {
-    type: "fitb",
-    before: "The primary purposes of Egyptian art were religious and",
-    after: ", with artworks intended for temples or tombs.",
-    a: "funerary"
-  },
-  {
-    type: "fitb",
-    before: "Roman art is marked by a focus on portraiture, especially in busts, and architectural innovations like the arch and dome, exemplified by the",
-    after: "and Roman aqueducts.",
-    a: "Pantheon"
-  },
-  {
-    type: "fitb",
-    before: "Medieval art is noted for its flat, symbolic representations, with figures being stylized and prioritizing",
-    after: "rather than naturalism.",
-    a: "spirituality"
-  },
-  {
-    type: "fitb",
-    before: "In Chinese painting, traditional works primarily use ink and brush on",
-    after: "or paper.",
-    a: "silk"
-  },
-  {
-    type: "fitb",
-    before: "Ukiyo-e is known for vibrant colors, bold lines, and perspective. Artists often used a technique called",
-    after: "to create color gradients and depth.",
-    a: "bokashi"
-  },
-  {
-    type: "fitb",
-    before: "The Renaissance emerged after the Black Death and the decline of feudalism. Renaissance art is characterized by realism, perspective, and",
-    after: "compositions.",
-    a: "complex"
-  },
-  {
-    type: "fitb",
-    before: "Mannerist compositions often appear unbalanced or crowded, creating a sense of",
-    after: ".",
-    a: "tension"
-  },
-  {
-    type: "fitb",
-    before: "Baroque artists often used chiaroscuro, creating strong contrasts between light and dark to show depth, and",
-    after: ", featuring dramatic lighting that highlights certain areas while leaving much in shadow.",
-    a: "tenebrism"
-  },
-  {
-    type: "fitb",
-    before: "The primary purpose of Neo-Classical art was to educate and inspire viewers. Artworks were meant to convey moral messages and celebrate virtues such as courage, loyalty, and",
-    after: ".",
-    a: "sacrifice"
-  },
-  {
-    type: "fitb",
-    before: "Impressionist artists frequently painted",
-    after: "(outdoors) to capture the ever-changing qualities of light and atmosphere.",
-    a: "en plein air"
-  },
-  {
-    type: "fitb",
-    before: "Post-Impressionism emerged roughly from",
-    after: "to 1905, as a reaction against the limitations of Impressionism.",
-    a: "1886"
-  },
-  {
-    type: "fitb",
-    before: "Neo-Impressionism's pointillism involves placing tiny dots of color next to each other, allowing the viewer's eye to",
-    after: "them from a distance.",
-    a: "blend"
-  },
-  {
-    type: "fitb",
-    before: "Dadaism emerged in the early 20th century as a reaction to",
-    after: ", rejecting traditional artistic values and embracing chaos, absurdity, and spontaneity.",
-    a: "World War I"
-  },
-  {
-    type: "fitb",
-    before: "Constructivism originated in 1920s",
-    after: "and aimed to create art with a social purpose that was accessible to everyone.",
-    a: "Russia"
-  },
-  {
-    type: "fitb",
-    before: "Optical art, or",
-    after: ", became popular in the 1960s, emphasizing visual effects and optical illusions.",
-    a: "Op Art"
-  },
-  {
-    type: "fitb",
-    before: "Minimalism emerged in the late 1950s as a reaction against the complexity of",
-    after: ", emphasizing simplicity and clarity.",
-    a: "Abstract Expressionism"
-  },
-  {
-    type: "fitb",
-    before: "In the Philippines, Luis E. Yee, Jr. (Junyee) is a pioneer of installation art, known for",
-    after: ", featuring dried banana stalks and kapok pods.",
-    a: "Wood Things"
-  },
-  {
-    type: "fitb",
-    before: "Body art serves various purposes, including personal expression, cultural significance, and challenging societal norms related to beauty and",
-    after: ".",
-    a: "body image"
-  }
-
+{type:"mc",q:"What is an art movement?",o:["A single artwork with a unique style","A collective term for a series of artworks sharing a common style, philosophy, or technique","A government-sponsored art program","A museum collection of related works"],a:1},
+{type:"mc",q:"Cave art dates back to approximately how many years ago?",o:["10,000 years ago","20,000 years ago","40,000 years ago","100,000 years ago"],a:2},
+{type:"mc",q:"Which cave in France features paintings of animals, human figures, and abstract symbols?",o:["Altamira Cave","Chauvet Cave","Lascaux Cave","Cueva de las Manos"],a:2},
+{type:"mc",q:"What natural pigments did cave artists use?",o:["Indigo, zinc, and charcoal","Ochre, charcoal, and minerals mixed with animal fats or water","Chalk, ash, and berry juice","Copper, sulfur, and sand"],a:1},
+{type:"mc",q:"Cave artists applied paint using which primitive tools?",o:["Brushes made of feathers","Twigs or animal hair","Flat stones","Fingers only"],a:1},
+{type:"mc",q:"The artwork style of cave art features which of the following?",o:["Realistic three-dimensional sculptures","Simple forms, silhouettes, and outlines with dynamic animals","Complex perspective and shading","Abstract geometric patterns exclusively"],a:1},
+{type:"mc",q:"What was the likely purpose of cave art?",o:["Purely decorative","Hunting rituals and documenting significant events","Religious worship of gods","Recording astronomical events"],a:1},
+{type:"mc",q:"Who are the significant artists of cave art?",o:["Known shamans of the tribe","Individual artists whose names were recorded","Unknown individuals whose works reflect a collective cultural effort of early hunters","Pharaohs and rulers"],a:2},
+{type:"mc",q:"Egyptian art flourished from which period?",o:["1000 BCE to 500 CE","3000 BCE to 30 BCE","5000 BCE to 1000 BCE","500 BCE to 500 CE"],a:1},
+{type:"mc",q:"What were the primary themes of Egyptian art?",o:["War and conquest","The afterlife and the divine, honoring gods and pharaohs","Everyday life and nature","Trade and commerce"],a:1},
+{type:"mc",q:"Which materials were used as media in Egyptian art?",o:["Bronze, terracotta, and mosaic","Stone, wood, metal, and papyrus","Marble, fresco, and oil paint","Glass, iron, and ceramics"],a:1},
+{type:"mc",q:"In Egyptian art, stone was commonly used for which purpose?",o:["Painting and writing","Decorative items","Sculptures and monuments","Smaller artifacts"],a:2},
+{type:"mc",q:"What is the hieratic scale in Egyptian art?",o:["A musical scale used in temple ceremonies","A convention where larger figures indicate higher status","A measurement system for pyramid construction","A style of writing on papyrus"],a:1},
+{type:"mc",q:"Which temple features colossal statues of gods and pharaohs as an example of hieratic scale?",o:["Temple of Luxor","Abu Simbel","Karnak Temple","Temple of Horus at Edfu"],a:2},
+{type:"mc",q:"How are figures typically shown in Egyptian art?",o:["Full frontal with direct gaze","In frontal poses with heads and legs in profile","Completely in profile","In three-quarter view"],a:1},
+{type:"mc",q:"In Egyptian symbolism, what does the color green represent?",o:["Death and mourning","Power and royalty","Fertility and rebirth","Sky and water"],a:2},
+{type:"mc",q:"What does the ankh symbol represent in Egyptian art?",o:["Death","Power","Fertility","Life"],a:3},
+{type:"mc",q:"What were the primary purposes of Egyptian art?",o:["Entertainment and trade","Religious and funerary, aiding in the deceased's journey to the afterlife","Political propaganda","Scientific documentation"],a:1},
+{type:"mc",q:"Who was a major architect in ancient Egypt known for designing the Pyramid of Djoser?",o:["Ramesses II","Tutankhamun","Nefertiti","Imhotep"],a:3},
+{type:"mc",q:"The Pyramid of Djoser is notable as which kind of building?",o:["The first pyramid","The first large stone building","The tallest structure in ancient Egypt","The first temple dedicated to Osiris"],a:1},
+{type:"mc",q:"Imhotep was later revered as a god of what?",o:["War and victory","The sun and creation","Wisdom and healing","Death and resurrection"],a:2},
+{type:"mc",q:"Greek art spanned from approximately which period?",o:["500 BCE to 500 CE","3000 BCE to 30 BCE","800 BCE to 30 BCE","1000 BCE to 100 CE"],a:2},
+{type:"mc",q:"Greek art emphasized which core concepts?",o:["Death, mystery, and the afterlife","Beauty, humanism, and idealized representations of the human form","War, conquest, and power","Nature, harmony, and impermanence"],a:1},
+{type:"mc",q:"Which materials did Greek artists primarily use?",o:["Stone, wood, and papyrus","Marble, bronze, and pottery","Oil paint, fresco, and marble","Metal, glass, and ceramics"],a:1},
+{type:"mc",q:"In the black-figure François Vase, how are figures painted?",o:["In red on a black background","In black slip on a natural red clay background","In white on a blue background","In gold on a black background"],a:1},
+{type:"mc",q:"In the red-figure Panathenaic Amphora, what color is the background painted?",o:["Red","White","Gold","Black"],a:3},
+{type:"mc",q:"What technique did Greek sculptors employ to create lifelike figures with movement and balance?",o:["Chiaroscuro","Impasto","Contrapposto","Pointillism"],a:2},
+{type:"mc",q:"Greek art was often created for which types of spaces?",o:["Private homes and tombs","Public spaces and temples, reflecting civic pride","Markets and commercial areas","Underground sanctuaries"],a:1},
+{type:"mc",q:"Which Greek artist was renowned for the statue of Zeus at Olympia?",o:["Praxiteles","Phidias","Myron","Polykleitos"],a:1},
+{type:"mc",q:"Praxiteles is known for his more relatable and sensual approach, as seen in which work?",o:["The Zeus at Olympia","The Discobolus","The Aphrodite of Knidos","The Doryphoros"],a:2},
+{type:"mc",q:"Roman art spanned from approximately which period?",o:["3000 BCE to 30 BCE","800 BCE to 30 BCE","500 BCE to 500 CE","100 CE to 600 CE"],a:2},
+{type:"mc",q:"Roman art is known for adapting Greek influences while emphasizing which qualities?",o:["Idealism and mythology","Realism and everyday life","Spirituality and religion","Abstraction and color"],a:1},
+{type:"mc",q:"Which materials did Roman artists utilize?",o:["Papyrus, bronze, and terracotta","Marble for sculptures, frescoes for wall paintings, and mosaics for decorative flooring","Oil paint, watercolor, and lithography","Stone, wood, metal, and papyrus"],a:1},
+{type:"mc",q:"What did mosaics feature in Roman art?",o:["Large flat stones painted with natural dyes","Intricate designs using tiny colored stones or glass","Woven fabric patterns pressed into clay","Carved relief images on flat surfaces"],a:1},
+{type:"mc",q:"Roman art is especially marked by a focus on what in its style?",o:["Landscape painting","Abstract geometric forms","Portraiture, especially in busts that capture individuals' likeness and character","Religious iconography"],a:2},
+{type:"mc",q:"Which architectural innovations allowed for larger Roman structures?",o:["The column and entablature","The arch and dome","The flying buttress and spire","The vault and nave"],a:1},
+{type:"mc",q:"Which two structures exemplify Roman architectural innovation according to the handout?",o:["The Colosseum and the Forum","The Pantheon and Roman aqueducts","The Circus Maximus and the Baths of Caracalla","The Senate House and the Temple of Saturn"],a:1},
+{type:"mc",q:"What was the primary purpose of Roman public monuments?",o:["To provide shelter for citizens","To honor emperors and heroes, reinforcing their status","To depict mythological stories for education","To mark territorial boundaries"],a:1},
+{type:"mc",q:"Which Roman emperor contributed to Roman arts by promoting idealized styles and themes of peace?",o:["Julius Caesar","Nero","Augustus","Constantine"],a:2},
+{type:"mc",q:"Which structures did Augustus commission or fund?",o:["The Colosseum and the Baths","The Ara Pacis and the Forum of Augustus","The Pantheon and the aqueducts","The Circus Maximus and the Trajan's Column"],a:1},
+{type:"mc",q:"Medieval art spans which time period?",o:["100 CE to 500 CE","500 to 1400 CE","1000 to 1600 CE","300 to 900 CE"],a:1},
+{type:"mc",q:"Medieval art is characterized by a strong influence from which institution?",o:["The monarchy","The trade guilds","The Church","The military"],a:2},
+{type:"mc",q:"Which media did medieval artists employ?",o:["Oil paint, fresco, and marble","Illuminated manuscripts, stained glass windows, and sculpture","Watercolor, lithography, and bronze","Woodblock prints, ink, and silk"],a:1},
+{type:"mc",q:"Where were stained glass windows primarily found in medieval art?",o:["Private homes of nobility","Market squares and town halls","Cathedrals","Underground catacombs"],a:2},
+{type:"mc",q:"Medieval art is noted for its flat, symbolic representations. What did paintings emphasize over realistic proportions?",o:["Perspective and anatomy","Outlines and bold colors","Shading and depth","Movement and balance"],a:1},
+{type:"mc",q:"What was the primary purpose of medieval art?",o:["To celebrate individual artists' talents","To educate and inspire religious devotion","To document historical events for rulers","To decorate private residences of the wealthy"],a:1},
+{type:"mc",q:"Much of medieval artwork was created by which group of individuals?",o:["Court-appointed royal painters","Monks dedicated to spiritual and artistic pursuits","Traveling merchants who sold art","Former Roman craftsmen"],a:1},
+{type:"mc",q:"Which illuminated manuscript is cited as a notable example of monastic contributions?",o:["The Lindisfarne Gospels","The Gutenberg Bible","The Book of Kells","The Dead Sea Scrolls"],a:2},
+{type:"mc",q:"The Très Riches Heures du Duc de Berry was created by which artists?",o:["The Limbourg brothers","The Van Eyck brothers","Raphael and his assistants","Monks at the Abbey of Cluny"],a:0},
+{type:"mc",q:"Asian art reflects which of the following?",o:["Solely religious themes of Buddhism","The continent's rich cultural heritage, diverse religions, and philosophies over thousands of years","Primarily war and imperial conquest","The influence of Western colonialism"],a:1},
+{type:"mc",q:"Chinese painting is rooted in ancient traditions and emphasizes which concept?",o:["Military power and imperial grandeur","Harmony with nature and philosophical concepts","Religious devotion to Buddhist deities","Realistic portraiture of rulers"],a:1},
+{type:"mc",q:"What materials are traditionally used in Chinese painting?",o:["Oil paint and canvas","Watercolor and rice paper","Ink and brush on silk or paper","Charcoal and parchment"],a:2},
+{type:"mc",q:"What are the two main styles in Chinese painting?",o:["Portrait and still life","Landscape and calligraphy","Abstract and narrative","Figure painting and genre scenes"],a:1},
+{type:"mc",q:"What do Chinese landscape paintings often depict?",o:["Urban scenes and marketplaces","Serene mountains, rivers, and forests","Battle scenes and military campaigns","Imperial courts and ceremonies"],a:1},
+{type:"mc",q:"What is the purpose of Chinese painting?",o:["To record historical events accurately","To express spiritual and philosophical concepts and serve as meditative objects","To entertain the imperial court","To train young artists in technical skills"],a:1},
+{type:"mc",q:"Wang Wei was a notable Chinese painter from which dynasty?",o:["Song dynasty","Ming dynasty","Han dynasty","Tang dynasty"],a:3},
+{type:"mc",q:"Wang Wei is known for which work?",o:["A Thousand Li of Rivers and Mountains","A Solitary Temple Amid Clearing Peaks","Along the River During the Qingming Festival","The Night Revels of Han Xizai"],a:1},
+{type:"mc",q:"Ukiyo-e emerged in Japan during which period?",o:["Meiji period (1868–1912)","Heian period (794–1185)","Edo period (1603–1868)","Kamakura period (1185–1333)"],a:2},
+{type:"mc",q:"What does the term 'ukiyo' mean?",o:["Floating world","Rising sun","Ancient tradition","Beautiful landscape"],a:0},
+{type:"mc",q:"Ukiyo-e celebrates which theme?",o:["Death and the afterlife","Imperial power and glory","The beauty of everyday life","Religious devotion and ritual"],a:2},
+{type:"mc",q:"What printing technique did Ukiyo-e artists primarily use for mass production?",o:["Lithography","Woodblock printing","Silkscreen printing","Etching"],a:1},
+{type:"mc",q:"The Ukiyo-e technique called bokashi creates which effect?",o:["Bold black outlines","Color gradients and depth","Textured brushwork","Geometric patterns"],a:1},
+{type:"mc",q:"Katsushika Hokusai is famous for which work?",o:["Fifty-Three Stations of the Tōkaidō","The Dream of the Fisherman's Wife","The Great Wave off Kanagawa","One Hundred Famous Views of Edo"],a:2},
+{type:"mc",q:"Utagawa Hiroshige is known for which landscape series?",o:["Thirty-Six Views of Mount Fuji","One Hundred Famous Views of Edo","Fifty-Three Stations of the Tōkaidō","Views of Famous Places in the Provinces"],a:2},
+{type:"mc",q:"The Early Modern Period connects which two art movements?",o:["Baroque and Rococo","Romanticism and Realism","Renaissance and Baroque","Mannerism and Neo-Classicism"],a:2},
+{type:"mc",q:"The Renaissance emerged after which historical event?",o:["The fall of the Roman Empire","The Black Death (1347–1351) and the decline of feudalism","The First Crusade","The Protestant Reformation"],a:1},
+{type:"mc",q:"What inspired artists and philosophers during the Renaissance?",o:["Medieval religious manuscripts","Islamic art and science","Classical Greek and Roman texts","Viking sagas and mythology"],a:2},
+{type:"mc",q:"What media did Renaissance artists employ?",o:["Woodblock prints, ink, and silk","Oil paint, frescoes, and marble","Watercolor, lithography, and bronze","Charcoal, pastel, and terracotta"],a:1},
+{type:"mc",q:"Renaissance art is characterized by which stylistic elements?",o:["Flat symbolic representations and bold colors","Elongated forms and exaggerated poses","Realism, perspective, and complex compositions","Dreamlike imagery and vivid non-naturalistic colors"],a:2},
+{type:"mc",q:"What did Renaissance artists study to create lifelike figures?",o:["Philosophy and theology","Anatomy and light","Mythology and literature","Mathematics and geometry"],a:1},
+{type:"mc",q:"Leonardo da Vinci is known for which works?",o:["David and the Sistine Chapel ceiling","The School of Athens and The Transfiguration","The Mona Lisa and The Last Supper","Madonna with the Long Neck and The Deposition from the Cross"],a:2},
+{type:"mc",q:"Michelangelo is famed for which works?",o:["The Mona Lisa and The Last Supper","The David and the Sistine Chapel ceiling","The School of Athens and La Grande Odalisque","The Birth of Venus and Primavera"],a:1},
+{type:"mc",q:"Raphael is celebrated for which work?",o:["The Last Supper","The Birth of Venus","The School of Athens","The Creation of Adam"],a:2},
+{type:"mc",q:"Mannerism emerged during which approximate period?",o:["1400s, during the early Renaissance","Around the 1520s, during the late Renaissance, lasting into the 16th century","In the early 17th century after the Baroque","In the 1700s during the Rococo period"],a:1},
+{type:"mc",q:"Which stylistic elements characterize Mannerism?",o:["Naturalism, symmetry, and clear compositions","Elongated forms, exaggerated poses, and unusual spatial relationships","Geometric abstraction and industrial materials","Loose brushwork and focus on natural light"],a:1},
+{type:"mc",q:"Mannerist compositions often appear how?",o:["Balanced and harmonious","Unbalanced or crowded, creating a sense of tension","Simple and minimalistic","Symmetrical and orderly"],a:1},
+{type:"mc",q:"What was the purpose of Mannerist art?",o:["To portray reality with scientific accuracy","To educate viewers about religious doctrine","To provoke thought and evoke emotion rather than portray reality","To celebrate military victory"],a:2},
+{type:"mc",q:"Parmigianino is known for which Mannerist work?",o:["The Deposition from the Cross","Madonna with the Long Neck","The Calling of Saint Matthew","The Elevation of the Cross"],a:1},
+{type:"mc",q:"Jacopo Pontormo is recognized for which work?",o:["Madonna with the Long Neck","La Cage","The Deposition from the Cross","The Death of Socrates"],a:2},
+{type:"mc",q:"The term 'Baroque' is derived from the Portuguese word barroco, meaning what?",o:["Golden age","Dramatic light","Irregular pearl","Grand design"],a:2},
+{type:"mc",q:"Baroque art emerged during which time period?",o:["Early 15th century","Late 16th century to early 18th century","Mid-19th century","Early 20th century"],a:1},
+{type:"mc",q:"Which technique did Baroque artists use to create strong contrasts between light and dark?",o:["Pointillism","Contrapposto","Impasto","Chiaroscuro"],a:3},
+{type:"mc",q:"What is tenebrism in Baroque art?",o:["A technique using tiny dots of color","Dramatic lighting that highlights certain areas while leaving much in shadow","The use of gold leaf to illuminate sacred figures","A method of creating texture with thick paint"],a:1},
+{type:"mc",q:"Caravaggio is celebrated for his dramatic use of light and shadow in which work?",o:["The Elevation of the Cross","Madonna with the Long Neck","The Calling of Saint Matthew","The School of Athens"],a:2},
+{type:"mc",q:"Peter Paul Rubens is described as a master of what?",o:["Geometric abstraction","Color and movement","Chiaroscuro and tenebrism","Pointillism and color theory"],a:1},
+{type:"mc",q:"Peter Paul Rubens is known for which work?",o:["The Calling of Saint Matthew","The Elevation of the Cross","The Death of Socrates","Liberty Leading the People"],a:1},
+{type:"mc",q:"Rococo art emerged in which country and century?",o:["Italy in the late 16th century","Germany in the early 17th century","France in the early 18th century","Spain in the mid-18th century"],a:2},
+{type:"mc",q:"Rococo art is known for which style?",o:["Bold, non-naturalistic colors and loose brushwork","Ornate, decorative style with themes of love, nature, and playful elegance","Geometric simplicity and industrial materials","Dramatic religious scenes with strong chiaroscuro"],a:1},
+{type:"mc",q:"Which materials did Rococo artists use?",o:["Oil paint, marble, and bronze","Ink and brush on silk or paper","Oil paint, pastel, and porcelain","Woodblock, ink, and rice paper"],a:2},
+{type:"mc",q:"What common motifs appear in Rococo art?",o:["Skulls, crosses, and geometric shapes","Shells, flowers, and curved lines","Machinery, gears, and industrial forms","Mountains, rivers, and forests"],a:1},
+{type:"mc",q:"Rococo art aimed to evoke which feelings?",o:["Existential dread and anxiety","Civic pride and heroism","Joy and intimacy","Spiritual awe and reverence"],a:2},
+{type:"mc",q:"Rococo art was often created for which types of spaces?",o:["Public squares and temples","Private spaces such as salons and palaces for the elite","Military barracks and government buildings","Cathedrals and religious institutions"],a:1},
+{type:"mc",q:"François Boucher depicted mythological subjects with sensuality. Which work is cited?",o:["La Grande Odalisque","Water Lilies","La Cage (The Cage)","Liberty Leading the People"],a:2},
+{type:"mc",q:"Neo-Classicism revived classical styles from which civilizations?",o:["Egypt and Mesopotamia","Ancient Greece and Rome","Medieval Europe and Byzantium","China and Japan"],a:1},
+{type:"mc",q:"Neo-Classicism spanned from which period?",o:["Mid-17th to early 18th century","Late 18th to early 19th century","Mid-19th to early 20th century","Early to mid-20th century"],a:1},
+{type:"mc",q:"Neo-Classicism is marked by an emphasis on which stylistic elements?",o:["Flowing organic lines and asymmetrical designs","Elongated forms and exaggerated poses","Symmetry, proportion, and minimalism","Loose brushwork and vibrant colors"],a:2},
+{type:"mc",q:"What was the primary purpose of Neo-Classical art?",o:["To celebrate emotional individualism","To educate and inspire viewers with moral messages and virtues","To challenge conventional forms of representation","To capture fleeting moments of light and atmosphere"],a:1},
+{type:"mc",q:"Jacques-Louis David is known for which work?",o:["La Grande Odalisque","The Death of Socrates","Liberty Leading the People","The Gleaners"],a:1},
+{type:"mc",q:"Jean-Auguste-Dominique Ingres is renowned for which work?",o:["The Death of Socrates","The Stone Breakers","La Grande Odalisque","Impression, Sunrise"],a:2},
+{type:"mc",q:"Romanticism emerged as a reaction against what?",o:["The strict rules of Neo-Classicism","The ornate style of Baroque","The flat representations of Medieval art","The scientific approach of Neo-Impressionism"],a:0},
+{type:"mc",q:"Romanticism lasted from the late 18th century into which period?",o:["Early 19th century","Mid-19th century","Late 19th century","Early 20th century"],a:1},
+{type:"mc",q:"Which media did Romantic artists use?",o:["Oil paint, marble, and bronze","Woodblock prints and ink","Oil paint, watercolor, and lithography","Oil paint, pastel, and porcelain"],a:2},
+{type:"mc",q:"Romantic art often featured which themes?",o:["Scientific accuracy and social realism","Fantasy, mythology, and the supernatural, with nature playing a central role","Geometric abstraction and industrial imagery","Urban life and consumer culture"],a:1},
+{type:"mc",q:"The Romantic movement celebrated which concept above all?",o:["Civic duty and patriotism","Collective identity and tradition","Individualism, focusing on personal experiences and distinct perspectives","Religious devotion and spiritual transcendence"],a:2},
+{type:"mc",q:"Eugène Delacroix is renowned for which work?",o:["The Death of Socrates","The Stone Breakers","Liberty Leading the People","The Gleaners"],a:2},
+{type:"mc",q:"Realism emerged in the mid-19th century as a reaction against which movements?",o:["Neo-Classicism and Baroque","Romanticism and Neo-Classicism","Impressionism and Post-Impressionism","Mannerism and Rococo"],a:1},
+{type:"mc",q:"What did Realist artists focus on?",o:["Idealized mythological scenes","The struggles and experiences of common people","The beauty of nature and landscapes","Religious themes and divine figures"],a:1},
+{type:"mc",q:"What was the primary purpose of Realism?",o:["To portray life without idealization and address socio-political issues such as poverty, labor, and social injustice","To celebrate individualism and personal emotion","To convey moral messages about ancient history","To capture fleeting moments of light and color"],a:0},
+{type:"mc",q:"Gustave Courbet is famous for which work?",o:["The Gleaners","Liberty Leading the People","The Stone Breakers","Water Lilies"],a:2},
+{type:"mc",q:"Jean-François Millet is known for which work depicting peasant women collecting leftover crops?",o:["The Stone Breakers","The Gleaners","The Sower","Angelus"],a:1},
+{type:"mc",q:"The term 'Impressionism' comes from which painting by Claude Monet?",o:["Water Lilies","The Japanese Footbridge","Impression, Sunrise","Haystacks"],a:2},
+{type:"mc",q:"Where did Impressionism begin?",o:["England in the early 19th century","Germany in the mid-19th century","Late 19th-century France","Italy in the early 20th century"],a:2},
+{type:"mc",q:"Which technique involves applying paint thickly to create a three-dimensional effect?",o:["Pointillism","Contrapposto","Chiaroscuro","Impasto"],a:3},
+{type:"mc",q:"Impressionist artists frequently painted 'en plein air.' What does this mean?",o:["By candlelight","Outdoors","In a studio","From memory"],a:1},
+{type:"mc",q:"What was the goal of Impressionism?",o:["To portray life without idealization","To create a scientific representation of light using dots","To convey the artist's immediate perception of a scene rather than an accurate depiction","To challenge conventional forms of representation"],a:2},
+{type:"mc",q:"Claude Monet is known for his series capturing the same scene at different times of day, such as which work?",o:["The Starry Night","Water Lilies","A Sunday Afternoon on the Island of La Grande Jatte","The Basket of Apples"],a:1},
+{type:"mc",q:"Post-Impressionism emerged from approximately which years?",o:["1850 to 1880","1886 to 1905","1907 to 1917","1920 to 1940"],a:1},
+{type:"mc",q:"How did Post-Impressionists differ from Impressionists in their aims?",o:["They returned to strict academic rules","They focused exclusively on portraiture","They aimed to express deeper emotions and ideas through their work","They rejected all use of color"],a:2},
+{type:"mc",q:"Vincent van Gogh is known for which work with swirling brushstrokes and vivid colors?",o:["Water Lilies","A Sunday Afternoon on the Island of La Grande Jatte","The Basket of Apples","The Starry Night"],a:3},
+{type:"mc",q:"Paul Cézanne emphasized structure and form by breaking objects into what?",o:["Dots of color placed side by side","Geometric shapes, as seen in The Basket of Apples","Dreamlike, abstract symbols","Fluid organic lines"],a:1},
+{type:"mc",q:"Neo-Impressionism emerged specifically in which decade?",o:["1860s","1870s","1880s","1900s"],a:2},
+{type:"mc",q:"What is the most famous technique associated with Neo-Impressionism?",o:["Impasto","Chiaroscuro","Contrapposto","Pointillism"],a:3},
+{type:"mc",q:"How does Pointillism work?",o:["Applying paint thickly in layers to create texture","Placing tiny dots of color next to each other, allowing the viewer's eye to blend them from a distance","Using broad loose brushstrokes to suggest movement","Scraping paint to reveal underlying layers"],a:1},
+{type:"mc",q:"Who pioneered Neo-Impressionism with a scientific approach to color theory?",o:["Paul Gauguin","Claude Monet","Georges Seurat","Vincent van Gogh"],a:2},
+{type:"mc",q:"Georges Seurat's prime example of Pointillism is which painting?",o:["The Starry Night","Water Lilies","A Sunday Afternoon on the Island of La Grande Jatte","The Basket of Apples"],a:2},
+{type:"mc",q:"Symbolism arose primarily in which country?",o:["Germany","Italy","England","France"],a:3},
+{type:"mc",q:"Symbolism aimed to express ideas and emotions through what?",o:["Realistic depictions of everyday life","Symbols rather than direct representation","Scientific use of color and light","Geometric abstraction"],a:1},
+{type:"mc",q:"Symbolism emerged as a reaction against which movements?",o:["Baroque and Rococo","Impressionism and Post-Impressionism","Realism and naturalism","Renaissance and Mannerism"],a:2},
+{type:"mc",q:"The style of Symbolism is characterized by which elements?",o:["Bold non-naturalistic colors applied directly from the tube","Flat symbolic representations and bold outlines","Dreamlike imagery, vivid colors, and an emphasis on the emotional experience","Geometric shapes and industrial materials"],a:2},
+{type:"mc",q:"What was the primary purpose of Symbolism?",o:["To accurately depict social inequality","To convey the inexpressible — feelings, dreams, and the subconscious mind","To educate viewers about classical mythology","To celebrate technological progress"],a:1},
+{type:"mc",q:"Paul Gauguin is a notable Symbolist figure known for which painting?",o:["The Starry Night","Where Do We Come From? What Are We? Where Are We Going?","A Sunday Afternoon on the Island of La Grande Jatte","Water Lilies"],a:1},
+{type:"mc",q:"What does Art Nouveau mean in English?",o:["Modern Art","New Wave","New Art","Living Art"],a:2},
+{type:"mc",q:"Art Nouveau emerged in the late 19th century and lasted into which period?",o:["Mid-19th century","Early 20th century","Mid-20th century","Late 20th century"],a:1},
+{type:"mc",q:"Art Nouveau features which distinctive style elements?",o:["Muted geometric shapes and industrial materials","Flowing, organic lines and motifs inspired by flowers, plants, and other natural forms","Bold non-naturalistic colors applied straight from the tube","Fragmented geometric forms showing multiple angles"],a:1},
+{type:"mc",q:"Art Nouveau aimed to integrate art into what?",o:["The political sphere","Everyday life, elevating decorative arts to the same status as fine arts","Religious worship","Industrial production"],a:1},
+{type:"mc",q:"Gustav Klimt is known for which richly decorative painting?",o:["La Cage","The Kiss","The Great Wave","Woman with a Hat"],a:1},
+{type:"mc",q:"Antoni Gaudí is known as an architect famous for which building in Barcelona?",o:["Palau de la Música Catalana","Casa Batlló","La Sagrada Família","Torre Glòries"],a:2},
+{type:"mc",q:"The term 'Fauvism' comes from the French word fauves, meaning what?",o:["Bold colors","Wild beasts","Bright flames","Free spirits"],a:1},
+{type:"mc",q:"Fauvism emerged in which century and country?",o:["Late 19th century in Germany","Early 20th century primarily in France","Mid-19th century in England","Early 20th century in Italy"],a:1},
+{type:"mc",q:"What was the emphasis of Fauvism?",o:["Geometric structure and form","Scientific representation of light","Color rather than detailed representation","Capturing fleeting moments of everyday life"],a:2},
+{type:"mc",q:"Fauvism featured bold, non-naturalistic colors with artists applying paint directly from the tube. What did this result in?",o:["Subtle gradients and soft tones","Dreamlike, blurred imagery","Striking contrasts and vibrant compositions","Muted, monochromatic palettes"],a:2},
+{type:"mc",q:"What was the purpose of Fauvism?",o:["To depict the world with scientific accuracy","To evoke feelings and emotions through color","To document social injustice","To challenge conventional representation with geometric forms"],a:1},
+{type:"mc",q:"Henri Matisse is known for which Fauvist work?",o:["Charing Cross Bridge","Woman with a Hat","The Scream","Composition VII"],a:1},
+{type:"mc",q:"André Derain is recognized for which work?",o:["Woman with a Hat","Charing Cross Bridge","Composition VII","The City Rises"],a:1},
+{type:"mc",q:"Expressionism emerged particularly in which country?",o:["France","Italy","Russia","Germany"],a:3},
+{type:"mc",q:"Expressionism sought to express what?",o:["The beauty of nature and light","The anxieties and emotional turmoil of the modern world","The ideals of classical antiquity","The mechanics of scientific progress"],a:1},
+{type:"mc",q:"Which media did Expressionist artists employ?",o:["Woodblock printing and ink on rice paper","Silkscreen printing and collage","Painting, literature, theater, and film — including oil paints, woodcuts, and charcoal","Metal, glass, and plastic with geometric shapes"],a:2},
+{type:"mc",q:"Edvard Munch's painting The Scream epitomizes what?",o:["Joy and playfulness","Civic pride and patriotism","Existential dread","Spiritual harmony"],a:2},
+{type:"mc",q:"Wassily Kandinsky is known for abstract works that convey spiritual experiences, such as which work?",o:["The Scream","Composition VII","Woman with a Hat","Spiral Jetty"],a:1},
+{type:"mc",q:"Cubism emerged primarily between which years?",o:["1880 to 1900","1886 to 1905","1907 and 1917","1920 and 1940"],a:2},
+{type:"mc",q:"Analytic Cubism (1907–1912) is characterized by which approach?",o:["Brighter colors, textures, and collage elements","Deconstructing objects into geometric shapes and showing them from various angles using a muted color palette of browns and grays","Bold non-naturalistic colors and loose brushwork","Dreamlike imagery and bizarre scenes"],a:1},
+{type:"mc",q:"Synthetic Cubism (1912–1914) introduced which elements?",o:["Muted browns and grays","Pointillist dots","Brighter colors, textures, and collage elements","Impasto and thick paint layers"],a:2},
+{type:"mc",q:"What was the purpose of Cubism?",o:["To capture fleeting moments of natural light","To challenge conventional forms of representation and reflect the complexity of modern life","To promote communist ideals through accessible art","To explore the unconscious mind and dreams"],a:1},
+{type:"mc",q:"Pablo Picasso's work Les Demoiselles d'Avignon showcased which Cubist qualities?",o:["Dreamlike imagery and symbolic objects","Pointillist dots arranged in geometric patterns","Fragmented forms and bold compositions","Flowing organic lines inspired by nature"],a:2},
+{type:"mc",q:"Georges Braque developed which Cubist work?",o:["Les Demoiselles d'Avignon","Violin and Candlestick","The City Rises","Dynamism of a Dog on a Leash"],a:1},
+{type:"mc",q:"Futurism began in which country?",o:["France","Germany","Russia","Italy"],a:3},
+{type:"mc",q:"Futurism focused on which themes?",o:["Nature, harmony, and impermanence","Dreams, the unconscious, and fantasy","Speed, violence, and modernity","Geometry, social purpose, and industrial production"],a:1},
+{type:"mc",q:"What art styles are associated with Futurism according to the handout?",o:["Impressionism and Symbolism","Cubism and Abstract art","Realism and Naturalism","Baroque and Mannerism"],a:1},
+{type:"mc",q:"What was the purpose of Futurism?",o:["To reject the past and celebrate the future","To preserve traditional artistic values","To explore the subconscious mind through art","To integrate art into everyday decorative life"],a:0},
+{type:"mc",q:"Umberto Boccioni is noted for which work that embodies Futurism's emphasis on dynamism?",o:["Dynamism of a Dog on a Leash","The City Rises","Violin and Candlestick","Composition VII"],a:1},
+{type:"mc",q:"Giacomo Balla is known for which painting that captures the movement of a dog and its owner?",o:["The City Rises","Dynamism of a Dog on a Leash","Charing Cross Bridge","The Scream"],a:1},
+{type:"mc",q:"Abstract art focuses on which elements instead of depicting recognizable objects or scenes?",o:["Realistic anatomy and light","Historical events and mythology","Colors, shapes, and forms to express emotions and ideas","Everyday struggles of common people"],a:2},
+{type:"mc",q:"Dadaism emerged as a reaction to which event?",o:["The Great Depression","World War II","World War I","The French Revolution"],a:2},
+{type:"mc",q:"Dadaism embraced which qualities?",o:["Harmony, symmetry, and classical beauty","Chaos, absurdity, and spontaneity","Realism, proportion, and naturalism","Geometry, functionality, and social purpose"],a:1},
+{type:"mc",q:"Which media did Dada artists work with?",o:["Oil paint, fresco, and marble","Ink and brush on silk","Collage, assemblage, and performance art using everyday objects","Metal, glass, and plastic"],a:2},
+{type:"mc",q:"What was the purpose of Dadaism?",o:["To celebrate beauty and the idealized human form","To challenge the meaning of art and protest the rational thinking that caused war","To promote religious devotion through visual narratives","To depict everyday life with scientific accuracy"],a:1},
+{type:"mc",q:"Marcel Duchamp is famous for his groundbreaking readymade sculpture known as what?",o:["Spiral Jetty","Fountain (a urinal presented as art)","Monument to the Third International","Wall Drawing #1136"],a:1},
+{type:"mc",q:"Surrealism emerged in which decade?",o:["1900s","1910s","1920s","1930s"],a:2},
+{type:"mc",q:"Surrealism was influenced by Dadaism and whose psychological theories?",o:["Carl Jung","Sigmund Freud","Alfred Adler","B.F. Skinner"],a:1},
+{type:"mc",q:"What did Surrealists aim to explore?",o:["The rational structures of modern society","The unconscious mind and dreams","The geometry of natural forms","The history of ancient civilizations"],a:1},
+{type:"mc",q:"Surrealists believed that dreams could reveal what?",o:["Scientific truths about the universe","Hidden truths about humanity","Historical facts about past civilizations","Mathematical patterns in nature"],a:1},
+{type:"mc",q:"Salvador Dalí is known for which Surrealist work?",o:["Fountain","The Scream","The Persistence of Memory","Wall Drawing #1136"],a:2},
+{type:"mc",q:"Constructivism originated in which country in the 1920s?",o:["France","Germany","Italy","Russia"],a:3},
+{type:"mc",q:"What materials did Constructivist artists use?",o:["Oil paint, watercolor, and lithography","Metal, glass, and plastic, emphasizing geometric shapes and industrial production","Woodblock, ink, and rice paper","Collage, assemblage, and everyday objects"],a:1},
+{type:"mc",q:"What ideals did Constructivists often promote?",o:["Aristocratic elegance and private luxury","Fascist nationalism","Communist ideals, believing art should be accessible to all and reflect modern life","Religious devotion and spiritual transcendence"],a:2},
+{type:"mc",q:"Vladimir Tatlin is renowned for which work that combined art and architecture?",o:["Monument to the Third International","Spiral Jetty","Fountain","Wall Drawing #1136"],a:0},
+{type:"mc",q:"Optical Art (Op Art) became popular in which decade?",o:["1940s","1950s","1960s","1970s"],a:2},
+{type:"mc",q:"What techniques did Op Art artists use?",o:["Loose brushwork and en plein air painting","Collage and mixed media","Geometric patterns, vibrant colors, and precise lines to create optical illusions","Organic flowing lines and natural motifs"],a:2},
+{type:"mc",q:"What was the purpose of Op Art?",o:["To depict social inequality","To challenge viewers' perceptions of reality through visual techniques","To express spiritual experiences through abstraction","To celebrate consumer culture"],a:1},
+{type:"mc",q:"Bridget Riley is a leading Op Art figure known for which work?",o:["Movement in Squares","Spiral Jetty","Campbell's Soup Cans","Wall Drawing #1136"],a:0},
+{type:"mc",q:"Bridget Riley's work influenced which fields beyond art?",o:["Science and medicine","Politics and law","Design, architecture, and fashion","Music and literature"],a:2},
+{type:"mc",q:"Pop Art emerged in which decade?",o:["1930s","1940s","1950s","1970s"],a:2},
+{type:"mc",q:"Pop Art drew inspiration from which sources?",o:["Ancient mythology and classical texts","Popular culture, advertising, and mass media","Nature and philosophical concepts","Dreams and the unconscious mind"],a:1},
+{type:"mc",q:"Which techniques did Pop artists use?",o:["Impasto and broken color","Silkscreen printing and collage, often featuring bright colors and bold graphics","Woodblock printing and bokashi","Chiaroscuro and tenebrism"],a:1},
+{type:"mc",q:"Pop artists aimed to blur the lines between high art and what?",o:["Religious art","Ancient classical art","Popular culture","Abstract expressionism"],a:2},
+{type:"mc",q:"Andy Warhol is renowned for which iconic Pop Art works?",o:["Movement in Squares and Spiral Jetty","Campbell's Soup Cans and Shot Marilyns","The Kiss and La Sagrada Família","Fountain and Monument to the Third International"],a:1},
+{type:"mc",q:"Minimalism emerged in the late 1950s as a reaction against which movement?",o:["Surrealism","Fauvism","Abstract Expressionism","Dadaism"],a:2},
+{type:"mc",q:"Minimalism emphasized which qualities?",o:["Ornate decoration and complex compositions","Dreamlike imagery and vivid colors","Simplicity and clarity","Bold non-naturalistic colors and expressive brushwork"],a:2},
+{type:"mc",q:"What materials and style did Minimalist artists use?",o:["Oil paint, pastels, and organic forms","Basic geometric shapes, monochromatic palettes, and industrial materials, emphasizing form over content","Collage, assemblage, and performance elements","Flowing organic lines and natural motifs"],a:1},
+{type:"mc",q:"What was the purpose of Minimalism?",o:["To convey emotional responses about human existence","To eliminate personal expression and emotion, allowing viewers to appreciate the artwork in its purest form","To challenge the meaning of art through absurdity","To integrate art into everyday decorative life"],a:1},
+{type:"mc",q:"Donald Judd is known for which Minimalist work?",o:["Movement in Squares","Spiral Jetty","Untitled (box-like sculptures)","Wall Drawing #1136"],a:2},
+{type:"mc",q:"Conceptual art emerged in which decade?",o:["1940s","1950s","1960s","1970s"],a:2},
+{type:"mc",q:"In Conceptual art, what is prioritized over traditional aesthetic and material concerns?",o:["Technical skill and craftsmanship","Ideas and concepts","Realistic depiction of subjects","Emotional self-expression"],a:1},
+{type:"mc",q:"In Conceptual art, what is often more important than the finished piece?",o:["The materials used","The size of the artwork","The concept behind the artwork","The artist's biography"],a:2},
+{type:"mc",q:"Sol LeWitt is known for which Conceptual work?",o:["Fountain","Spiral Jetty","Movement in Squares","Wall Drawing #1136"],a:3},
+{type:"mc",q:"How does experiential art differ from traditional art?",o:["It focuses exclusively on realistic depiction","It invites viewers to actively participate rather than just observe","It eliminates all visual elements in favor of ideas","It is created only through digital technology"],a:1},
+{type:"mc",q:"What is installation art?",o:["A live art form combining visual art with theatrical performance","An artistic genre of three-dimensional works often created for a specific place or temporary period","A form of artistic expression using the human body as a canvas","Art that uses natural materials found in the environment"],a:1},
+{type:"mc",q:"Installation art uses which materials to create immersive environments?",o:["Only oil paint and canvas","Video, light, sound, and found objects","Traditional stone and marble","Woodblock prints and paper"],a:1},
+{type:"mc",q:"Which purposes can installation art serve?",o:["Only religious devotion","Exclusively commercial purposes","Challenging social norms, exploring cultural narratives, or commenting on environmental issues","Only entertainment and spectacle"],a:2},
+{type:"mc",q:"Yayoi Kusama is famous for which installation works?",o:["Spiral Jetty and Order of Things No. 3","Infinity Mirror Rooms and Obliteration Room","Wall Drawing #1136 and Monument to the Third International","Cut Piece and Relation in Time"],a:1},
+{type:"mc",q:"Who is a pioneer of installation art in the Philippines, known for Wood Things?",o:["Whang-od Oggay","Jose John Santos III","Luis E. Yee, Jr. (Junyee)","Marina Abramović"],a:2},
+{type:"mc",q:"The work Wood Things by Junyee features which materials?",o:["Black basalt rocks and earth","Metal, glass, and plastic","Dried banana stalks and kapok pods","Silk and rice paper"],a:2},
+{type:"mc",q:"Body art uses the human body as what?",o:["A tool for protest only","A canvas for artistic expression","A scientific specimen","A medium for historical documentation"],a:1},
+{type:"mc",q:"Which forms does body art include?",o:["Oil painting, fresco, and mosaic","Only tattooing and scarification","Tattoos, body painting, makeup, piercings, and performance-based art","Woodblock prints and calligraphy"],a:2},
+{type:"mc",q:"What purposes does body art serve?",o:["Only aesthetic decoration","Personal expression, cultural significance, and challenging societal norms related to beauty and body image","Exclusively religious ritual","Only commercial fashion"],a:1},
+{type:"mc",q:"Marina Abramović is known for which body art performance?",o:["Cut Piece","Relation in Time (exploring emotional connections with former partner Ulay)","Infinity Mirror Rooms","Spiral Jetty"],a:1},
+{type:"mc",q:"Whang-od Oggay, also known as Maria Oggay, is known for which practice?",o:["Installation art using natural materials","Performance art combining dance and theater","Traditional tattooing practiced since she was a teenager","Land art using rocks and earth"],a:2},
+{type:"mc",q:"What does land art (Earth art) emphasize?",o:["The relationship between nature and human intervention","The unconscious mind and dreamlike imagery","Geometric abstraction and industrial production","Consumer culture and mass media"],a:0},
+{type:"mc",q:"What materials does land art use?",o:["Metal, glass, and plastic","Natural materials found in the environment such as soil, rocks, and plants","Traditional painting materials like oil paint and canvas","Everyday found objects and collage elements"],a:1},
+{type:"mc",q:"What is the purpose of land art?",o:["To challenge social norms related to beauty","To showcase the beauty of the natural world and provoke reflection on environmental issues","To promote communist ideals through accessible art","To eliminate personal expression from artwork"],a:1},
+{type:"mc",q:"Robert Smithson is known for which iconic land art piece?",o:["Order of Things No. 3","Wood Things","Spiral Jetty","Monument to the Third International"],a:2},
+{type:"mc",q:"Where is Spiral Jetty located?",o:["The coast of California","The banks of the Mississippi River","Rozel Point on the north arm of Great Salt Lake in Utah","The Florida Everglades"],a:2},
+{type:"mc",q:"What is Spiral Jetty made from?",o:["Dried banana stalks and kapok pods","Concrete and steel","Black basalt rocks and earth from the site","Sand and driftwood"],a:2},
+{type:"mc",q:"Jose John Santos III is known for which piece that uses natural materials to explore themes of order, chaos, and human interaction with the environment?",o:["Wood Things","Paghahanap","Spiral Jetty","Order of Things No. 3"],a:3},
+{type:"mc",q:"Performance art is defined as which type of art form?",o:["A purely visual art form focused on static objects","A live art form that combines visual art with theatrical performance","An art form using natural materials in the environment","An art form focusing only on body modification"],a:1},
+{type:"mc",q:"What themes does performance art often explore?",o:["Classical mythology and ancient history","Speed, violence, and modernity","Identity, politics, and society","Geometric abstraction and industrial production"],a:2},
+{type:"mc",q:"What media can performance art encompass?",o:["Only live dance","Oil paint, marble, and bronze","Acting, dance, and video","Woodblock prints and calligraphy"],a:2},
+{type:"mc",q:"What is the purpose of performance art?",o:["To eliminate personal expression from artwork","To engage the audience in real-time, creating a shared experience between the performer and the viewers","To showcase technical mastery of traditional art techniques","To convey moral messages about ancient history"],a:1},
+{type:"mc",q:"Yoko Ono is known for which performance work where viewers were invited to cut pieces of her clothing?",o:["Relation in Time","Obliteration Room","Cut Piece","Wood Things"],a:2},
+{type:"mc",q:"The Philippine Performing Arts Company, Inc. (PPACI) helps preserve which culture through performance?",o:["Japanese traditional culture","Traditional Filipino culture","Chinese imperial court traditions","Indonesian shadow puppet traditions"],a:1},
+{type:"mc",q:"Which annual PPACI production features traditional Filipino dances blended with modern choreography?",o:["Spiral Jetty","Order of Things No. 3","Wood Things","Paghahanap"],a:3},
+{type:"mc",q:"Which of the following correctly matches the art movement to its significant artist?",o:["Impressionism — Georges Seurat","Neo-Impressionism — Claude Monet","Realism — Gustave Courbet","Post-Impressionism — Édouard Manet"],a:2},
+{type:"mc",q:"Which movement is most directly linked to the idea that 'the concept behind the artwork is often more important than the finished piece'?",o:["Minimalism","Pop Art","Conceptual Art","Optical Art"],a:2},
+{type:"mc",q:"Which art movement used readymades — everyday objects presented as art — to challenge the definition of art?",o:["Surrealism","Constructivism","Dadaism","Conceptual Art"],a:2},
+{type:"mc",q:"Which movement emphasized pointillism as a scientific approach to color theory?",o:["Post-Impressionism","Impressionism","Symbolism","Neo-Impressionism"],a:3},
+{type:"mc",q:"Which art movement is associated with chiaroscuro AND tenebrism as its primary stylistic techniques?",o:["Renaissance","Mannerism","Baroque","Rococo"],a:2},
+{type:"mc",q:"Which movement sought to elevate decorative arts to the same status as fine arts, making beautiful objects accessible to everyone?",o:["Constructivism","Art Nouveau","Minimalism","Pop Art"],a:1},
+{type:"mc",q:"Which of the following artists is correctly matched with their movement?",o:["Pablo Picasso — Futurism","Umberto Boccioni — Cubism","Salvador Dalí — Surrealism","Marcel Duchamp — Constructivism"],a:2},
+{type:"mc",q:"The Rococo movement's common motifs include which of the following?",o:["Geometric shapes and industrial forms","Skulls, crosses, and religious imagery","Shells, flowers, and curved lines","Mountains, rivers, and forests"],a:2},
+{type:"mc",q:"Which art movement embraced themes of speed, violence, and modernity while rejecting the past?",o:["Dadaism","Surrealism","Constructivism","Futurism"],a:3},
+{type:"mc",q:"What distinguishes Analytic Cubism from Synthetic Cubism?",o:["Analytic Cubism used brighter colors and collage; Synthetic Cubism used muted browns and grays","Analytic Cubism (1907–1912) used muted browns and grays to deconstruct objects; Synthetic Cubism (1912–1914) introduced brighter colors, textures, and collage","Analytic Cubism focused on pointillist dots; Synthetic Cubism focused on chiaroscuro","Analytic Cubism was Italian; Synthetic Cubism was French"],a:1}
 ];
