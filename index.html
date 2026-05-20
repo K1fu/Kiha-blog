@@ -847,8 +847,8 @@
             <div class="nav-buttons">
                 <button class="nav-btn" data-period="prelims">Prelims</button>
                 <button class="nav-btn" data-period="midterms">Midterms</button>
-                <button class="nav-btn active" data-period="pre-finals">Pre-Finals</button>
-                <button class="nav-btn" data-period="finals">Finals</button>
+                <button class="nav-btn" data-period="pre-finals">Pre-Finals</button>
+                <button class="nav-btn active" data-period="finals">Finals</button>
             </div>
             <div class="nav-search">
                 <input type="text" class="search-input" placeholder="Search by subject code or name...">
@@ -1581,7 +1581,7 @@
 
         // Initialize on page load with prelims filter
         window.addEventListener('load', function() {
-            filterCards('pre-finals', '');
+            filterCards('finals', '');
         });
 
         // ─── EASTER EGG: Developer Click Counter ───
